@@ -18,15 +18,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.yapp.official.data.UserState
+import com.yapp.official.data.User
 import com.yapp.official.ui.theme.YappOfficialTheme
-import com.yapp.official.ui.user.UserIntent
+import com.yapp.official.ui.user.UserAction
 import com.yapp.official.ui.user.UserViewModel
-import com.yapp.official.ui.user.UserViewState
+import org.orbitmvi.orbit.compose.collectAsState
 
 
 class MainActivity : ComponentActivity() {
@@ -49,19 +48,19 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun UserScreen(userViewModel: UserViewModel) {
-    val viewState by userViewModel.viewState.collectAsState()
+    val viewState by userViewModel.collectAsState()
 
     Scaffold(
         content = {
             Column(modifier = Modifier.padding(16.dp)) {
                 Row {
-                    Button(onClick = { userViewModel.processIntent(UserIntent.AddUser) }) {
+                    Button(onClick = { userViewModel.processIntent(UserAction.AddUser) }) {
                         Text(text = "사람 추가")
                     }
 
                     Spacer(modifier = Modifier.width(16.dp))
 
-                    Button(onClick = { userViewModel.processIntent(UserIntent.RemoveUser) }) {
+                    Button(onClick = { userViewModel.processIntent(UserAction.RemoveUser) }) {
                         Text(text = "사람 제거")
                     }
                 }
@@ -81,7 +80,7 @@ fun UserScreen(userViewModel: UserViewModel) {
 
 
 @Composable
-fun UserItem(user: UserState) {
+fun UserItem(user: User) {
     Column(modifier = Modifier.padding(8.dp)) {
         Text(text = "ID: ${user.id}")
         Text(text = "Name: ${user.name}")

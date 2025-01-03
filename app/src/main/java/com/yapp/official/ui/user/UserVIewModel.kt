@@ -1,34 +1,35 @@
 package com.yapp.official.ui.user
 
 import androidx.lifecycle.ViewModel
-import com.yapp.official.data.UserState
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.yapp.official.data.User
+import org.orbitmvi.orbit.Container
+import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.viewmodel.container
 
-class UserViewModel : ViewModel() {
-    private val _viewState = MutableStateFlow(UserViewState())
-    val viewState: StateFlow<UserViewState> get() = _viewState
+class UserViewModel : ViewModel() , ContainerHost<UserState, UserAction>{
 
-    fun processIntent(intent: UserIntent) {
+    override val container: Container<UserState, UserAction> = container(initialState = UserState())
+
+
+    fun processIntent(intent: UserAction) {
         when (intent) {
-            is UserIntent.AddUser -> addUser()
-            is UserIntent.RemoveUser -> removeUser()
+            is UserAction.AddUser -> addUser()
+            is UserAction.RemoveUser -> removeUser()
         }
     }
 
-    private fun addUser() {
-        val newUser = UserState(id = _viewState.value.nextId, name = "Jaewon")
-        _viewState.value = _viewState.value.copy(
-            users = _viewState.value.users + newUser,
-            nextId = _viewState.value.nextId + 1
-        )
+    private fun addUser() = intent {
+        val newUser = User(id = state.users.size + 1, name = "JAE WON")
+        reduce {
+            state.copy(users = state.users + newUser)
+        }
     }
 
-    private fun removeUser() {
-        if (_viewState.value.users.isNotEmpty()) {
-            _viewState.value = _viewState.value.copy(
-                users = _viewState.value.users.dropLast(1)
-            )
+    private fun removeUser() = intent {
+        if (state.users.isNotEmpty()) {
+            reduce {
+                state.copy(users = state.users.dropLast(1))
+            }
         }
     }
 }

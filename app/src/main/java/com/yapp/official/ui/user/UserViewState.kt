@@ -1,8 +1,5 @@
 package com.yapp.official.ui.user
 
-import com.yapp.official.data.UserState
+import com.yapp.official.data.User
 
-data class UserViewState(
-    val users: List<UserState> = emptyList(),
-    val nextId: Int = 1
-)
+data class UserState(val users: List<User> = emptyList()) // State
