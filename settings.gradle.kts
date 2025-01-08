@@ -37,7 +37,6 @@ include(
 include(
     ":feature:home",
     ":feature:notice",
-    ":feature:home",
     ":feature:signup",
     ":feature:login"
 )
