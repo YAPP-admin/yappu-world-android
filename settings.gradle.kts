@@ -20,4 +20,23 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "YappOfficial"
+
 include(":app")
+
+// core
+include(
+    ":core:model",
+    ":core:data-api",
+    ":core:designsystem",
+    ":core:ui",
+    ":core:data",
+    ":core:domain"
+)
+
+// feature
+include(
+    ":feature:home",
+    ":feature:notice",
+    ":feature:signup",
+    ":feature:login"
+)
