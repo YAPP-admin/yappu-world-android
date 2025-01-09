@@ -1,5 +1,7 @@
 plugins {
-    alias(libs.plugins.android.application)
+    id("yapp.android.application")
+
+    /** Hilt 적용하며 compose 및 android 플러그인 제거 예정 **/
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 }
@@ -10,33 +12,12 @@ android {
 
     defaultConfig {
         applicationId = "com.yapp.official"
-        minSdk = 28
-        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-    buildFeatures {
-        compose = true
-    }
 }
 
 dependencies {
@@ -45,6 +26,8 @@ dependencies {
     implementation(project(":feature:signup"))
     implementation(project(":feature:login"))
 
+
+    /** Hilt 적용하며 compose 및 android 라이브러리 제거 예정 **/
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -60,4 +43,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
 }
