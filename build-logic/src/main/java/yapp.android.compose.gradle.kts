@@ -1,4 +1,4 @@
-import com.yapp.app.configureCompose
+import com.yapp.configureCompose
 
 
 configureCompose()

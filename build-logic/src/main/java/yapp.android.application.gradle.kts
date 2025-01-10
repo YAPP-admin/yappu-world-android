@@ -1,4 +1,4 @@
-import com.yapp.app.configureKotlinAndroid
+import com.yapp.configureKotlinAndroid
 
 plugins {
     id("com.android.application")
