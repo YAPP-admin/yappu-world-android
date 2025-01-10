@@ -3,6 +3,9 @@ package com.yapp.designsystem.theme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
@@ -25,7 +28,7 @@ private fun ColorPreview(color: Color, name: String) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(30.dp)
+                .height(40.dp)
                 .background(color)
                 .border(width = 1.dp, color = YappTheme.lightColorScheme.lineSolidNormal)
         )
@@ -42,127 +45,53 @@ private fun TypographyPreview(textStyle: TextStyle, name: String) {
     )
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, widthDp = 800)
 @Composable
 private fun YappColorPreview() {
     YappTheme {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState())
+        val colors = YappTheme.lightColorScheme.let {
+            listOf(
+                "Primary Normal" to it.primaryNormal,
+                "Label Normal" to it.labelNormal,
+                "Label Strong" to it.labelStrong,
+                "Label Neutral" to it.labelNeutral,
+                "Label Alternative" to it.labelAlternative,
+                "Label Assistive" to it.labelAssistive,
+                "Label Disable" to it.labelDisable,
+                "Background Normal Normal" to it.backgroundNormalNormal,
+                "Background Normal Alternative" to it.backgroundNormalAlternative,
+                "Background Elevated Normal" to it.backgroundElevatedNormal,
+                "Background Elevated Alternative" to it.backgroundElevatedAlternative,
+                "Interaction Inactive" to it.interactionInactive,
+                "Interaction Disable" to it.interactionDisable,
+                "Line Normal Normal" to it.lineNormalNormal,
+                "Line Normal Neutral" to it.lineNormalNeutral,
+                "Line Normal Alternative" to it.lineNormalAlternative,
+                "Line Normal Strong" to it.lineNormalStrong,
+                "Line Solid Normal" to it.lineSolidNormal,
+                "Line Solid Neutral" to it.lineSolidNeutral,
+                "Line Solid Alternative" to it.lineSolidAlternative,
+                "Line Solid Strong" to it.lineSolidStrong,
+                "Fill Normal" to it.fillNormal,
+                "Fill Strong" to it.fillStrong,
+                "Fill Alternative" to it.fillAlternative,
+                "Status Positive" to it.statusPositive,
+                "Status Cautionary" to it.statusCautionary,
+                "Status Negative" to it.statusNegative,
+                "Static White" to it.staticWhite,
+                "Static Black" to it.staticBlack,
+                "Material Dimmer" to it.materialDimmer
+            )
+        }
+
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(3),
+            modifier = Modifier.padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            ColorPreview(
-                color = YappTheme.lightColorScheme.primaryNormal,
-                name = "Primary Normal"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.labelNormal,
-                name = "Label Normal"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.labelStrong,
-                name = "Label Strong"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.labelNeutral,
-                name = "Label Neutral"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.labelAlternative,
-                name = "Label Alternative"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.labelAssistive,
-                name = "Label Assistive"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.labelDisable,
-                name = "Label Disable"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.backgroundNormalNormal,
-                name = "Background Normal Normal"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.backgroundNormalAlternative,
-                name = "Background Normal Alternative"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.backgroundElevatedNormal,
-                name = "Background Elevated Normal"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.backgroundElevatedAlternative,
-                name = "Background Elevated Alternative"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.interactionInactive,
-                name = "Interaction Inactive"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.interactionDisable,
-                name = "Interaction Disable"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.lineNormalNormal,
-                name = "Line Normal Normal"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.lineNormalNeutral,
-                name = "Line Normal Neutral"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.lineNormalAlternative,
-                name = "Line Normal Alternative"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.lineSolidNormal,
-                name = "Line Solid Normal"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.lineSolidNeutral,
-                name = "Line Solid Neutral"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.lineSolidAlternative,
-                name = "Line Solid Alternative"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.fillNormal,
-                name = "Fill Normal"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.fillStrong,
-                name = "Fill Strong"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.fillAlternative,
-                name = "Fill Alternative"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.statusPositive,
-                name = "Status Positive"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.statusCautionary,
-                name = "Status Cautionary"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.statusNegative,
-                name = "Status Negative"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.staticWhite,
-                name = "Static White"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.staticBlack,
-                name = "Static Black"
-            )
-            ColorPreview(
-                color = YappTheme.lightColorScheme.materialDimmer,
-                name = "Material Dimmer"
-            )
+            items(colors) { (name, color) ->
+                ColorPreview(color = color, name = name)
+            }
         }
     }
 }
@@ -176,78 +105,35 @@ private fun YappTypographyPreview() {
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            TypographyPreview(
-                textStyle = YappTheme.typography.display1,
-                name = "Display 1"
-            )
-            TypographyPreview(
-                textStyle = YappTheme.typography.display2,
-                name = "Display 2"
-            )
-            TypographyPreview(
-                textStyle = YappTheme.typography.title1,
-                name = "Title 1"
-            )
-            TypographyPreview(
-                textStyle = YappTheme.typography.title2,
-                name = "Title 2"
-            )
-            TypographyPreview(
-                textStyle = YappTheme.typography.title3,
-                name = "Title 3"
-            )
-            TypographyPreview(
-                textStyle = YappTheme.typography.heading1,
-                name = "Heading 1"
-            )
-            TypographyPreview(
-                textStyle = YappTheme.typography.heading2,
-                name = "Heading 2"
-            )
-            TypographyPreview(
-                textStyle = YappTheme.typography.headline1,
-                name = "Headline 1"
-            )
-            TypographyPreview(
-                textStyle = YappTheme.typography.headline2,
-                name = "Headline 2"
-            )
-            TypographyPreview(
-                textStyle = YappTheme.typography.body1Normal,
-                name = "Body 1 Normal"
-            )
-            TypographyPreview(
-                textStyle = YappTheme.typography.body1Reading,
-                name = "Body 1 Reading"
-            )
-            TypographyPreview(
-                textStyle = YappTheme.typography.body2Normal,
-                name = "Body 2 Normal"
-            )
-            TypographyPreview(
-                textStyle = YappTheme.typography.body2Reading,
-                name = "Body 2 Reading"
-            )
-            TypographyPreview(
-                textStyle = YappTheme.typography.label1Normal,
-                name = "Label 1 Normal"
-            )
-            TypographyPreview(
-                textStyle = YappTheme.typography.label1Reading,
-                name = "Label 1 Reading"
-            )
-            TypographyPreview(
-                textStyle = YappTheme.typography.label2,
-                name = "Label 2"
-            )
-            TypographyPreview(
-                textStyle = YappTheme.typography.caption1,
-                name = "Caption 1"
-            )
-            TypographyPreview(
-                textStyle = YappTheme.typography.caption2,
-                name = "Caption 2"
-            )
+            val typos = YappTheme.typography.let {
+                listOf(
+                    "Display 1" to it.display1,
+                    "Display 2" to it.display2,
+                    "Title 1" to it.title1,
+                    "Title 2" to it.title2,
+                    "Title 3" to it.title3,
+                    "Heading 1" to it.heading1,
+                    "Heading 2" to it.heading2,
+                    "Headline 1" to it.headline1,
+                    "Headline 2" to it.headline2,
+                    "Body 1 Normal" to it.body1Normal,
+                    "Body 1 Reading" to it.body1Reading,
+                    "Body 2 Normal" to it.body2Normal,
+                    "Body 2 Reading" to it.body2Reading,
+                    "Label 1 Normal" to it.label1Normal,
+                    "Label 1 Reading" to it.label1Reading,
+                    "Label 2" to it.label2,
+                    "Caption 1" to it.caption1,
+                    "Caption 2" to it.caption2
+                )
+            }
+
+            typos.forEach { (name, textStyle) ->
+                TypographyPreview(
+                    name = name,
+                    textStyle = textStyle,
+                )
+            }
         }
     }
 }
