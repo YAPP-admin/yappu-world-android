@@ -1,9 +1,11 @@
+import com.yapp.app.setNamespace
+
 plugins {
     id("yapp.android.library")
 }
 
 android {
-    namespace = "com.yapp.domain"
+    setNamespace("core.domain")
 }
 
 dependencies {

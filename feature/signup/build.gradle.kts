@@ -1,9 +1,11 @@
+import com.yapp.app.setNamespace
+
 plugins {
     id("yapp.android.feature")
 }
 
 android {
-    namespace = "com.yapp.signup"
+    setNamespace("feature.signup")
 }
 
 dependencies {
