@@ -1,4 +1,4 @@
-package com.yapp.app
+package com.yapp
 
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies

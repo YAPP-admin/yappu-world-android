@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    setNamespace("official")
+    setNamespace("app.official")
 }
 
 dependencies {

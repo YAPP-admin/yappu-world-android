@@ -1,4 +1,4 @@
-import com.yapp.app.configureKotlin
+import com.yapp.configureKotlin
 
 plugins {
     kotlin("jvm")
