@@ -1,4 +1,4 @@
-package com.yapp.designsystem.theme
+package com.yapp.core.designsystem.theme
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -11,7 +11,7 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.sp
-import com.yapp.designsystem.R
+import com.yapp.core.designsystem.R
 
 internal val pretendardFamily = FontFamily(
     Font(R.font.pretendard, FontWeight(700)),
