@@ -1,4 +1,4 @@
-package com.yapp.designsystem.theme
+package com.yapp.core.designsystem.theme
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
