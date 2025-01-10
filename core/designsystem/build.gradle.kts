@@ -1,10 +1,12 @@
+import com.yapp.app.setNamespace
+
 plugins {
     id("yapp.android.library")
     id("yapp.android.compose")
 }
 
 android {
-    namespace = "com.yapp.designsystem"
+    setNamespace("core.designsystem")
 }
 
 
