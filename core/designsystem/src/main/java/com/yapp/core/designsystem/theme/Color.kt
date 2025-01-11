@@ -87,7 +87,7 @@ data class YappColorScheme(
     val materialDimmer: Color
 )
 
-val LocalLightColorScheme = staticCompositionLocalOf {
+val LocalColorScheme = staticCompositionLocalOf {
     YappColorScheme(
         primaryNormal = Color.Unspecified,
         labelNormal = Color.Unspecified,

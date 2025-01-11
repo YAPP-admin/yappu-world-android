@@ -28,7 +28,7 @@ private fun ColorPreview(color: Color, name: String) {
     Column {
         BasicText(
             text = name,
-            style = TextStyle(color = YappTheme.lightColorScheme.staticBlack, fontSize = 14.sp)
+            style = TextStyle(color = YappTheme.colorScheme.staticBlack, fontSize = 14.sp)
         )
         Spacer(Modifier.height(4.dp))
         Box(
@@ -36,7 +36,7 @@ private fun ColorPreview(color: Color, name: String) {
                 .fillMaxWidth()
                 .height(40.dp)
                 .background(color)
-                .border(width = 1.dp, color = YappTheme.lightColorScheme.lineSolidNormal)
+                .border(width = 1.dp, color = YappTheme.colorScheme.lineSolidNormal)
         )
         Spacer(Modifier.height(12.dp))
     }
@@ -55,7 +55,7 @@ private fun TypographyPreview(textStyle: TextStyle, name: String) {
 @Composable
 private fun YappColorPreview() {
     YappTheme {
-        val colors = YappTheme.lightColorScheme.let {
+        val colors = YappTheme.colorScheme.let {
             listOf(
                 "Primary Normal" to it.primaryNormal,
                 "Label Normal" to it.labelNormal,
