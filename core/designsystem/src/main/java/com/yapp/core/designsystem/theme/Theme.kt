@@ -12,11 +12,11 @@ fun YappTheme(
 ) {
     CompositionLocalProvider(
         LocalTypography provides Typography,
-        LocalLightColorScheme provides LightColorScheme,
+        LocalColorScheme provides LightColorScheme,
     ) {
         MaterialTheme(
             colorScheme = lightColorScheme(
-                background = YappTheme.lightColorScheme.backgroundNormalNormal,
+                background = YappTheme.colorScheme.backgroundNormalNormal,
             ),
             content = content,
         )
@@ -29,8 +29,8 @@ object YappTheme {
         @ReadOnlyComposable
         get() = LocalTypography.current
 
-    val lightColorScheme: YappColorScheme
+    val colorScheme: YappColorScheme
         @Composable
         @ReadOnlyComposable
-        get() = LocalLightColorScheme.current
+        get() = LocalColorScheme.current
 }
