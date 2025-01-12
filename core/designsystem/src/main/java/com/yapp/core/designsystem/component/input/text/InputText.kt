@@ -1,7 +1,6 @@
 package com.yapp.core.designsystem.component.input.text
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -41,6 +40,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.R
+import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
 
 @Composable
@@ -258,7 +258,7 @@ fun YappInputTextLarge(
                 modifier = Modifier
                     .size(InputTextDefaults.rightIconSizeLarge)
                     .clip(CircleShape)
-                    .clickable { isPasswordVisible = !isPasswordVisible },
+                    .yappClickable { isPasswordVisible = !isPasswordVisible },
                 painter = painterResource(
                     if (isPasswordVisible) {
                         R.drawable.icon_eye
