@@ -46,7 +46,6 @@ import com.yapp.core.designsystem.theme.YappTheme
 @Composable
 fun YappInputTextBasic(
     modifier: Modifier = Modifier,
-    shape: Shape,
     label: String? = null,
     value: String,
     onValueChange: (String) -> Unit,
@@ -61,7 +60,8 @@ fun YappInputTextBasic(
     maxLines: Int = 1,
     minLines: Int = 1,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    colors: InputTextColors = InputTextDefaults.colors,
+    shape: Shape,
+    colors: InputTextColors,
     textStyles: InputTextTextStyles,
     spacings: InputTextSpacings,
     contentPaddings: PaddingValues,
@@ -176,6 +176,11 @@ fun YappInputTextLarge(
     maxLines: Int = 1,
     minLines: Int = 1,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    shape: Shape = InputTextDefaults.shapeLarge,
+    colors: InputTextColors = InputTextDefaults.colors,
+    textStyles: InputTextTextStyles = InputTextDefaults.textStylesLarge,
+    spacings: InputTextSpacings = InputTextDefaults.spacingsLarge,
+    contentPaddings: PaddingValues = InputTextDefaults.contentPaddingsLarge,
 ) {
     YappInputTextBasic(
         modifier = modifier,
@@ -191,11 +196,11 @@ fun YappInputTextLarge(
         maxLines = maxLines,
         minLines = minLines,
         interactionSource = interactionSource,
-        shape = InputTextDefaults.shapeLarge,
-        colors = InputTextDefaults.colors,
-        textStyles = InputTextDefaults.textStylesLarge,
-        spacings = InputTextDefaults.spacingsLarge,
-        contentPaddings = InputTextDefaults.contentPaddingsLarge,
+        shape = shape,
+        colors = colors,
+        textStyles = textStyles,
+        spacings = spacings,
+        contentPaddings = contentPaddings,
     )
 }
 
@@ -213,6 +218,11 @@ fun YappInputTextLarge(
     maxLines: Int = 1,
     minLines: Int = 1,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    shape: Shape = InputTextDefaults.shapeLarge,
+    colors: InputTextColors = InputTextDefaults.colors,
+    textStyles: InputTextTextStyles = InputTextDefaults.textStylesLarge,
+    spacings: InputTextSpacings = InputTextDefaults.spacingsLarge,
+    contentPaddings: PaddingValues = InputTextDefaults.contentPaddingsLarge,
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
 
@@ -233,11 +243,11 @@ fun YappInputTextLarge(
         maxLines = maxLines,
         minLines = minLines,
         interactionSource = interactionSource,
-        shape = InputTextDefaults.shapeLarge,
-        colors = InputTextDefaults.colors,
-        textStyles = InputTextDefaults.textStylesLarge,
-        spacings = InputTextDefaults.spacingsLarge,
-        contentPaddings = InputTextDefaults.contentPaddingsLarge,
+        shape = shape,
+        colors = colors,
+        textStyles = textStyles,
+        spacings = spacings,
+        contentPaddings = contentPaddings,
         visualTransformation = if (isPasswordVisible) {
             VisualTransformation.None
         } else {
