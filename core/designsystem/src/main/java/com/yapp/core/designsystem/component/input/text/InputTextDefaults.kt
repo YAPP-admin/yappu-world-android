@@ -1,4 +1,4 @@
-package com.yapp.core.designsystem.component.inputtext
+package com.yapp.core.designsystem.component.input.text
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
