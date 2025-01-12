@@ -44,7 +44,7 @@ import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
 
 @Composable
-fun YappInputTextBasic(
+fun YappBasicInputText(
     modifier: Modifier = Modifier,
     label: String? = null,
     value: String,
@@ -182,7 +182,7 @@ fun YappInputTextLarge(
     spacings: InputTextSpacings = InputTextDefaults.spacingsLarge,
     contentPaddings: PaddingValues = InputTextDefaults.contentPaddingsLarge,
 ) {
-    YappInputTextBasic(
+    YappBasicInputText(
         modifier = modifier,
         label = label,
         value = value,
@@ -226,7 +226,7 @@ fun YappInputTextLarge(
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
 
-    YappInputTextBasic(
+    YappBasicInputText(
         modifier = modifier,
         label = label,
         value = password,
