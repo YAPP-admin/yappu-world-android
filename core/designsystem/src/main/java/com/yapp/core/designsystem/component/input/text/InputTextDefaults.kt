@@ -40,17 +40,17 @@ object InputTextDefaults {
     val textStylesLarge
         @Composable
         get() = InputTextTextStyles(
-            labelTextStyle = YappTheme.typography.label1Normal,
-            inputTextTextStyle = YappTheme.typography.body1Normal,
-            descriptionTextStyle = YappTheme.typography.label2,
+            labelTextStyle = YappTheme.typography.label1NormalMedium,
+            inputTextTextStyle = YappTheme.typography.body1NormalRegular,
+            descriptionTextStyle = YappTheme.typography.label2Regular,
         )
 
     val textStylesMedium
         @Composable
         get() = InputTextTextStyles(
-            labelTextStyle = YappTheme.typography.label1Normal,
-            inputTextTextStyle = YappTheme.typography.body2Normal,
-            descriptionTextStyle = YappTheme.typography.label2,
+            labelTextStyle = YappTheme.typography.label1NormalMedium,
+            inputTextTextStyle = YappTheme.typography.body2NormalRegular,
+            descriptionTextStyle = YappTheme.typography.label2Regular,
         )
 
     val spacingsLarge = InputTextSpacings(
