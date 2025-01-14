@@ -39,25 +39,25 @@ object SolidButtonDefaults {
             )
         )
 
-    val textStylesXLarge
+    val textStyleXLarge
         @Composable
-        get() = YappTheme.typography.body1Normal
+        get() = YappTheme.typography.body1NormalBold
 
-    val textStylesLarge
+    val textStyleLarge
         @Composable
-        get() = YappTheme.typography.body1Normal
+        get() = YappTheme.typography.body1NormalBold
 
-    val textStylesMedium
+    val textStyleMedium
         @Composable
-        get() = YappTheme.typography.body2Normal
+        get() = YappTheme.typography.body2NormalBold
 
-    val textStylesSmall
+    val textStyleSmall
         @Composable
-        get() = YappTheme.typography.label2
+        get() = YappTheme.typography.label2Bold
 
-    val textStylesXSmall
+    val textStyleXSmall
         @Composable
-        get() = YappTheme.typography.label2
+        get() = YappTheme.typography.label2Bold
 
     val contentPaddingsXLarge = PaddingValues(vertical = 16.dp, horizontal = 36.dp)
     val contentPaddingsLarge = PaddingValues(vertical = 12.dp, horizontal = 28.dp)

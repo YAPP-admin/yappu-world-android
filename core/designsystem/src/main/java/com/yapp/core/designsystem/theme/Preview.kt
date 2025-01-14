@@ -102,44 +102,80 @@ private fun YappColorPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, widthDp = 800, heightDp = 1000)
 @Composable
 private fun YappTypographyPreview() {
     YappTheme {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-            val typos = YappTheme.typography.let {
-                listOf(
-                    "Display 1" to it.display1,
-                    "Display 2" to it.display2,
-                    "Title 1" to it.title1,
-                    "Title 2" to it.title2,
-                    "Title 3" to it.title3,
-                    "Heading 1" to it.heading1,
-                    "Heading 2" to it.heading2,
-                    "Headline 1" to it.headline1,
-                    "Headline 2" to it.headline2,
-                    "Body 1 Normal" to it.body1Normal,
-                    "Body 1 Reading" to it.body1Reading,
-                    "Body 2 Normal" to it.body2Normal,
-                    "Body 2 Reading" to it.body2Reading,
-                    "Label 1 Normal" to it.label1Normal,
-                    "Label 1 Reading" to it.label1Reading,
-                    "Label 2" to it.label2,
-                    "Caption 1" to it.caption1,
-                    "Caption 2" to it.caption2
-                )
-            }
+        val typos = YappTheme.typography.let {
+            listOf(
+                "Display 1 Bold" to it.display1Bold,
+                "Display 1 Medium" to it.display1Medium,
+                "Display 1 Regular" to it.display1Regular,
+                "Display 2 Bold" to it.display2Bold,
+                "Display 2 Medium" to it.display2Medium,
+                "Display 2 Regular" to it.display2Regular,
+                "Title 1 Bold" to it.title1Bold,
+                "Title 1 Medium" to it.title1Medium,
+                "Title 1 Regular" to it.title1Regular,
+                "Title 2 Bold" to it.title2Bold,
+                "Title 2 Medium" to it.title2Medium,
+                "Title 2 Regular" to it.title2Regular,
+                "Title 3 Bold" to it.title3Bold,
+                "Title 3 Medium" to it.title3Medium,
+                "Title 3 Regular" to it.title3Regular,
+                "Heading 1 Bold" to it.heading1Bold,
+                "Heading 1 Medium" to it.heading1Medium,
+                "Heading 1 Regular" to it.heading1Regular,
+                "Heading 2 Bold" to it.heading2Bold,
+                "Heading 2 Medium" to it.heading2Medium,
+                "Heading 2 Regular" to it.heading2Regular,
+                "Headline 1 Bold" to it.headline1Bold,
+                "Headline 1 Medium" to it.headline1Medium,
+                "Headline 1 Regular" to it.headline1Regular,
+                "Headline 2 Bold" to it.headline2Bold,
+                "Headline 2 Medium" to it.headline2Medium,
+                "Headline 2 Regular" to it.headline2Regular,
+                "Body 1 Normal Bold" to it.body1NormalBold,
+                "Body 1 Normal Medium" to it.body1NormalMedium,
+                "Body 1 Normal Regular" to it.body1NormalRegular,
+                "Body 1 Reading Bold" to it.body1ReadingBold,
+                "Body 1 Reading Medium" to it.body1ReadingMedium,
+                "Body 1 Reading Regular" to it.body1ReadingRegular,
+                "Body 2 Normal Bold" to it.body2NormalBold,
+                "Body 2 Normal Medium" to it.body2NormalMedium,
+                "Body 2 Normal Regular" to it.body2NormalRegular,
+                "Body 2 Reading Bold" to it.body2ReadingBold,
+                "Body 2 Reading Medium" to it.body2ReadingMedium,
+                "Body 2 Reading Regular" to it.body2ReadingRegular,
+                "Label 1 Normal Bold" to it.label1NormalBold,
+                "Label 1 Normal Medium" to it.label1NormalMedium,
+                "Label 1 Normal Regular" to it.label1NormalRegular,
+                "Label 1 Reading Bold" to it.label1ReadingBold,
+                "Label 1 Reading Medium" to it.label1ReadingMedium,
+                "Label 1 Reading Regular" to it.label1ReadingRegular,
+                "Label 2 Bold" to it.label2Bold,
+                "Label 2 Medium" to it.label2Medium,
+                "Label 2 Regular" to it.label2Regular,
+                "Caption 1 Bold" to it.caption1Bold,
+                "Caption 1 Medium" to it.caption1Medium,
+                "Caption 1 Regular" to it.caption1Regular,
+                "Caption 2 Bold" to it.caption2Bold,
+                "Caption 2 Medium" to it.caption2Medium,
+                "Caption 2 Regular" to it.caption2Regular
+            )
+        }
 
-            typos.forEach { (name, textStyle) ->
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(3),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(typos) { (name, textStyle) ->
                 TypographyPreview(
                     name = name,
                     textStyle = textStyle,
                 )
             }
         }
+
     }
 }
