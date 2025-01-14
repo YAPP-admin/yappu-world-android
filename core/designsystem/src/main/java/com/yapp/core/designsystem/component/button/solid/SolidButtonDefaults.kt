@@ -1,4 +1,4 @@
-package com.yapp.core.designsystem.component.button
+package com.yapp.core.designsystem.component.button.solid
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
