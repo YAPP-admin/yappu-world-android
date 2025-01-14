@@ -267,7 +267,7 @@ internal val Typography = YappTypography(
         letterSpacing = TextUnit(0.0096f, TextUnitType.Em),
     ),
     label1NormalBold = pretendardStyle.copy(
-        fontWeight = FontWeight(700),
+        fontWeight = FontWeight(600),
         fontSize = 14.sp,
         lineHeight = 20.sp,
         letterSpacing = TextUnit(0.0145f, TextUnitType.Em),
