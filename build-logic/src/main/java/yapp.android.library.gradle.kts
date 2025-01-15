@@ -1,4 +1,3 @@
-import com.yapp.configureHiltAndroid
 import com.yapp.configureKotlinAndroid
 
 plugins {
@@ -6,4 +5,3 @@ plugins {
 }
 
 configureKotlinAndroid()
-configureHiltAndroid()
