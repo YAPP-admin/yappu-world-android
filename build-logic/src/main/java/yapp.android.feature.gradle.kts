@@ -1,3 +1,5 @@
+import com.yapp.configureHiltAndroid
+
 plugins {
     id("yapp.android.library")
     id("yapp.android.compose")
@@ -10,6 +12,8 @@ android {
         }
     }
 }
+
+configureHiltAndroid()
 
 dependencies {
     implementation(project(":core:ui"))
