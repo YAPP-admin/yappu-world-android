@@ -66,6 +66,9 @@ private const val CLICK_EVENT_DELAY_TIME: Long = 300L
 internal interface MultipleEventsCutter {
     fun processEvent(event: () -> Unit)
 
+    /**
+     * 팩토리 메서드를 통한 인스턴스 생성을 위한 Companion 객체
+     */
     companion object
 }
 
