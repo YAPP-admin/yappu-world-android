@@ -16,6 +16,7 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 
 hilt = "2.51.1"
+ksp = "2.0.0-1.0.22"
 
 
 [libraries]
@@ -52,4 +53,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
-
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
