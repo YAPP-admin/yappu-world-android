@@ -1,6 +1,5 @@
 package com.yapp
 
-import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
 
@@ -18,10 +17,3 @@ internal fun Project.configureHiltAndroid() {
     }
 }
 
-internal class HiltAndroidPlugin : Plugin<Project> {
-    override fun apply(target: Project) {
-        with(target) {
-            configureHiltAndroid()
-        }
-    }
-}
