@@ -21,6 +21,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -59,13 +60,15 @@ fun YappBasicInputText(
     singleLine: Boolean = false,
     maxLines: Int = 1,
     minLines: Int = 1,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
     shape: Shape,
     colors: InputTextColors,
     textStyles: InputTextTextStyles,
     spacings: InputTextSpacings,
     contentPaddings: PaddingValues,
 ) {
+    @Suppress("NAME_SHADOWING")
+    val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
     val focused = interactionSource.collectIsFocusedAsState().value
 
     val labelColor = colors.labelColor
@@ -175,13 +178,16 @@ fun YappInputTextLarge(
     singleLine: Boolean = false,
     maxLines: Int = 1,
     minLines: Int = 1,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
     shape: Shape = InputTextDefaults.shapeLarge,
     colors: InputTextColors = InputTextDefaults.colors,
     textStyles: InputTextTextStyles = InputTextDefaults.textStylesLarge,
     spacings: InputTextSpacings = InputTextDefaults.spacingsLarge,
     contentPaddings: PaddingValues = InputTextDefaults.contentPaddingsLarge,
 ) {
+    @Suppress("NAME_SHADOWING")
+    val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
+
     YappBasicInputText(
         modifier = modifier,
         label = label,
@@ -217,13 +223,16 @@ fun YappInputTextLarge(
     singleLine: Boolean = false,
     maxLines: Int = 1,
     minLines: Int = 1,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: MutableInteractionSource? = null,
     shape: Shape = InputTextDefaults.shapeLarge,
     colors: InputTextColors = InputTextDefaults.colors,
     textStyles: InputTextTextStyles = InputTextDefaults.textStylesLarge,
     spacings: InputTextSpacings = InputTextDefaults.spacingsLarge,
     contentPaddings: PaddingValues = InputTextDefaults.contentPaddingsLarge,
 ) {
+    @Suppress("NAME_SHADOWING")
+    val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
+
     var isPasswordVisible by remember { mutableStateOf(false) }
 
     YappBasicInputText(
