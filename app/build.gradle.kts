@@ -14,4 +14,5 @@ dependencies {
     implementation(project(":feature:signup"))
     implementation(project(":feature:login"))
 
+    implementation(libs.androidx.activity.compose)
 }
