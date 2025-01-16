@@ -1,3 +1,4 @@
+import com.yapp.configureCompose
 import com.yapp.configureHiltAndroid
 import com.yapp.configureKotlinAndroid
 
@@ -6,4 +7,5 @@ plugins {
 }
 
 configureKotlinAndroid()
+configureCompose()
 configureHiltAndroid()
