@@ -43,7 +43,7 @@ fun YappNestedCheckboxBasic(
             modifier = Modifier.size(iconSize),
             painter = painterResource(R.drawable.icon_check),
             tint = iconColor,
-            contentDescription = "체크 아이콘"
+            contentDescription = if (checked) "선택됨" else "선택되지 않음"
         )
 
         Spacer(Modifier.width(iconRightSpacing))
