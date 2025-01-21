@@ -13,6 +13,9 @@ dependencies {
     implementation(project(":feature:notice"))
     implementation(project(":feature:signup"))
     implementation(project(":feature:login"))
+    implementation(project(":core:designsystem"))
 
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.navigation.compose)
 }

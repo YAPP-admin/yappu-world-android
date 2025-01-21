@@ -3,6 +3,7 @@ package com.yapp
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.provideDelegate
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -16,7 +17,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
  */
 internal fun Project.configureKotlinAndroid() {
     // Plugins
-    pluginManager.apply("org.jetbrains.kotlin.android")
+    with(pluginManager) {
+        apply("org.jetbrains.kotlin.android")
+        apply("org.jetbrains.kotlin.plugin.serialization")
+    }
 
     // Android settings
     androidExtension.apply {
@@ -44,6 +48,10 @@ internal fun Project.configureKotlinAndroid() {
 
     }
     configureKotlinCommon(jvmTarget = JvmTarget.JVM_17)
+    val libs = extensions.libs
+    dependencies {
+        "implementation"(libs.findLibrary("kotlinx.serialization.json").get())
+    }
 }
 
 
