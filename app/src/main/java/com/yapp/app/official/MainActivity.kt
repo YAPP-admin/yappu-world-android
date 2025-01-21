@@ -4,7 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.yapp.feature.home.HomeScreen
+import com.yapp.app.official.ui.YappApp
+import com.yapp.app.official.ui.rememberNavigator
+import com.yapp.core.designsystem.theme.YappTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -14,7 +16,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            HomeScreen()
+            val navigator = rememberNavigator()
+            YappTheme{
+                YappApp(navigator)
+            }
         }
     }
 }
