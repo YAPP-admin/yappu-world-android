@@ -17,5 +17,4 @@ dependencies {
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.runtime.ktx)
-    implementation(libs.navigation.compose)
 }
