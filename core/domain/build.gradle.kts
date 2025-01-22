@@ -13,4 +13,5 @@ dependencies {
     implementation(project(":core:data-api"))
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.hilt.core)
 }
