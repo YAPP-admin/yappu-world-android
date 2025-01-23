@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_title">당신의 작은 아이디어가\n세상을 바꿉니다.</string>
+    <string name="login_title_email">이메일</string>
+    <string name="login_title_pw">비밀번호</string>
+    <string name="login_placeholder_pw">••••••••</string>
+    <string name="login_placeholder_email">YAPP@email.com</string>
+    <string name="login_btn">로그인</string>
+    <string name="login_title_signup">아직 회원이 아니신가요?</string>
+    <string name="login_btn_signup">회원가입</string>
+</resources>
