@@ -21,7 +21,7 @@ fun YappNavHost(
         modifier = modifier,
     ) {
         loginNavGraph(
-            onSignUpClick = { navigator.navigateSignUpScreen() }
+            signupDestination = { navigator.navigateSignUpScreen() }
         )
         signupNavGraph()
         homeNavGraph()

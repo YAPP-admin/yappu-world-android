@@ -4,7 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.yapp.feature.login.LoginScreen
+import com.yapp.feature.login.LoginRouteScreen
 import kotlinx.serialization.Serializable
 
 @Serializable data object LoginRoute
@@ -12,9 +12,9 @@ import kotlinx.serialization.Serializable
 fun NavController.navigateToLogin(navOptions: NavOptions? = null) { navigate(LoginRoute, navOptions) }
 
 fun NavGraphBuilder.loginNavGraph(
-    onSignUpClick: NavGraphBuilder.() -> Unit,
+    signupDestination: (String) -> Unit,
 ){
     composable<LoginRoute> {
-        LoginScreen()
+        LoginRouteScreen(signupDestination)
     }
 }
