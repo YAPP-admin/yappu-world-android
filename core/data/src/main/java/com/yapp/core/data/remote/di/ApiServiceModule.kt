@@ -14,7 +14,7 @@ object ApiServiceModule {
 
     @Singleton
     @Provides
-    fun provideAuthService(retrofit: Retrofit): UnAuthorizedUserApi {
+    fun provideUnAuthorizedUserApi(retrofit: Retrofit): UnAuthorizedUserApi {
         return retrofit.create(UnAuthorizedUserApi::class.java)
     }
 }

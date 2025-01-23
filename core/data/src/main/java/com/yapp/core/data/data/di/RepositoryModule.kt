@@ -12,7 +12,7 @@ import dagger.hilt.components.SingletonComponent
 internal abstract class RepositoryModule {
 
     @Binds
-    abstract fun bindTokenRepository(
-        tokenRepositoryImpl: UnAuthorizedUserRepositoryImpl,
+    abstract fun bindUnAuthorizedUserRepositoryImpl(
+        unAuthorizedUserRepositoryImpl: UnAuthorizedUserRepositoryImpl,
     ): UnAuthorizedUserRepository
 }
