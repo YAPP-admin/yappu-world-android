@@ -13,6 +13,7 @@ internal fun Project.configureHiltAndroid() {
     val libs = extensions.libs
     dependencies {
         "implementation"(libs.findLibrary("hilt.android").get())
+        "implementation"(libs.findLibrary("hilt.navigation.compose").get())
         "ksp"(libs.findLibrary("hilt.compiler").get())
         "kspTest"(libs.findLibrary("hilt.compiler").get())
     }

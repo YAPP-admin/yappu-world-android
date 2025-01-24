@@ -17,8 +17,10 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 
 hilt = "2.51.1"
+hiltNavigationCompose = "1.2.0"
 ksp = "2.0.0-1.0.22"
 navigationCompose = "2.8.5"
+
 
 
 [libraries]
@@ -50,6 +52,7 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hilt-navigation-compose = {group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose"}
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationCompose" }
 
 [plugins]
