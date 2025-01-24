@@ -12,9 +12,9 @@ import kotlinx.serialization.Serializable
 fun NavController.navigateToLogin(navOptions: NavOptions? = null) { navigate(LoginRoute, navOptions) }
 
 fun NavGraphBuilder.loginNavGraph(
-    signupDestination: (String) -> Unit,
+    onClickSignUp: (String) -> Unit,
 ){
     composable<LoginRoute> {
-        LoginRouteScreen(signupDestination)
+        LoginRouteScreen(onClickSignUp)
     }
 }
