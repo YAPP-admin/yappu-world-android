@@ -8,4 +8,5 @@
     <string name="login_btn">로그인</string>
     <string name="login_title_signup">아직 회원이 아니신가요?</string>
     <string name="login_btn_signup">회원가입</string>
+    <string name="login_divider">또는</string>
 </resources>
