@@ -8,12 +8,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 
 /**
  * Composable 에 clickable 을 설정해주는 [Modifier]
  *
  * @param rippleEnabled Ripple 여부 설정
  * @param rippleColor 표시된 Ripple Color
+ * @param rippleBounded Ripple 영역 초과 설정
+ * @param rippleRadius Ripple 영역
  * @param runIf clickable 이 발생하는 조건
  * @param singleClick 더블 클릭 방지 여부
  * @param onClick 컴포넌트가 클릭됐을 때 실행할 람다식
@@ -24,6 +27,8 @@ import androidx.compose.ui.graphics.Color
 fun Modifier.yappClickable(
     rippleEnabled: Boolean = true,
     rippleColor: Color? = null,
+    rippleBounded: Boolean = true,
+    rippleRadius: Dp = Dp.Unspecified,
     runIf: Boolean = true,
     singleClick: Boolean = true,
     onLongClick: (() -> Unit)? = null,
@@ -47,6 +52,8 @@ fun Modifier.yappClickable(
                 },
                 onLongClick = onLongClick,
                 indication = ripple(
+                    bounded = rippleBounded,
+                    radius = rippleRadius,
                     color = rippleColor ?: Color.Unspecified,
                 ).takeIf { rippleEnabled },
                 interactionSource = remember { MutableInteractionSource() },
