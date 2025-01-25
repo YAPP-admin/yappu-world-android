@@ -11,5 +11,6 @@ android {
 
 dependencies {
     implementation(project(":core:model"))
+    implementation(project(":core:designsystem"))
     implementation(libs.androidx.appcompat)
 }
