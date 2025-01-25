@@ -32,7 +32,8 @@ fun SignUpScreen(
             YappHeaderActionbar(
                 title = stringResource(R.string.signup_screen_title),
                 leftIcon = com.yapp.core.designsystem.R.drawable.icon_chevron_left,
-                onClickLeftIcon = {}
+                onClickLeftIcon = {},
+                contentDescription = stringResource(R.string.signup_screen_header_icon_descrption)
             )
 
             Spacer(Modifier.height(16.dp))
