@@ -1,5 +1,6 @@
 package com.yapp.core.designsystem.component.header
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,8 +17,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
 
 @Composable
@@ -52,6 +55,31 @@ fun YappHeaderActionbar(
             rightAction?.invoke(this)
         }
     }
+}
+
+@Composable
+fun YappHeaderActionbar(
+    modifier: Modifier = Modifier,
+    @DrawableRes leftIcon: Int,
+    contentDescription: String? = null,
+    onClickLeftIcon: () -> Unit,
+    title: String,
+) {
+    YappHeaderActionbar(
+        modifier = modifier,
+        title = title,
+        leftIcon = {
+            Icon(
+                painter = painterResource(id = leftIcon),
+                contentDescription = contentDescription,
+                modifier = Modifier.yappClickable(
+                    rippleBounded = false,
+                    rippleRadius = 24.dp,
+                    onClick = onClickLeftIcon,
+                )
+            )
+        }
+    )
 }
 
 @Composable
