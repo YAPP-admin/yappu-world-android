@@ -64,7 +64,7 @@ fun YappSolidPrimaryButtonXLarge(
     colors: SolidButtonColors = SolidButtonDefaults.colorsPrimary,
     contentPaddings: PaddingValues = SolidButtonDefaults.contentPaddingsXLarge,
     text: String,
-    enable: Boolean,
+    enable: Boolean = true,
     onClick: () -> Unit,
 ) {
     YappSolidButtonBasic(
@@ -87,7 +87,7 @@ fun YappSolidPrimaryButtonLarge(
     colors: SolidButtonColors = SolidButtonDefaults.colorsPrimary,
     contentPaddings: PaddingValues = SolidButtonDefaults.contentPaddingsLarge,
     text: String,
-    enable: Boolean,
+    enable: Boolean = true,
     onClick: () -> Unit,
 ) {
     YappSolidButtonBasic(
@@ -104,7 +104,7 @@ fun YappSolidPrimaryButtonLarge(
 
 @Preview
 @Composable
-fun YappSolidPrimaryButtonXLargePreview() {
+private fun YappSolidPrimaryButtonXLargePreview() {
     YappTheme {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             YappSolidPrimaryButtonXLarge(
@@ -123,7 +123,7 @@ fun YappSolidPrimaryButtonXLargePreview() {
 
 @Preview
 @Composable
-fun YappSolidPrimaryButtonLargePreview() {
+private fun YappSolidPrimaryButtonLargePreview() {
     YappTheme {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             YappSolidPrimaryButtonLarge(
