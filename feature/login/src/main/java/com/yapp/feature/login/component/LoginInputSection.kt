@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.component.button.solid.YappSolidPrimaryButtonXLarge
 import com.yapp.core.designsystem.component.input.text.YappInputTextLarge
 import com.yapp.core.designsystem.theme.YappTheme
+import com.yapp.core.ui.component.PasswordInputTextLarge
 import com.yapp.feature.login.R
 
 @Composable
@@ -29,7 +30,7 @@ fun LoginInputSection(
         placeholder = stringResource(R.string.login_placeholder_email),
     )
     Spacer(Modifier.height(16.dp))
-    YappInputTextLarge(
+    PasswordInputTextLarge(
         label = stringResource(R.string.login_title_pw),
         password = pw,
         onPasswordChange = onPWChange,

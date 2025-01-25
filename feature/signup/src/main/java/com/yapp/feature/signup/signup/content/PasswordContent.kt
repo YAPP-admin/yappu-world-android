@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yapp.core.designsystem.component.input.text.YappInputTextLarge
 import com.yapp.core.designsystem.theme.YappTheme
+import com.yapp.core.ui.component.PasswordInputTextLarge
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.feature.signup.R
 
@@ -46,7 +46,7 @@ fun PasswordContent() {
 
         Spacer(Modifier.height(40.dp))
 
-        YappInputTextLarge(
+        PasswordInputTextLarge(
             label = stringResource(R.string.signup_screen_password_input_text_label),
             placeholder = stringResource(R.string.signup_screen_password_input_text_placeholder),
             password = "",
@@ -55,7 +55,7 @@ fun PasswordContent() {
 
         Spacer(Modifier.height(24.dp))
 
-        YappInputTextLarge(
+        PasswordInputTextLarge(
             label = stringResource(R.string.signup_screen_password_confirm_input_text_label),
             placeholder = stringResource(R.string.signup_screen_password_confirm_input_text_placeholder),
             password = "",

@@ -21,7 +21,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -210,82 +209,6 @@ fun YappInputTextLarge(
     )
 }
 
-@Composable
-fun YappInputTextLarge(
-    modifier: Modifier = Modifier,
-    label: String? = null,
-    password: String,
-    onPasswordChange: (String) -> Unit,
-    placeholder: String = "",
-    description: String? = null,
-    isError: Boolean = false,
-    keyboardActions: KeyboardActions = KeyboardActions.Default,
-    singleLine: Boolean = false,
-    maxLines: Int = 1,
-    minLines: Int = 1,
-    interactionSource: MutableInteractionSource? = null,
-    shape: Shape = InputTextDefaults.shapeLarge,
-    colors: InputTextColors = InputTextDefaults.colors,
-    textStyles: InputTextTextStyles = InputTextDefaults.textStylesLarge,
-    spacings: InputTextSpacings = InputTextDefaults.spacingsLarge,
-    contentPaddings: PaddingValues = InputTextDefaults.contentPaddingsLarge,
-) {
-    @Suppress("NAME_SHADOWING")
-    val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
-
-    var isPasswordVisible by remember { mutableStateOf(false) }
-
-    YappBasicInputText(
-        modifier = modifier,
-        label = label,
-        value = password,
-        onValueChange = onPasswordChange,
-        placeholder = placeholder,
-        description = description,
-        isError = isError,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password,
-            imeAction = ImeAction.Done
-        ),
-        keyboardActions = keyboardActions,
-        singleLine = singleLine,
-        maxLines = maxLines,
-        minLines = minLines,
-        interactionSource = interactionSource,
-        shape = shape,
-        colors = colors,
-        textStyles = textStyles,
-        spacings = spacings,
-        contentPaddings = contentPaddings,
-        visualTransformation = if (isPasswordVisible) {
-            VisualTransformation.None
-        } else {
-            PasswordVisualTransformation()
-        },
-        rightIcon = {
-            Icon(
-                modifier = Modifier
-                    .size(InputTextDefaults.rightIconSizeLarge)
-                    .clip(CircleShape)
-                    .yappClickable { isPasswordVisible = !isPasswordVisible },
-                painter = painterResource(
-                    if (isPasswordVisible) {
-                        R.drawable.icon_eye
-                    } else {
-                        R.drawable.icon_eye_slash
-                    }
-                ),
-                tint = if (isPasswordVisible) {
-                    YappTheme.colorScheme.labelAlternative
-                } else {
-                    YappTheme.colorScheme.labelAssistive
-                },
-                contentDescription = "비밀번호 ${if (isPasswordVisible) "숨김" else "가리기"} 버튼"
-            )
-        },
-    )
-}
-
 @Preview(showBackground = true)
 @Composable
 private fun YappInputTextLargePreview() {
@@ -311,36 +234,6 @@ private fun YappInputTextLargePreview() {
                 placeholder = "Placeholder",
                 isError = true,
                 description = "Description"
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun YappInputTextLargePasswordPreview() {
-    YappTheme {
-        Column {
-            var defaultInputValue by remember { mutableStateOf("test1234") }
-            var errorInputText by remember { mutableStateOf("test1234") }
-
-            YappInputTextLarge(
-                label = "Label",
-                password = defaultInputValue,
-                onPasswordChange = { defaultInputValue = it },
-                placeholder = "Placeholder",
-                description = "Description",
-            )
-
-            Spacer(Modifier.height(10.dp))
-
-            YappInputTextLarge(
-                label = "Label",
-                password = errorInputText,
-                onPasswordChange = { errorInputText = it },
-                placeholder = "Placeholder",
-                isError = true,
-                description = "Description",
             )
         }
     }
