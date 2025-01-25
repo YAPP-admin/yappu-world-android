@@ -2,14 +2,24 @@
 <resources>
     <string name="signup_screen_title">회원가입</string>
     <string name="signup_screen_button_next">다음</string>
-    <string name="signup_screen_step_2">STEP 2</string>
-    <string name="signup_screen_email_title">아이디로 사용할\n이메일 정보를 알려주세요.</string>
-    <string name="signup_screen_email_input_text_label">이메일</string>
-    <string name="signup_screen_email_input_placeholder">YAPP@email.com</string>
+
     <string name="signup_screen_step_1">STEP 1</string>
     <string name="signup_screen_name_title">만나서 반가워요 :)\n이름이 어떻게 되세요?</string>
     <string name="signup_screen_name_description">출석 확인을 위해 실명으로 입력해주세요.</string>
     <string name="signup_screen_name_input_text_label">이름</string>
     <string name="signup_screen_name_input_text_placeholder">홍길동</string>
     <string name="signup_screen_header_icon_descrption">뒤로가기 버튼</string>
+
+    <string name="signup_screen_step_2">STEP 2</string>
+    <string name="signup_screen_email_title">아이디로 사용할\n이메일 정보를 알려주세요.</string>
+    <string name="signup_screen_email_input_text_label">이메일</string>
+    <string name="signup_screen_email_input_placeholder">YAPP@email.com</string>
+
+    <string name="signup_screen_step_3">STEP 3</string>
+    <string name="signup_screen_password_title">비밀번호를 설정할게요.</string>
+    <string name="signup_screen_password_description">영문+숫자+특수문자를 사용해, 8~20자 이내로 설정해주세요.</string>
+    <string name="signup_screen_password_input_text_label">비밀번호</string>
+    <string name="signup_screen_password_input_text_placeholder">••••••••</string>
+    <string name="signup_screen_password_confirm_input_text_label">비밀번호 확인</string>
+    <string name="signup_screen_password_confirm_input_text_placeholder">••••••••</string>
 </resources>
