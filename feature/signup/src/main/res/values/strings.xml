@@ -11,4 +11,5 @@
     <string name="signup_screen_name_description">출석 확인을 위해 실명으로 입력해주세요.</string>
     <string name="signup_screen_name_input_text_label">이름</string>
     <string name="signup_screen_name_input_text_placeholder">홍길동</string>
+    <string name="signup_screen_header_icon_descrption">뒤로가기 버튼</string>
 </resources>
