@@ -1,7 +1,5 @@
 package com.yapp.core.designsystem.component.header
 
-import android.graphics.drawable.Icon
-import android.provider.MediaStore.Images
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.theme.YappTheme
 
 @Composable
-fun HeaderActionbar(
+fun YappHeaderActionbar(
     modifier: Modifier = Modifier,
     leftIcon: @Composable (() -> Unit)? = null,
     rightAction: @Composable (RowScope.() -> Unit)? = null,
@@ -93,7 +91,7 @@ fun HeaderActionbarExpanded(
 @Composable
 private fun HeaderActionbarPreview() {
     YappTheme {
-        HeaderActionbar(
+        YappHeaderActionbar(
             leftIcon = {
                 Icon(
                     imageVector = Icons.Default.Close,
