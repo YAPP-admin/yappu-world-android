@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
@@ -28,8 +29,12 @@ fun YappTextAssistiveButtonMedium(
     textStyle: TextStyle = TextButtonDefaults.textStyleMedium,
     colors: TextButtonColors = TextButtonDefaults.colorsAssistive,
     contentPaddings: PaddingValues = TextButtonDefaults.contentPaddingsMedium,
+    leftIcon: (@Composable () -> Unit)? = null,
+    leftIconSpacing: Dp = TextButtonDefaults.iconLeftSpacingMedium,
+    rightIcon: (@Composable () -> Unit)? = null,
+    rightIconSpacing: Dp = TextButtonDefaults.iconRightSpacingMedium,
     text: String,
-    enable: Boolean,
+    enable: Boolean = true,
     onClick: () -> Unit,
 ) {
     YappTextButtonBasic(
@@ -39,6 +44,10 @@ fun YappTextAssistiveButtonMedium(
         textStyle = textStyle,
         colors = colors,
         contentPaddings = contentPaddings,
+        leftIcon = leftIcon,
+        leftIconSpacing = leftIconSpacing,
+        rightIcon = rightIcon,
+        rightIconSpacing = rightIconSpacing,
         enable = enable,
         onClick = onClick
     )
@@ -51,8 +60,12 @@ fun YappTextAssistiveButtonSmall(
     textStyle: TextStyle = TextButtonDefaults.textStyleSmall,
     colors: TextButtonColors = TextButtonDefaults.colorsAssistive,
     contentPaddings: PaddingValues = TextButtonDefaults.contentPaddingsSmall,
+    leftIcon: (@Composable () -> Unit)? = null,
+    leftIconSpacing: Dp = TextButtonDefaults.iconLeftSpacingSmall,
+    rightIcon: (@Composable () -> Unit)? = null,
+    rightIconSpacing: Dp = TextButtonDefaults.iconRightSpacingSmall,
     text: String,
-    enable: Boolean,
+    enable: Boolean = true,
     onClick: () -> Unit,
 ) {
     YappTextButtonBasic(
@@ -62,6 +75,10 @@ fun YappTextAssistiveButtonSmall(
         textStyle = textStyle,
         colors = colors,
         contentPaddings = contentPaddings,
+        leftIcon = leftIcon,
+        leftIconSpacing = leftIconSpacing,
+        rightIcon = rightIcon,
+        rightIconSpacing = rightIconSpacing,
         enable = enable,
         onClick = onClick
     )
@@ -69,7 +86,7 @@ fun YappTextAssistiveButtonSmall(
 
 @Preview(showBackground = true)
 @Composable
-fun YappTextAssistiveButtonMediumPreview() {
+private fun YappTextAssistiveButtonMediumPreview() {
     YappTheme {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             YappTextAssistiveButtonMedium(
@@ -88,7 +105,7 @@ fun YappTextAssistiveButtonMediumPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun YappTextAssistiveButtonSmallPreview() {
+private fun YappTextAssistiveButtonSmallPreview() {
     YappTheme {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             YappTextAssistiveButtonSmall(
