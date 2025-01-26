@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.theme.YappTheme
 
@@ -61,6 +62,12 @@ object TextButtonDefaults {
 
     val contentPaddingsMedium = PaddingValues(vertical = 4.dp)
     val contentPaddingsSmall = PaddingValues(vertical = 4.dp)
+
+    val iconRightSpacingMedium = Dp.Unspecified
+    val iconRightSpacingSmall = 4.dp
+
+    val iconLeftSpacingMedium = Dp.Unspecified
+    val iconLeftSpacingSmall = 4.dp
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
