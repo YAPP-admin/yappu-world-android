@@ -60,24 +60,26 @@ fun YappHeaderActionbar(
 @Composable
 fun YappHeaderActionbar(
     modifier: Modifier = Modifier,
-    @DrawableRes leftIcon: Int,
+    @DrawableRes leftIcon: Int?,
     contentDescription: String? = null,
-    onClickLeftIcon: () -> Unit,
+    onClickLeftIcon: (() -> Unit)? = null,
     title: String,
 ) {
     YappHeaderActionbar(
         modifier = modifier,
         title = title,
         leftIcon = {
-            Icon(
-                painter = painterResource(id = leftIcon),
-                contentDescription = contentDescription,
-                modifier = Modifier.yappClickable(
-                    rippleBounded = false,
-                    rippleRadius = 24.dp,
-                    onClick = onClickLeftIcon,
+            if (leftIcon != null) {
+                Icon(
+                    painter = painterResource(id = leftIcon),
+                    contentDescription = contentDescription,
+                    modifier = Modifier.yappClickable(
+                        rippleBounded = false,
+                        rippleRadius = 24.dp,
+                        onClick = onClickLeftIcon,
+                    )
                 )
-            )
+            }
         }
     )
 }
