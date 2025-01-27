@@ -31,7 +31,6 @@ import com.yapp.core.ui.extension.yappDefaultAnimatedContentTransitionSpec
 import com.yapp.core.ui.util.keyboardAsState
 import com.yapp.feature.signup.R
 import com.yapp.feature.signup.signup.page.CompleteContent
-import com.yapp.feature.signup.signup.page.email.EmailContent
 import com.yapp.feature.signup.signup.page.PasswordContent
 import com.yapp.feature.signup.signup.page.PendingContent
 import com.yapp.feature.signup.signup.page.PositionContent
@@ -84,10 +83,10 @@ fun SignUpScreen(
             ) { targetState ->
                 when (targetState) {
                     SignUpStep.Name -> NamePage(
-                        onChangeName = { onIntent(SignUpIntent.UpdateName(it)) }
+                        onNameChanged = { onIntent(SignUpIntent.NameChanged(it)) }
                     )
                     SignUpStep.Email -> EmailPage(
-                        onChangeEmail = { onIntent(SignUpIntent.UpdateEmail(it)) }
+                        onEmailChanged = { onIntent(SignUpIntent.EmailChanged(it)) }
                     )
                     SignUpStep.Password -> PasswordContent()
                     SignUpStep.Position -> PositionContent()

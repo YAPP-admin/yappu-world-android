@@ -9,5 +9,5 @@ sealed interface EmailIntent {
 }
 
 sealed interface EmailSideEffect {
-    data class ChangeEmail(val email: String) : EmailSideEffect
+    data class EmailChanged(val email: String) : EmailSideEffect
 }

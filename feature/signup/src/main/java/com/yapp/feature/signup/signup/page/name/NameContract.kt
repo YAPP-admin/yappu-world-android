@@ -9,5 +9,5 @@ sealed interface NameIntent {
 }
 
 sealed interface NameSideEffect {
-    data class ChangeName(val name: String) : NameSideEffect
+    data class NameChanged(val name: String) : NameSideEffect
 }

@@ -9,8 +9,8 @@ sealed interface SignUpIntent {
     data object ClickPrimaryButton : SignUpIntent
     data object ClickBackButton : SignUpIntent
     data object BackPressed : SignUpIntent
-    data class UpdateName(val name: String) : SignUpIntent
-    data class UpdateEmail(val email: String) : SignUpIntent
+    data class NameChanged(val name: String) : SignUpIntent
+    data class EmailChanged(val email: String) : SignUpIntent
 }
 
 enum class SignUpStep {
