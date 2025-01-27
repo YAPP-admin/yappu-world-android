@@ -16,9 +16,12 @@ import com.yapp.core.designsystem.component.header.YappHeaderActionbar
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.feature.signup.R
+import com.yapp.feature.signup.signup.content.CompleteContent
 import com.yapp.feature.signup.signup.content.EmailContent
 import com.yapp.feature.signup.signup.content.NameContent
 import com.yapp.feature.signup.signup.content.PasswordContent
+import com.yapp.feature.signup.signup.content.PendingContent
+import com.yapp.feature.signup.signup.content.PositionContent
 
 @Composable
 fun SignUpRoute() {
@@ -48,8 +51,9 @@ fun SignUpScreen(
                     SignUpStep.Name -> NameContent()
                     SignUpStep.Email -> EmailContent()
                     SignUpStep.Password -> PasswordContent()
-                    SignUpStep.Position -> Unit
-                    SignUpStep.Complete -> Unit
+                    SignUpStep.Position -> PositionContent()
+                    SignUpStep.Complete -> CompleteContent()
+                    SignUpStep.Pending -> PendingContent()
                 }
             }
 
