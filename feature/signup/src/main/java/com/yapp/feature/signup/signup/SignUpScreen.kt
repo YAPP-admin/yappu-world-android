@@ -1,5 +1,6 @@
 package com.yapp.feature.signup.signup
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -30,10 +31,11 @@ import com.yapp.core.ui.extension.yappDefaultAnimatedContentTransitionSpec
 import com.yapp.core.ui.util.keyboardAsState
 import com.yapp.feature.signup.R
 import com.yapp.feature.signup.signup.page.CompleteContent
-import com.yapp.feature.signup.signup.page.EmailContent
+import com.yapp.feature.signup.signup.page.email.EmailContent
 import com.yapp.feature.signup.signup.page.PasswordContent
 import com.yapp.feature.signup.signup.page.PendingContent
 import com.yapp.feature.signup.signup.page.PositionContent
+import com.yapp.feature.signup.signup.page.email.EmailPage
 import com.yapp.feature.signup.signup.page.name.NamePage
 
 @Composable
@@ -53,6 +55,10 @@ fun SignUpScreen(
     uiState: SignUpState = SignUpState(),
     onIntent: (SignUpIntent) -> Unit = {},
 ) {
+    BackHandler {
+        onIntent(SignUpIntent.BackPressed)
+    }
+
     YappBackground {
         Column(modifier = Modifier.fillMaxSize()) {
             YappHeaderActionbar(
@@ -80,7 +86,9 @@ fun SignUpScreen(
                     SignUpStep.Name -> NamePage(
                         onChangeName = { onIntent(SignUpIntent.UpdateName(it)) }
                     )
-                    SignUpStep.Email -> EmailContent()
+                    SignUpStep.Email -> EmailPage(
+                        onChangeEmail = { onIntent(SignUpIntent.UpdateEmail(it)) }
+                    )
                     SignUpStep.Password -> PasswordContent()
                     SignUpStep.Position -> PositionContent()
                     SignUpStep.Complete -> CompleteContent()
