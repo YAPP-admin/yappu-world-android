@@ -22,4 +22,17 @@
     <string name="signup_screen_password_input_text_placeholder">••••••••</string>
     <string name="signup_screen_password_confirm_input_text_label">비밀번호 확인</string>
     <string name="signup_screen_password_confirm_input_text_placeholder">••••••••</string>
+    <string name="signup_screen_step_4">STEP 4</string>
+    <string name="signup_screen_position_title">%s님!\n어떤 역할로 활동중이신가요?</string>
+    <string name="signup_screen_position_description">YAPP에서 활동중인 기수와 직군 정보를 알려주세요.\n이전 활동 내역이 있다면 함께 추가 할수 있어요.</string>
+    <string name="signup_screen_position_generation_input_text_label">기수</string>
+    <string name="signup_screen_position_generation_input_text_placeholder">25</string>
+    <string name="signup_screen_position_position_input_text_label">직군</string>
+    <string name="signup_screen_position_position_input_text_placeholder">선택해주세요</string>
+    <string name="signup_screen_add_previous_generation_button">이전 활동 기수 추가하기</string>
+    <string name="signup_code_bottom_dialog_title">잠깐! 가입 코드가 있다면, 입력해주세요.</string>
+    <string name="signup_code_bottom_dialog_input_text_label">가입코드</string>
+    <string name="signup_code_bottom_dialog_input_text_placeholder">입력해주세요</string>
+    <string name="signup_code_bottom_dialog_complete_button">입력 완료</string>
+    <string name="signup_code_bottom_dialog_no_code_button">코드가 없어요</string>
 </resources>
