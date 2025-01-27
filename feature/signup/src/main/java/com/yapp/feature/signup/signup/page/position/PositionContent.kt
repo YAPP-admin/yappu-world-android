@@ -1,4 +1,4 @@
-package com.yapp.feature.signup.signup.page
+package com.yapp.feature.signup.signup.page.position
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

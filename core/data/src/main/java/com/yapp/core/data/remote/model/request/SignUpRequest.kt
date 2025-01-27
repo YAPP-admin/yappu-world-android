@@ -1,6 +1,5 @@
 package com.yapp.core.data.remote.model.request
 
-import com.yapp.model.ActivityUnitModel
 import com.yapp.model.SignUpInfo
 import kotlinx.serialization.Serializable
 
@@ -27,7 +26,7 @@ fun SignUpInfo.toData() = SignUpRequest(
     signUpCode = signUpCode
 )
 
-fun ActivityUnitModel.toData() = ActivityUnit(
+fun com.yapp.model.ActivityUnit.toData() = ActivityUnit(
     generation = generation,
     position = position,
 )
