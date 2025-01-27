@@ -31,11 +31,12 @@ import com.yapp.core.ui.extension.yappDefaultAnimatedContentTransitionSpec
 import com.yapp.core.ui.util.keyboardAsState
 import com.yapp.feature.signup.R
 import com.yapp.feature.signup.signup.page.CompleteContent
-import com.yapp.feature.signup.signup.page.PasswordContent
+import com.yapp.feature.signup.signup.page.password.PasswordContent
 import com.yapp.feature.signup.signup.page.PendingContent
 import com.yapp.feature.signup.signup.page.PositionContent
 import com.yapp.feature.signup.signup.page.email.EmailPage
 import com.yapp.feature.signup.signup.page.name.NamePage
+import com.yapp.feature.signup.signup.page.password.PasswordPage
 
 @Composable
 fun SignUpRoute(
@@ -88,7 +89,10 @@ fun SignUpScreen(
                     SignUpStep.Email -> EmailPage(
                         onEmailChanged = { onIntent(SignUpIntent.EmailChanged(it)) }
                     )
-                    SignUpStep.Password -> PasswordContent()
+                    SignUpStep.Password -> PasswordPage(
+                        onPasswordChanged = { onIntent(SignUpIntent.PasswordChanged(it)) },
+                        onPasswordConfirmChanged = { onIntent(SignUpIntent.PasswordConfirmChanged(it)) },
+                    )
                     SignUpStep.Position -> PositionContent()
                     SignUpStep.Complete -> CompleteContent()
                     SignUpStep.Pending -> PendingContent()

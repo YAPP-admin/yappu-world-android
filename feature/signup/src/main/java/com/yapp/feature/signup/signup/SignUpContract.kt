@@ -11,6 +11,8 @@ sealed interface SignUpIntent {
     data object BackPressed : SignUpIntent
     data class NameChanged(val name: String) : SignUpIntent
     data class EmailChanged(val email: String) : SignUpIntent
+    data class PasswordChanged(val password: String) : SignUpIntent
+    data class PasswordConfirmChanged(val passwordConfirm: String) : SignUpIntent
 }
 
 enum class SignUpStep {
