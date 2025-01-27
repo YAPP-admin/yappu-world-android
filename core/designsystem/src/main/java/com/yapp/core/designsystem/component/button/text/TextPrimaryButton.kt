@@ -86,7 +86,7 @@ fun YappTextPrimaryButtonSmall(
 
 @Preview(showBackground = true)
 @Composable
-fun YappTextPrimaryButtonMediumPreview() {
+private fun YappTextPrimaryButtonMediumPreview() {
     YappTheme {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             YappTextPrimaryButtonMedium(
@@ -105,7 +105,7 @@ fun YappTextPrimaryButtonMediumPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun YappTextPrimaryButtonSmallPreview() {
+private fun YappTextPrimaryButtonSmallPreview() {
     YappTheme {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             YappTextPrimaryButtonSmall(
