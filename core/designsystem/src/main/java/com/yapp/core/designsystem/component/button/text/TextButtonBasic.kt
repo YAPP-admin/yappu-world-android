@@ -42,31 +42,36 @@ fun YappTextButtonBasic(
     onClick: () -> Unit,
 ) {
     CompositionLocalProvider(value = LocalRippleConfiguration provides colors.ripple) {
-        Row(
+        Box(
             modifier = modifier
                 .clip(shape = shape)
                 .yappClickable(
                     runIf = enable,
                     onClick = onClick,
-                )
-                .padding(contentPaddings)
-                .heightIn(min = textStyle.lineHeight.value.dp),
-            verticalAlignment = Alignment.CenterVertically,
+                ),
+            contentAlignment = Alignment.Center
         ) {
-            if (leftIcon != null) {
-                leftIcon()
-                Spacer(Modifier.width(leftIconSpacing))
-            }
+            Row(
+                modifier = Modifier
+                    .padding(contentPaddings)
+                    .heightIn(min = textStyle.lineHeight.value.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                if (leftIcon != null) {
+                    leftIcon()
+                    Spacer(Modifier.width(leftIconSpacing))
+                }
 
-            Text(
-                text = text,
-                style = textStyle,
-                color = colors.textColor(enable = enable),
-            )
+                Text(
+                    text = text,
+                    style = textStyle,
+                    color = colors.textColor(enable = enable),
+                )
 
-            if (rightIcon != null) {
-                rightIcon()
-                Spacer(Modifier.width(rightIconSpacing))
+                if (rightIcon != null) {
+                    Spacer(Modifier.width(rightIconSpacing))
+                    rightIcon()
+                }
             }
         }
     }
