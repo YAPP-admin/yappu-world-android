@@ -24,6 +24,7 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
         postSideEffect: (Nothing) -> Unit
     ) {
         when (intent) {
+            SignUpIntent.BackPressed,
             SignUpIntent.ClickBackButton -> {
                 val previousStep = when (state.currentStep) {
                     SignUpStep.Pending -> SignUpStep.Complete
@@ -64,13 +65,18 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
                 signUpInfo = signUpInfo.copy(name = intent.name)
                 reduce { copy(primaryButtonEnable = intent.name.isNotBlank()) }
             }
+
+            is SignUpIntent.UpdateEmail -> {
+                signUpInfo = signUpInfo.copy(email = intent.email)
+                reduce { copy(primaryButtonEnable = intent.email.isNotBlank()) } // TODO 이메일 정규식 검사
+            }
         }
     }
 
     private fun updatePrimaryButtonEnable(step: SignUpStep): Boolean {
         return when (step) {
             SignUpStep.Name -> signUpInfo.name.isNotBlank()
-            SignUpStep.Email -> TODO()
+            SignUpStep.Email -> signUpInfo.email.isNotBlank() // TODO 이메일 정규식 검사
             SignUpStep.Password -> TODO()
             SignUpStep.Position -> TODO()
             SignUpStep.Complete -> TODO()
