@@ -31,9 +31,8 @@ import com.yapp.core.ui.extension.yappDefaultAnimatedContentTransitionSpec
 import com.yapp.core.ui.util.keyboardAsState
 import com.yapp.feature.signup.R
 import com.yapp.feature.signup.signup.page.CompleteContent
-import com.yapp.feature.signup.signup.page.password.PasswordContent
 import com.yapp.feature.signup.signup.page.PendingContent
-import com.yapp.feature.signup.signup.page.PositionContent
+import com.yapp.feature.signup.signup.page.position.PositionContent
 import com.yapp.feature.signup.signup.page.email.EmailPage
 import com.yapp.feature.signup.signup.page.name.NamePage
 import com.yapp.feature.signup.signup.page.password.PasswordPage
