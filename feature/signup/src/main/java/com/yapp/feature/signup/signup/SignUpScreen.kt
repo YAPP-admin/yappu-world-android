@@ -2,6 +2,7 @@ package com.yapp.feature.signup.signup
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -11,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,15 +26,15 @@ import com.yapp.core.designsystem.component.button.solid.YappSolidPrimaryButtonX
 import com.yapp.core.designsystem.component.header.YappHeaderActionbar
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
-import com.yapp.core.ui.extension.collectWithLifecycle
+import com.yapp.core.ui.extension.yappDefaultAnimatedContentTransitionSpec
 import com.yapp.core.ui.util.keyboardAsState
 import com.yapp.feature.signup.R
-import com.yapp.feature.signup.signup.content.CompleteContent
-import com.yapp.feature.signup.signup.content.EmailContent
-import com.yapp.feature.signup.signup.content.NameContent
-import com.yapp.feature.signup.signup.content.PasswordContent
-import com.yapp.feature.signup.signup.content.PendingContent
-import com.yapp.feature.signup.signup.content.PositionContent
+import com.yapp.feature.signup.signup.page.CompleteContent
+import com.yapp.feature.signup.signup.page.EmailContent
+import com.yapp.feature.signup.signup.page.PasswordContent
+import com.yapp.feature.signup.signup.page.PendingContent
+import com.yapp.feature.signup.signup.page.PositionContent
+import com.yapp.feature.signup.signup.page.name.NamePage
 
 @Composable
 fun SignUpRoute(
@@ -65,12 +65,21 @@ fun SignUpScreen(
             Spacer(Modifier.height(16.dp))
 
             AnimatedContent(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .height(IntrinsicSize.Max), // Keyboard 숨김/보여짐 여부에 따라 AnimatedContent의 height가 달라짐 방지
                 targetState = uiState.currentStep,
+                transitionSpec = {
+                    yappDefaultAnimatedContentTransitionSpec(
+                        leftDirectionCondition = initialState.ordinal < targetState.ordinal
+                    )
+                },
                 label = "AnimatedContent",
             ) { targetState ->
                 when (targetState) {
-                    SignUpStep.Name -> NameContent()
+                    SignUpStep.Name -> NamePage(
+                        onChangeName = { onIntent(SignUpIntent.UpdateName(it)) }
+                    )
                     SignUpStep.Email -> EmailContent()
                     SignUpStep.Password -> PasswordContent()
                     SignUpStep.Position -> PositionContent()

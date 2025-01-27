@@ -1,4 +1,4 @@
-package com.yapp.feature.signup.signup.content
+package com.yapp.feature.signup.signup.page
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -14,7 +14,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yapp.core.designsystem.component.input.text.YappInputTextLarge
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.feature.signup.R

@@ -3,17 +3,20 @@ package com.yapp.feature.signup.signup
 import androidx.lifecycle.ViewModel
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
+import com.yapp.model.SignUpInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor() : ViewModel() {
+    private var signUpInfo = SignUpInfo()
+
     val store: MviIntentStore<SignUpState, SignUpIntent, Nothing> =
         mviIntentStore(
             initialState = SignUpState(),
             onIntent = ::onIntent
         )
-    
+
     private fun onIntent(
         intent: SignUpIntent,
         state: SignUpState,
@@ -31,7 +34,12 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
                     SignUpStep.Name -> TODO()
                 }
 
-                reduce { copy(currentStep = previousStep) }
+                reduce {
+                    copy(
+                        currentStep = previousStep,
+                        primaryButtonEnable = updatePrimaryButtonEnable(previousStep)
+                    )
+                }
             }
 
             SignUpIntent.ClickPrimaryButton -> {
@@ -44,8 +52,29 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
                     SignUpStep.Pending -> SignUpStep.Pending
                 }
 
-                reduce { copy(currentStep = nextStep) }
+                reduce {
+                    copy(
+                        currentStep = nextStep,
+                        primaryButtonEnable = false
+                    )
+                }
             }
+
+            is SignUpIntent.UpdateName -> {
+                signUpInfo = signUpInfo.copy(name = intent.name)
+                reduce { copy(primaryButtonEnable = intent.name.isNotBlank()) }
+            }
+        }
+    }
+
+    private fun updatePrimaryButtonEnable(step: SignUpStep): Boolean {
+        return when (step) {
+            SignUpStep.Name -> signUpInfo.name.isNotBlank()
+            SignUpStep.Email -> TODO()
+            SignUpStep.Password -> TODO()
+            SignUpStep.Position -> TODO()
+            SignUpStep.Complete -> TODO()
+            SignUpStep.Pending -> TODO()
         }
     }
 }

@@ -1,11 +1,11 @@
 package com.yapp.model
 
 data class SignUpInfo(
-    val email: String,
-    val password: String,
-    val name: String,
-    val activityUnits: List<ActivityUnitModel>,
-    val signUpCode: String
+    val email: String = "",
+    val password: String = "",
+    val name: String = "",
+    val activityUnits: List<ActivityUnitModel> = emptyList(),
+    val signUpCode: String = ""
 )
 
 data class ActivityUnitModel(
