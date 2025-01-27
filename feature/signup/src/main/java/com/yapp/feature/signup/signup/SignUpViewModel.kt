@@ -56,7 +56,7 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
                 reduce {
                     copy(
                         currentStep = nextStep,
-                        primaryButtonEnable = false
+                        primaryButtonEnable = updatePrimaryButtonEnable(nextStep)
                     )
                 }
             }
