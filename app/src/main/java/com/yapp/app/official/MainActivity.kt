@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val navigator = rememberNavigator()
-            YappTheme{
+            YappTheme {
                 YappApp(navigator)
             }
         }

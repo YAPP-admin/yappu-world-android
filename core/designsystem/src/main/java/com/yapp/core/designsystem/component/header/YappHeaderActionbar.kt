@@ -39,7 +39,7 @@ fun YappHeaderActionbar(
         if (title != null) {
             Text(
                 text = title,
-                style = YappTheme.typography.heading1Bold,
+                style = YappTheme.typography.headline1Bold,
                 color = YappTheme.colorScheme.labelNormal,
             )
         }
