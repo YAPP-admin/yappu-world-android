@@ -8,6 +8,7 @@ data class SignUpState(
 sealed interface SignUpIntent {
     data object ClickPrimaryButton : SignUpIntent
     data object ClickBackButton : SignUpIntent
+    data class UpdateName(val name: String) : SignUpIntent
 }
 
 enum class SignUpStep {
