@@ -23,7 +23,7 @@ class NameViewModel @Inject constructor() : ViewModel() {
         when (intent) {
             is NameIntent.ChangeName -> {
                 reduce { copy(name = intent.name) }
-                postSideEffect(NameSideEffect.ChangeName(intent.name))
+                postSideEffect(NameSideEffect.NameChanged(intent.name))
             }
         }
     }

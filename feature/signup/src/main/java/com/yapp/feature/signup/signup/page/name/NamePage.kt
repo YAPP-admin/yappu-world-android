@@ -23,12 +23,12 @@ import com.yapp.feature.signup.R
 @Composable
 fun NamePage(
     viewModel: NameViewModel = hiltViewModel(),
-    onChangeName: (String) -> Unit,
+    onNameChanged: (String) -> Unit,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
     viewModel.store.sideEffects.collectWithLifecycle {
         when (it) {
-            is NameSideEffect.ChangeName -> onChangeName(it.name)
+            is NameSideEffect.NameChanged -> onNameChanged(it.name)
         }
     }
 

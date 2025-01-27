@@ -23,12 +23,12 @@ import com.yapp.feature.signup.R
 @Composable
 fun EmailPage(
     viewModel: EmailViewModel = hiltViewModel(),
-    onChangeEmail: (String) -> Unit,
+    onEmailChanged: (String) -> Unit,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
     viewModel.store.sideEffects.collectWithLifecycle {
         when (it) {
-            is EmailSideEffect.ChangeEmail -> onChangeEmail(it.email)
+            is EmailSideEffect.EmailChanged -> onEmailChanged(it.email)
         }
     }
 

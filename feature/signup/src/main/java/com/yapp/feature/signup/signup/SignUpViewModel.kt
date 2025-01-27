@@ -61,12 +61,12 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
                 }
             }
 
-            is SignUpIntent.UpdateName -> {
+            is SignUpIntent.NameChanged -> {
                 signUpInfo = signUpInfo.copy(name = intent.name)
                 reduce { copy(primaryButtonEnable = intent.name.isNotBlank()) }
             }
 
-            is SignUpIntent.UpdateEmail -> {
+            is SignUpIntent.EmailChanged -> {
                 signUpInfo = signUpInfo.copy(email = intent.email)
                 reduce { copy(primaryButtonEnable = intent.email.isNotBlank()) } // TODO 이메일 정규식 검사
             }

@@ -23,7 +23,7 @@ class EmailViewModel @Inject constructor() : ViewModel() {
         when (intent) {
             is EmailIntent.ChangeEmail -> {
                 reduce { copy(email = intent.email) }
-                postSideEffect(EmailSideEffect.ChangeEmail(intent.email))
+                postSideEffect(EmailSideEffect.EmailChanged(intent.email))
             }
         }
     }
