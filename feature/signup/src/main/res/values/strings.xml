@@ -19,9 +19,12 @@
     <string name="signup_screen_password_title">비밀번호를 설정할게요.</string>
     <string name="signup_screen_password_description">영문+숫자+특수문자를 사용해, 8~20자 이내로 설정해주세요.</string>
     <string name="signup_screen_password_input_text_label">비밀번호</string>
+    <string name="signup_screen_password_input_text_description">비밀번호 설정 조건에 맞지 않아요. 다시 입력 해주세요.</string>
     <string name="signup_screen_password_input_text_placeholder">••••••••</string>
     <string name="signup_screen_password_confirm_input_text_label">비밀번호 확인</string>
+    <string name="signup_screen_password_confirm_input_text_description">입력하신 비밀번호와 달라요. 확인후 다시 입력해주세요.</string>
     <string name="signup_screen_password_confirm_input_text_placeholder">••••••••</string>
+
     <string name="signup_screen_step_4">STEP 4</string>
     <string name="signup_screen_position_title">%s님!\n어떤 역할로 활동중이신가요?</string>
     <string name="signup_screen_position_description">YAPP에서 활동중인 기수와 직군 정보를 알려주세요.\n이전 활동 내역이 있다면 함께 추가 할수 있어요.</string>

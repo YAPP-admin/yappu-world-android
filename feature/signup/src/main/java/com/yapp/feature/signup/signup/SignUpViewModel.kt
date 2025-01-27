@@ -38,7 +38,7 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
                 reduce {
                     copy(
                         currentStep = previousStep,
-                        primaryButtonEnable = updatePrimaryButtonEnable(previousStep)
+                        primaryButtonEnable = getPrimaryButtonEnable(previousStep)
                     )
                 }
             }
@@ -56,7 +56,7 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
                 reduce {
                     copy(
                         currentStep = nextStep,
-                        primaryButtonEnable = updatePrimaryButtonEnable(nextStep)
+                        primaryButtonEnable = getPrimaryButtonEnable(nextStep)
                     )
                 }
             }
@@ -70,14 +70,24 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
                 signUpInfo = signUpInfo.copy(email = intent.email)
                 reduce { copy(primaryButtonEnable = intent.email.isNotBlank()) } // TODO 이메일 정규식 검사
             }
+
+            is SignUpIntent.PasswordChanged -> {
+                signUpInfo = signUpInfo.copy(password = intent.password)
+                reduce { copy(primaryButtonEnable = signUpInfo.isAllPasswordConditionValid) }
+            }
+
+            is SignUpIntent.PasswordConfirmChanged -> {
+                signUpInfo = signUpInfo.copy(passwordConfirm = intent.passwordConfirm)
+                reduce { copy(primaryButtonEnable = signUpInfo.isAllPasswordConditionValid) }
+            }
         }
     }
 
-    private fun updatePrimaryButtonEnable(step: SignUpStep): Boolean {
+    private fun getPrimaryButtonEnable(step: SignUpStep): Boolean {
         return when (step) {
             SignUpStep.Name -> signUpInfo.name.isNotBlank()
             SignUpStep.Email -> signUpInfo.email.isNotBlank() // TODO 이메일 정규식 검사
-            SignUpStep.Password -> TODO()
+            SignUpStep.Password -> signUpInfo.isAllPasswordConditionValid
             SignUpStep.Position -> TODO()
             SignUpStep.Complete -> TODO()
             SignUpStep.Pending -> TODO()
