@@ -137,7 +137,7 @@ fun PositionDropdown(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewYappBasicInputTextWithDropdown() {
+private fun PositionDropdownPreview() {
     YappTheme {
         var selectedValue by remember { mutableStateOf<String?>(null) }
 
