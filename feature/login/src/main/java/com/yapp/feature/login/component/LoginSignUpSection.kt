@@ -20,7 +20,7 @@ import com.yapp.feature.login.R
 @Stable
 @Composable
 fun LoginSignUpSection(
-    onClickSignUp : () -> Unit
+    onSignUpClick : () -> Unit
 ){
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -36,7 +36,7 @@ fun LoginSignUpSection(
             text = stringResource(R.string.login_btn_signup),
             contentPaddings = PaddingValues(0.dp),
             enable = true,
-            onClick = onClickSignUp
+            onClick = onSignUpClick
         )
     }
 }

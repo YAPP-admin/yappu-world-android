@@ -15,11 +15,11 @@ class LoginViewModel @Inject constructor() : ViewModel() {
                 when (intent) {
                     is LoginIntent.ClickLoginButton -> {}
                     is LoginIntent.ClickSignUpButton -> reduce { copy(showAgreementDialog = true) }
-                    is LoginIntent.EmailChanged -> reduce { copy(email = intent.email) }
-                    is LoginIntent.PasswordChanged -> reduce { copy(password = intent.password) }
+                    is LoginIntent.ChangeEmail -> reduce { copy(email = intent.email) }
+                    is LoginIntent.ChangePassword -> reduce { copy(password = intent.password) }
                     is LoginIntent.CloseAgreementDialog -> reduce { copy(showAgreementDialog = false) }
-                    is LoginIntent.CheckAgreement1 -> reduce { copy(agreement1 = intent.checked) }
-                    is LoginIntent.CheckAgreement2 -> reduce { copy(agreement2 = intent.checked) }
+                    is LoginIntent.CheckTerms -> reduce { copy(terms = intent.checked) }
+                    is LoginIntent.CheckPersonalPolicy -> reduce { copy(personalPolicy = intent.checked) }
                     is LoginIntent.ClickNextButton -> postSideEffect(LoginSideEffect.NavigateToSignUp)
                 }
             }

@@ -22,7 +22,7 @@ fun LoginInputSection(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     buttonEnable : Boolean,
-    onClickButton : () -> Unit
+    onButtonClick : () -> Unit
 ) {
     YappInputTextLarge(
         value = email,
@@ -41,7 +41,7 @@ fun LoginInputSection(
         modifier = Modifier.fillMaxWidth(),
         text = stringResource(R.string.login_btn),
         enable = (buttonEnable),
-        onClick = onClickButton
+        onClick = onButtonClick
     )
 }
 

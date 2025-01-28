@@ -7,21 +7,21 @@ data class LoginState(
     val emailErrorDescription: String? = null,
     val passwordErrorDescription: String? = null,
     val showAgreementDialog: Boolean = false,
-    val agreement1: Boolean = false,
-    val agreement2: Boolean = false,
+    val terms: Boolean = false,
+    val personalPolicy: Boolean = false,
 ) {
     val enableLoginButton: Boolean = email.isNotEmpty() && password.isNotEmpty()
-    val enableNextButton: Boolean = agreement1 && agreement2
+    val enableNextButton: Boolean = terms && personalPolicy
 }
 
 sealed interface LoginIntent {
-    data class EmailChanged(val email: String) : LoginIntent
-    data class PasswordChanged(val password: String) : LoginIntent
+    data class ChangeEmail(val email: String) : LoginIntent
+    data class ChangePassword(val password: String) : LoginIntent
     data object ClickLoginButton : LoginIntent
     data object ClickSignUpButton : LoginIntent
     data object CloseAgreementDialog : LoginIntent
-    data class CheckAgreement1(val checked: Boolean) : LoginIntent
-    data class CheckAgreement2(val checked: Boolean) : LoginIntent
+    data class CheckTerms(val checked: Boolean) : LoginIntent
+    data class CheckPersonalPolicy(val checked: Boolean) : LoginIntent
     data object ClickNextButton : LoginIntent
 }
 

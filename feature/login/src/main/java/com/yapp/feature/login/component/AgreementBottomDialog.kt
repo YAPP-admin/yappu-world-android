@@ -26,12 +26,12 @@ import com.yapp.feature.login.R
 @Composable
 fun AgreementBottomDialog(
     onDismiss: () -> Unit,
-    agreement1: Boolean,
-    agreement2: Boolean,
-    onAgreement1Checked: (Boolean) -> Unit,
-    onAgreement2Checked: (Boolean) -> Unit,
+    terms: Boolean,
+    personalPolicy: Boolean,
+    onTermsChecked: (Boolean) -> Unit,
+    onPersonalPolicyChecked: (Boolean) -> Unit,
     enableNextButton: Boolean,
-    onClickNextButton: () -> Unit,
+    onNextButtonClick: () -> Unit,
 ) {
     BottomDialog(
         onDismiss = onDismiss
@@ -44,21 +44,21 @@ fun AgreementBottomDialog(
             )
             Spacer(Modifier.height(24.dp))
             AgreementContent(
-                text = stringResource(R.string.agreement_bottom_dialog_item1),
-                checked = agreement1,
-                onCheckedChange = { onAgreement1Checked(it) }
+                text = stringResource(R.string.agreement_bottom_dialog_terms),
+                checked = terms,
+                onCheckedChange = { onTermsChecked(it) }
             )
             AgreementContent(
-                text = stringResource(R.string.agreement_bottom_dialog_item2),
-                checked = agreement2,
-                onCheckedChange = { onAgreement2Checked(it) }
+                text = stringResource(R.string.agreement_bottom_dialog_personal_policy),
+                checked = personalPolicy,
+                onCheckedChange = { onPersonalPolicyChecked(it) }
             )
             Spacer(Modifier.height(24.dp))
             YappSolidPrimaryButtonXLarge(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(R.string.agreement_bottom_dialog_button_next),
                 enable = enableNextButton,
-                onClick = { onClickNextButton() }
+                onClick = { onNextButtonClick() }
             )
         }
     }
@@ -107,12 +107,12 @@ private fun LoginScreenPreview() {
     YappTheme {
         AgreementBottomDialog(
             {},
-            agreement1 = true,
-            agreement2 = false,
-            onAgreement1Checked = {},
-            onAgreement2Checked = {},
+            terms = true,
+            personalPolicy = false,
+            onTermsChecked = {},
+            onPersonalPolicyChecked = {},
             enableNextButton = false,
-            onClickNextButton = {}
+            onNextButtonClick = {}
         )
     }
 }
