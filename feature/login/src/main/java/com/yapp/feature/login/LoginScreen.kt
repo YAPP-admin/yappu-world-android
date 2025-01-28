@@ -57,10 +57,10 @@ fun LoginScreen(
             LoginInputSection(
                 email = loginState.email,
                 password = loginState.password,
-                onEmailChange = { onIntent(LoginIntent.EmailChanged(it)) },
-                onPasswordChange = { onIntent(LoginIntent.PasswordChanged(it)) },
+                onEmailChange = { onIntent(LoginIntent.ChangeEmail(it)) },
+                onPasswordChange = { onIntent(LoginIntent.ChangePassword(it)) },
                 buttonEnable = loginState.enableLoginButton,
-                onClickButton = { onIntent(LoginIntent.ClickLoginButton) }
+                onButtonClick = { onIntent(LoginIntent.ClickLoginButton) }
             )
             Spacer(Modifier.height(24.dp))
             LoginDivider()
@@ -70,12 +70,12 @@ fun LoginScreen(
         if (loginState.showAgreementDialog) {
             AgreementBottomDialog(
                 onDismiss = { onIntent(LoginIntent.CloseAgreementDialog) },
-                agreement1 = loginState.agreement1,
-                agreement2 = loginState.agreement2,
-                onAgreement1Checked = { onIntent(LoginIntent.CheckAgreement1(it)) },
-                onAgreement2Checked = { onIntent(LoginIntent.CheckAgreement2(it)) },
+                terms = loginState.terms,
+                personalPolicy = loginState.personalPolicy,
+                onTermsChecked = { onIntent(LoginIntent.CheckTerms(it)) },
+                onPersonalPolicyChecked = { onIntent(LoginIntent.CheckPersonalPolicy(it)) },
                 enableNextButton = loginState.enableNextButton,
-                onClickNextButton = { onIntent(LoginIntent.ClickNextButton)}
+                onNextButtonClick = { onIntent(LoginIntent.ClickNextButton)}
             )
         }
     }
