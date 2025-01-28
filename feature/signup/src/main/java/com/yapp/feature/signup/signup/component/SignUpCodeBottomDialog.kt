@@ -19,7 +19,12 @@ import com.yapp.feature.signup.R
 
 @Composable
 fun SignUpCodeBottomDialog(
+    signUpCode: String,
+    inputCompleteButtonEnable: Boolean,
     onDismissRequest: () -> Unit,
+    onSignUpCodeChange: (String) -> Unit,
+    onInputCompleteButtonClick: () -> Unit,
+    onNoSignUpCodeButtonClick: () -> Unit
 ) {
     BottomDialog(
         onDismissRequest = onDismissRequest
@@ -37,17 +42,18 @@ fun SignUpCodeBottomDialog(
 
             YappInputTextLarge(
                 label = stringResource(R.string.signup_code_bottom_dialog_input_text_label),
-                value = "",
+                value = signUpCode,
                 placeholder = stringResource(R.string.signup_code_bottom_dialog_input_text_placeholder),
-                onValueChange = {}
+                onValueChange = onSignUpCodeChange
             )
 
             Spacer(Modifier.height(24.dp))
 
             YappSolidPrimaryButtonLarge(
                 modifier = Modifier.fillMaxWidth(),
+                enable = inputCompleteButtonEnable,
                 text = stringResource(R.string.signup_code_bottom_dialog_complete_button),
-                onClick = {}
+                onClick = onInputCompleteButtonClick
             )
 
             Spacer(Modifier.height(8.dp))
@@ -55,7 +61,7 @@ fun SignUpCodeBottomDialog(
             YappTextPrimaryButtonSmall(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(R.string.signup_code_bottom_dialog_no_code_button),
-                onClick = {}
+                onClick = onNoSignUpCodeButtonClick
             )
         }
     }

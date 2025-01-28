@@ -97,6 +97,11 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
             }
 
             SignUpIntent.DismissSignUpCodeBottomDialog -> reduce { copy(showSignUpCodeBottomDialog = false) }
+
+            is SignUpIntent.ChangeSighUpCode -> reduce { copy(signUpCode = intent.signUpCode) }
+
+            SignUpIntent.ClickInputCompleteButton,
+            SignUpIntent.ClickNoSignUpCodeButton -> TODO()
         }
     }
 
@@ -106,8 +111,8 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
             SignUpStep.Email -> signUpInfo.email.isNotBlank() // TODO 이메일 정규식 검사
             SignUpStep.Password -> signUpInfo.isAllPasswordConditionValid
             SignUpStep.Position -> signUpInfo.isActivityUnitsValid
-            SignUpStep.Complete -> TODO()
-            SignUpStep.Pending -> TODO()
+            SignUpStep.Complete,
+            SignUpStep.Pending -> true
         }
     }
 }

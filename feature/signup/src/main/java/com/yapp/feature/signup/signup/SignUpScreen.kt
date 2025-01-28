@@ -121,7 +121,12 @@ fun SignUpScreen(
 
         if (uiState.showSignUpCodeBottomDialog) {
             SignUpCodeBottomDialog(
-                onDismissRequest = { onIntent(SignUpIntent.DismissSignUpCodeBottomDialog) }
+                onDismissRequest = { onIntent(SignUpIntent.DismissSignUpCodeBottomDialog) },
+                signUpCode = uiState.signUpCode,
+                inputCompleteButtonEnable = uiState.inputCompleteButtonEnable,
+                onSignUpCodeChange = { onIntent(SignUpIntent.ChangeSighUpCode(it)) },
+                onInputCompleteButtonClick = { onIntent(SignUpIntent.ClickInputCompleteButton) },
+                onNoSignUpCodeButtonClick = { onIntent(SignUpIntent.ClickNoSignUpCodeButton) },
             )
         }
     }
