@@ -11,16 +11,32 @@ class LoginViewModel @Inject constructor() : ViewModel() {
     val store: MviIntentStore<LoginState, LoginIntent, LoginSideEffect> =
         mviIntentStore(
             initialState = LoginState(),
-            onIntent = { intent, _, reduce, postSideEffect  ->
+            onIntent = { intent, _, reduce, postSideEffect ->
                 when (intent) {
                     is LoginIntent.ClickLoginButton -> {}
                     is LoginIntent.ClickSignUpButton -> reduce { copy(showAgreementDialog = true) }
                     is LoginIntent.ChangeEmail -> reduce { copy(email = intent.email) }
                     is LoginIntent.ChangePassword -> reduce { copy(password = intent.password) }
-                    is LoginIntent.CloseAgreementDialog -> reduce { copy(showAgreementDialog = false) }
+                    is LoginIntent.CloseAgreementDialog -> reduce {
+                        copy(
+                            showAgreementDialog = false,
+                            personalPolicy = false,
+                            terms = false,
+                        )
+                    }
+
                     is LoginIntent.CheckTerms -> reduce { copy(terms = intent.checked) }
                     is LoginIntent.CheckPersonalPolicy -> reduce { copy(personalPolicy = intent.checked) }
-                    is LoginIntent.ClickNextButton -> postSideEffect(LoginSideEffect.NavigateToSignUp)
+                    is LoginIntent.ClickNextButton -> {
+                        reduce {
+                            copy(
+                                showAgreementDialog = false,
+                                personalPolicy = false,
+                                terms = false,
+                            )
+                        }
+                        postSideEffect(LoginSideEffect.NavigateToSignUp)
+                    }
                 }
             }
         )
