@@ -48,7 +48,7 @@ class NavigatorState(
         navController.navigateToNotice()
     }
 
-    private fun popBackStack() {
+    fun popBackStack() {
         navController.popBackStack()
     }
 }
