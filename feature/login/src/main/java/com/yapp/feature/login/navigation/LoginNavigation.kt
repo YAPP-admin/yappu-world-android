@@ -4,7 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.yapp.feature.login.LoginRouteScreen
+import com.yapp.feature.login.LoginRoute
 import kotlinx.serialization.Serializable
 
 @Serializable data object LoginRoute
@@ -15,6 +15,6 @@ fun NavGraphBuilder.loginNavGraph(
     onClickSignUp: (String) -> Unit,
 ){
     composable<LoginRoute> {
-        LoginRouteScreen(onClickSignUp)
+        LoginRoute(onClickSignUp)
     }
 }
