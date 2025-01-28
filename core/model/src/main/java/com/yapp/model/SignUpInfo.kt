@@ -14,7 +14,7 @@ data class SignUpInfo(
     val isAllPasswordConditionValid =
         password.matches(passwordRegex) && password == passwordConfirm
 
-    val isActivityUnitsValid = activityUnits.none { it.position.isNullOrEmpty() || it.generation == null }
+    val isActivityUnitsValid = activityUnits.none { it.position.isNullOrEmpty() || it.generation == null } && activityUnits.isNotEmpty()
 }
 
 @Stable

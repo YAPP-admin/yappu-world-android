@@ -146,10 +146,11 @@ class SignUpViewModel @Inject constructor(
         postSideEffect: (SignUpSideEffect) -> Unit,
     ) = viewModelScope.launch {
         postSideEffect(SignUpSideEffect.ClearFocus) // FIXME: TextField가 Focus를 가진 상태로 BottomSheet가 사라지면, 시스템 뒤로가기 이벤트가 동작하지 않는 문제가 있음
-        reduce { copy(showSignUpCodeBottomDialog = false) }
 
         signUpUseCase(signUpInfo)
             .onSuccess { result ->
+                reduce { copy(showSignUpCodeBottomDialog = false) }
+                delay(500L) // FIXME: 키보드가 완전히 내려가기 전에 다음 페이지로 넘어가면, 화면이 튕기는 현상이 있음.
                 when (result) {
                     SignUpResult.Complete -> reduce { copy(currentStep = SignUpStep.Complete) }
                     SignUpResult.Pending -> reduce { copy(currentStep = SignUpStep.Pending) }
