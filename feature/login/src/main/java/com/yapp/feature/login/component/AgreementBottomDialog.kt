@@ -34,7 +34,7 @@ fun AgreementBottomDialog(
     onNextButtonClick: () -> Unit,
 ) {
     BottomDialog(
-        onDismiss = onDismiss
+        onDismissRequest = onDismiss
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Text(
