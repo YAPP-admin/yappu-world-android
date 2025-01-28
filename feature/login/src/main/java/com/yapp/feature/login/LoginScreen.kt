@@ -26,8 +26,8 @@ import com.yapp.feature.login.component.TopTitle
 
 
 @Composable
-internal fun LoginRouteScreen(
-    onClickSignUP: (String) -> Unit,
+internal fun LoginRoute(
+    onClickSignUp: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
@@ -45,39 +45,33 @@ internal fun LoginRouteScreen(
             .padding(horizontal = 20.dp),
         contentAlignment = Alignment.TopStart
     ) {
-        LoginContent(
+        LoginScreen(
             loginState = loginState,
-            onSignUpClick = {viewModel.store.onIntent(LoginIntent.ClickSignUpButton)},
-            onLoginClick = {viewModel.store.onIntent(LoginIntent.ClickLoginButton)},
-            onIDChange = { viewModel.store.onIntent(LoginIntent.InputID(it)) },
-            onPWChange = {viewModel.store.onIntent(LoginIntent.InputPW(it))}
+            onIntent = { viewModel.store.onIntent(it) },
         )
     }
 }
 
 @Composable
-fun LoginContent(
+fun LoginScreen(
     loginState: LoginState,
-    onSignUpClick: () -> Unit,
-    onLoginClick : () -> Unit,
-    onIDChange: (String) -> Unit,
-    onPWChange : (String) -> Unit,
+    onIntent: (LoginIntent) -> Unit = {}
 ) {
     Column {
         Spacer(Modifier.height(72.dp))
         TopTitle()
         LoginInputSection(
-            id = loginState.id,
-            pw = loginState.password,
-            onIDChange = onIDChange,
-            onPWChange = onPWChange,
-            isActive = loginState.isActivateLoginButton,
-            clickButton = onLoginClick
+            email = loginState.email,
+            password = loginState.password,
+            onEmailChange = {onIntent(LoginIntent.EmailChanged(it))},
+            onPasswordChange =  {onIntent(LoginIntent.PasswordChanged(it))},
+            buttonEnable = loginState.enableLoginButton,
+            onClickButton = { onIntent(LoginIntent.ClickLoginButton) }
         )
         Spacer(Modifier.height(24.dp))
         LoginDivider()
         Spacer(Modifier.height(32.dp))
-        LoginSignUpSection(onSignUpClick)
+        LoginSignUpSection { onIntent(LoginIntent.ClickSignUpButton) }
     }
 }
 
@@ -85,6 +79,6 @@ fun LoginContent(
 @Composable
 private fun LoginScreenPreview() {
     YappTheme {
-        LoginRouteScreen({})
+        LoginRoute({})
     }
 }

@@ -17,31 +17,31 @@ import com.yapp.feature.login.R
 
 @Composable
 fun LoginInputSection(
-    id : String,
-    pw : String,
-    onIDChange: (String) -> Unit,
-    onPWChange: (String) -> Unit,
-    isActive : Boolean,
-    clickButton : () -> Unit
+    email : String,
+    password : String,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    buttonEnable : Boolean,
+    onClickButton : () -> Unit
 ) {
     YappInputTextLarge(
-        value = id,
-        onValueChange = onIDChange,
+        value = email,
+        onValueChange = onEmailChange,
         placeholder = stringResource(R.string.login_placeholder_email),
     )
     Spacer(Modifier.height(16.dp))
     PasswordInputTextLarge(
         label = stringResource(R.string.login_title_pw),
-        password = pw,
-        onPasswordChange = onPWChange,
+        password = password,
+        onPasswordChange = onPasswordChange,
         placeholder = stringResource(R.string.login_placeholder_pw)
     )
     Spacer(Modifier.height(24.dp))
     YappSolidPrimaryButtonXLarge(
         modifier = Modifier.fillMaxWidth(),
         text = stringResource(R.string.login_btn),
-        enable = (isActive),
-        onClick = clickButton
+        enable = (buttonEnable),
+        onClick = onClickButton
     )
 }
 

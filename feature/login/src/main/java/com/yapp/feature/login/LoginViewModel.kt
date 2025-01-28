@@ -15,8 +15,8 @@ class LoginViewModel @Inject constructor() : ViewModel() {
                 when (intent) {
                     is LoginIntent.ClickLoginButton -> {}
                     is LoginIntent.ClickSignUpButton -> { postSideEffect(LoginSideEffect.ShowToast("회원가입 버튼 클릭")) }
-                    is LoginIntent.InputID -> reduce { copy(id = intent.id) }
-                    is LoginIntent.InputPW -> reduce { copy(password = intent.pw )}
+                    is LoginIntent.EmailChanged -> reduce { copy(email = intent.email) }
+                    is LoginIntent.PasswordChanged -> reduce { copy(password = intent.password )}
                 }
             }
         )

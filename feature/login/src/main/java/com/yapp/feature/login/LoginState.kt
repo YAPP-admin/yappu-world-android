@@ -2,18 +2,17 @@ package com.yapp.feature.login
 
 
 data class LoginState(
-    val id: String = "",
+    val email: String = "",
     val password: String = "",
-    val idFailDescription : String? = null,
-    val pwFailDescription : String? = null,
-    val isPWVisible: Boolean = false, // 비밀번호 표시 여부
+    val emailErrorDescription : String? = null,
+    val passwordErrorDescription : String? = null
 ){
-    val isActivateLoginButton : Boolean = id.isNotEmpty() && password.isNotEmpty()
+    val enableLoginButton : Boolean = email.isNotEmpty() && password.isNotEmpty()
 }
 
 sealed interface LoginIntent {
-    data class InputID (val id : String) : LoginIntent
-    data class InputPW ( val pw : String ) : LoginIntent
+    data class EmailChanged (val email : String) : LoginIntent
+    data class PasswordChanged (val password : String ) : LoginIntent
     data object ClickLoginButton : LoginIntent
     data object ClickSignUpButton : LoginIntent
 }

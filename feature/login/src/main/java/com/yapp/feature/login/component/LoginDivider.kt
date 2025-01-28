@@ -1,6 +1,5 @@
 package com.yapp.feature.login.component
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -45,8 +44,6 @@ fun LoginDivider(){
 @Composable
 private fun LoginScreenPreview() {
     YappTheme {
-        Column {
-            LoginDivider()
-        }
+        LoginDivider()
     }
 }
