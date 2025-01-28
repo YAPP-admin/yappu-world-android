@@ -3,15 +3,39 @@ import com.yapp.app.setNamespace
 plugins {
     id("yapp.android.library")
     id("yapp.android.hilt")
+    alias(libs.plugins.protobuf)
 }
 
-android{
+android {
     setNamespace("core.data")
+}
+
+protobuf {
+    protoc {
+        artifact = libs.protobuf.protoc.get().toString()
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                register("java") {
+                    option("lite")
+                }
+            }
+        }
+    }
 }
 
 dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:data-api"))
+
+    implementation(libs.androidx.datastore.core)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.protobuf.kotlin.lite)
+
+    ksp(libs.encrypted.datastore.preference.ksp)
+    implementation(libs.encrypted.datastore.preference.ksp.annotations)
+    implementation(libs.encrypted.datastore.preference.security)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.retrofit.core)
