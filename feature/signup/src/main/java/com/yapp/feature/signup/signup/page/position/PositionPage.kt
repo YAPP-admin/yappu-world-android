@@ -37,8 +37,9 @@ import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.signup.R
-import com.yapp.feature.signup.signup.component.PositionDropdown
-import com.yapp.feature.signup.signup.component.SignUpCodeBottomDialog
+import com.yapp.feature.signup.signup.page.position.component.ActivityUnitInputSection
+import com.yapp.feature.signup.signup.page.position.component.PositionDropdown
+import com.yapp.feature.signup.signup.page.position.component.PreviousActivityUnitInputSection
 import com.yapp.model.ActivityUnit
 
 @Composable
@@ -147,86 +148,6 @@ fun PositionContent(
                 color = YappTheme.colorScheme.backgroundNormalNormal
             )
         }
-    }
-}
-
-@Composable
-private fun PreviousActivityUnitInputSection(
-    index: Int,
-    generation: String?,
-    position: String?,
-    onGenerationChange: (String) -> Unit,
-    onPositionChange: (String) -> Unit,
-    onDeleteButtonClick: (Int) -> Unit,
-) {
-    Column {
-        HorizontalDivider(
-            thickness = 1.dp,
-            color = YappTheme.colorScheme.lineNormalNormal,
-        )
-
-        Spacer(Modifier.height(24.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                stringResource(R.string.signup_screen_position_previous_generation, index + 1),
-                color = YappTheme.colorScheme.labelNormal,
-                style = YappTheme.typography.body1NormalBold
-            )
-
-            Icon(
-                modifier = Modifier
-                    .size(24.dp)
-                    .yappClickable {
-                        onDeleteButtonClick(index)
-                    },
-                painter = painterResource(R.drawable.icon_trash_bin),
-                contentDescription = null,
-            )
-        }
-
-        Spacer(Modifier.height(8.dp))
-
-        ActivityUnitInputSection(
-            generation = generation,
-            position = position,
-            onGenerationChange = onGenerationChange,
-            onPositionChange = onPositionChange
-        )
-    }
-}
-
-@Composable
-private fun ActivityUnitInputSection(
-    generation: String?,
-    position: String?,
-    onGenerationChange: (String) -> Unit,
-    onPositionChange: (String) -> Unit,
-) {
-    Row {
-        YappInputTextLarge(
-            modifier = Modifier.width(120.dp),
-            label = stringResource(R.string.signup_screen_position_generation_input_text_label),
-            placeholder = stringResource(R.string.signup_screen_position_generation_input_text_placeholder),
-            value = generation ?: "",
-            onValueChange = onGenerationChange,
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
-        )
-
-        Spacer(Modifier.width(16.dp))
-
-        PositionDropdown(
-            label = stringResource(R.string.signup_screen_position_position_input_text_label),
-            value = position,
-            onValueChange = onPositionChange,
-            placeholder = stringResource(R.string.signup_screen_position_position_input_text_placeholder),
-            // TODO 임시 데이터, 서버에서 받아오게 변경 필요
-            dropdownOptions = listOf("PM", "UX/UI Design", "Android", "iOS", "Web", "Server"),
-        )
     }
 }
 
