@@ -17,22 +17,26 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.yapp.core.designsystem.component.button.outlined.YappOutlinedPrimaryButtonXLarge
 import com.yapp.core.designsystem.component.button.solid.YappSolidPrimaryButtonLarge
 import com.yapp.core.designsystem.component.button.solid.YappSolidPrimaryButtonXLarge
+import com.yapp.core.designsystem.component.button.text.YappTextAssistiveButtonMedium
 import com.yapp.core.designsystem.component.header.YappHeaderActionbar
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
+import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.core.ui.extension.yappDefaultAnimatedContentTransitionSpec
 import com.yapp.core.ui.util.keyboardAsState
 import com.yapp.feature.signup.R
 import com.yapp.feature.signup.signup.component.SignUpCodeBottomDialog
-import com.yapp.feature.signup.signup.page.CompleteContent
-import com.yapp.feature.signup.signup.page.PendingContent
+import com.yapp.feature.signup.signup.page.CompletePage
+import com.yapp.feature.signup.signup.page.PendingPage
 import com.yapp.feature.signup.signup.page.email.EmailPage
 import com.yapp.feature.signup.signup.page.name.NamePage
 import com.yapp.feature.signup.signup.page.password.PasswordPage
@@ -40,9 +44,16 @@ import com.yapp.feature.signup.signup.page.position.PositionPage
 
 @Composable
 fun SignUpRoute(
-    viewModel: SignUpViewModel = hiltViewModel()
+    viewModel: SignUpViewModel = hiltViewModel(),
+    navigateBack: () -> Unit,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
+
+    viewModel.store.sideEffects.collectWithLifecycle {
+        when (it) {
+            SignUpSideEffect.NavigateBack -> navigateBack()
+        }
+    }
 
     SignUpScreen(
         uiState = uiState,
@@ -68,7 +79,7 @@ fun SignUpScreen(
         ) {
             YappHeaderActionbar(
                 title = stringResource(R.string.signup_screen_title),
-                leftIcon = com.yapp.core.designsystem.R.drawable.icon_chevron_left,
+                leftIcon = uiState.backIcon,
                 onClickLeftIcon = { onIntent(SignUpIntent.ClickBackButton) },
                 contentDescription = stringResource(R.string.signup_screen_header_icon_descrption)
             )
@@ -106,8 +117,8 @@ fun SignUpScreen(
                         onActivityUnitsChanged = { onIntent(SignUpIntent.ActivityUnitsChanged(it)) }
                     )
 
-                    SignUpStep.Complete -> CompleteContent()
-                    SignUpStep.Pending -> PendingContent()
+                    SignUpStep.Complete -> CompletePage()
+                    SignUpStep.Pending -> PendingPage()
                 }
             }
 
@@ -141,13 +152,36 @@ private fun SignUpScreenButton(
 ) {
     val isKeyboardVisible by keyboardAsState()
 
+    if (uiState.showPendingButton) {
+        YappTextAssistiveButtonMedium(
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .fillMaxWidth(),
+            text = "대기상태가 계속되고 있나요?",
+            onClick = {}
+        )
+
+        Spacer(Modifier.height(8.dp))
+
+        YappOutlinedPrimaryButtonXLarge(
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .fillMaxWidth(),
+            text = "승인요청하기",
+            onClick = {}
+        )
+
+        Spacer(Modifier.height(16.dp))
+        return
+    }
+
     if (isKeyboardVisible.not()) {
         YappSolidPrimaryButtonXLarge(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
                 .fillMaxWidth(),
             enable = uiState.primaryButtonEnable,
-            text = stringResource(R.string.signup_screen_button_next),
+            text = stringResource(uiState.primaryButtonText),
             onClick = { onIntent(SignUpIntent.ClickPrimaryButton) }
         )
         Spacer(Modifier.height(16.dp))
@@ -170,7 +204,9 @@ private fun SignUpScreenButton(
 @Composable
 private fun SignUpScreenPreview() {
     YappTheme {
-        SignUpScreen()
+        SignUpScreen(
+            uiState = SignUpState(currentStep = SignUpStep.Pending)
+        )
     }
 }
 

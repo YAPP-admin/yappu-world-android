@@ -2,6 +2,7 @@
 <resources>
     <string name="signup_screen_title">회원가입</string>
     <string name="signup_screen_button_next">다음</string>
+    <string name="signup_screen_button_start">시작하기</string>
 
     <string name="signup_screen_step_1">STEP 1</string>
     <string name="signup_screen_name_title">만나서 반가워요 :)\n이름이 어떻게 되세요?</string>
