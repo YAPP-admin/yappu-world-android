@@ -30,12 +30,13 @@ import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.yappDefaultAnimatedContentTransitionSpec
 import com.yapp.core.ui.util.keyboardAsState
 import com.yapp.feature.signup.R
+import com.yapp.feature.signup.signup.component.SignUpCodeBottomDialog
 import com.yapp.feature.signup.signup.page.CompleteContent
 import com.yapp.feature.signup.signup.page.PendingContent
-import com.yapp.feature.signup.signup.page.position.PositionContent
 import com.yapp.feature.signup.signup.page.email.EmailPage
 import com.yapp.feature.signup.signup.page.name.NamePage
 import com.yapp.feature.signup.signup.page.password.PasswordPage
+import com.yapp.feature.signup.signup.page.position.PositionPage
 
 @Composable
 fun SignUpRoute(
@@ -59,7 +60,12 @@ fun SignUpScreen(
     }
 
     YappBackground {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .consumeWindowInsets(WindowInsets.navigationBars)
+                .imePadding()
+        ) {
             YappHeaderActionbar(
                 title = stringResource(R.string.signup_screen_title),
                 leftIcon = com.yapp.core.designsystem.R.drawable.icon_chevron_left,
@@ -85,22 +91,37 @@ fun SignUpScreen(
                     SignUpStep.Name -> NamePage(
                         onNameChanged = { onIntent(SignUpIntent.NameChanged(it)) }
                     )
+
                     SignUpStep.Email -> EmailPage(
                         onEmailChanged = { onIntent(SignUpIntent.EmailChanged(it)) }
                     )
+
                     SignUpStep.Password -> PasswordPage(
                         onPasswordChanged = { onIntent(SignUpIntent.PasswordChanged(it)) },
                         onPasswordConfirmChanged = { onIntent(SignUpIntent.PasswordConfirmChanged(it)) },
                     )
-                    SignUpStep.Position -> PositionContent()
+
+                    SignUpStep.Position -> PositionPage(
+                        name = uiState.name,
+                        onActivityUnitsChanged = { onIntent(SignUpIntent.ActivityUnitsChanged(it)) }
+                    )
+
                     SignUpStep.Complete -> CompleteContent()
                     SignUpStep.Pending -> PendingContent()
                 }
             }
 
-            SignUpScreenButton(
-                uiState = uiState,
-                onIntent = onIntent
+            if (uiState.showSignUpScreenButton) {
+                SignUpScreenButton(
+                    uiState = uiState,
+                    onIntent = onIntent
+                )
+            }
+        }
+
+        if (uiState.showSignUpCodeBottomDialog) {
+            SignUpCodeBottomDialog(
+                onDismissRequest = { onIntent(SignUpIntent.DismissSignUpCodeBottomDialog) }
             )
         }
     }
@@ -113,29 +134,28 @@ private fun SignUpScreenButton(
 ) {
     val isKeyboardVisible by keyboardAsState()
 
-    if (isKeyboardVisible) {
+    if (isKeyboardVisible.not()) {
+        YappSolidPrimaryButtonXLarge(
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .fillMaxWidth(),
+            enable = uiState.primaryButtonEnable,
+            text = stringResource(R.string.signup_screen_button_next),
+            onClick = { onIntent(SignUpIntent.ClickPrimaryButton) }
+        )
+        Spacer(Modifier.height(16.dp))
+        return
+    }
+
+    if (uiState.showKeyboardAboveButton) {
         YappSolidPrimaryButtonLarge(
             modifier = Modifier
-                .fillMaxWidth()
-                .consumeWindowInsets(WindowInsets.navigationBars)
-                .imePadding(),
+                .fillMaxWidth(),
             shape = RoundedCornerShape(0.dp),
             enable = uiState.primaryButtonEnable,
             text = stringResource(R.string.signup_screen_button_next),
             onClick = { onIntent(SignUpIntent.ClickPrimaryButton) }
         )
-    } else {
-        YappSolidPrimaryButtonXLarge(
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .fillMaxWidth()
-                .imePadding(),
-            enable = uiState.primaryButtonEnable,
-            text = stringResource(R.string.signup_screen_button_next),
-            onClick = { onIntent(SignUpIntent.ClickPrimaryButton) }
-        )
-
-        Spacer(Modifier.height(16.dp))
     }
 }
 

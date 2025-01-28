@@ -20,7 +20,7 @@ import com.yapp.core.designsystem.theme.YappTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomDialog(
-    onDismiss: () -> Unit,
+    onDismissRequest: () -> Unit,
     content: @Composable () -> Unit,
 ) {
     ModalBottomSheet(
@@ -30,7 +30,7 @@ fun BottomDialog(
         containerColor = Color.Transparent,
         contentColor = Color.Transparent,
         dragHandle = null,
-        onDismissRequest = { onDismiss() },
+        onDismissRequest = { onDismissRequest() },
         shape = RoundedCornerShape(0.dp),
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ) {
@@ -49,7 +49,7 @@ fun BottomDialog(
 @Composable
 private fun BottomDialogPreview() {
     YappTheme {
-        BottomDialog(onDismiss = { }) {
+        BottomDialog(onDismissRequest = { }) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text("Preview")
             }

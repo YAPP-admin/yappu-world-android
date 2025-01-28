@@ -18,9 +18,11 @@ import com.yapp.core.ui.component.BottomDialog
 import com.yapp.feature.signup.R
 
 @Composable
-fun SignUpCodeBottomDialog() {
+fun SignUpCodeBottomDialog(
+    onDismissRequest: () -> Unit,
+) {
     BottomDialog(
-        onDismiss = {}
+        onDismissRequest = onDismissRequest
     ) {
         Column(
             modifier = Modifier.padding(20.dp),
