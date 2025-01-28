@@ -8,10 +8,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor() : ViewModel() {
-    val store: MviIntentStore<LoginState, LoginIntent, Nothing> =
+    val store: MviIntentStore<LoginState, LoginIntent, LoginSideEffect> =
         mviIntentStore(
             initialState = LoginState(),
-            onIntent = { intent, _, reduce, _ ->
+            onIntent = { intent, _, reduce, postSideEffect  ->
                 when (intent) {
                     is LoginIntent.ClickLoginButton -> {}
                     is LoginIntent.ClickSignUpButton -> reduce { copy(showAgreementDialog = true) }
@@ -20,6 +20,7 @@ class LoginViewModel @Inject constructor() : ViewModel() {
                     is LoginIntent.CloseAgreementDialog -> reduce { copy(showAgreementDialog = false) }
                     is LoginIntent.CheckAgreement1 -> reduce { copy(agreement1 = intent.checked) }
                     is LoginIntent.CheckAgreement2 -> reduce { copy(agreement2 = intent.checked) }
+                    is LoginIntent.ClickNextButton -> postSideEffect(LoginSideEffect.NavigateToSignUp)
                 }
             }
         )

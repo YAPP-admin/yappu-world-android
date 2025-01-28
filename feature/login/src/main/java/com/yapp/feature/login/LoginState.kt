@@ -22,4 +22,9 @@ sealed interface LoginIntent {
     data object CloseAgreementDialog : LoginIntent
     data class CheckAgreement1(val checked: Boolean) : LoginIntent
     data class CheckAgreement2(val checked: Boolean) : LoginIntent
+    data object ClickNextButton : LoginIntent
+}
+
+sealed interface LoginSideEffect {
+    data object NavigateToSignUp : LoginSideEffect
 }

@@ -14,6 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
+import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.login.component.AgreementBottomDialog
 import com.yapp.feature.login.component.LoginDivider
 import com.yapp.feature.login.component.LoginInputSection
@@ -23,24 +24,27 @@ import com.yapp.feature.login.component.TopTitle
 
 @Composable
 internal fun LoginRoute(
-    navigateSignup: () -> Unit,
+    navigateToSignup: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val loginState by viewModel.store.uiState.collectAsStateWithLifecycle()
+    viewModel.store.sideEffects.collectWithLifecycle { effect ->
+        when (effect) {
+            LoginSideEffect.NavigateToSignUp -> navigateToSignup()
+        }
+    }
 
     LoginScreen(
         loginState = loginState,
-        onIntent = { viewModel.store.onIntent(it) },
-        navigateSignup
+        onIntent = { viewModel.store.onIntent(it) }
     )
 }
 
 @Composable
 fun LoginScreen(
     loginState: LoginState,
-    onIntent: (LoginIntent) -> Unit = {},
-    navigateSignup: () -> Unit,
+    onIntent: (LoginIntent) -> Unit = {}
 ) {
     YappBackground {
         Column(
@@ -65,13 +69,13 @@ fun LoginScreen(
         }
         if (loginState.showAgreementDialog) {
             AgreementBottomDialog(
-                { onIntent(LoginIntent.CloseAgreementDialog) },
-                loginState.agreement1,
-                loginState.agreement2,
-                { onIntent(LoginIntent.CheckAgreement1(it)) },
-                { onIntent(LoginIntent.CheckAgreement2(it)) },
-                loginState.enableNextButton,
-                { navigateSignup() }
+                onDismiss = { onIntent(LoginIntent.CloseAgreementDialog) },
+                agreement1 = loginState.agreement1,
+                agreement2 = loginState.agreement2,
+                onAgreement1Checked = { onIntent(LoginIntent.CheckAgreement1(it)) },
+                onAgreement2Checked = { onIntent(LoginIntent.CheckAgreement2(it)) },
+                enableNextButton = loginState.enableNextButton,
+                onClickNextButton = { onIntent(LoginIntent.ClickNextButton)}
             )
         }
     }
