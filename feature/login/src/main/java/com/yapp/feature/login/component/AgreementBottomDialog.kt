@@ -103,7 +103,7 @@ fun AgreementContent(
 
 @Preview(showBackground = true)
 @Composable
-private fun LoginScreenPreview() {
+private fun AgreementBottomDialogPreview() {
     YappTheme {
         AgreementBottomDialog(
             {},
