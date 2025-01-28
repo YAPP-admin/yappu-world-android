@@ -159,7 +159,7 @@ private fun SignUpScreenButton(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
                 .fillMaxWidth(),
-            text = "대기상태가 계속되고 있나요?",
+            text = stringResource(R.string.signup_screen_pending_assistive_button),
             onClick = {}
         )
 
@@ -169,7 +169,7 @@ private fun SignUpScreenButton(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
                 .fillMaxWidth(),
-            text = "승인요청하기",
+            text = stringResource(R.string.signup_screen_pending_outlined_button),
             onClick = {}
         )
 
