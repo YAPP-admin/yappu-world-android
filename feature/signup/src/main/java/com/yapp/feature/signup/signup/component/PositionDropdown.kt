@@ -19,16 +19,20 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.PopupProperties
 import com.yapp.core.designsystem.component.input.text.InputTextDefaults
 import com.yapp.core.designsystem.component.input.text.YappBasicInputText
 import com.yapp.core.designsystem.extension.yappClickable
@@ -54,8 +58,12 @@ fun PositionDropdown(
         value
     }
 
-    BoxWithConstraints(modifier = modifier) {
-        Box {
+    var boxWidth by remember { mutableIntStateOf(0) }
+
+    Box(modifier = modifier) {
+        Box(
+            modifier = Modifier.onSizeChanged { boxWidth = it.width }
+        ) {
             YappBasicInputText(
                 label = label,
                 value = value ?: placeholder,
@@ -106,7 +114,7 @@ fun PositionDropdown(
                     shape = RoundedCornerShape(12.dp)
                 )
                 .border(1.dp, YappTheme.colorScheme.lineNormalNormal, RoundedCornerShape(12.dp))
-                .width(maxWidth)
+                .width(with(LocalDensity.current) { boxWidth.toDp() })
                 .padding(8.dp),
             offset = DpOffset(y = 4.dp, x = 0.dp),
             expanded = isDropdownExpanded,
