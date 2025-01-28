@@ -6,9 +6,6 @@ data class PositionState(
     val name: String = "",
     val currentActivityUnit: ActivityUnit = ActivityUnit(),
     val previousActivityUnit: List<ActivityUnit> = emptyList(),
-    val position: String = "",
-    val isValid: Boolean = false,
-    val errorMessage: String? = null
 )
 
 sealed interface PositionIntent {
