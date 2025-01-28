@@ -11,8 +11,12 @@ import kotlinx.serialization.Serializable
 
 fun NavController.navigateToSignUp(navOptions: NavOptions? = null) { navigate(SignUpRoute, navOptions) }
 
-fun NavGraphBuilder.signupNavGraph(){
+fun NavGraphBuilder.signupNavGraph(
+    navigateBack: () -> Unit,
+){
     composable<SignUpRoute> {
-        SignUpRoute()
+        SignUpRoute(
+            navigateBack = navigateBack,
+        )
     }
 }

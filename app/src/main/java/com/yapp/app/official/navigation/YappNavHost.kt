@@ -22,7 +22,9 @@ fun YappNavHost(
         loginNavGraph(
             navigateSignUp = { navigator.navigateSignUpScreen() }
         )
-        signupNavGraph()
+        signupNavGraph(
+            navigateBack = { navigator.popBackStack() }
+        )
         homeNavGraph()
         noticeNavGraph()
     }

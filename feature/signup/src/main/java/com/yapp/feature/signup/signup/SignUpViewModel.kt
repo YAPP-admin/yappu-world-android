@@ -9,6 +9,7 @@ import com.yapp.model.SignUpInfo
 import com.yapp.model.SignUpResult
 import com.yapp.model.exceptions.SignUpCodeException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,7 +19,7 @@ class SignUpViewModel @Inject constructor(
 ) : ViewModel() {
     private var signUpInfo = SignUpInfo()
 
-    val store: MviIntentStore<SignUpState, SignUpIntent, Nothing> =
+    val store: MviIntentStore<SignUpState, SignUpIntent, SignUpSideEffect> =
         mviIntentStore(
             initialState = SignUpState(),
             onIntent = ::onIntent
@@ -28,18 +29,21 @@ class SignUpViewModel @Inject constructor(
         intent: SignUpIntent,
         state: SignUpState,
         reduce: (SignUpState.() -> SignUpState) -> Unit,
-        postSideEffect: (Nothing) -> Unit
+        postSideEffect: (SignUpSideEffect) -> Unit,
     ) {
         when (intent) {
             SignUpIntent.BackPressed,
             SignUpIntent.ClickBackButton -> {
                 val previousStep = when (state.currentStep) {
-                    SignUpStep.Pending -> SignUpStep.Complete
-                    SignUpStep.Complete -> SignUpStep.Position
                     SignUpStep.Position -> SignUpStep.Password
                     SignUpStep.Password -> SignUpStep.Email
                     SignUpStep.Email -> SignUpStep.Name
-                    SignUpStep.Name -> TODO()
+                    SignUpStep.Complete,
+                    SignUpStep.Pending,
+                    SignUpStep.Name -> {
+                        postSideEffect(SignUpSideEffect.NavigateBack)
+                        return
+                    }
                 }
 
                 reduce {
@@ -60,9 +64,9 @@ class SignUpViewModel @Inject constructor(
                     SignUpStep.Name -> SignUpStep.Email
                     SignUpStep.Email -> SignUpStep.Password
                     SignUpStep.Password -> SignUpStep.Position
-                    SignUpStep.Position -> SignUpStep.Position
-                    SignUpStep.Complete -> TODO()
-                    SignUpStep.Pending -> SignUpStep.Pending
+                    SignUpStep.Position,
+                    SignUpStep.Complete,
+                    SignUpStep.Pending -> return
                 }
 
                 reduce {
@@ -103,7 +107,15 @@ class SignUpViewModel @Inject constructor(
                 reduce { copy(primaryButtonEnable = signUpInfo.isActivityUnitsValid) }
             }
 
-            SignUpIntent.DismissSignUpCodeBottomDialog -> reduce { copy(showSignUpCodeBottomDialog = false) }
+            SignUpIntent.DismissSignUpCodeBottomDialog -> {
+                signUpInfo = signUpInfo.copy(signUpCode = "")
+                reduce {
+                    copy(
+                        showSignUpCodeBottomDialog = false,
+                        signUpCode = ""
+                    )
+                }
+            }
 
             is SignUpIntent.ChangeSighUpCode -> {
                 signUpInfo = signUpInfo.copy(signUpCode = intent.signUpCode)
@@ -130,6 +142,8 @@ class SignUpViewModel @Inject constructor(
         signUpInfo: SignUpInfo,
         reduce: (SignUpState.() -> SignUpState) -> Unit,
     ) = viewModelScope.launch {
+        reduce { copy(showSignUpCodeBottomDialog = false) }
+
         signUpUseCase(signUpInfo)
             .onSuccess { result ->
                 when (result) {
@@ -140,11 +154,9 @@ class SignUpViewModel @Inject constructor(
             .onFailure {
                 when (it) {
                     is SignUpCodeException -> reduce { copy(signUpErrorInputTextDescription = it.message) }
-                    else -> TODO()
+                    else -> throw it // TODO 예외 처리
                 }
             }
-
-        reduce { copy(showSignUpCodeBottomDialog = false) }
     }
 
     private fun getPrimaryButtonEnable(step: SignUpStep): Boolean {

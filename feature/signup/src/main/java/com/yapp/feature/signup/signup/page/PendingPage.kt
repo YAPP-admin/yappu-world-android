@@ -19,21 +19,21 @@ import com.yapp.core.ui.component.YappBackground
 import com.yapp.feature.signup.R
 
 @Composable
-fun CompleteContent() {
+fun PendingPage() {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 20.dp)
     ) {
         Text(
-            text = stringResource(R.string.signup_screen_complete_title),
+            text = stringResource(R.string.signup_screen_pending_title),
             style = YappTheme.typography.title3Bold,
         )
 
         Spacer(Modifier.height(8.dp))
 
         Text(
-            text = stringResource(R.string.signup_screen_complete_description),
+            text = stringResource(R.string.signup_screen_pending_description),
             style = YappTheme.typography.body2NormalMedium,
             color = YappTheme.colorScheme.labelAlternative,
         )
@@ -42,7 +42,7 @@ fun CompleteContent() {
 
         Image(
             modifier = Modifier.fillMaxWidth(),
-            painter = painterResource(id = R.drawable.illust_signup_complete),
+            painter = painterResource(id = R.drawable.illust_signup_pending),
             contentDescription = null,
         )
     }
@@ -50,10 +50,10 @@ fun CompleteContent() {
 
 @Preview
 @Composable
-fun CompleteContentPreview() {
+fun PendingContentPreview() {
     YappTheme {
         YappBackground {
-            CompleteContent()
+            PendingPage()
         }
     }
 }
