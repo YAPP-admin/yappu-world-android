@@ -22,6 +22,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -49,9 +50,11 @@ fun PositionPage(
     onActivityUnitsChanged: (List<ActivityUnit>) -> Unit,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
+    val focusManager = LocalFocusManager.current
     viewModel.store.sideEffects.collectWithLifecycle {
         when (it) {
             is PositionSideEffect.ActivityUnitsChanged -> onActivityUnitsChanged(it.activityUnits)
+            PositionSideEffect.ClearFocus -> focusManager.clearFocus(force = true)
         }
     }
 

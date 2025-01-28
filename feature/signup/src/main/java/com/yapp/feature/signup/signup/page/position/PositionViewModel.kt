@@ -50,6 +50,7 @@ class PositionViewModel @Inject constructor() : ViewModel() {
                 val newCurrentActivityUnit = state.currentActivityUnit.copy(position = intent.position)
                 reduce { copy(currentActivityUnit = newCurrentActivityUnit) }
                 postSideEffect(PositionSideEffect.ActivityUnitsChanged(newCurrentActivityUnit + state.previousActivityUnit))
+                postSideEffect(PositionSideEffect.ClearFocus)
             }
 
             is PositionIntent.PreviousGenerationChange -> {
@@ -67,6 +68,7 @@ class PositionViewModel @Inject constructor() : ViewModel() {
                 }
                 reduce { copy(previousActivityUnit = updatedList) }
                 postSideEffect(PositionSideEffect.ActivityUnitsChanged(state.currentActivityUnit + updatedList))
+                postSideEffect(PositionSideEffect.ClearFocus)
             }
         }
     }
