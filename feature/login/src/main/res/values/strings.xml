@@ -9,4 +9,12 @@
     <string name="login_title_signup">아직 회원이 아니신가요?</string>
     <string name="login_btn_signup">회원가입</string>
     <string name="login_divider">또는</string>
+
+    
+    <string name="agreement_bottom_dialog_title">서비스 이용약관</string>
+    <string name="agreement_bottom_dialog_item1">서비스 이용약관에 동의</string>
+    <string name="agreement_bottom_dialog_item2">개인정보 수집 및 이용 동의</string>
+    <string name="agreement_bottom_dialog_button_next">다음</string>
+    <string name="agreement_bottom_dialog_text_essential">(필수)</string>
+    <string name="agreement_bottom_dialog_button_detail">보기</string>
 </resources>
