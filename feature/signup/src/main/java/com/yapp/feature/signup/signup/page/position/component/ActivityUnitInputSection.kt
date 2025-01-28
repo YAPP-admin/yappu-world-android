@@ -64,6 +64,8 @@ fun PreviousActivityUnitInputSection(
     onPositionChange: (String) -> Unit,
     onDeleteButtonClick: (Int) -> Unit,
 ) {
+    val displayIndex = index + 1
+
     Column {
         HorizontalDivider(
             thickness = 1.dp,
@@ -78,7 +80,7 @@ fun PreviousActivityUnitInputSection(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                stringResource(R.string.signup_screen_position_previous_generation, index + 1),
+                stringResource(R.string.signup_screen_position_previous_generation, displayIndex),
                 color = YappTheme.colorScheme.labelNormal,
                 style = YappTheme.typography.body1NormalBold
             )
@@ -90,7 +92,7 @@ fun PreviousActivityUnitInputSection(
                         onDeleteButtonClick(index)
                     },
                 painter = painterResource(R.drawable.icon_trash_bin),
-                contentDescription = null,
+                contentDescription = stringResource(R.string.signup_screen_position_previous_delete_content_description, displayIndex),
             )
         }
 
