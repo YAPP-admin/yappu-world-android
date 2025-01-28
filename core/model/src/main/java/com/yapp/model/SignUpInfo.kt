@@ -13,10 +13,16 @@ data class SignUpInfo(
 ) {
     val isAllPasswordConditionValid =
         password.matches(passwordRegex) && password == passwordConfirm
+
+    val isActivityUnitsValid = activityUnits.none { it.position.isNullOrEmpty() || it.generation == null }
 }
 
 @Stable
 data class ActivityUnit(
-    val generation: Int,
-    val position: String
-)
+    val generation: Int? = null,
+    val position: String? = null,
+) {
+    operator fun plus(previousActivityUnit: List<ActivityUnit>): List<ActivityUnit> {
+        return previousActivityUnit.toMutableList().apply { add(0, this@ActivityUnit) }
+    }
+}

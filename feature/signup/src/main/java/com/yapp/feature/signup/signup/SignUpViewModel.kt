@@ -44,11 +44,16 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
             }
 
             SignUpIntent.ClickPrimaryButton -> {
+                if (state.currentStep == SignUpStep.Position) {
+                    reduce { copy(showSignUpCodeBottomDialog = true) }
+                    return
+                }
+
                 val nextStep = when (state.currentStep) {
                     SignUpStep.Name -> SignUpStep.Email
                     SignUpStep.Email -> SignUpStep.Password
                     SignUpStep.Password -> SignUpStep.Position
-                    SignUpStep.Position -> SignUpStep.Complete // TODO SignUpStep.Pending
+                    SignUpStep.Position -> SignUpStep.Position
                     SignUpStep.Complete -> TODO()
                     SignUpStep.Pending -> SignUpStep.Pending
                 }
@@ -63,7 +68,12 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
 
             is SignUpIntent.NameChanged -> {
                 signUpInfo = signUpInfo.copy(name = intent.name)
-                reduce { copy(primaryButtonEnable = intent.name.isNotBlank()) }
+                reduce {
+                    copy(
+                        primaryButtonEnable = intent.name.isNotBlank(),
+                        name = intent.name
+                    )
+                }
             }
 
             is SignUpIntent.EmailChanged -> {
@@ -80,6 +90,13 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
                 signUpInfo = signUpInfo.copy(passwordConfirm = intent.passwordConfirm)
                 reduce { copy(primaryButtonEnable = signUpInfo.isAllPasswordConditionValid) }
             }
+
+            is SignUpIntent.ActivityUnitsChanged -> {
+                signUpInfo = signUpInfo.copy(activityUnits = intent.activityUnits)
+                reduce { copy(primaryButtonEnable = signUpInfo.isActivityUnitsValid) }
+            }
+
+            SignUpIntent.DismissSignUpCodeBottomDialog -> reduce { copy(showSignUpCodeBottomDialog = false) }
         }
     }
 
@@ -88,7 +105,7 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
             SignUpStep.Name -> signUpInfo.name.isNotBlank()
             SignUpStep.Email -> signUpInfo.email.isNotBlank() // TODO 이메일 정규식 검사
             SignUpStep.Password -> signUpInfo.isAllPasswordConditionValid
-            SignUpStep.Position -> TODO()
+            SignUpStep.Position -> signUpInfo.isActivityUnitsValid
             SignUpStep.Complete -> TODO()
             SignUpStep.Pending -> TODO()
         }
