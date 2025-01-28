@@ -9,7 +9,6 @@ import com.yapp.feature.login.navigation.loginNavGraph
 import com.yapp.feature.notice.navigation.noticeNavGraph
 import com.yapp.feature.signup.navigation.signupNavGraph
 
-
 @Composable
 fun YappNavHost(
     navigator: NavigatorState,
@@ -21,7 +20,7 @@ fun YappNavHost(
         modifier = modifier,
     ) {
         loginNavGraph(
-            onClickSignUp = { navigator.navigateSignUpScreen() }
+            navigateSignUp = { navigator.navigateSignUpScreen() }
         )
         signupNavGraph()
         homeNavGraph()
