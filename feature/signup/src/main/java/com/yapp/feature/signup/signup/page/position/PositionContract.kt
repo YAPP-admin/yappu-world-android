@@ -20,4 +20,5 @@ sealed interface PositionIntent {
 
 sealed interface PositionSideEffect {
     data class ActivityUnitsChanged(val activityUnits: List<ActivityUnit>) : PositionSideEffect
+    data object ClearFocus : PositionSideEffect
 }
