@@ -7,9 +7,11 @@ data class SignUpState(
     val primaryButtonEnable: Boolean = false,
     val name: String = "",
     val showSignUpCodeBottomDialog: Boolean = false,
+    val signUpCode: String = "",
 ) {
     val showKeyboardAboveButton = currentStep != SignUpStep.Position
     val showSignUpScreenButton: Boolean = showSignUpCodeBottomDialog.not()
+    val inputCompleteButtonEnable = signUpCode.isNotBlank()
 }
 
 sealed interface SignUpIntent {
@@ -22,6 +24,9 @@ sealed interface SignUpIntent {
     data class PasswordConfirmChanged(val passwordConfirm: String) : SignUpIntent
     data class ActivityUnitsChanged(val activityUnits: List<ActivityUnit>) : SignUpIntent
     data object DismissSignUpCodeBottomDialog : SignUpIntent
+    data object ClickNoSignUpCodeButton : SignUpIntent
+    data object ClickInputCompleteButton : SignUpIntent
+    data class ChangeSighUpCode(val signUpCode: String): SignUpIntent
 }
 
 enum class SignUpStep {
