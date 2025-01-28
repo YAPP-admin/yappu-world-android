@@ -14,7 +14,9 @@ dependencies {
     implementation(project(":feature:signup"))
     implementation(project(":feature:login"))
     implementation(project(":core:designsystem"))
+    implementation(project(":core:data")) // For di
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.timber)
 }
