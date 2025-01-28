@@ -21,6 +21,8 @@ import com.yapp.feature.signup.R
 fun SignUpCodeBottomDialog(
     signUpCode: String,
     inputCompleteButtonEnable: Boolean,
+    isSignUpCodeInputTextError: Boolean,
+    signUpCodeInputTextDescription: String?,
     onDismissRequest: () -> Unit,
     onSignUpCodeChange: (String) -> Unit,
     onInputCompleteButtonClick: () -> Unit,
@@ -44,6 +46,8 @@ fun SignUpCodeBottomDialog(
                 label = stringResource(R.string.signup_code_bottom_dialog_input_text_label),
                 value = signUpCode,
                 placeholder = stringResource(R.string.signup_code_bottom_dialog_input_text_placeholder),
+                isError = isSignUpCodeInputTextError,
+                description = signUpCodeInputTextDescription,
                 onValueChange = onSignUpCodeChange
             )
 

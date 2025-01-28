@@ -1,14 +1,21 @@
 package com.yapp.feature.signup.signup
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
+import com.yapp.domain.SignUpUseCase
 import com.yapp.model.SignUpInfo
+import com.yapp.model.SignUpResult
+import com.yapp.model.exceptions.SignUpCodeException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor() : ViewModel() {
+class SignUpViewModel @Inject constructor(
+    private val signUpUseCase: SignUpUseCase,
+) : ViewModel() {
     private var signUpInfo = SignUpInfo()
 
     val store: MviIntentStore<SignUpState, SignUpIntent, Nothing> =
@@ -98,11 +105,46 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
 
             SignUpIntent.DismissSignUpCodeBottomDialog -> reduce { copy(showSignUpCodeBottomDialog = false) }
 
-            is SignUpIntent.ChangeSighUpCode -> reduce { copy(signUpCode = intent.signUpCode) }
+            is SignUpIntent.ChangeSighUpCode -> {
+                signUpInfo = signUpInfo.copy(signUpCode = intent.signUpCode)
+                reduce { copy(signUpCode = intent.signUpCode) }
+            }
 
-            SignUpIntent.ClickInputCompleteButton,
-            SignUpIntent.ClickNoSignUpCodeButton -> TODO()
+            SignUpIntent.ClickInputCompleteButton -> {
+                signUp(
+                    signUpInfo = signUpInfo,
+                    reduce = reduce,
+                )
+            }
+
+            SignUpIntent.ClickNoSignUpCodeButton -> {
+                signUp(
+                    signUpInfo = signUpInfo.copy(signUpCode = ""),
+                    reduce = reduce,
+                )
+            }
         }
+    }
+
+    private fun signUp(
+        signUpInfo: SignUpInfo,
+        reduce: (SignUpState.() -> SignUpState) -> Unit,
+    ) = viewModelScope.launch {
+        signUpUseCase(signUpInfo)
+            .onSuccess { result ->
+                when (result) {
+                    SignUpResult.Complete -> reduce { copy(currentStep = SignUpStep.Complete) }
+                    SignUpResult.Pending -> reduce { copy(currentStep = SignUpStep.Pending) }
+                }
+            }
+            .onFailure {
+                when (it) {
+                    is SignUpCodeException -> reduce { copy(signUpErrorInputTextDescription = it.message) }
+                    else -> TODO()
+                }
+            }
+
+        reduce { copy(showSignUpCodeBottomDialog = false) }
     }
 
     private fun getPrimaryButtonEnable(step: SignUpStep): Boolean {

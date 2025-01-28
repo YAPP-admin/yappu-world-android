@@ -19,14 +19,15 @@ data class ActivityUnit(
 )
 
 fun SignUpInfo.toData() = SignUpRequest(
-    email = email,
-    password = password,
-    name = name,
+    email = email.trim(),
+    password = password.trim(),
+    name = name.trim(),
     activityUnits = activityUnits.map { it.toData() },
-    signUpCode = signUpCode
+    signUpCode = signUpCode.trim()
 )
 
 fun com.yapp.model.ActivityUnit.toData() = ActivityUnit(
-    generation = generation,
-    position = position,
+    // Data Layer의 ActivityUnit으로 변환 시, null 값이 들어가면 안됨. 잘못된 값이 전송되는 것을 막기 위해 !! 사용
+    generation = generation!!,
+    position = position!!,
 )

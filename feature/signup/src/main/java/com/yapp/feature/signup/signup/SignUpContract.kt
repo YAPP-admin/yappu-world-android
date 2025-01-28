@@ -8,10 +8,12 @@ data class SignUpState(
     val name: String = "",
     val showSignUpCodeBottomDialog: Boolean = false,
     val signUpCode: String = "",
+    val signUpErrorInputTextDescription: String? = null
 ) {
     val showKeyboardAboveButton = currentStep != SignUpStep.Position
     val showSignUpScreenButton: Boolean = showSignUpCodeBottomDialog.not()
     val inputCompleteButtonEnable = signUpCode.isNotBlank()
+    val isSignUpErrorInputTextError = signUpErrorInputTextDescription != null
 }
 
 sealed interface SignUpIntent {
