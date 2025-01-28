@@ -126,6 +126,7 @@ class SignUpViewModel @Inject constructor(
                 signUp(
                     signUpInfo = signUpInfo,
                     reduce = reduce,
+                    postSideEffect = postSideEffect,
                 )
             }
 
@@ -133,6 +134,7 @@ class SignUpViewModel @Inject constructor(
                 signUp(
                     signUpInfo = signUpInfo.copy(signUpCode = ""),
                     reduce = reduce,
+                    postSideEffect = postSideEffect,
                 )
             }
         }
@@ -141,7 +143,9 @@ class SignUpViewModel @Inject constructor(
     private fun signUp(
         signUpInfo: SignUpInfo,
         reduce: (SignUpState.() -> SignUpState) -> Unit,
+        postSideEffect: (SignUpSideEffect) -> Unit,
     ) = viewModelScope.launch {
+        postSideEffect(SignUpSideEffect.ClearFocus) // FIXME: TextField가 Focus를 가진 상태로 BottomSheet가 사라지면, 시스템 뒤로가기 이벤트가 동작하지 않는 문제가 있음
         reduce { copy(showSignUpCodeBottomDialog = false) }
 
         signUpUseCase(signUpInfo)

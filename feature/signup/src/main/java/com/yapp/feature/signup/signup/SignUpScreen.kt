@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,10 +49,12 @@ fun SignUpRoute(
     navigateBack: () -> Unit,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
+    val focusManager = LocalFocusManager.current
 
     viewModel.store.sideEffects.collectWithLifecycle {
         when (it) {
             SignUpSideEffect.NavigateBack -> navigateBack()
+            SignUpSideEffect.ClearFocus -> focusManager.clearFocus(force = true)
         }
     }
 
