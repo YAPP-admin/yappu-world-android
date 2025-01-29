@@ -31,10 +31,10 @@ import com.yapp.core.designsystem.component.header.YappHeaderActionbar
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
-import com.yapp.core.ui.extension.yappDefaultAnimatedContentTransitionSpec
 import com.yapp.core.ui.util.keyboardAsState
 import com.yapp.feature.signup.R
 import com.yapp.feature.signup.signup.component.SignUpCodeBottomDialog
+import com.yapp.feature.signup.signup.extension.signUpAnimatedContentTransitionSpec
 import com.yapp.feature.signup.signup.page.CompletePage
 import com.yapp.feature.signup.signup.page.PendingPage
 import com.yapp.feature.signup.signup.page.email.EmailPage
@@ -94,8 +94,9 @@ fun SignUpScreen(
                     .height(IntrinsicSize.Max), // Keyboard 숨김/보여짐 여부에 따라 AnimatedContent의 height가 달라짐 방지
                 targetState = uiState.currentStep,
                 transitionSpec = {
-                    yappDefaultAnimatedContentTransitionSpec(
-                        leftDirectionCondition = initialState.ordinal < targetState.ordinal
+                    signUpAnimatedContentTransitionSpec(
+                        initialStep = initialState,
+                        targetStep = targetState,
                     )
                 },
                 label = "AnimatedContent",
