@@ -27,7 +27,6 @@ fun SignUpInfo.toData() = SignUpRequest(
 )
 
 fun com.yapp.model.ActivityUnit.toData() = ActivityUnit(
-    // Data Layer의 ActivityUnit으로 변환 시, null 값이 들어가면 안됨. 잘못된 값이 전송되는 것을 막기 위해 !! 사용
-    generation = generation!!,
-    position = position!!,
+    generation = generation ?: throw IllegalArgumentException("Generation must not be null"),
+    position = position ?: throw IllegalArgumentException("Position must not be null"),
 )
