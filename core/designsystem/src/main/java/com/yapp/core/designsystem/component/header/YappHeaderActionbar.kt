@@ -85,7 +85,7 @@ fun YappHeaderActionbar(
 }
 
 @Composable
-fun HeaderActionbarExpanded(
+fun YappHeaderActionbarExpanded(
     modifier: Modifier = Modifier,
     leftIcon: @Composable (() -> Unit)? = null,
     rightAction: @Composable (RowScope.() -> Unit)? = null,
@@ -117,6 +117,34 @@ fun HeaderActionbarExpanded(
     }
 }
 
+@Composable
+fun YappHeaderActionbarExpanded(
+    modifier: Modifier = Modifier,
+    @DrawableRes leftIcon: Int?,
+    contentDescription: String? = null,
+    onClickLeftIcon: (() -> Unit)? = null,
+    title: String,
+) {
+
+    YappHeaderActionbarExpanded(
+        modifier = modifier,
+        title = title,
+        leftIcon = {
+            if (leftIcon != null) {
+                Icon(
+                    painter = painterResource(id = leftIcon),
+                    contentDescription = contentDescription,
+                    modifier = Modifier.yappClickable(
+                        rippleBounded = false,
+                        rippleRadius = 24.dp,
+                        onClick = onClickLeftIcon,
+                    )
+                )
+            }
+        }
+    )
+}
+
 @Preview(backgroundColor = 0xFFFFFFFF, showBackground = true)
 @Composable
 private fun HeaderActionbarPreview() {
@@ -137,7 +165,7 @@ private fun HeaderActionbarPreview() {
 @Composable
 private fun HeaderActionbarExpandedPreview() {
     YappTheme {
-        HeaderActionbarExpanded(
+        YappHeaderActionbarExpanded(
             leftIcon = {
                 Icon(
                     imageVector = Icons.Default.Close,
