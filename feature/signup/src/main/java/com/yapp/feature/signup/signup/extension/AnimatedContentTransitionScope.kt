@@ -11,19 +11,17 @@ fun AnimatedContentTransitionScope<SignUpStep>.signUpAnimatedContentTransitionSp
     targetStep: SignUpStep,
 ): ContentTransform {
     val direction = when {
-        targetStep in listOf(
-            SignUpStep.Complete,
-            SignUpStep.Pending
-        ) -> AnimatedContentTransitionScope.SlideDirection.Up
-
         initialStep.ordinal < targetStep.ordinal -> AnimatedContentTransitionScope.SlideDirection.Left
         else -> AnimatedContentTransitionScope.SlideDirection.Right
     }
+
+    val durationMillis = if (initialStep == SignUpStep.Name && targetStep == SignUpStep.Pending) 0 else 500
+
     return slideIntoContainer(
         towards = direction,
-        animationSpec = tween(500),
+        animationSpec = tween(durationMillis),
     ) togetherWith slideOutOfContainer(
         towards = direction,
-        animationSpec = tween(500),
+        animationSpec = tween(durationMillis),
     )
 }
