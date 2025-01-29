@@ -9,12 +9,14 @@ data class PositionState(
 )
 
 sealed interface PositionIntent {
-    data class GenerationChange(val generation: String) : PositionIntent
-    data class PositionChange(val position: String) : PositionIntent
-    data class PreviousGenerationChange(val index: Int, val generation: String) : PositionIntent
-    data class PreviousPositionChange(val index: Int, val position: String) : PositionIntent
+    data class ChangeGeneration(val generation: String) : PositionIntent
+    data class ChangePosition(val position: String) : PositionIntent
+    data class ChangePreviousGeneration(val index: Int, val generation: String) : PositionIntent
+    data class ChangePreviousPosition(val index: Int, val position: String) : PositionIntent
     data class EnterScreen(val name: String) : PositionIntent
     data object ClickAddPreviousGenerationButton : PositionIntent
+    data object DropdownMenuShown : PositionIntent
+
     data class ClickDeletePreviousGenerationButton(val index: Int) : PositionIntent
 }
 

@@ -1,45 +1,34 @@
 package com.yapp.feature.signup.signup.page.position
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.component.button.text.YappTextAssistiveButtonSmall
 import com.yapp.core.designsystem.component.gradient.GradientBottom
-import com.yapp.core.designsystem.component.input.text.YappInputTextLarge
-import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.signup.R
 import com.yapp.feature.signup.signup.page.position.component.ActivityUnitInputSection
-import com.yapp.feature.signup.signup.page.position.component.PositionDropdown
 import com.yapp.feature.signup.signup.page.position.component.PreviousActivityUnitInputSection
 import com.yapp.model.ActivityUnit
 
@@ -111,8 +100,9 @@ fun PositionContent(
                 ActivityUnitInputSection(
                     generation = uiState.currentActivityUnit.generation?.toString() ?: "",
                     position = uiState.currentActivityUnit.position ?: "",
-                    onGenerationChange = { onIntent(PositionIntent.GenerationChange(it)) },
-                    onPositionChange = { onIntent(PositionIntent.PositionChange(it)) },
+                    onGenerationChange = { onIntent(PositionIntent.ChangeGeneration(it)) },
+                    onPositionChange = { onIntent(PositionIntent.ChangePosition(it)) },
+                    onDropdownMenuShown = { onIntent(PositionIntent.DropdownMenuShown) },
                 )
 
                 uiState.previousActivityUnit.forEachIndexed { index, activityUnit ->
@@ -122,9 +112,10 @@ fun PositionContent(
                         index = index,
                         generation = activityUnit.generation?.toString() ?: "",
                         position = activityUnit.position ?: "",
-                        onGenerationChange = { onIntent(PositionIntent.PreviousGenerationChange(index, it)) },
-                        onPositionChange = { onIntent(PositionIntent.PreviousPositionChange(index, it)) },
+                        onGenerationChange = { onIntent(PositionIntent.ChangePreviousGeneration(index, it)) },
+                        onPositionChange = { onIntent(PositionIntent.ChangePreviousPosition(index, it)) },
                         onDeleteButtonClick = { onIntent(PositionIntent.ClickDeletePreviousGenerationButton(it)) },
+                        onDropdownMenuShown = { onIntent(PositionIntent.DropdownMenuShown) },
                     )
                 }
 

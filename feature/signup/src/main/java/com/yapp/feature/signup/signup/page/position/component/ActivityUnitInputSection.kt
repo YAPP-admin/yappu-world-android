@@ -31,6 +31,7 @@ fun ActivityUnitInputSection(
     position: String?,
     onGenerationChange: (String) -> Unit,
     onPositionChange: (String) -> Unit,
+    onDropdownMenuShown: () -> Unit,
 ) {
     Row {
         YappInputTextLarge(
@@ -51,6 +52,7 @@ fun ActivityUnitInputSection(
             placeholder = stringResource(R.string.signup_screen_position_position_input_text_placeholder),
             // TODO 임시 데이터, 서버에서 받아오게 변경 필요
             dropdownOptions = listOf("PM", "UX/UI Design", "Android", "iOS", "Web", "Server"),
+            onDropdownMenuShown = onDropdownMenuShown,
         )
     }
 }
@@ -63,6 +65,7 @@ fun PreviousActivityUnitInputSection(
     onGenerationChange: (String) -> Unit,
     onPositionChange: (String) -> Unit,
     onDeleteButtonClick: (Int) -> Unit,
+    onDropdownMenuShown: () -> Unit,
 ) {
     val displayIndex = index + 1
 
@@ -92,7 +95,10 @@ fun PreviousActivityUnitInputSection(
                         onDeleteButtonClick(index)
                     },
                 painter = painterResource(R.drawable.icon_trash_bin),
-                contentDescription = stringResource(R.string.signup_screen_position_previous_delete_content_description, displayIndex),
+                contentDescription = stringResource(
+                    R.string.signup_screen_position_previous_delete_content_description,
+                    displayIndex
+                ),
             )
         }
 
@@ -102,7 +108,8 @@ fun PreviousActivityUnitInputSection(
             generation = generation,
             position = position,
             onGenerationChange = onGenerationChange,
-            onPositionChange = onPositionChange
+            onPositionChange = onPositionChange,
+            onDropdownMenuShown = onDropdownMenuShown,
         )
     }
 }
@@ -115,7 +122,8 @@ fun ActivityUnitInputSectionPreview() {
             generation = "12",
             position = "Android",
             onGenerationChange = {},
-            onPositionChange = {}
+            onPositionChange = {},
+            onDropdownMenuShown = {},
         )
     }
 }
@@ -130,7 +138,8 @@ fun PreviousActivityUnitInputSectionPreview() {
             position = "Android",
             onGenerationChange = {},
             onPositionChange = {},
-            onDeleteButtonClick = {}
+            onDeleteButtonClick = {},
+            onDropdownMenuShown = {},
         )
     }
 }

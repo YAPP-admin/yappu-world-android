@@ -41,6 +41,7 @@ fun PositionDropdown(
     placeholder: String,
     dropdownOptions: List<String>,
     description: String? = null,
+    onDropdownMenuShown: () -> Unit = {},
 ) {
     var isDropdownExpanded by remember { mutableStateOf(false) }
 
@@ -95,7 +96,10 @@ fun PositionDropdown(
                     .matchParentSize()
                     .yappClickable(
                         rippleEnabled = false,
-                        onClick = { isDropdownExpanded = true }
+                        onClick = {
+                            isDropdownExpanded = true
+                            onDropdownMenuShown()
+                        }
                     )
             )
         }
