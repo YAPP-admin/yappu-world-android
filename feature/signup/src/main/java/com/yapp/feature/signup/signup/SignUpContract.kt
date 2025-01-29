@@ -42,7 +42,7 @@ sealed interface SignUpIntent {
     data object DismissSignUpCodeBottomDialog : SignUpIntent
     data object ClickNoSignUpCodeButton : SignUpIntent
     data object ClickInputCompleteButton : SignUpIntent
-    data class ChangeSighUpCode(val signUpCode: String): SignUpIntent
+    data class ChangeSignUpCode(val signUpCode: String): SignUpIntent
 }
 
 sealed interface SignUpSideEffect {

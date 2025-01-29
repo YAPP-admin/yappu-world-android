@@ -117,7 +117,7 @@ class SignUpViewModel @Inject constructor(
                 }
             }
 
-            is SignUpIntent.ChangeSighUpCode -> {
+            is SignUpIntent.ChangeSignUpCode -> {
                 signUpInfo = signUpInfo.copy(signUpCode = intent.signUpCode)
                 reduce { copy(signUpCode = intent.signUpCode) }
             }
