@@ -30,7 +30,7 @@ timber = "5.0.1"
 
 androidxDatastore = "1.1.2"
 encryptedDatastore = "1.9.25-1.0.20-1.2.0"
-protobuf = "3.24.4"
+protobuf = "3.25.5"
 protobufPlugin = "0.9.4"
 
 
