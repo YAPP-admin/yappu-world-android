@@ -40,20 +40,19 @@ class PositionViewModel @Inject constructor() : ViewModel() {
                 postSideEffect(PositionSideEffect.ActivityUnitsChanged(state.currentActivityUnit + newPreviousActivityUnit))
             }
 
-            is PositionIntent.GenerationChange -> {
+            is PositionIntent.ChangeGeneration -> {
                 val newCurrentActivityUnit = state.currentActivityUnit.copy(generation = intent.generation.toIntOrNull())
                 reduce { copy(currentActivityUnit = newCurrentActivityUnit) }
                 postSideEffect(PositionSideEffect.ActivityUnitsChanged(newCurrentActivityUnit + state.previousActivityUnit))
             }
 
-            is PositionIntent.PositionChange -> {
+            is PositionIntent.ChangePosition -> {
                 val newCurrentActivityUnit = state.currentActivityUnit.copy(position = intent.position)
                 reduce { copy(currentActivityUnit = newCurrentActivityUnit) }
                 postSideEffect(PositionSideEffect.ActivityUnitsChanged(newCurrentActivityUnit + state.previousActivityUnit))
-                postSideEffect(PositionSideEffect.ClearFocus)
             }
 
-            is PositionIntent.PreviousGenerationChange -> {
+            is PositionIntent.ChangePreviousGeneration -> {
                 val updatedList = state.previousActivityUnit.replace(intent.index) {
                     it.copy(generation = intent.generation.toIntOrNull())
                 }
@@ -62,14 +61,15 @@ class PositionViewModel @Inject constructor() : ViewModel() {
             }
 
 
-            is PositionIntent.PreviousPositionChange -> {
+            is PositionIntent.ChangePreviousPosition -> {
                 val updatedList = state.previousActivityUnit.replace(intent.index) {
                     it.copy(position = intent.position)
                 }
                 reduce { copy(previousActivityUnit = updatedList) }
                 postSideEffect(PositionSideEffect.ActivityUnitsChanged(state.currentActivityUnit + updatedList))
-                postSideEffect(PositionSideEffect.ClearFocus)
             }
+
+            PositionIntent.DropdownMenuShown -> postSideEffect(PositionSideEffect.ClearFocus)
         }
     }
 }
