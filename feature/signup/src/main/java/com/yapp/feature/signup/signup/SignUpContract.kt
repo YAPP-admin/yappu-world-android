@@ -15,16 +15,14 @@ data class SignUpState(
     val showSignUpScreenButton: Boolean = showSignUpCodeBottomDialog.not()
     val inputCompleteButtonEnable = signUpCode.isNotBlank()
     val isSignUpErrorInputTextError = signUpErrorInputTextDescription != null
-    val backIcon: Int? = if (currentStep !in listOf(SignUpStep.Complete, SignUpStep.Pending)) {
-        com.yapp.core.designsystem.R.drawable.icon_chevron_left
-    } else {
-        null
+    val backIcon: Int? = when (currentStep) {
+        SignUpStep.Complete, SignUpStep.Pending -> null
+        else -> com.yapp.core.designsystem.R.drawable.icon_chevron_left
     }
 
-    val primaryButtonText = if (currentStep == SignUpStep.Complete) {
-        R.string.signup_screen_button_start
-    } else {
-        R.string.signup_screen_button_next
+    val primaryButtonText = when (currentStep) {
+        SignUpStep.Complete -> R.string.signup_screen_button_start
+        else -> R.string.signup_screen_button_next
     }
 
     val showPendingButton = currentStep == SignUpStep.Pending
@@ -42,7 +40,7 @@ sealed interface SignUpIntent {
     data object DismissSignUpCodeBottomDialog : SignUpIntent
     data object ClickNoSignUpCodeButton : SignUpIntent
     data object ClickInputCompleteButton : SignUpIntent
-    data class ChangeSignUpCode(val signUpCode: String): SignUpIntent
+    data class ChangeSignUpCode(val signUpCode: String) : SignUpIntent
 }
 
 sealed interface SignUpSideEffect {
