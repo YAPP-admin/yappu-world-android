@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.yapp.core.designsystem.component.alert.YappAlertDialog
 import com.yapp.core.designsystem.component.button.outlined.YappOutlinedSecondaryButtonXLarge
 import com.yapp.core.designsystem.component.control.switches.YappSwitchMedium
 import com.yapp.core.designsystem.component.header.YappHeaderActionbarExpanded
@@ -172,6 +173,29 @@ fun SettingScreen(
             )
 
             Spacer(Modifier.height(16.dp))
+        }
+
+        if (uiState.showLogoutDialog) {
+            YappAlertDialog(
+                title = stringResource(R.string.logout_dialog_title),
+                actionButtonText = stringResource(R.string.logout_dialog_action_button),
+                recommendActionButtonText = stringResource(R.string.logout_dialog_recommend_action_button),
+                onDismissRequest = { onIntent(SettingIntent.DismissLogoutDialog) },
+                onActionButtonClick = { onIntent(SettingIntent.ClickLogoutDialogActionButton) },
+                onRecommendActionButtonClick = { onIntent(SettingIntent.ClickLogoutDialogRecommendActionButton) },
+            )
+        }
+
+        if (uiState.showDeleteAccountDialog) {
+            YappAlertDialog(
+                title = stringResource(R.string.delete_account_dialog_title),
+                body = stringResource(R.string.delete_account_dialog_body),
+                actionButtonText = stringResource(R.string.delete_account_dialog_action_button),
+                recommendActionButtonText = stringResource(R.string.delete_account_dialog_recommend_action_button),
+                onDismissRequest = { onIntent(SettingIntent.DismissDeleteAccountDialog) },
+                onActionButtonClick = { onIntent(SettingIntent.ClickDeleteAccountDialogActionButton) },
+                onRecommendActionButtonClick = { onIntent(SettingIntent.ClickDeleteAccountDialogRecommendActionButton) },
+            )
         }
     }
 }

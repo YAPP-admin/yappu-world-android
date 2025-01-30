@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.yapp.feature.home.HomeScreen
+import com.yapp.feature.home.setting.SettingRoute
 import kotlinx.serialization.Serializable
 
 @Serializable data object HomeRoute
@@ -13,6 +14,6 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) { navigate(Home
 
 fun NavGraphBuilder.homeNavGraph(){
     composable<HomeRoute> {
-        HomeScreen()
+        SettingRoute()
     }
 }
