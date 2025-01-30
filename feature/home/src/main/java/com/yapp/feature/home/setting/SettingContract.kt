@@ -2,7 +2,8 @@ package com.yapp.feature.home.setting
 
 data class SettingState(
     val isNotificationEnabled: Boolean = false,
-    val errorMessage: String? = null
+    val showLogoutDialog: Boolean = false,
+    val showDeleteAccountDialog: Boolean = false,
 )
 
 sealed interface SettingIntent {
@@ -13,6 +14,12 @@ sealed interface SettingIntent {
     data object ClickTermsItem : SettingIntent
     data object ClickInquiryItem : SettingIntent
     data object ClickDeleteAccountButton : SettingIntent
+    data object DismissLogoutDialog : SettingIntent
+    data object ClickLogoutDialogActionButton : SettingIntent
+    data object ClickLogoutDialogRecommendActionButton : SettingIntent
+    data object DismissDeleteAccountDialog : SettingIntent
+    data object ClickDeleteAccountDialogActionButton : SettingIntent
+    data object ClickDeleteAccountDialogRecommendActionButton : SettingIntent
 }
 
 sealed interface SettingSideEffect {

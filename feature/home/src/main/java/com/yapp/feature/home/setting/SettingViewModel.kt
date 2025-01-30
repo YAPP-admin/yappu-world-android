@@ -26,6 +26,7 @@ class SettingViewModel @Inject constructor() : ViewModel() {
                 reduce { copy(isNotificationEnabled = intent.enabled) }
             }
             SettingIntent.ClickLogoutButton -> {
+                reduce { copy(showLogoutDialog = true) }
             }
             SettingIntent.ClickBackButton -> {
                 postSideEffect(SettingSideEffect.NavigateBack)
@@ -40,7 +41,21 @@ class SettingViewModel @Inject constructor() : ViewModel() {
                 postSideEffect(SettingSideEffect.OpenInquiry)
             }
             SettingIntent.ClickDeleteAccountButton -> {
+                reduce { copy(showDeleteAccountDialog = true) }
             }
+
+            SettingIntent.DismissDeleteAccountDialog,
+            SettingIntent.ClickDeleteAccountDialogActionButton -> {
+                reduce { copy(showDeleteAccountDialog = false) }
+            }
+
+            SettingIntent.DismissLogoutDialog,
+            SettingIntent.ClickLogoutDialogActionButton -> {
+                reduce { copy(showLogoutDialog = false) }
+            }
+
+            SettingIntent.ClickDeleteAccountDialogRecommendActionButton -> TODO()
+            SettingIntent.ClickLogoutDialogRecommendActionButton -> TODO()
         }
     }
 }
