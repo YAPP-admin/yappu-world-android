@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
@@ -17,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,7 +36,12 @@ fun YappHeaderActionbar(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 16.dp, horizontal = 20.dp),
+            .padding(
+                start = 14.dp,
+                end = 20.dp,
+                top = 15.dp,
+                bottom = 15.dp
+            ),
         contentAlignment = Alignment.Center
     ) {
         if (title != null) {
@@ -73,11 +81,13 @@ fun YappHeaderActionbar(
                 Icon(
                     painter = painterResource(id = leftIcon),
                     contentDescription = contentDescription,
-                    modifier = Modifier.yappClickable(
-                        rippleBounded = false,
-                        rippleRadius = 24.dp,
-                        onClick = onClickLeftIcon,
-                    )
+                    modifier = Modifier
+                        .size(24.dp)
+                        .yappClickable(
+                            rippleBounded = false,
+                            rippleRadius = 18.dp,
+                            onClick = onClickLeftIcon,
+                        )
                 )
             }
         }
