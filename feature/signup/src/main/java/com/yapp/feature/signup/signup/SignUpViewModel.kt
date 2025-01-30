@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.sign
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
@@ -89,7 +90,7 @@ class SignUpViewModel @Inject constructor(
 
             is SignUpIntent.EmailChanged -> {
                 signUpInfo = signUpInfo.copy(email = intent.email)
-                reduce { copy(primaryButtonEnable = intent.email.isNotBlank()) } // TODO 이메일 정규식 검사
+                reduce { copy(primaryButtonEnable = signUpInfo.isEmailValid) }
             }
 
             is SignUpIntent.PasswordChanged -> {
@@ -167,7 +168,7 @@ class SignUpViewModel @Inject constructor(
     private fun getPrimaryButtonEnable(step: SignUpStep): Boolean {
         return when (step) {
             SignUpStep.Name -> signUpInfo.name.isNotBlank()
-            SignUpStep.Email -> signUpInfo.email.isNotBlank() // TODO 이메일 정규식 검사
+            SignUpStep.Email -> signUpInfo.isEmailValid
             SignUpStep.Password -> signUpInfo.isAllPasswordConditionValid
             SignUpStep.Position -> signUpInfo.isActivityUnitsValid
             SignUpStep.Complete,

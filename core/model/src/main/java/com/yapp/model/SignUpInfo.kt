@@ -11,8 +11,10 @@ data class SignUpInfo(
     val activityUnits: List<ActivityUnit> = emptyList(),
     val signUpCode: String = ""
 ) {
+    val isEmailValid = email.matches(Regex.email)
+
     val isAllPasswordConditionValid =
-        password.matches(passwordRegex) && password == passwordConfirm
+        password.matches(Regex.password) && password == passwordConfirm
 
     val isActivityUnitsValid = activityUnits.none { it.position.isNullOrEmpty() || it.generation == null } && activityUnits.isNotEmpty()
 }

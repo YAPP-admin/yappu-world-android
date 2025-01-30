@@ -11,6 +11,7 @@ import com.yapp.feature.home.navigation.navigateToHome
 import com.yapp.feature.login.navigation.LoginRoute
 import com.yapp.feature.login.navigation.navigateToLogin
 import com.yapp.feature.notice.navigation.navigateToNotice
+import com.yapp.feature.signup.navigation.SignUpRoute
 import com.yapp.feature.signup.navigation.navigateToSignUp
 
 
@@ -31,7 +32,7 @@ class NavigatorState(
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
 
-    val startDestination = HomeRoute
+    val startDestination = SignUpRoute
 
     fun navigateLoginScreen() {
         navController.navigateToLogin()

@@ -67,6 +67,8 @@ fun EmailContent(
             label = stringResource(R.string.signup_screen_email_input_text_label),
             placeholder = stringResource(R.string.signup_screen_email_input_placeholder),
             value = uiState.email,
+            isError = uiState.isEmailError,
+            description = uiState.emailErrorDescription,
             onValueChange = { onIntent(EmailIntent.ChangeEmail(it)) },
         )
     }

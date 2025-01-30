@@ -3,14 +3,14 @@ package com.yapp.feature.signup.signup.page.password
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.yapp.feature.signup.R
-import com.yapp.model.passwordRegex
+import com.yapp.model.Regex
 
 data class PasswordState(
     val password: String = "",
     val passwordConfirm: String = "",
 ) {
     val isPasswordError =
-        password.matches(passwordRegex).not() && password.isNotEmpty()
+        password.matches(Regex.password).not() && password.isNotEmpty()
 
     val isPasswordConfirmError = (password != passwordConfirm) && passwordConfirm.isNotEmpty()
 
