@@ -6,7 +6,7 @@ import androidx.room.Query
 import androidx.room.Upsert
 
 @Dao
-interface PositionConfigDao {
+internal interface PositionConfigDao {
     @Query("SELECT * FROM ${EntityTable.POSITION_CONFIG}")
     fun getPositionConfigs(): List<PositionConfigEntity>
 
