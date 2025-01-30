@@ -28,9 +28,9 @@
     <string name="signup_screen_password_confirm_input_text_placeholder">••••••••</string>
 
     <string name="signup_screen_step_4">STEP 4</string>
-    <string name="signup_screen_position_title">%s님!\n어떤 역할로 활동중이신가요?</string>
-    <string name="signup_screen_position_description">YAPP에서 활동중인 기수와 직군 정보를 알려주세요.\n이전 활동 내역이 있다면 함께 추가 할수 있어요.</string>
-    <string name="signup_screen_position_generation_input_text_label">기수</string>
+    <string name="signup_screen_position_title">%s님은 어떤 역할이신가요?</string>
+    <string name="signup_screen_position_description">현재 활동 중이라면 진행 중인 기수를,\n활동하지 않고 있다면 이전 기수를 입력해 주세요.</string>
+    <string name="signup_screen_position_generation_input_text_label">활동기수</string>
     <string name="signup_screen_position_generation_input_text_placeholder">25</string>
     <string name="signup_screen_position_position_input_text_label">직군</string>
     <string name="signup_screen_position_position_input_text_placeholder">선택해주세요</string>
