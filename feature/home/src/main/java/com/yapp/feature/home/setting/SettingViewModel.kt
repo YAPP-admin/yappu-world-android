@@ -1,13 +1,19 @@
 package com.yapp.feature.home.setting
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
+import com.yapp.domain.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingViewModel @Inject constructor() : ViewModel() {
+class SettingViewModel @Inject constructor(
+    private val logoutUseCase: LogoutUseCase,
+) : ViewModel() {
 
     val store: MviIntentStore<SettingState, SettingIntent, SettingSideEffect> =
         mviIntentStore(
@@ -23,6 +29,7 @@ class SettingViewModel @Inject constructor() : ViewModel() {
     ) {
         when (intent) {
             is SettingIntent.ClickNotificationSwitch -> {
+                // TODO 서버 API 호출
                 reduce { copy(isNotificationEnabled = intent.enabled) }
             }
             SettingIntent.ClickLogoutButton -> {
@@ -55,7 +62,13 @@ class SettingViewModel @Inject constructor() : ViewModel() {
             }
 
             SettingIntent.ClickDeleteAccountDialogRecommendActionButton -> TODO()
-            SettingIntent.ClickLogoutDialogRecommendActionButton -> TODO()
+
+            SettingIntent.ClickLogoutDialogRecommendActionButton -> {
+                viewModelScope.launch {
+                    logoutUseCase()
+                    postSideEffect(SettingSideEffect.NavigateToLogin)
+                }
+            }
         }
     }
 }

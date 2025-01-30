@@ -27,4 +27,5 @@ sealed interface SettingSideEffect {
     data object OpenPrivacyPolicy : SettingSideEffect
     data object OpenTerms : SettingSideEffect
     data object OpenInquiry : SettingSideEffect
+    data object NavigateToLogin : SettingSideEffect
 }
