@@ -57,6 +57,9 @@ fun SettingRoute(
 
             SettingSideEffect.OpenInquiry -> {
             }
+
+            SettingSideEffect.NavigateToLogin -> {
+            }
         }
     }
 

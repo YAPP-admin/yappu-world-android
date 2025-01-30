@@ -1,4 +1,4 @@
-package com.yapp.data_api
+package com.yapp.dataapi
 
 import com.yapp.model.SignUpInfo
 import com.yapp.model.SignUpResult

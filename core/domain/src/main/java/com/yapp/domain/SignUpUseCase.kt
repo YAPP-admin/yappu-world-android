@@ -1,8 +1,7 @@
 package com.yapp.domain
 
-import com.yapp.data_api.UnAuthorizedUserRepository
+import com.yapp.dataapi.UnAuthorizedUserRepository
 import com.yapp.model.SignUpInfo
-import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 class SignUpUseCase @Inject constructor(
