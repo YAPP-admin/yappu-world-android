@@ -1,5 +1,7 @@
 package com.yapp.feature.home.setting
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,6 +25,7 @@ import com.yapp.core.designsystem.component.control.switches.YappSwitchMedium
 import com.yapp.core.designsystem.component.header.YappHeaderActionbarExpanded
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
+import com.yapp.core.ui.constant.Url
 import com.yapp.core.ui.extension.borderBottom
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.home.R
@@ -33,14 +37,24 @@ fun SettingRoute(
     viewModel: SettingViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
+
+    val context = LocalContext.current
+
     viewModel.store.sideEffects.collectWithLifecycle { sideEffect ->
         when (sideEffect) {
             SettingSideEffect.NavigateBack -> {
             }
+
             SettingSideEffect.OpenPrivacyPolicy -> {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Url.PRIVACY_POLICY))
+                context.startActivity(intent)
             }
+
             SettingSideEffect.OpenTerms -> {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Url.TERMS))
+                context.startActivity(intent)
             }
+
             SettingSideEffect.OpenInquiry -> {
             }
         }
