@@ -36,6 +36,7 @@ import com.yapp.model.ActivityUnit
 fun PositionPage(
     viewModel: PositionViewModel = hiltViewModel(),
     name: String,
+    positions: List<String>,
     onActivityUnitsChanged: (List<ActivityUnit>) -> Unit,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
@@ -48,7 +49,7 @@ fun PositionPage(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.store.onIntent(PositionIntent.EnterScreen(name))
+        viewModel.store.onIntent(PositionIntent.EnterScreen(name, positions))
     }
 
     PositionContent(
@@ -100,6 +101,7 @@ fun PositionContent(
                 ActivityUnitInputSection(
                     generation = uiState.currentActivityUnit.generation?.toString() ?: "",
                     position = uiState.currentActivityUnit.position ?: "",
+                    dropdownOptions = uiState.positions,
                     onGenerationChange = { onIntent(PositionIntent.ChangeGeneration(it)) },
                     onPositionChange = { onIntent(PositionIntent.ChangePosition(it)) },
                     onDropdownMenuShown = { onIntent(PositionIntent.DropdownMenuShown) },
@@ -112,6 +114,7 @@ fun PositionContent(
                         index = index,
                         generation = activityUnit.generation?.toString() ?: "",
                         position = activityUnit.position ?: "",
+                        dropdownOptions = uiState.positions,
                         onGenerationChange = { onIntent(PositionIntent.ChangePreviousGeneration(index, it)) },
                         onPositionChange = { onIntent(PositionIntent.ChangePreviousPosition(index, it)) },
                         onDeleteButtonClick = { onIntent(PositionIntent.ClickDeletePreviousGenerationButton(it)) },

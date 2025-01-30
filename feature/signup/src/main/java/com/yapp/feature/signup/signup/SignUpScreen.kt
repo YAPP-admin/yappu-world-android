@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -72,6 +73,10 @@ fun SignUpScreen(
         onIntent(SignUpIntent.BackPressed)
     }
 
+    LaunchedEffect(Unit) {
+        onIntent(SignUpIntent.EnterScreen)
+    }
+
     YappBackground {
         Column(
             modifier = Modifier
@@ -117,6 +122,7 @@ fun SignUpScreen(
 
                     SignUpStep.Position -> PositionPage(
                         name = uiState.name,
+                        positions = uiState.positions,
                         onActivityUnitsChanged = { onIntent(SignUpIntent.ActivityUnitsChanged(it)) }
                     )
 

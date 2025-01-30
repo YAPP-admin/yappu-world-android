@@ -5,5 +5,5 @@ import retrofit2.http.GET
 
 internal interface ConfigApi {
     @GET("v1/positions")
-    suspend fun getPositionConfigs(): List<PositionConfigResponse>
+    suspend fun getPositionConfigs(): PositionConfigResponse
 }

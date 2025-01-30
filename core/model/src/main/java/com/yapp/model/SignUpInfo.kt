@@ -9,7 +9,7 @@ data class SignUpInfo(
     val passwordConfirm: String = "",
     val name: String = "",
     val activityUnits: List<ActivityUnit> = emptyList(),
-    val signUpCode: String = ""
+    val signUpCode: String = "",
 ) {
     val isEmailValid = email.matches(Regex.email)
 

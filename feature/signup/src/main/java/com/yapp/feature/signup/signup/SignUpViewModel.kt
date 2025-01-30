@@ -4,12 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
+import com.yapp.domain.GetPositionConfigsUseCase
 import com.yapp.domain.SignUpUseCase
 import com.yapp.model.SignUpInfo
 import com.yapp.model.SignUpResult
 import com.yapp.model.exceptions.SignUpCodeException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.sign
@@ -17,6 +21,7 @@ import kotlin.math.sign
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val signUpUseCase: SignUpUseCase,
+    private val getPositionConfigsUseCase: GetPositionConfigsUseCase,
 ) : ViewModel() {
     private var signUpInfo = SignUpInfo()
 
@@ -33,6 +38,17 @@ class SignUpViewModel @Inject constructor(
         postSideEffect: (SignUpSideEffect) -> Unit,
     ) {
         when (intent) {
+            SignUpIntent.EnterScreen -> {
+                getPositionConfigsUseCase()
+                    .onEach {
+                        reduce { copy(positions = it) }
+                    }
+                    .catch {
+                        throw it // TODO 에러 처리
+                    }
+                    .launchIn(viewModelScope)
+            }
+
             SignUpIntent.BackPressed,
             SignUpIntent.ClickBackButton -> {
                 val previousStep = when (state.currentStep) {
