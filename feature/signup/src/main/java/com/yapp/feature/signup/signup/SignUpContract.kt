@@ -16,7 +16,7 @@ data class SignUpState(
     val inputCompleteButtonEnable = signUpCode.isNotBlank()
     val isSignUpErrorInputTextError = signUpErrorInputTextDescription != null
     val backIcon: Int? = when (currentStep) {
-        SignUpStep.Complete, SignUpStep.Pending -> null
+        SignUpStep.Complete -> null
         else -> com.yapp.core.designsystem.R.drawable.icon_chevron_left
     }
 
