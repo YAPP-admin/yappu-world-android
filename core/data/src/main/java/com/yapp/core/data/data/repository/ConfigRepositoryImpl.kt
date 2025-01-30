@@ -29,7 +29,7 @@ internal class ConfigRepositoryImpl @Inject constructor(
         emit(positionConfigDao.getPositionConfigs().map { it.label })
 
         val remotePositionConfigs = configApi.getPositionConfigs()
-        positionConfigDao.upsertPositionConfigs(remotePositionConfigs.map { it.toEntity() })
+        positionConfigDao.upsertPositionConfigs(remotePositionConfigs.toEntity())
 
         emit(positionConfigDao.getPositionConfigs().map { it.label })
     }.flowOn(ioDispatcher)

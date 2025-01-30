@@ -29,6 +29,7 @@ import com.yapp.feature.signup.R
 fun ActivityUnitInputSection(
     generation: String?,
     position: String?,
+    dropdownOptions: List<String>,
     onGenerationChange: (String) -> Unit,
     onPositionChange: (String) -> Unit,
     onDropdownMenuShown: () -> Unit,
@@ -50,8 +51,7 @@ fun ActivityUnitInputSection(
             value = position,
             onValueChange = onPositionChange,
             placeholder = stringResource(R.string.signup_screen_position_position_input_text_placeholder),
-            // TODO 임시 데이터, 서버에서 받아오게 변경 필요
-            dropdownOptions = listOf("PM", "UX/UI Design", "Android", "iOS", "Web", "Server"),
+            dropdownOptions = dropdownOptions,
             onDropdownMenuShown = onDropdownMenuShown,
         )
     }
@@ -62,6 +62,7 @@ fun PreviousActivityUnitInputSection(
     index: Int,
     generation: String?,
     position: String?,
+    dropdownOptions: List<String>,
     onGenerationChange: (String) -> Unit,
     onPositionChange: (String) -> Unit,
     onDeleteButtonClick: (Int) -> Unit,
@@ -107,6 +108,7 @@ fun PreviousActivityUnitInputSection(
         ActivityUnitInputSection(
             generation = generation,
             position = position,
+            dropdownOptions = dropdownOptions,
             onGenerationChange = onGenerationChange,
             onPositionChange = onPositionChange,
             onDropdownMenuShown = onDropdownMenuShown,
@@ -121,6 +123,7 @@ fun ActivityUnitInputSectionPreview() {
         ActivityUnitInputSection(
             generation = "12",
             position = "Android",
+            dropdownOptions = listOf("PM", "Designer", "Android"),
             onGenerationChange = {},
             onPositionChange = {},
             onDropdownMenuShown = {},
@@ -136,6 +139,7 @@ fun PreviousActivityUnitInputSectionPreview() {
             index = 0,
             generation = "12",
             position = "Android",
+            dropdownOptions = listOf("PM", "Designer", "Android"),
             onGenerationChange = {},
             onPositionChange = {},
             onDeleteButtonClick = {},

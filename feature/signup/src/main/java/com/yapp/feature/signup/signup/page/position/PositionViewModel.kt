@@ -24,7 +24,7 @@ class PositionViewModel @Inject constructor() : ViewModel() {
     ) {
         when (intent) {
             is PositionIntent.EnterScreen -> {
-                reduce { copy(name = intent.name) }
+                reduce { copy(name = intent.name, positions = intent.positions) }
             }
 
             is PositionIntent.ClickAddPreviousGenerationButton -> {
