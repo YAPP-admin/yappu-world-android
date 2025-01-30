@@ -1,10 +1,11 @@
 package com.yapp.core.data.remote.model.request
 
+import com.yapp.core.data.local.PositionConfigEntity
 import com.yapp.model.SignUpInfo
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SignUpRequest(
+internal data class SignUpRequest(
     val email: String,
     val password: String,
     val name: String,
@@ -13,20 +14,20 @@ data class SignUpRequest(
 )
 
 @Serializable
-data class ActivityUnit(
+internal data class ActivityUnit(
     val generation: Int,
     val position: String
 )
 
-fun SignUpInfo.toData() = SignUpRequest(
+internal fun SignUpInfo.toData(positionConfigs: List<PositionConfigEntity>) = SignUpRequest(
     email = email.trim(),
     password = password.trim(),
     name = name.trim(),
-    activityUnits = activityUnits.map { it.toData() },
+    activityUnits = activityUnits.map { it.toData(positionConfigs) },
     signUpCode = signUpCode.trim()
 )
 
-fun com.yapp.model.ActivityUnit.toData() = ActivityUnit(
+internal fun com.yapp.model.ActivityUnit.toData(positionConfigs: List<PositionConfigEntity>) = ActivityUnit(
     generation = generation ?: throw IllegalArgumentException("Generation must not be null"),
-    position = position ?: throw IllegalArgumentException("Position must not be null"),
+    position = positionConfigs.find { it.label == position }?.name ?: throw IllegalArgumentException("Invalid position: must not be null or undefined"),
 )
