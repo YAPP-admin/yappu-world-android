@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import java.util.Optional
 
 @Serializable
-data class SignUpResponse(
+internal data class SignUpResponse(
     val accessToken: String,
     val refreshToken: String,
 )

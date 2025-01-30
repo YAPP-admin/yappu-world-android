@@ -12,7 +12,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RoomModule {
+internal object RoomModule {
 
     private const val DB_NAME = "database-yapp"
 

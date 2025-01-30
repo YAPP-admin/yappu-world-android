@@ -9,6 +9,6 @@ import androidx.room.RoomDatabase
     ],
     version = 1,
 )
-abstract class RoomDataBase : RoomDatabase() {
+internal abstract class RoomDataBase : RoomDatabase() {
     abstract fun positionConfigDao(): PositionConfigDao
 }
