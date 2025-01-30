@@ -37,6 +37,10 @@ dependencies {
     implementation(libs.encrypted.datastore.preference.ksp.annotations)
     implementation(libs.encrypted.datastore.preference.security)
 
+    ksp(libs.room.compiler)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.kotlin.serialization)

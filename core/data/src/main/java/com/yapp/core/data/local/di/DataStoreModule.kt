@@ -1,4 +1,4 @@
-package com.yapp.core.data.local
+package com.yapp.core.data.local.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -7,6 +7,8 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.yapp.core.data.local.SecurityPreferences
+import com.yapp.core.data.local.generateSecurityPreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
