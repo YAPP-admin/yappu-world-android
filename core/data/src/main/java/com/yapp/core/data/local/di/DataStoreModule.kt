@@ -2,11 +2,15 @@ package com.yapp.core.data.local.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
+import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.yapp.core.data.PositionConfigs
+import com.yapp.core.data.local.proto.PositionConfigSerializer
 import com.yapp.core.data.local.SecurityPreferences
 import com.yapp.core.data.local.generateSecurityPreferences
 import dagger.Module
@@ -33,6 +37,18 @@ internal object DataStoreModule {
         )
     }
 
+    @Provides
+    @Singleton
+    fun providesPositionConfigPreferencesDataStore(
+        @ApplicationContext context: Context,
+        serializer: PositionConfigSerializer,
+    ): DataStore<PositionConfigs> =
+        DataStoreFactory.create(
+            serializer = serializer,
+        ) {
+            context.dataStoreFile(POSITION_CONFIG_NAME)
+        }
+
     @EncryptedDataStore
     @Singleton
     @Provides
@@ -53,6 +69,7 @@ internal object DataStoreModule {
 
     private const val DATASTORE_NAME = "yapp-datastore"
     private const val ENCRYPTED_DATASTORE_NAME = "yapp-datastore-encrypted"
+    private const val POSITION_CONFIG_NAME = "position_config.pb"
 }
 
 @Qualifier
