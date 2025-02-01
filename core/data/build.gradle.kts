@@ -1,4 +1,6 @@
 import com.yapp.app.setNamespace
+import org.gradle.internal.extensions.stdlib.capitalized
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("yapp.android.library")
@@ -20,6 +22,21 @@ protobuf {
                 register("java") {
                     option("lite")
                 }
+                register("kotlin") {
+                    option("lite")
+                }
+            }
+        }
+    }
+}
+
+// https://stackoverflow.com/questions/78634960/ksp-error-when-upgrading-android-project-to-compose-compiler-2-0-0
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        afterEvaluate {
+            val capName = variant.name.capitalized()
+            tasks.getByName<KotlinCompile>("ksp${capName}Kotlin") {
+                setSource(tasks.getByName("generate${capName}Proto").outputs)
             }
         }
     }
@@ -36,10 +53,6 @@ dependencies {
     ksp(libs.encrypted.datastore.preference.ksp)
     implementation(libs.encrypted.datastore.preference.ksp.annotations)
     implementation(libs.encrypted.datastore.preference.security)
-
-    ksp(libs.room.compiler)
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.retrofit.core)

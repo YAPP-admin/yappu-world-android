@@ -1,8 +1,7 @@
 package com.yapp.core.data.data.repository
 
-import com.yapp.core.data.data.Dispatcher
-import com.yapp.core.data.data.YappDispatchers
-import com.yapp.core.data.local.PositionConfigDao
+import androidx.datastore.core.DataStore
+import com.yapp.core.data.PositionConfigs
 import com.yapp.core.data.local.SecurityPreferences
 import com.yapp.core.data.remote.api.UnAuthorizedUserApi
 import com.yapp.core.data.remote.model.request.toData
@@ -10,22 +9,18 @@ import com.yapp.core.data.remote.model.response.toModel
 import com.yapp.dataapi.UnAuthorizedUserRepository
 import com.yapp.model.SignUpInfo
 import com.yapp.model.SignUpResult
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 import kotlin.jvm.optionals.getOrNull
 
 internal class UnAuthorizedUserRepositoryImpl @Inject constructor(
     private val api: UnAuthorizedUserApi,
     private val securityPreferences: SecurityPreferences,
-    private val dao: PositionConfigDao,
-    @Dispatcher(YappDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
+    private val dataStore: DataStore<PositionConfigs>,
 ): UnAuthorizedUserRepository {
 
     override suspend fun signUp(request: SignUpInfo): SignUpResult {
-        val positionConfigs = withContext(ioDispatcher) {
-            dao.getPositionConfigs()
-        }
+        val positionConfigs = dataStore.data.firstOrNull() ?: PositionConfigs.getDefaultInstance()
 
         val response = api.signUp(
             request.toData(positionConfigs)

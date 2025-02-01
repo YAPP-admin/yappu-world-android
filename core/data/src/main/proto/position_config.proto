@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option java_package = "com.yapp.core.data";
+option java_multiple_files = true;
+
+message PositionConfig {
+  string name = 1;
+  string label = 2;
+}
+
+message PositionConfigs {
+  repeated PositionConfig configs = 1;
+}
