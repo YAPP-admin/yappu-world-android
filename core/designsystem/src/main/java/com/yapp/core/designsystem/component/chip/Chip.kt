@@ -100,7 +100,7 @@ fun YappChipSmall(
 
 @Preview(showBackground = true)
 @Composable
-private fun YappOutlinedPrimaryButtonLargePreview() {
+private fun YappChipPreview() {
     YappTheme {
         Column {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
