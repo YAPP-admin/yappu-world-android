@@ -44,7 +44,7 @@ class SignUpViewModel @Inject constructor(
                         reduce { copy(positions = it) }
                     }
                     .catch {
-                        throw it // TODO 에러 처리
+//                        throw it // TODO 에러 처리
                     }
                     .launchIn(viewModelScope)
             }

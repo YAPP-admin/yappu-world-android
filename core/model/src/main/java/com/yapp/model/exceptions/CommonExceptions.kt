@@ -13,7 +13,7 @@ class NotFoundException(
 ) : RuntimeException()
 
 class NetworkException(
-    override val message: String = "네트워크 연결 상태 또는 수수 서버에 문제가 있어요.",
+    override val message: String = "네트워크 연결 상태 또는 얍 서버에 문제가 있어요.",
 ) : RuntimeException()
 
 class UnknownException(
