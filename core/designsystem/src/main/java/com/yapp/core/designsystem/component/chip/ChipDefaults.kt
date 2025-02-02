@@ -53,7 +53,7 @@ object ChipDefaults {
     val contentPaddingsSmall = PaddingValues(vertical = 3.dp, horizontal = 8.dp)
 }
 
-
+// TODO :: 해당 값은 서버와의 매칭 필요
 enum class ChipColorType {
     Main, Sub, Gray, White
 }
