@@ -15,8 +15,7 @@ object ChipDefaults {
     val shapeSmall = RoundedCornerShape(8.dp)
 
     val colorsFill
-        @Composable
-        get() = ChipFillColors(
+        @Composable get() = ChipFillColors(
             mainFillTextColor = Color(0xFFFFEFE9),
             subFillTextColor = Color(0xFFFFF7EA),
             grayFillTextColor = YappTheme.colorScheme.backgroundNormalNormal,
@@ -28,8 +27,7 @@ object ChipDefaults {
         )
 
     val colorsWeak
-        @Composable
-        get() = ChipWeakColors(
+        @Composable get() = ChipWeakColors(
             mainWeakTextColor = YappTheme.colorScheme.primaryNormal,
             subTWeakTextColor = Color(0xFFFFAD31),
             grayWeakTextColor = YappTheme.colorScheme.labelAlternative,
@@ -41,12 +39,10 @@ object ChipDefaults {
         )
 
     val textStyleLarge
-        @Composable
-        get() = YappTheme.typography.label2Bold
+        @Composable get() = YappTheme.typography.label2Bold
 
     val textStyleSmall
-        @Composable
-        get() = YappTheme.typography.caption2Bold
+        @Composable get() = YappTheme.typography.caption2Bold
 
 
     val contentPaddingsLarge = PaddingValues(vertical = 4.dp, horizontal = 10.dp)
@@ -78,24 +74,22 @@ data class ChipFillColors(
     @Stable
     override fun textColor(
         colorType: ChipColorType,
-    ): Color =
-        when (colorType) {
-            ChipColorType.Main -> mainFillTextColor
-            ChipColorType.Sub -> subFillTextColor
-            ChipColorType.White -> whiteFillTextColor
-            ChipColorType.Gray -> grayFillTextColor
-        }
+    ): Color = when (colorType) {
+        ChipColorType.Main -> mainFillTextColor
+        ChipColorType.Sub -> subFillTextColor
+        ChipColorType.White -> whiteFillTextColor
+        ChipColorType.Gray -> grayFillTextColor
+    }
 
     @Stable
     override fun backgroundColor(
         colorType: ChipColorType,
-    ): Color =
-        when (colorType) {
-            ChipColorType.Main -> mainFillBackGroundColor
-            ChipColorType.Sub -> subFillBackGroundColor
-            ChipColorType.White -> whiteFillBackGroundColor
-            ChipColorType.Gray -> grayFillBackGroundColor
-        }
+    ): Color = when (colorType) {
+        ChipColorType.Main -> mainFillBackGroundColor
+        ChipColorType.Sub -> subFillBackGroundColor
+        ChipColorType.White -> whiteFillBackGroundColor
+        ChipColorType.Gray -> grayFillBackGroundColor
+    }
 }
 
 
@@ -113,22 +107,20 @@ data class ChipWeakColors(
     @Stable
     override fun textColor(
         colorType: ChipColorType,
-    ): Color =
-        when (colorType) {
-            ChipColorType.Main -> mainWeakTextColor
-            ChipColorType.Sub -> subTWeakTextColor
-            ChipColorType.White -> whiteWeakTextColor
-            ChipColorType.Gray -> grayWeakTextColor
-        }
+    ): Color = when (colorType) {
+        ChipColorType.Main -> mainWeakTextColor
+        ChipColorType.Sub -> subTWeakTextColor
+        ChipColorType.White -> whiteWeakTextColor
+        ChipColorType.Gray -> grayWeakTextColor
+    }
 
     @Stable
     override fun backgroundColor(
         colorType: ChipColorType,
-    ): Color =
-        when (colorType) {
-            ChipColorType.Main -> mainWeakBackGroundColor
-            ChipColorType.Sub -> subWeakBackGroundColor
-            ChipColorType.White -> whiteWeakBackGroundColor
-            ChipColorType.Gray -> grayWeakBackGroundColor
-        }
+    ): Color = when (colorType) {
+        ChipColorType.Main -> mainWeakBackGroundColor
+        ChipColorType.Sub -> subWeakBackGroundColor
+        ChipColorType.White -> whiteWeakBackGroundColor
+        ChipColorType.Gray -> grayWeakBackGroundColor
+    }
 }
