@@ -46,9 +46,7 @@ internal fun YappChipBasic(
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = text,
-            style = textStyle,
-            color = colors.textColor(colorType)
+            text = text, style = textStyle, color = colors.textColor(colorType)
         )
     }
 }
