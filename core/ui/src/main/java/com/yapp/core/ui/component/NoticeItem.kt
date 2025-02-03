@@ -121,7 +121,7 @@ fun NoticeItemPreview() {
     YappTheme {
         LazyColumn {
             items(noticeInfo) { item ->
-                NoticeItem(item)
+                NoticeItem(noticeInfo = item)
             }
         }
     }
