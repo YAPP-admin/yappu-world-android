@@ -16,6 +16,7 @@ object ChipDefaults {
 
     val colorsFill
         @Composable get() = ChipFillColors(
+            // TODO : 지정 되지 않은 컬러값 등록 필요
             mainFillTextColor = Color(0xFFFFEFE9),
             subFillTextColor = Color(0xFFFFF7EA),
             grayFillTextColor = YappTheme.colorScheme.backgroundNormalNormal,
@@ -29,7 +30,7 @@ object ChipDefaults {
     val colorsWeak
         @Composable get() = ChipWeakColors(
             mainWeakTextColor = YappTheme.colorScheme.primaryNormal,
-            subTWeakTextColor = Color(0xFFFFAD31),
+            subWeakTextColor = Color(0xFFFFAD31),
             grayWeakTextColor = YappTheme.colorScheme.labelAlternative,
             whiteWeakTextColor = YappTheme.colorScheme.labelAlternative,
             mainWeakBackGroundColor = Color(0xFFFFEFE9),
@@ -49,7 +50,7 @@ object ChipDefaults {
     val contentPaddingsSmall = PaddingValues(vertical = 3.dp, horizontal = 8.dp)
 }
 
-// TODO :: 해당 값은 서버와의 매칭 필요
+
 enum class ChipColorType {
     Main, Sub, Gray, White
 }
@@ -96,7 +97,7 @@ data class ChipFillColors(
 @Immutable
 data class ChipWeakColors(
     val mainWeakTextColor: Color,
-    val subTWeakTextColor: Color,
+    val subWeakTextColor: Color,
     val grayWeakTextColor: Color,
     val whiteWeakTextColor: Color,
     val mainWeakBackGroundColor: Color,
@@ -109,7 +110,7 @@ data class ChipWeakColors(
         colorType: ChipColorType,
     ): Color = when (colorType) {
         ChipColorType.Main -> mainWeakTextColor
-        ChipColorType.Sub -> subTWeakTextColor
+        ChipColorType.Sub -> subWeakTextColor
         ChipColorType.White -> whiteWeakTextColor
         ChipColorType.Gray -> grayWeakTextColor
     }

@@ -36,10 +36,11 @@ data class TagInfo(
 
 @Composable
 fun NoticeItem(
+    modifier: Modifier = Modifier,
     noticeInfo: NoticeInfo,
 ) {
     Column(
-        modifier = Modifier.padding(vertical = 9.dp)
+        modifier = modifier.padding(vertical = 9.dp)
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
