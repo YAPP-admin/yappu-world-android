@@ -34,7 +34,7 @@ internal fun YappChipBasic(
 ) {
     val colors = when (isFill) {
         true -> ChipDefaults.colorsFill
-        false -> ChipDefaults.colorsWeak
+        false ->ChipDefaults.colorsWeak
     }
 
     Box(
