@@ -102,6 +102,29 @@ fun YappSolidPrimaryButtonLarge(
     )
 }
 
+@Composable
+fun YappSolidPrimaryButtonXSmall(
+    modifier: Modifier = Modifier,
+    shape: Shape = SolidButtonDefaults.shapeXSmall,
+    textStyle: TextStyle = SolidButtonDefaults.textStyleXSmall,
+    colors: SolidButtonColors = SolidButtonDefaults.colorsPrimary,
+    contentPaddings: PaddingValues = SolidButtonDefaults.contentPaddingsXSmall,
+    text: String,
+    enable: Boolean = true,
+    onClick: () -> Unit,
+) {
+    YappSolidButtonBasic(
+        modifier = modifier,
+        shape = shape,
+        text = text,
+        textStyle = textStyle,
+        colors = colors,
+        contentPaddings = contentPaddings,
+        enable = enable,
+        onClick = onClick
+    )
+}
+
 @Preview
 @Composable
 private fun YappSolidPrimaryButtonXLargePreview() {
@@ -132,6 +155,25 @@ private fun YappSolidPrimaryButtonLargePreview() {
                 onClick = {}
             )
             YappSolidPrimaryButtonLarge(
+                text = "Label",
+                enable = false,
+                onClick = {}
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun YappSolidPrimaryButtonXSmallPreview() {
+    YappTheme {
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            YappSolidPrimaryButtonXSmall(
+                text = "Label",
+                enable = true,
+                onClick = {}
+            )
+            YappSolidPrimaryButtonXSmall(
                 text = "Label",
                 enable = false,
                 onClick = {}

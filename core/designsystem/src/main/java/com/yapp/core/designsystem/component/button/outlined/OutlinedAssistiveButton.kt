@@ -12,11 +12,11 @@ import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.theme.YappTheme
 
 @Composable
-fun YappOutlinedPrimaryButtonXLarge(
+fun YappOutlinedAssistiveButtonXLarge(
     modifier: Modifier = Modifier,
     shape: Shape = OutlinedButtonDefaults.shapeXLarge,
     textStyle: TextStyle = OutlinedButtonDefaults.textStyleXLarge,
-    colors: OutlinedButtonColors = OutlinedButtonDefaults.colorsPrimary,
+    colors: OutlinedButtonColors = OutlinedButtonDefaults.colorsAssistive,
     contentPaddings: PaddingValues = OutlinedButtonDefaults.contentPaddingsXLarge,
     text: String,
     enable: Boolean = true,
@@ -35,11 +35,11 @@ fun YappOutlinedPrimaryButtonXLarge(
 }
 
 @Composable
-fun YappOutlinedPrimaryButtonLarge(
+fun YappOutlinedAssistiveButtonLarge(
     modifier: Modifier = Modifier,
     shape: Shape = OutlinedButtonDefaults.shapeLarge,
     textStyle: TextStyle = OutlinedButtonDefaults.textStyleLarge,
-    colors: OutlinedButtonColors = OutlinedButtonDefaults.colorsPrimary,
+    colors: OutlinedButtonColors = OutlinedButtonDefaults.colorsAssistive,
     contentPaddings: PaddingValues = OutlinedButtonDefaults.contentPaddingsLarge,
     text: String,
     enable: Boolean = true,
@@ -58,11 +58,34 @@ fun YappOutlinedPrimaryButtonLarge(
 }
 
 @Composable
-fun YappOutlinedPrimaryButtonXSmall(
+fun YappOutlinedAssistiveButtonMedium(
+    modifier: Modifier = Modifier,
+    shape: Shape = OutlinedButtonDefaults.shapeMedium,
+    textStyle: TextStyle = OutlinedButtonDefaults.textStyleMedium,
+    colors: OutlinedButtonColors = OutlinedButtonDefaults.colorsAssistive,
+    contentPaddings: PaddingValues = OutlinedButtonDefaults.contentPaddingsMedium,
+    text: String,
+    enable: Boolean = true,
+    onClick: () -> Unit,
+) {
+    YappOutlinedButtonBasic(
+        modifier = modifier,
+        shape = shape,
+        text = text,
+        textStyle = textStyle,
+        colors = colors,
+        contentPaddings = contentPaddings,
+        enable = enable,
+        onClick = onClick
+    )
+}
+
+@Composable
+fun YappOutlinedAssistiveButtonXSmall(
     modifier: Modifier = Modifier,
     shape: Shape = OutlinedButtonDefaults.shapeXSmall,
     textStyle: TextStyle = OutlinedButtonDefaults.textStyleXSmall,
-    colors: OutlinedButtonColors = OutlinedButtonDefaults.colorsPrimary,
+    colors: OutlinedButtonColors = OutlinedButtonDefaults.colorsAssistive,
     contentPaddings: PaddingValues = OutlinedButtonDefaults.contentPaddingsXSmall,
     text: String,
     enable: Boolean = true,
@@ -82,15 +105,15 @@ fun YappOutlinedPrimaryButtonXSmall(
 
 @Preview(showBackground = true)
 @Composable
-private fun YappOutlinedPrimaryButtonXLargePreview() {
+private fun YappOutlinedAssistiveButtonXLargePreview() {
     YappTheme {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            YappOutlinedPrimaryButtonXLarge(
+            YappOutlinedAssistiveButtonXLarge(
                 text = "Label",
                 enable = true,
                 onClick = {}
             )
-            YappOutlinedPrimaryButtonXLarge(
+            YappOutlinedAssistiveButtonXLarge(
                 text = "Label",
                 enable = false,
                 onClick = {}
@@ -101,15 +124,15 @@ private fun YappOutlinedPrimaryButtonXLargePreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun YappOutlinedPrimaryButtonLargePreview() {
+private fun YappOutlinedAssistiveButtonLargePreview() {
     YappTheme {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            YappOutlinedPrimaryButtonLarge(
+            YappOutlinedAssistiveButtonLarge(
                 text = "Label",
                 enable = true,
                 onClick = {}
             )
-            YappOutlinedPrimaryButtonLarge(
+            YappOutlinedAssistiveButtonLarge(
                 text = "Label",
                 enable = false,
                 onClick = {}
@@ -120,15 +143,34 @@ private fun YappOutlinedPrimaryButtonLargePreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun YappOutlinedPrimaryButtonXSmallPreview() {
+private fun YappOutlinedAssistiveButtonMediumPreview() {
     YappTheme {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            YappOutlinedPrimaryButtonXSmall(
+            YappOutlinedAssistiveButtonMedium(
                 text = "Label",
                 enable = true,
                 onClick = {}
             )
-            YappOutlinedPrimaryButtonXSmall(
+            YappOutlinedAssistiveButtonMedium(
+                text = "Label",
+                enable = false,
+                onClick = {}
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun YappOutlinedAssistiveButtonXSmallPreview() {
+    YappTheme {
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            YappOutlinedAssistiveButtonXSmall(
+                text = "Label",
+                enable = true,
+                onClick = {}
+            )
+            YappOutlinedAssistiveButtonXSmall(
                 text = "Label",
                 enable = false,
                 onClick = {}

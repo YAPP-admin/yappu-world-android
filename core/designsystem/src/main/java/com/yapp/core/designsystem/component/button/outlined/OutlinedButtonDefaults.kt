@@ -58,6 +58,25 @@ object OutlinedButtonDefaults {
             )
         )
 
+    @OptIn(ExperimentalMaterial3Api::class)
+    val colorsAssistive
+        @Composable
+        get() = OutlinedButtonColors(
+            enableTextColor = YappTheme.colorScheme.labelNormal,
+            disableTextColor = YappTheme.colorScheme.labelDisable,
+            enableOutlinedColor = YappTheme.colorScheme.lineNormalNormal,
+            disableOutlinedColor = YappTheme.colorScheme.lineNormalNormal,
+            ripple = RippleConfiguration(
+                rippleAlpha = RippleAlpha(
+                    pressedAlpha = 0.31f,
+                    focusedAlpha = 0.28f,
+                    draggedAlpha = 0.28f,
+                    hoveredAlpha = 0.2575f
+                ),
+                color = YappTheme.colorScheme.lineNormalNormal
+            )
+        )
+
     val textStyleXLarge
         @Composable
         get() = YappTheme.typography.body1NormalBold
