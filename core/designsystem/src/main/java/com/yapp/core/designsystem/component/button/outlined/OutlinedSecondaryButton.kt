@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.theme.YappTheme
 
@@ -20,6 +21,10 @@ fun YappOutlinedSecondaryButtonXLarge(
     contentPaddings: PaddingValues = OutlinedButtonDefaults.contentPaddingsXLarge,
     text: String,
     enable: Boolean = true,
+    leftIcon: (@Composable () -> Unit)? = null,
+    leftIconSpacing: Dp = OutlinedButtonDefaults.leftIconSpacingXLarge,
+    rightIcon: (@Composable () -> Unit)? = null,
+    rightIconSpacing: Dp = OutlinedButtonDefaults.rightIconSpacingXLarge,
     onClick: () -> Unit,
 ) {
     YappOutlinedButtonBasic(
@@ -30,6 +35,10 @@ fun YappOutlinedSecondaryButtonXLarge(
         colors = colors,
         contentPaddings = contentPaddings,
         enable = enable,
+        leftIcon = leftIcon,
+        leftIconSpacing = leftIconSpacing,
+        rightIcon = rightIcon,
+        rightIconSpacing = rightIconSpacing,
         onClick = onClick
     )
 }
@@ -43,6 +52,10 @@ fun YappOutlinedSecondaryButtonLarge(
     contentPaddings: PaddingValues = OutlinedButtonDefaults.contentPaddingsLarge,
     text: String,
     enable: Boolean = true,
+    leftIcon: (@Composable () -> Unit)? = null,
+    leftIconSpacing: Dp = OutlinedButtonDefaults.leftIconSpacingLarge,
+    rightIcon: (@Composable () -> Unit)? = null,
+    rightIconSpacing: Dp = OutlinedButtonDefaults.rightIconSpacingLarge,
     onClick: () -> Unit,
 ) {
     YappOutlinedButtonBasic(
@@ -53,6 +66,10 @@ fun YappOutlinedSecondaryButtonLarge(
         colors = colors,
         contentPaddings = contentPaddings,
         enable = enable,
+        leftIcon = leftIcon,
+        leftIconSpacing = leftIconSpacing,
+        rightIcon = rightIcon,
+        rightIconSpacing = rightIconSpacing,
         onClick = onClick
     )
 }
