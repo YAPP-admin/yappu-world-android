@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.theme.YappTheme
 
@@ -102,6 +103,18 @@ object OutlinedButtonDefaults {
     val contentPaddingsMedium = PaddingValues(vertical = 9.dp, horizontal = 20.dp)
     val contentPaddingsSmall = PaddingValues(vertical = 7.dp, horizontal = 14.dp)
     val contentPaddingsXSmall = PaddingValues(vertical = 5.dp, horizontal = 12.dp)
+
+    val leftIconSpacingXLarge = Dp.Unspecified
+    val leftIconSpacingLarge = Dp.Unspecified
+    val leftIconSpacingMedium = Dp.Unspecified
+    val leftIconSpacingSmall = Dp.Unspecified
+    val leftIconSpacingXSmall = 4.dp
+
+    val rightIconSpacingXLarge = Dp.Unspecified
+    val rightIconSpacingLarge = Dp.Unspecified
+    val rightIconSpacingMedium = Dp.Unspecified
+    val rightIconSpacingSmall = Dp.Unspecified
+    val rightIconSpacingXSmall = 4.dp
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

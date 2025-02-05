@@ -5,8 +5,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.Text
@@ -18,7 +21,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.yapp.core.designsystem.component.button.outlined.OutlinedButtonDefaults
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
 
@@ -32,6 +37,10 @@ fun YappSolidButtonBasic(
     colors: SolidButtonColors,
     contentPaddings: PaddingValues,
     enable: Boolean,
+    leftIcon: (@Composable () -> Unit)?,
+    leftIconSpacing: Dp,
+    rightIcon: (@Composable () -> Unit)?,
+    rightIconSpacing: Dp,
     onClick: () -> Unit,
 ) {
     CompositionLocalProvider(value = LocalRippleConfiguration provides colors.ripple) {
@@ -47,11 +56,25 @@ fun YappSolidButtonBasic(
                 .heightIn(min = textStyle.lineHeight.value.dp),
             contentAlignment = Alignment.Center,
         ) {
-            Text(
-                text = text,
-                style = textStyle,
-                color = colors.textColor(enable = enable),
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                if (leftIcon != null) {
+                    leftIcon()
+                    Spacer(Modifier.width(leftIconSpacing))
+                }
+
+                Text(
+                    text = text,
+                    style = textStyle,
+                    color = colors.textColor(enable = enable),
+                )
+
+                if (rightIcon != null) {
+                    Spacer(Modifier.width(rightIconSpacing))
+                    rightIcon()
+                }
+            }
         }
     }
 }
@@ -65,6 +88,10 @@ fun YappSolidPrimaryButtonXLarge(
     contentPaddings: PaddingValues = SolidButtonDefaults.contentPaddingsXLarge,
     text: String,
     enable: Boolean = true,
+    leftIcon: (@Composable () -> Unit)? = null,
+    leftIconSpacing: Dp = SolidButtonDefaults.leftIconSpacingXLarge,
+    rightIcon: (@Composable () -> Unit)? = null,
+    rightIconSpacing: Dp = SolidButtonDefaults.rightIconSpacingXLarge,
     onClick: () -> Unit,
 ) {
     YappSolidButtonBasic(
@@ -75,6 +102,10 @@ fun YappSolidPrimaryButtonXLarge(
         colors = colors,
         contentPaddings = contentPaddings,
         enable = enable,
+        leftIcon = leftIcon,
+        leftIconSpacing = leftIconSpacing,
+        rightIcon = rightIcon,
+        rightIconSpacing = rightIconSpacing,
         onClick = onClick
     )
 }
@@ -88,6 +119,10 @@ fun YappSolidPrimaryButtonLarge(
     contentPaddings: PaddingValues = SolidButtonDefaults.contentPaddingsLarge,
     text: String,
     enable: Boolean = true,
+    leftIcon: (@Composable () -> Unit)? = null,
+    leftIconSpacing: Dp = SolidButtonDefaults.leftIconSpacingLarge,
+    rightIcon: (@Composable () -> Unit)? = null,
+    rightIconSpacing: Dp = SolidButtonDefaults.rightIconSpacingLarge,
     onClick: () -> Unit,
 ) {
     YappSolidButtonBasic(
@@ -98,6 +133,10 @@ fun YappSolidPrimaryButtonLarge(
         colors = colors,
         contentPaddings = contentPaddings,
         enable = enable,
+        leftIcon = leftIcon,
+        leftIconSpacing = leftIconSpacing,
+        rightIcon = rightIcon,
+        rightIconSpacing = rightIconSpacing,
         onClick = onClick
     )
 }
@@ -111,6 +150,10 @@ fun YappSolidPrimaryButtonXSmall(
     contentPaddings: PaddingValues = SolidButtonDefaults.contentPaddingsXSmall,
     text: String,
     enable: Boolean = true,
+    leftIcon: (@Composable () -> Unit)? = null,
+    leftIconSpacing: Dp = OutlinedButtonDefaults.leftIconSpacingXSmall,
+    rightIcon: (@Composable () -> Unit)? = null,
+    rightIconSpacing: Dp = OutlinedButtonDefaults.rightIconSpacingXSmall,
     onClick: () -> Unit,
 ) {
     YappSolidButtonBasic(
@@ -121,6 +164,10 @@ fun YappSolidPrimaryButtonXSmall(
         colors = colors,
         contentPaddings = contentPaddings,
         enable = enable,
+        leftIcon = leftIcon,
+        leftIconSpacing = leftIconSpacing,
+        rightIcon = rightIcon,
+        rightIconSpacing = rightIconSpacing,
         onClick = onClick
     )
 }
