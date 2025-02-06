@@ -4,16 +4,35 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.yapp.feature.home.HomeScreen
+import com.yapp.feature.home.HomeRoute
 import com.yapp.feature.home.setting.SettingRoute
 import kotlinx.serialization.Serializable
 
-@Serializable data object HomeRoute
+@Serializable
+data object HomeRoute
 
-fun NavController.navigateToHome(navOptions: NavOptions? = null) { navigate(HomeRoute, navOptions) }
+@Serializable
+data object SettingRoute
 
-fun NavGraphBuilder.homeNavGraph(){
+fun NavController.navigateToHome(navOptions: NavOptions? = null) {
+    navigate(HomeRoute, navOptions)
+}
+
+fun NavController.navigateToSetting(navOptions: NavOptions? = null) {
+    navigate(SettingRoute, navOptions)
+}
+
+fun NavGraphBuilder.homeNavGraph(
+    navigateNotice: () -> Unit,
+    navigateSetting: () -> Unit
+    ) {
     composable<HomeRoute> {
+        HomeRoute({navigateNotice()}, {navigateSetting()})
+    }
+}
+
+fun NavGraphBuilder.settingNavGraph() {
+    composable<SettingRoute> {
         SettingRoute()
     }
 }
