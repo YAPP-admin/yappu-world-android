@@ -8,10 +8,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.yapp.feature.home.navigation.HomeRoute
 import com.yapp.feature.home.navigation.navigateToHome
-import com.yapp.feature.login.navigation.LoginRoute
+import com.yapp.feature.home.navigation.navigateToSetting
 import com.yapp.feature.login.navigation.navigateToLogin
 import com.yapp.feature.notice.navigation.navigateToNotice
-import com.yapp.feature.signup.navigation.SignUpRoute
 import com.yapp.feature.signup.navigation.navigateToSignUp
 
 
@@ -32,7 +31,7 @@ class NavigatorState(
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
 
-    val startDestination = SignUpRoute
+    val startDestination = HomeRoute
 
     fun navigateLoginScreen() {
         navController.navigateToLogin()
@@ -44,6 +43,10 @@ class NavigatorState(
 
     fun navigateHomeScreen() {
         navController.navigateToHome()
+    }
+
+    fun navigateSettingScreen(){
+        navController.navigateToSetting()
     }
 
     fun navigateNoticeScreen() {
