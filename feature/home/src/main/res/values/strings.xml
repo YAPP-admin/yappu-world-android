@@ -15,4 +15,6 @@
     <string name="delete_account_dialog_body">탈퇴하시면 모든 정보가 삭제돼요.</string>
     <string name="delete_account_dialog_action_button">아니요!</string>
     <string name="delete_account_dialog_recommend_action_button">탈퇴하기</string>
+    <string name="home_notice_more_button">더보기</string>
+    <string name="home_notice_title">공지사항</string>
 </resources>
