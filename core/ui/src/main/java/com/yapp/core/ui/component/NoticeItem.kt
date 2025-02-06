@@ -38,6 +38,7 @@ data class TagInfo(
 fun NoticeItem(
     modifier: Modifier = Modifier,
     noticeInfo: NoticeInfo,
+    isLastItem : Boolean = false
 ) {
     Column(
         modifier = modifier.padding(vertical = 9.dp)
@@ -86,9 +87,11 @@ fun NoticeItem(
             overflow = TextOverflow.Ellipsis
         )
     }
-    HorizontalDivider(
-        color = YappTheme.colorScheme.lineNormalAlternative
-    )
+    if (!isLastItem){
+        HorizontalDivider(
+            color = YappTheme.colorScheme.lineNormalAlternative
+        )
+    }
 }
 
 
