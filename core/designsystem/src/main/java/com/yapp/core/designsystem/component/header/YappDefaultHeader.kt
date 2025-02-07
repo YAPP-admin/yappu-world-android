@@ -2,7 +2,6 @@ package com.yapp.core.designsystem.component.header
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,29 +23,26 @@ fun YappDefaultHeader(
     modifier: Modifier = Modifier,
     onClickRightIcon: (() -> Unit)? = null,
 ) {
-    Box(
+    Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(
                 horizontal = 20.dp,
                 vertical = 16.dp
             ),
-        contentAlignment = Alignment.CenterStart
+        verticalAlignment = Alignment.CenterVertically
+
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                modifier = Modifier.size(24.dp),
-                painter = painterResource(R.drawable.icon_yapp),
-                contentDescription = "logo",
-            )
-            Spacer(Modifier.width(8.dp))
-            Image(
-                painter = painterResource(R.drawable.icon_yapp_text),
-                contentDescription = "logo_text",
-            )
-        }
+        Image(
+            modifier = Modifier.size(24.dp),
+            painter = painterResource(R.drawable.icon_yapp),
+            contentDescription = "logo",
+        )
+        Spacer(Modifier.width(8.dp))
+        Image(
+            painter = painterResource(R.drawable.icon_yapp_text),
+            contentDescription = "logo_text",
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -55,7 +51,8 @@ fun YappDefaultHeader(
             Icon(
                 modifier = Modifier.yappClickable(onClick = onClickRightIcon),
                 painter = painterResource(R.drawable.icon_setting),
-                contentDescription = "logo",
+                contentDescription = "setting",
+
             )
         }
     }

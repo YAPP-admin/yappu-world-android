@@ -28,7 +28,7 @@ internal fun LoginRoute(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
-    val loginState by viewModel.store.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
     viewModel.store.sideEffects.collectWithLifecycle { effect ->
         when (effect) {
             LoginSideEffect.NavigateToSignUp -> navigateToSignup()
@@ -36,7 +36,7 @@ internal fun LoginRoute(
     }
 
     LoginScreen(
-        loginState = loginState,
+        loginState = uiState,
         onIntent = { viewModel.store.onIntent(it) }
     )
 }

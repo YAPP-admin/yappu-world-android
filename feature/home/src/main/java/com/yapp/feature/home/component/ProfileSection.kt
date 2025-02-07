@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.component.chip.ChipColorType
 import com.yapp.core.designsystem.component.chip.YappChipSmall
@@ -16,11 +17,11 @@ import com.yapp.core.designsystem.theme.YappTheme
 
 @Composable
 fun ProfileSection(
-    name : String,
-    activityStatus : String,
-    generation : Int,
-    position : String
-){
+    name: String,
+    activityStatus: String,
+    generation: Int,
+    position: String,
+) {
     HomeSectionBackground {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -55,5 +56,17 @@ fun ProfileSection(
             )
         }
     }
+}
 
+@Preview(showBackground = true)
+@Composable
+private fun ProfileSectionPreview() {
+    YappTheme {
+        ProfileSection(
+            name = "홍길동",
+            activityStatus = "활동회원",
+            generation = 1,
+            position = "안드로이드"
+        )
+    }
 }

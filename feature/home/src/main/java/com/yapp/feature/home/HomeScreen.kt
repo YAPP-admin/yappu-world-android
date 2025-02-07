@@ -27,7 +27,7 @@ internal fun HomeRoute(
     navigateToSetting: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
-    val homeState by viewModel.store.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
     viewModel.store.sideEffects.collectWithLifecycle { effect ->
         when (effect) {
             HomeSideEffect.NavigateToNotice -> navigateToNotice()
@@ -36,7 +36,7 @@ internal fun HomeRoute(
     }
 
     HomeScreen(
-        homeState = homeState,
+        homeState = uiState,
         onIntent = { viewModel.store.onIntent(it) }
     )
 }
