@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notice_screen_header_title">공지사항</string>
+    <string name="notice_screen_header_back_icon_content_description">뒤로가기</string>
+    <string name="notice_filter_bottom_dialog_title">필터</string>
+    <string name="notice_filter_bottom_dialog_expose">노출 대상</string>
+    <string name="notice_filter_bottom_dialog_button_text">적용</string>
+</resources>

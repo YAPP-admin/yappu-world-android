@@ -4,7 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.yapp.feature.notice.NoticeScreen
+import com.yapp.feature.notice.notice.NoticeScreen
 import kotlinx.serialization.Serializable
 
 @Serializable data object NoticeRoute
