@@ -29,6 +29,7 @@ import com.yapp.core.ui.component.NoticeInfo
 import com.yapp.core.ui.component.NoticeItem
 import com.yapp.core.ui.component.TagInfo
 import com.yapp.core.ui.component.YappBackground
+import com.yapp.core.ui.extension.borderBottom
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.notice.R
 import com.yapp.feature.notice.notice.component.NoticeCategoryButton
@@ -116,6 +117,9 @@ fun NoticeScreen(
                 ) {
                     items(count = 10) {
                         NoticeItem(
+                            modifier = Modifier.borderBottom(
+                                color = YappTheme.colorScheme.lineNormalAlternative
+                            ),
                             noticeInfo = NoticeInfo(
                                 tags = listOf(
                                     TagInfo("세션", ChipColorType.Main),
