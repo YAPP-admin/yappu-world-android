@@ -1,5 +1,6 @@
 package com.yapp.core.data.remote.di
 
+import com.yapp.core.data.remote.api.AlarmApi
 import com.yapp.core.data.remote.api.ConfigApi
 import com.yapp.core.data.remote.api.LoginApi
 import com.yapp.core.data.remote.api.UnAuthorizedUserApi
@@ -32,4 +33,9 @@ internal object ApiModule {
         return retrofit.create(LoginApi::class.java)
     }
 
+    @Singleton
+    @Provides
+    fun provideAlarmApi(@AuthRetrofit retrofit: Retrofit): AlarmApi {
+        return retrofit.create(AlarmApi::class.java)
+    }
 }
