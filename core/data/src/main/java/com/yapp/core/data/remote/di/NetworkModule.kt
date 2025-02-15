@@ -1,14 +1,13 @@
 package com.yapp.core.data.remote.di
 
-import android.util.Log
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.yapp.core.data.remote.Tag
 import com.yapp.core.data.remote.retrofit.ResultCallAdapterFactory
+import com.yapp.core.data.remote.retrofit.TokenInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.serialization.encodeToString
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -22,7 +21,7 @@ import retrofit2.OptionalConverterFactory
 
 @Module
 @InstallIn(SingletonComponent::class)
-object NetworkModule {
+internal object NetworkModule {
 
     private const val BASE_URL = "https://dev-yappuworld.yapp.co.kr/"
 
@@ -54,8 +53,33 @@ object NetworkModule {
 
     @Singleton
     @Provides
+    @AuthOkHttpClient
+    fun provideAuthOkHttpClient(
+        tokenInterceptor: TokenInterceptor,
+        loggingInterceptor: HttpLoggingInterceptor,
+    ): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(tokenInterceptor)
+        .addInterceptor(loggingInterceptor)
+        .build()
+
+    @Singleton
+    @Provides
     fun provideRetrofit(
         okHttpClient: OkHttpClient,
+        json: Json,
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addCallAdapterFactory(ResultCallAdapterFactory())
+        .addConverterFactory(OptionalConverterFactory.create())
+        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+        .client(okHttpClient)
+        .build()
+
+    @Singleton
+    @Provides
+    @AuthRetrofit
+    fun provideAuthRetrofit(
+        @AuthOkHttpClient okHttpClient: OkHttpClient,
         json: Json,
     ): Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
