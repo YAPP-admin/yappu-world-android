@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DeviceAlarmRequest(
-    val deviceToggle: String,
+    val deviceToggle: Boolean,
 )
