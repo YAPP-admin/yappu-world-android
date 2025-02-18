@@ -29,6 +29,7 @@ import com.yapp.feature.login.component.TopTitle
 @Composable
 internal fun LoginRoute(
     navigateToSignup: () -> Unit,
+    navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
@@ -41,10 +42,13 @@ internal fun LoginRoute(
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Url.TERMS))
                 context.startActivity(intent)
             }
+
             LoginSideEffect.ShowPersonalPolicy -> {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Url.PRIVACY_POLICY))
                 context.startActivity(intent)
             }
+
+            LoginSideEffect.NavigateToHome -> navigateToHome()
         }
     }
     LoginScreen(
@@ -56,7 +60,7 @@ internal fun LoginRoute(
 @Composable
 fun LoginScreen(
     loginState: LoginState,
-    onIntent: (LoginIntent) -> Unit = {}
+    onIntent: (LoginIntent) -> Unit = {},
 ) {
     YappBackground {
         Column(
@@ -72,7 +76,9 @@ fun LoginScreen(
                 onEmailChange = { onIntent(LoginIntent.ChangeEmail(it)) },
                 onPasswordChange = { onIntent(LoginIntent.ChangePassword(it)) },
                 buttonEnable = loginState.enableLoginButton,
-                onButtonClick = { onIntent(LoginIntent.ClickLoginButton) }
+                onButtonClick = { onIntent(LoginIntent.ClickLoginButton) },
+                emailErrorDescription = loginState.emailErrorDescription,
+                passwordErrorDescription = loginState.passwordErrorDescription
             )
             Spacer(Modifier.height(24.dp))
             LoginDivider()
@@ -87,9 +93,9 @@ fun LoginScreen(
                 onTermsChecked = { onIntent(LoginIntent.CheckTerms(it)) },
                 onPersonalPolicyChecked = { onIntent(LoginIntent.CheckPersonalPolicy(it)) },
                 enableNextButton = loginState.enableNextButton,
-                onNextButtonClick = { onIntent(LoginIntent.ClickNextButton)},
-                onTermsButtonClick = {onIntent(LoginIntent.ClickTerms)},
-                onPersonalPolicyButtonClick = {onIntent(LoginIntent.ClickPersonalPolicy)}
+                onNextButtonClick = { onIntent(LoginIntent.ClickNextButton) },
+                onTermsButtonClick = { onIntent(LoginIntent.ClickTerms) },
+                onPersonalPolicyButtonClick = { onIntent(LoginIntent.ClickPersonalPolicy) }
             )
         }
     }
@@ -100,6 +106,6 @@ fun LoginScreen(
 @Composable
 private fun LoginScreenPreview() {
     YappTheme {
-        LoginRoute({})
+        LoginRoute({}, {})
     }
 }

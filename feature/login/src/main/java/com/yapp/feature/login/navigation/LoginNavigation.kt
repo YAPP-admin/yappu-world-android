@@ -13,8 +13,9 @@ fun NavController.navigateToLogin(navOptions: NavOptions? = null) { navigate(Log
 
 fun NavGraphBuilder.loginNavGraph(
     navigateSignUp: () -> Unit,
-){
+    navigateHome: () -> Unit,
+    ){
     composable<LoginRoute> {
-        LoginRoute(navigateSignUp)
+        LoginRoute(navigateSignUp,navigateHome)
     }
 }
