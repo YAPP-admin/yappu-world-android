@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -48,6 +49,7 @@ internal fun LoginRoute(
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Url.PRIVACY_POLICY))
                 context.startActivity(intent)
             }
+
             LoginSideEffect.NavigateToHome -> navigateToHome()
             is LoginSideEffect.ShowToast -> {
                 Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
@@ -65,6 +67,8 @@ fun LoginScreen(
     loginState: LoginState,
     onIntent: (LoginIntent) -> Unit = {},
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     YappBackground {
         Column(
             modifier = Modifier
@@ -79,7 +83,10 @@ fun LoginScreen(
                 onEmailChange = { onIntent(LoginIntent.ChangeEmail(it)) },
                 onPasswordChange = { onIntent(LoginIntent.ChangePassword(it)) },
                 buttonEnable = loginState.enableLoginButton,
-                onButtonClick = { onIntent(LoginIntent.ClickLoginButton) },
+                onButtonClick = {
+                    keyboardController?.hide()
+                    onIntent(LoginIntent.ClickLoginButton)
+                },
                 emailErrorDescription = loginState.emailErrorDescription,
                 passwordErrorDescription = loginState.passwordErrorDescription
             )
