@@ -13,7 +13,7 @@ import com.yapp.feature.signup.navigation.signupNavGraph
 @Composable
 fun YappNavHost(
     navigator: NavigatorState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     NavHost(
         navController = navigator.navController,
@@ -21,14 +21,15 @@ fun YappNavHost(
         modifier = modifier,
     ) {
         loginNavGraph(
-            navigateSignUp = { navigator.navigateSignUpScreen() }
+            navigateSignUp = { navigator.navigateSignUpScreen() },
+            navigateHome = { navigator.navigateHomeScreen() }
         )
         signupNavGraph(
             navigateBack = { navigator.popBackStack() }
         )
         homeNavGraph(
-            navigateNotice = {navigator.navigateNoticeScreen()},
-            navigateSetting = {navigator.navigateSettingScreen()}
+            navigateNotice = { navigator.navigateNoticeScreen() },
+            navigateSetting = { navigator.navigateSettingScreen() }
         )
         settingNavGraph()
         noticeNavGraph()

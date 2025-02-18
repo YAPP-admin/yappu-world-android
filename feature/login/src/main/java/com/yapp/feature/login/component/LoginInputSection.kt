@@ -22,19 +22,25 @@ fun LoginInputSection(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     buttonEnable : Boolean,
-    onButtonClick : () -> Unit
-) {
+    onButtonClick : () -> Unit,
+    emailErrorDescription : String?,
+    passwordErrorDescription : String?,
+    ) {
     YappInputTextLarge(
         value = email,
         onValueChange = onEmailChange,
         placeholder = stringResource(R.string.login_placeholder_email),
+        description = emailErrorDescription,
+        isError = !emailErrorDescription.isNullOrEmpty()
     )
     Spacer(Modifier.height(16.dp))
     PasswordInputTextLarge(
         label = stringResource(R.string.login_title_pw),
         password = password,
         onPasswordChange = onPasswordChange,
-        placeholder = stringResource(R.string.login_placeholder_pw)
+        placeholder = stringResource(R.string.login_placeholder_pw),
+        description = passwordErrorDescription,
+        isError = !passwordErrorDescription.isNullOrEmpty()
     )
     Spacer(Modifier.height(24.dp))
     YappSolidPrimaryButtonXLarge(
@@ -56,7 +62,9 @@ private fun LoginScreenPreview() {
                 {},
                 {},
                 false,
-                {}
+                {},
+                null,
+                null
             )
         }
     }

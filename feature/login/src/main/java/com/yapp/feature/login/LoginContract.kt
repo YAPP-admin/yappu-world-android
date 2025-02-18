@@ -9,8 +9,9 @@ data class LoginState(
     val showAgreementDialog: Boolean = false,
     val terms: Boolean = false,
     val personalPolicy: Boolean = false,
+    val isResponseLogin: Boolean = true,
 ) {
-    val enableLoginButton: Boolean = email.isNotEmpty() && password.isNotEmpty()
+    val enableLoginButton: Boolean = email.isNotEmpty() && password.isNotEmpty() && isResponseLogin
     val enableNextButton: Boolean = terms && personalPolicy
 }
 
@@ -29,6 +30,7 @@ sealed interface LoginIntent {
 
 sealed interface LoginSideEffect {
     data object NavigateToSignUp : LoginSideEffect
+    data object NavigateToHome : LoginSideEffect
     data object ShowTerms : LoginSideEffect
     data object ShowPersonalPolicy : LoginSideEffect
 }
