@@ -89,9 +89,9 @@ class LoginViewModel @Inject constructor(
             }
             .onFailure {
                 val errorMessage = it.message ?: ""
+                reduce { copy(isResponseLogin = false) }
                 when (it) {
                     is InvalidRequestArgument -> {
-                        reduce { copy(isResponseLogin = false) }
                         if (errorMessage.contains("이메일")) {
                             reduce {
                                 copy(
@@ -107,6 +107,9 @@ class LoginViewModel @Inject constructor(
                                 )
                             }
                         }
+                    }
+                    else -> {
+                        postSideEffect(LoginSideEffect.ShowToast(errorMessage))
                     }
                 }
             }

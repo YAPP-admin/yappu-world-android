@@ -33,4 +33,5 @@ sealed interface LoginSideEffect {
     data object NavigateToHome : LoginSideEffect
     data object ShowTerms : LoginSideEffect
     data object ShowPersonalPolicy : LoginSideEffect
+    data class ShowToast(val message: String) : LoginSideEffect
 }
