@@ -1,14 +1,31 @@
 package com.yapp.model.exceptions
 
 enum class YappServerError(val exception: YappException) {
+    COM_0001(InternalServerException()),
+    COM_0002(InvalidRequestArgument()),
+
+    // 회원가입
     USR_1001(SignUpCodeException()),
     USR_1002(AlreadyRegisteredException()),
     USR_1003(UnprocessedSignUpException()),
+
+    // 로그인
+    USR_1101(UserNotFoundForEmailException()),
+    USR_1102(SignUpPendingException()),
+    USR_1103(RecentSignUpRejectedException()),
+    USR_1104(LoginBlockedException())
 }
 
+class InternalServerException : YappException()
+class InvalidRequestArgument : YappException()
 class SignUpCodeException() : YappException("잘못된 가입코드입니다.")
 class AlreadyRegisteredException() : YappException("이미 가입된 이메일입니다.")
 class UnprocessedSignUpException() : YappException("처리되지 않은 가입 신청이 존재하여, 추가 가입 신청이 불가합니다.")
+class UserNotFoundForEmailException : YappException("계정 정보를 찾을 수 없습니다.")
+class SignUpPendingException : YappException("회원가입 처리가 진행 중입니다.")
+class RecentSignUpRejectedException : YappException("최근의 회원가입 신청은 거절되었습니다.")
+class LoginBlockedException : YappException("로그인이 불가능한 회원 상태입니다.")
+
 
 open class YappException(message: String = "") : Exception(message) {
     private var _message: String = message

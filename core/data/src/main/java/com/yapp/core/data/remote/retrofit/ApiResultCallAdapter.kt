@@ -63,7 +63,14 @@ private class ApiResultCall<R>(
             val exception = YappServerError
                 .valueOf(errorBody.errorCode)
                 .exception
-                .apply { setMessage(message) }
+                .apply {
+                    when (errorBody.errorCode) {
+                        YappServerError.COM_0001.name, YappServerError.COM_0002.name -> {
+                            setMessage(errorBody.message)
+                        }
+                        else -> setMessage(message)
+                    }
+                }
             callback.onFailure(this@ApiResultCall, exception)
         }.onFailure {
             val exception = handleCommonError(response.code())
