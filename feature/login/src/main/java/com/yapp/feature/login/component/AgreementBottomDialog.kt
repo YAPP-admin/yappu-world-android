@@ -32,6 +32,8 @@ fun AgreementBottomDialog(
     onPersonalPolicyChecked: (Boolean) -> Unit,
     enableNextButton: Boolean,
     onNextButtonClick: () -> Unit,
+    onTermsButtonClick: () -> Unit,
+    onPersonalPolicyButtonClick: () -> Unit
 ) {
     BottomDialog(
         onDismissRequest = onDismiss
@@ -46,12 +48,14 @@ fun AgreementBottomDialog(
             AgreementContent(
                 text = stringResource(R.string.agreement_bottom_dialog_terms),
                 checked = terms,
-                onCheckedChange = { onTermsChecked(it) }
+                onCheckedChange = { onTermsChecked(it) },
+                onShowButtonClick = onTermsButtonClick
             )
             AgreementContent(
                 text = stringResource(R.string.agreement_bottom_dialog_personal_policy),
                 checked = personalPolicy,
-                onCheckedChange = { onPersonalPolicyChecked(it) }
+                onCheckedChange = { onPersonalPolicyChecked(it) },
+                onShowButtonClick = onPersonalPolicyButtonClick
             )
             Spacer(Modifier.height(24.dp))
             YappSolidPrimaryButtonXLarge(
@@ -70,6 +74,7 @@ fun AgreementContent(
     modifier: Modifier = Modifier,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
+    onShowButtonClick : () -> Unit
 ) {
     Row(
         modifier = modifier
@@ -94,7 +99,7 @@ fun AgreementContent(
         ) {
             YappTextAssistiveButtonSmall(
                 text = stringResource(R.string.agreement_bottom_dialog_button_detail),
-                onClick = {}
+                onClick = onShowButtonClick
             )
         }
     }
@@ -112,7 +117,9 @@ private fun AgreementBottomDialogPreview() {
             onTermsChecked = {},
             onPersonalPolicyChecked = {},
             enableNextButton = false,
-            onNextButtonClick = {}
+            onNextButtonClick = {},
+            onTermsButtonClick = {},
+            onPersonalPolicyButtonClick = {}
         )
     }
 }
