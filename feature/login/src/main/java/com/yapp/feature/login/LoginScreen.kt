@@ -2,6 +2,7 @@ package com.yapp.feature.login
 
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -47,8 +48,10 @@ internal fun LoginRoute(
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Url.PRIVACY_POLICY))
                 context.startActivity(intent)
             }
-
             LoginSideEffect.NavigateToHome -> navigateToHome()
+            is LoginSideEffect.ShowToast -> {
+                Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
+            }
         }
     }
     LoginScreen(
