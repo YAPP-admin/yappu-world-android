@@ -23,8 +23,12 @@ sealed interface LoginIntent {
     data class CheckTerms(val checked: Boolean) : LoginIntent
     data class CheckPersonalPolicy(val checked: Boolean) : LoginIntent
     data object ClickNextButton : LoginIntent
+    data object ClickTerms : LoginIntent
+    data object ClickPersonalPolicy : LoginIntent
 }
 
 sealed interface LoginSideEffect {
     data object NavigateToSignUp : LoginSideEffect
+    data object ShowTerms : LoginSideEffect
+    data object ShowPersonalPolicy : LoginSideEffect
 }

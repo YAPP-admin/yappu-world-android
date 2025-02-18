@@ -1,5 +1,7 @@
 package com.yapp.feature.login
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,12 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
+import com.yapp.core.ui.constant.Url
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.login.component.AgreementBottomDialog
 import com.yapp.feature.login.component.LoginDivider
@@ -29,12 +33,20 @@ internal fun LoginRoute(
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
     viewModel.store.sideEffects.collectWithLifecycle { effect ->
         when (effect) {
             LoginSideEffect.NavigateToSignUp -> navigateToSignup()
+            LoginSideEffect.ShowTerms -> {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Url.TERMS))
+                context.startActivity(intent)
+            }
+            LoginSideEffect.ShowPersonalPolicy -> {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Url.PRIVACY_POLICY))
+                context.startActivity(intent)
+            }
         }
     }
-
     LoginScreen(
         loginState = uiState,
         onIntent = { viewModel.store.onIntent(it) }
@@ -75,7 +87,9 @@ fun LoginScreen(
                 onTermsChecked = { onIntent(LoginIntent.CheckTerms(it)) },
                 onPersonalPolicyChecked = { onIntent(LoginIntent.CheckPersonalPolicy(it)) },
                 enableNextButton = loginState.enableNextButton,
-                onNextButtonClick = { onIntent(LoginIntent.ClickNextButton)}
+                onNextButtonClick = { onIntent(LoginIntent.ClickNextButton)},
+                onTermsButtonClick = {onIntent(LoginIntent.ClickTerms)},
+                onPersonalPolicyButtonClick = {onIntent(LoginIntent.ClickPersonalPolicy)}
             )
         }
     }
