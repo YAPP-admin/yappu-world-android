@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.domain.LoginUseCase
+import com.yapp.model.Regex
 import com.yapp.model.exceptions.InvalidRequestArgument
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -82,37 +83,41 @@ class LoginViewModel @Inject constructor(
         password: String,
         reduce: (LoginState.() -> LoginState) -> Unit,
         postSideEffect: (LoginSideEffect) -> Unit,
-    ) = viewModelScope.launch {
-        loginUseCase(email, password)
-            .onSuccess {
-                postSideEffect(LoginSideEffect.NavigateToHome)
+    ) {
+        if (!email.matches(Regex.email)){
+            reduce {
+                copy(
+                    isResponseLogin = false,
+                    emailErrorDescription = "입력하신 이메일을 확인해주세요.",
+                    passwordErrorDescription = null
+                )
             }
-            .onFailure {
-                val errorMessage = it.message ?: ""
-                reduce { copy(isResponseLogin = false) }
-                when (it) {
-                    is InvalidRequestArgument -> {
-                        if (errorMessage.contains("이메일")) {
-                            reduce {
-                                copy(
-                                    emailErrorDescription = "입력하신 이메일을 확인해주세요.",
-                                    passwordErrorDescription = null
-                                )
+        }else{
+            viewModelScope.launch {
+                loginUseCase(email, password)
+                    .onSuccess {
+                        postSideEffect(LoginSideEffect.NavigateToHome)
+                    }
+                    .onFailure {
+                        val errorMessage = it.message ?: ""
+                        reduce{copy(isResponseLogin = false)}
+                        when (it) {
+                            is InvalidRequestArgument -> {
+                                reduce {
+                                    copy(
+                                        emailErrorDescription = null,
+                                        passwordErrorDescription = "비밀번호가 달라요. 입력하신 비밀번호를 확인해주세요."
+                                    )
+                                }
                             }
-                        } else if (errorMessage.contains("올바르지")) {
-                            reduce {
-                                copy(
-                                    emailErrorDescription = null,
-                                    passwordErrorDescription = "비밀번호가 달라요. 입력하신 비밀번호를 확인해주세요."
-                                )
+                            else -> {
+                                postSideEffect(LoginSideEffect.ShowToast(errorMessage))
                             }
                         }
                     }
-                    else -> {
-                        postSideEffect(LoginSideEffect.ShowToast(errorMessage))
-                    }
-                }
             }
+
+        }
     }
 }
 
