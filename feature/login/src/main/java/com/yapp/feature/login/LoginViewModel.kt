@@ -84,7 +84,7 @@ class LoginViewModel @Inject constructor(
         reduce: (LoginState.() -> LoginState) -> Unit,
         postSideEffect: (LoginSideEffect) -> Unit,
     ) {
-        if (!email.matches(Regex.email)){
+        if (!email.matches(Regex.email)) {
             reduce {
                 copy(
                     isLoginEnabled = false,
@@ -92,31 +92,31 @@ class LoginViewModel @Inject constructor(
                     passwordErrorDescription = null
                 )
             }
-        }else{
-            viewModelScope.launch {
-                loginUseCase(email, password)
-                    .onSuccess {
-                        postSideEffect(LoginSideEffect.NavigateToHome)
-                    }
-                    .onFailure {
-                        val errorMessage = it.message ?: ""
-                        reduce{copy(isLoginEnabled = false)}
-                        when (it) {
-                            is InvalidRequestArgument -> {
-                                reduce {
-                                    copy(
-                                        emailErrorDescription = null,
-                                        passwordErrorDescription = "비밀번호가 달라요. 입력하신 비밀번호를 확인해주세요."
-                                    )
-                                }
-                            }
-                            else -> {
-                                postSideEffect(LoginSideEffect.ShowToast(errorMessage))
+            return
+        }
+        viewModelScope.launch {
+            loginUseCase(email, password)
+                .onSuccess {
+                    postSideEffect(LoginSideEffect.NavigateToHome)
+                }
+                .onFailure {
+                    val errorMessage = it.message ?: ""
+                    reduce { copy(isLoginEnabled = false) }
+                    when (it) {
+                        is InvalidRequestArgument -> {
+                            reduce {
+                                copy(
+                                    emailErrorDescription = null,
+                                    passwordErrorDescription = "비밀번호가 달라요. 입력하신 비밀번호를 확인해주세요."
+                                )
                             }
                         }
-                    }
-            }
 
+                        else -> {
+                            postSideEffect(LoginSideEffect.ShowToast(errorMessage))
+                        }
+                    }
+                }
         }
     }
 }
