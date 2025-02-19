@@ -1,7 +1,5 @@
 package com.yapp.feature.home.setting
 
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,13 +44,11 @@ fun SettingRoute(
             }
 
             SettingSideEffect.OpenPrivacyPolicy -> {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Url.PRIVACY_POLICY))
-                context.startActivity(intent)
+                Url.moveToUrl(context, Url.PRIVACY_POLICY)
             }
 
             SettingSideEffect.OpenTerms -> {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Url.TERMS))
-                context.startActivity(intent)
+                Url.moveToUrl(context, Url.TERMS)
             }
 
             SettingSideEffect.OpenInquiry -> {

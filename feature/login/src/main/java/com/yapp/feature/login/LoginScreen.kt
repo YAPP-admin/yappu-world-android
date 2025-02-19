@@ -1,7 +1,5 @@
 package com.yapp.feature.login
 
-import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -41,13 +39,11 @@ internal fun LoginRoute(
         when (effect) {
             LoginSideEffect.NavigateToSignUp -> navigateToSignup()
             LoginSideEffect.ShowTerms -> {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Url.TERMS))
-                context.startActivity(intent)
+                Url.moveToUrl(context, Url.TERMS)
             }
 
             LoginSideEffect.ShowPersonalPolicy -> {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Url.PRIVACY_POLICY))
-                context.startActivity(intent)
+                Url.moveToUrl(context, Url.PRIVACY_POLICY)
             }
 
             LoginSideEffect.NavigateToHome -> navigateToHome()

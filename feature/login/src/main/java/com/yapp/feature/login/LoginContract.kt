@@ -9,9 +9,9 @@ data class LoginState(
     val showAgreementDialog: Boolean = false,
     val terms: Boolean = false,
     val personalPolicy: Boolean = false,
-    val isResponseLogin: Boolean = true,
+    val isLoginEnabled: Boolean = true,
 ) {
-    val enableLoginButton: Boolean = email.isNotEmpty() && password.isNotEmpty() && isResponseLogin
+    val enableLoginButton: Boolean = email.isNotEmpty() && password.isNotEmpty() && isLoginEnabled
     val enableNextButton: Boolean = terms && personalPolicy
 }
 
