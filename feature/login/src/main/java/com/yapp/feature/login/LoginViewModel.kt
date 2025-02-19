@@ -38,7 +38,7 @@ class LoginViewModel @Inject constructor(
             is LoginIntent.ClickSignUpButton -> reduce { copy(showAgreementDialog = true) }
             is LoginIntent.ChangeEmail -> reduce {
                 copy(
-                    isResponseLogin = true,
+                    isLoginEnabled = true,
                     emailErrorDescription = null,
                     email = intent.email
                 )
@@ -46,7 +46,7 @@ class LoginViewModel @Inject constructor(
 
             is LoginIntent.ChangePassword -> reduce {
                 copy(
-                    isResponseLogin = true,
+                    isLoginEnabled = true,
                     passwordErrorDescription = null,
                     password = intent.password
                 )
@@ -87,7 +87,7 @@ class LoginViewModel @Inject constructor(
         if (!email.matches(Regex.email)){
             reduce {
                 copy(
-                    isResponseLogin = false,
+                    isLoginEnabled = false,
                     emailErrorDescription = "입력하신 이메일을 확인해주세요.",
                     passwordErrorDescription = null
                 )
@@ -100,7 +100,7 @@ class LoginViewModel @Inject constructor(
                     }
                     .onFailure {
                         val errorMessage = it.message ?: ""
-                        reduce{copy(isResponseLogin = false)}
+                        reduce{copy(isLoginEnabled = false)}
                         when (it) {
                             is InvalidRequestArgument -> {
                                 reduce {

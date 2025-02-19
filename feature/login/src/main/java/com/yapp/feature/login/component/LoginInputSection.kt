@@ -57,14 +57,14 @@ private fun LoginScreenPreview() {
     YappTheme {
         Column {
             LoginInputSection(
-                "",
-                "",
-                {},
-                {},
-                false,
-                {},
-                null,
-                null
+                email = "",
+                password = "",
+                onEmailChange = {},
+                onPasswordChange = {},
+                buttonEnable = false,
+                onButtonClick = {},
+                emailErrorDescription = null,
+                passwordErrorDescription = null
             )
         }
     }
