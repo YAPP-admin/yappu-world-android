@@ -13,7 +13,8 @@ enum class YappServerError(val exception: YappException) {
     USR_1101(UserNotFoundForEmailException()),
     USR_1102(SignUpPendingException()),
     USR_1103(RecentSignUpRejectedException()),
-    USR_1104(LoginBlockedException())
+    USR_1104(LoginBlockedException()),
+    USR_1105(LoginException())
 }
 
 class InternalServerException : YappException()
@@ -25,7 +26,7 @@ class UserNotFoundForEmailException : YappException("계정 정보를 찾을 수
 class SignUpPendingException : YappException("회원가입 처리가 진행 중입니다.")
 class RecentSignUpRejectedException : YappException("최근의 회원가입 신청은 거절되었습니다.")
 class LoginBlockedException : YappException("로그인이 불가능한 회원 상태입니다.")
-
+class LoginException : YappException("로그인에 실패했습니다. 계정 정보를 다시 확인하세요.")
 
 open class YappException(message: String = "") : Exception(message) {
     private var _message: String = message
