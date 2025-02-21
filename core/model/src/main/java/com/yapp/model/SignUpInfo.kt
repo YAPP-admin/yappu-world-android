@@ -18,13 +18,3 @@ data class SignUpInfo(
 
     val isActivityUnitsValid = activityUnits.none { it.position.isNullOrEmpty() || it.generation == null } && activityUnits.isNotEmpty()
 }
-
-@Stable
-data class ActivityUnit(
-    val generation: Int? = null,
-    val position: String? = null,
-) {
-    operator fun plus(previousActivityUnit: List<ActivityUnit>): List<ActivityUnit> {
-        return previousActivityUnit.toMutableList().apply { add(0, this@ActivityUnit) }
-    }
-}
