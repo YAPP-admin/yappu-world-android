@@ -8,7 +8,6 @@ import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.domain.GetUserProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,10 +22,6 @@ class HomeViewModel @Inject constructor(
             onIntent = ::onIntent
         )
 
-    init {
-        store.onIntent(HomeIntent.LoadUserInfo)
-    }
-
     private fun onIntent(
         intent: HomeIntent,
         state: HomeState,
@@ -38,7 +33,7 @@ class HomeViewModel @Inject constructor(
         when (intent) {
             HomeIntent.ClickMoreButton -> postSideEffect(HomeSideEffect.NavigateToNotice)
             HomeIntent.ClickSettingButton -> postSideEffect(HomeSideEffect.NavigateToSetting)
-            HomeIntent.LoadUserInfo -> {
+            HomeIntent.LoadMyInfo -> {
                 loadUserInfo(reduce, postSideEffect)
             }
         }
@@ -49,15 +44,13 @@ class HomeViewModel @Inject constructor(
         postSideEffect: (HomeSideEffect) -> Unit,
     ) = viewModelScope.launch {
         getUserProfileUseCase()
-            .onSuccess { result ->
-                result.firstOrNull()?.let { info ->
-                    reduce {
-                        copy(
-                            name = info.name,
-                            role = UserRole.fromRole(info.role),
-                            activityUnits = info.activityUnits
-                        )
-                    }
+            .onSuccess { info ->
+                reduce {
+                    copy(
+                        name = info.name,
+                        role = UserRole.fromRole(info.role),
+                        activityUnits = info.activityUnits
+                    )
                 }
             }
             .onFailure {

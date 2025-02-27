@@ -3,8 +3,8 @@ package com.yapp.core.data.data.di
 import com.yapp.core.data.data.repository.AuthorizedUserRepositoryImpl
 import com.yapp.core.data.data.repository.ConfigRepositoryImpl
 import com.yapp.core.data.data.repository.LoginRepositoryImpl
-import com.yapp.core.data.data.repository.UerProfileRepositoryImpl
 import com.yapp.core.data.data.repository.UnAuthorizedUserRepositoryImpl
+import com.yapp.core.data.data.repository.UserProfileRepositoryImpl
 import com.yapp.dataapi.AuthorizedUserRepository
 import com.yapp.dataapi.ConfigRepository
 import com.yapp.dataapi.LoginRepository
@@ -41,6 +41,6 @@ internal abstract class RepositoryModule {
 
     @Binds
     abstract fun bindUserProfileRepositoryImpl(
-        repositoryImpl: UerProfileRepositoryImpl
+        repositoryImpl: UserProfileRepositoryImpl
     ): UserProfileRepository
 }
