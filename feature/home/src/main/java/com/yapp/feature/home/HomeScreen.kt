@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,6 +30,10 @@ internal fun HomeRoute(
     navigateToSetting: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.store.onIntent(HomeIntent.LoadMyInfo)
+    }
+
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     viewModel.store.sideEffects.collectWithLifecycle { effect ->

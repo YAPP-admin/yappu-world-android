@@ -43,7 +43,7 @@ data class HomeState(
 sealed interface HomeIntent {
     data object ClickMoreButton : HomeIntent
     data object ClickSettingButton : HomeIntent
-    data object LoadUserInfo : HomeIntent
+    data object LoadMyInfo : HomeIntent
 }
 
 sealed interface HomeSideEffect {
