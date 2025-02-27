@@ -3,11 +3,13 @@ package com.yapp.feature.home
 import com.yapp.core.designsystem.component.chip.ChipColorType
 import com.yapp.core.ui.component.NoticeInfo
 import com.yapp.core.ui.component.TagInfo
+import com.yapp.core.ui.component.UserRole
 import com.yapp.model.ActivityUnit
 
 data class HomeState(
-    val name : String = "김재원",
-    val activityUnits : List<ActivityUnit> = listOf(ActivityUnit(position = "Android", generation = 25)),
+    val name : String = "",
+    val role : UserRole = UserRole.ACTIVE,
+    val activityUnits : List<ActivityUnit> = listOf(ActivityUnit(position = "", generation = 0)),
     var noticeInfo: List<NoticeInfo> = listOf()
 ){
     init {
@@ -41,9 +43,11 @@ data class HomeState(
 sealed interface HomeIntent {
     data object ClickMoreButton : HomeIntent
     data object ClickSettingButton : HomeIntent
+    data object LoadUserInfo : HomeIntent
 }
 
 sealed interface HomeSideEffect {
     data object NavigateToNotice : HomeSideEffect
     data object NavigateToSetting : HomeSideEffect
+    data class ShowToast(val message: String) : HomeSideEffect
 }

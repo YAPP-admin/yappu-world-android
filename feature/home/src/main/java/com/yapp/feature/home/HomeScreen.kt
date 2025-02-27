@@ -1,5 +1,6 @@
 package com.yapp.feature.home
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,10 +30,14 @@ internal fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
     viewModel.store.sideEffects.collectWithLifecycle { effect ->
         when (effect) {
             HomeSideEffect.NavigateToNotice -> navigateToNotice()
             HomeSideEffect.NavigateToSetting -> navigateToSetting()
+            is HomeSideEffect.ShowToast -> {
+                Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -61,21 +67,20 @@ fun HomeScreen(
                     .padding(horizontal = 20.dp, vertical = 16.dp)
             ) {
                 ProfileSection(
-                    homeState.name,
-                    "활동회원",
-                    (homeState.activityUnits[0].generation) ?: 25,
-                    (homeState.activityUnits[0].position) ?: "Android"
+                    name = homeState.name,
+                    activityStatus = homeState.role,
+                    generation = (homeState.activityUnits[0].generation) ?: 25,
+                    position = (homeState.activityUnits[0].position) ?: "Android"
                 )
                 Spacer(Modifier.height(8.dp))
                 NoticeSection(
                     noticeInfo = homeState.noticeInfo,
-                    onMoreButtonClick = { onIntent(HomeIntent.ClickMoreButton)}
+                    onMoreButtonClick = { onIntent(HomeIntent.ClickMoreButton) }
                 )
             }
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
