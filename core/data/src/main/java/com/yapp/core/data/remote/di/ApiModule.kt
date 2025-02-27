@@ -42,7 +42,7 @@ internal object ApiModule {
 
     @Singleton
     @Provides
-    fun provideUserProfileApi(retrofit: Retrofit): UserProfileApi {
+    fun provideUserProfileApi(@AuthRetrofit retrofit: Retrofit): UserProfileApi {
         return retrofit.create(UserProfileApi::class.java)
     }
 }

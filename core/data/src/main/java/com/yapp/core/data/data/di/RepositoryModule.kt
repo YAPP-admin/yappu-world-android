@@ -3,11 +3,13 @@ package com.yapp.core.data.data.di
 import com.yapp.core.data.data.repository.AuthorizedUserRepositoryImpl
 import com.yapp.core.data.data.repository.ConfigRepositoryImpl
 import com.yapp.core.data.data.repository.LoginRepositoryImpl
+import com.yapp.core.data.data.repository.UerProfileRepositoryImpl
 import com.yapp.core.data.data.repository.UnAuthorizedUserRepositoryImpl
 import com.yapp.dataapi.AuthorizedUserRepository
 import com.yapp.dataapi.ConfigRepository
 import com.yapp.dataapi.LoginRepository
 import com.yapp.dataapi.UnAuthorizedUserRepository
+import com.yapp.dataapi.UserProfileRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -36,4 +38,9 @@ internal abstract class RepositoryModule {
     abstract fun bindLoginRepositoryImpl(
         repositoryImpl: LoginRepositoryImpl,
     ): LoginRepository
+
+    @Binds
+    abstract fun bindUserProfileRepositoryImpl(
+        repositoryImpl: UerProfileRepositoryImpl
+    ): UserProfileRepository
 }
