@@ -11,14 +11,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yapp.core.designsystem.component.chip.ChipColorType
-import com.yapp.core.designsystem.component.chip.YappChipSmall
 import com.yapp.core.designsystem.theme.YappTheme
+import com.yapp.core.ui.component.RoleChip
+import com.yapp.core.ui.component.UserRole
 
 @Composable
 fun ProfileSection(
     name: String,
-    activityStatus: String,
+    activityStatus: UserRole,
     generation: Int,
     position: String,
 ) {
@@ -32,7 +32,7 @@ fun ProfileSection(
                 style = YappTheme.typography.title2Bold
             )
             Spacer(Modifier.width(8.dp))
-            YappChipSmall(text = activityStatus, colorType = ChipColorType.Main, isFill = false)
+            RoleChip(role = activityStatus)
         }
         Spacer(Modifier.height(4.dp))
         Row(
@@ -64,7 +64,7 @@ private fun ProfileSectionPreview() {
     YappTheme {
         ProfileSection(
             name = "홍길동",
-            activityStatus = "활동회원",
+            activityStatus = UserRole.ACTIVE,
             generation = 1,
             position = "안드로이드"
         )
