@@ -74,8 +74,8 @@ fun HomeScreen(
                 ProfileSection(
                     name = homeState.name,
                     activityStatus = homeState.role,
-                    generation = (homeState.activityUnits[0].generation) ?: 25,
-                    position = (homeState.activityUnits[0].position) ?: "Android"
+                    generation = (homeState.activityUnits.firstOrNull()?.generation) ?: 25,
+                    position = (homeState.activityUnits.firstOrNull()?.position) ?: "Android"
                 )
                 Spacer(Modifier.height(8.dp))
                 NoticeSection(
