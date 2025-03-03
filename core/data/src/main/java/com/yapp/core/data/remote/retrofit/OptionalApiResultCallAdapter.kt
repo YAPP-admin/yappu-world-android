@@ -44,16 +44,7 @@ private class OptionalApiResultCall<R: Any>(
                     return
                 }
 
-                return if (successType == Unit::class.java) {
-                    @Suppress("UNCHECKED_CAST")
-                    callback.onResponse(this@OptionalApiResultCall, Response.success(Optional.ofNullable(Unit as R)))
-                } else {
-                    callback.onFailure(
-                        this@OptionalApiResultCall,
-                        Exception("Body가 존재하지 않지만, Unit 이외의 타입으로 정의했습니다.")
-                    )
-                }
-
+                callback.onResponse(this@OptionalApiResultCall, Response.success(Optional.ofNullable(null)))
             }
 
             override fun onFailure(call: Call<R>, throwable: Throwable) {
