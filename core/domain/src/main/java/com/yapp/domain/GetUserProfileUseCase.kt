@@ -1,13 +1,13 @@
 package com.yapp.domain
 
-import com.yapp.dataapi.UserProfileRepository
+import com.yapp.dataapi.AuthorizedUserRepository
 import javax.inject.Inject
 
 class GetUserProfileUseCase @Inject constructor(
-    private val userProfileRepository: UserProfileRepository,
+    private val authorizedUserRepository: AuthorizedUserRepository,
 ) {
     suspend operator fun invoke() = runCatchingIgnoreCancelled {
-        userProfileRepository.getUserProfile()
+        authorizedUserRepository.getUserProfile()
     }
 }
 
