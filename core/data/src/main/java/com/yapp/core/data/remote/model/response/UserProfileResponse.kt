@@ -11,11 +11,11 @@ data class UserProfileResponse(
     val role: String,
     val activityUnits: List<UserActivityUnit>,
 ) {
-    fun toUserInfo() = UserInfo(
+    fun toModel() = UserInfo(
         id = id,
         name = name,
         role = role,
-        activityUnits = activityUnits.map { it.toUserActivityUnit() }
+        activityUnits = activityUnits.map { it.toModel() }
     )
 }
 
@@ -25,7 +25,7 @@ data class UserActivityUnit(
     val generation: Int,
     val position: String,
 ) {
-    fun toUserActivityUnit() = ActivityUnit(
+    fun toModel() = ActivityUnit(
         generation = generation,
         position = position
     )

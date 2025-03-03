@@ -2,9 +2,8 @@ package com.yapp.core.data.remote.di
 
 import com.yapp.core.data.remote.api.AlarmApi
 import com.yapp.core.data.remote.api.ConfigApi
-import com.yapp.core.data.remote.api.LoginApi
 import com.yapp.core.data.remote.api.UnAuthorizedUserApi
-import com.yapp.core.data.remote.api.UserProfileApi
+import com.yapp.core.data.remote.api.AuthorizedUserApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,19 +29,13 @@ internal object ApiModule {
 
     @Singleton
     @Provides
-    fun provideLoginApi(retrofit: Retrofit): LoginApi {
-        return retrofit.create(LoginApi::class.java)
-    }
-
-    @Singleton
-    @Provides
     fun provideAlarmApi(@AuthRetrofit retrofit: Retrofit): AlarmApi {
         return retrofit.create(AlarmApi::class.java)
     }
 
     @Singleton
     @Provides
-    fun provideUserProfileApi(@AuthRetrofit retrofit: Retrofit): UserProfileApi {
-        return retrofit.create(UserProfileApi::class.java)
+    fun provideAuthorizedApi(@AuthRetrofit retrofit: Retrofit): AuthorizedUserApi {
+        return retrofit.create(AuthorizedUserApi::class.java)
     }
 }

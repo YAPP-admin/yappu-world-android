@@ -1,6 +1,8 @@
 package com.yapp.core.data.remote.api
 
+import com.yapp.core.data.remote.model.request.LoginRequest
 import com.yapp.core.data.remote.model.request.SignUpRequest
+import com.yapp.core.data.remote.model.response.LoginResponse
 import com.yapp.core.data.remote.model.response.SignUpResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -11,4 +13,9 @@ internal interface UnAuthorizedUserApi {
     suspend fun signUp(
         @Body request: SignUpRequest,
     ): Optional<SignUpResponse>
+
+    @POST("v1/auth/login")
+    suspend fun login(
+        @Body request : LoginRequest
+    ) : LoginResponse
 }
