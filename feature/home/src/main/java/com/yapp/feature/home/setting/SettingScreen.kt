@@ -33,7 +33,8 @@ import com.yapp.feature.home.setting.component.SettingItemMedium
 
 @Composable
 fun SettingRoute(
-    viewModel: SettingViewModel = hiltViewModel()
+    viewModel: SettingViewModel = hiltViewModel(),
+    navigateBack: () -> Unit,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
 
@@ -41,8 +42,7 @@ fun SettingRoute(
 
     viewModel.store.sideEffects.collectWithLifecycle { sideEffect ->
         when (sideEffect) {
-            SettingSideEffect.NavigateBack -> {
-            }
+            SettingSideEffect.NavigateBack -> navigateBack()
 
             SettingSideEffect.OpenPrivacyPolicy -> {
                 Url.moveToUrl(context, Url.PRIVACY_POLICY)
