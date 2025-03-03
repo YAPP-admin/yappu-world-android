@@ -8,6 +8,7 @@ import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Callback
 import retrofit2.Response
+import timber.log.Timber
 import java.lang.reflect.Type
 
 internal class ApiResultCallAdapter<R>(
@@ -38,15 +39,9 @@ private class ApiResultCall<R>(
                     return
                 }
 
-                return if (successType == Unit::class.java) {
-                    @Suppress("UNCHECKED_CAST")
-                    callback.onResponse(this@ApiResultCall, Response.success(Unit as R))
-                } else {
-                    callback.onFailure(
-                        this@ApiResultCall,
-                        Exception("Body가 존재하지 않지만, Unit 이외의 타입으로 정의했습니다.")
-                    )
-                }
+
+                @Suppress("UNCHECKED_CAST")
+                callback.onResponse(this@ApiResultCall, Response.success(Unit as R))
             }
 
             override fun onFailure(call: Call<R>, throwable: Throwable) {
@@ -68,6 +63,7 @@ private class ApiResultCall<R>(
                         YappServerError.COM_0001.name, YappServerError.COM_0002.name -> {
                             setMessage(errorBody.message)
                         }
+
                         else -> setMessage(message)
                     }
                 }

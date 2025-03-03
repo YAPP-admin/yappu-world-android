@@ -16,6 +16,7 @@ dependencies {
     implementation(project(":feature:login"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:data")) // For di
+    implementation(project(":core:domain"))
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)

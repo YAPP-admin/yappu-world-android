@@ -41,7 +41,9 @@ fun YappNavHost(
             navigateNotice = { navigator.navigateNoticeScreen() },
             navigateSetting = { navigator.navigateSettingScreen() }
         )
-        settingNavGraph()
+        settingNavGraph(
+            navigateBack = { navigator.popBackStack() }
+        )
         noticeNavGraph()
     }
 }

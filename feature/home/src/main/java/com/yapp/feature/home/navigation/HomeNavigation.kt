@@ -34,8 +34,12 @@ fun NavGraphBuilder.homeNavGraph(
     }
 }
 
-fun NavGraphBuilder.settingNavGraph() {
+fun NavGraphBuilder.settingNavGraph(
+    navigateBack: () -> Unit,
+) {
     composable<SettingRoute> {
-        SettingRoute()
+        SettingRoute(
+            navigateBack = navigateBack,
+        )
     }
 }
