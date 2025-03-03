@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import com.yapp.app.official.ui.NavigatorState
+import com.yapp.app.official.ui.clearBackStackNavOptions
 import com.yapp.feature.home.navigation.homeNavGraph
 import com.yapp.feature.home.navigation.settingNavGraph
 import com.yapp.feature.login.navigation.loginNavGraph
@@ -25,7 +26,7 @@ fun YappNavHost(
             navigateSignUp = { navigator.navigateSignUpScreen() },
             navigateHome = {
                 navigator.navigateHomeScreen(
-                    navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+                    navOptions = clearBackStackNavOptions
                 )
             }
         )
@@ -33,7 +34,7 @@ fun YappNavHost(
             navigateBack = { navigator.popBackStack() },
             navigateHome = {
                 navigator.navigateHomeScreen(
-                    navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+                    navOptions = clearBackStackNavOptions
                 )
             }
         )
@@ -42,6 +43,11 @@ fun YappNavHost(
             navigateSetting = { navigator.navigateSettingScreen() }
         )
         settingNavGraph(
+            navigateLogin = {
+                navigator.navigateLoginScreen(
+                    navOptions = clearBackStackNavOptions
+                )
+            },
             navigateBack = { navigator.popBackStack() }
         )
         noticeNavGraph()

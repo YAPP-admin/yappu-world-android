@@ -9,18 +9,18 @@ data class SettingState(
 sealed interface SettingIntent {
     data object EnterScreen : SettingIntent
     data object ClickNotificationSwitch : SettingIntent
-    data object ClickLogoutButton : SettingIntent
+    data object ClickLogoutItem : SettingIntent
     data object ClickBackButton : SettingIntent
     data object ClickPrivacyPolicyItem : SettingIntent
     data object ClickTermsItem : SettingIntent
     data object ClickInquiryItem : SettingIntent
-    data object ClickDeleteAccountButton : SettingIntent
+    data object ClickDeleteAccountItem : SettingIntent
     data object DismissLogoutDialog : SettingIntent
-    data object ClickLogoutDialogActionButton : SettingIntent
-    data object ClickLogoutDialogRecommendActionButton : SettingIntent
+    data object ClickLogoutDialogCancelButton : SettingIntent
+    data object ClickLogoutDialogLogoutButton : SettingIntent
     data object DismissDeleteAccountDialog : SettingIntent
-    data object ClickDeleteAccountDialogActionButton : SettingIntent
-    data object ClickDeleteAccountDialogRecommendActionButton : SettingIntent
+    data object ClickDeleteAccountDialogCancelButton : SettingIntent
+    data object ClickDeleteAccountDialogDeleteButton : SettingIntent
 }
 
 sealed interface SettingSideEffect {

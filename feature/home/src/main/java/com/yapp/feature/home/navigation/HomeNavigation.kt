@@ -35,11 +35,13 @@ fun NavGraphBuilder.homeNavGraph(
 }
 
 fun NavGraphBuilder.settingNavGraph(
+    navigateLogin: () -> Unit,
     navigateBack: () -> Unit,
 ) {
     composable<SettingRoute> {
         SettingRoute(
             navigateBack = navigateBack,
+            navigateLogin = navigateLogin,
         )
     }
 }
