@@ -2,6 +2,7 @@ package com.yapp.core.data.remote.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.yapp.core.data.remote.Tag
+import com.yapp.core.data.remote.retrofit.NullOnEmptyConverterFactory
 import com.yapp.core.data.remote.retrofit.ResultCallAdapterFactory
 import com.yapp.core.data.remote.retrofit.TokenInterceptor
 import dagger.Module
@@ -70,6 +71,7 @@ internal object NetworkModule {
     ): Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addCallAdapterFactory(ResultCallAdapterFactory())
+        .addConverterFactory(NullOnEmptyConverterFactory())
         .addConverterFactory(OptionalConverterFactory.create())
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .client(okHttpClient)
@@ -84,6 +86,7 @@ internal object NetworkModule {
     ): Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addCallAdapterFactory(ResultCallAdapterFactory())
+        .addConverterFactory(NullOnEmptyConverterFactory())
         .addConverterFactory(OptionalConverterFactory.create())
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .client(okHttpClient)
