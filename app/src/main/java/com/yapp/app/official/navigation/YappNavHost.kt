@@ -2,6 +2,7 @@ package com.yapp.app.official.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import com.yapp.app.official.ui.NavigatorState
 import com.yapp.feature.home.navigation.homeNavGraph
@@ -22,10 +23,19 @@ fun YappNavHost(
     ) {
         loginNavGraph(
             navigateSignUp = { navigator.navigateSignUpScreen() },
-            navigateHome = { navigator.navigateHomeScreen() }
+            navigateHome = {
+                navigator.navigateHomeScreen(
+                    navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+                )
+            }
         )
         signupNavGraph(
-            navigateBack = { navigator.popBackStack() }
+            navigateBack = { navigator.popBackStack() },
+            navigateHome = {
+                navigator.navigateHomeScreen(
+                    navOptions = NavOptions.Builder().setPopUpTo(0, true).build()
+                )
+            }
         )
         homeNavGraph(
             navigateNotice = { navigator.navigateNoticeScreen() },

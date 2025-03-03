@@ -7,7 +7,8 @@ data class SettingState(
 )
 
 sealed interface SettingIntent {
-    data class ClickNotificationSwitch(val enabled: Boolean) : SettingIntent
+    data object EnterScreen : SettingIntent
+    data object ClickNotificationSwitch : SettingIntent
     data object ClickLogoutButton : SettingIntent
     data object ClickBackButton : SettingIntent
     data object ClickPrivacyPolicyItem : SettingIntent
