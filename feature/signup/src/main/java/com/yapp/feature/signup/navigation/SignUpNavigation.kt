@@ -7,16 +7,21 @@ import androidx.navigation.compose.composable
 import com.yapp.feature.signup.signup.SignUpRoute
 import kotlinx.serialization.Serializable
 
-@Serializable data object SignUpRoute
+@Serializable
+data object SignUpRoute
 
-fun NavController.navigateToSignUp(navOptions: NavOptions? = null) { navigate(SignUpRoute, navOptions) }
+fun NavController.navigateToSignUp(navOptions: NavOptions? = null) {
+    navigate(SignUpRoute, navOptions)
+}
 
 fun NavGraphBuilder.signupNavGraph(
     navigateBack: () -> Unit,
-){
+    navigateHome: () -> Unit,
+) {
     composable<SignUpRoute> {
         SignUpRoute(
             navigateBack = navigateBack,
+            navigateHome = navigateHome,
         )
     }
 }

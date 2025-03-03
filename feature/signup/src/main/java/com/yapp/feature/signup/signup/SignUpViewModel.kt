@@ -77,6 +77,11 @@ class SignUpViewModel @Inject constructor(
                     return
                 }
 
+                if (state.currentStep == SignUpStep.Complete) {
+                    postSideEffect(SignUpSideEffect.NavigateHome)
+                    return
+                }
+
                 val nextStep = when (state.currentStep) {
                     SignUpStep.Name -> SignUpStep.Email
                     SignUpStep.Email -> SignUpStep.Password

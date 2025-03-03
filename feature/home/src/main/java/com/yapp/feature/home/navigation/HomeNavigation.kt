@@ -25,9 +25,12 @@ fun NavController.navigateToSetting(navOptions: NavOptions? = null) {
 fun NavGraphBuilder.homeNavGraph(
     navigateNotice: () -> Unit,
     navigateSetting: () -> Unit
-    ) {
+) {
     composable<HomeRoute> {
-        HomeRoute({navigateNotice()}, {navigateSetting()})
+        HomeRoute(
+            navigateToNotice = navigateNotice,
+            navigateToSetting = navigateSetting,
+        )
     }
 }
 

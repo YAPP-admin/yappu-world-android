@@ -47,6 +47,7 @@ sealed interface SignUpIntent {
 
 sealed interface SignUpSideEffect {
     data object NavigateBack : SignUpSideEffect
+    data object NavigateHome : SignUpSideEffect
     data object ClearFocus : SignUpSideEffect
 }
 

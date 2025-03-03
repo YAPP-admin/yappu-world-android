@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
+import com.yapp.dataapi.AlarmRepository
 import com.yapp.domain.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -13,6 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
+    private val alarmRepository: AlarmRepository,
 ) : ViewModel() {
 
     val store: MviIntentStore<SettingState, SettingIntent, SettingSideEffect> =
@@ -28,9 +30,18 @@ class SettingViewModel @Inject constructor(
         postSideEffect: (SettingSideEffect) -> Unit
     ) {
         when (intent) {
+            SettingIntent.EnterScreen -> {
+                viewModelScope.launch {
+                    val enabled = alarmRepository.getMasterAlarmStatus()
+                    reduce { copy(isNotificationEnabled = enabled) }
+                }
+            }
+
             is SettingIntent.ClickNotificationSwitch -> {
-                // TODO 서버 API 호출
-                reduce { copy(isNotificationEnabled = intent.enabled) }
+                viewModelScope.launch {
+                    val enabled = alarmRepository.updateMasterAlarmStatus()
+                    reduce { copy(isNotificationEnabled = enabled) }
+                }
             }
             SettingIntent.ClickLogoutButton -> {
                 reduce { copy(showLogoutDialog = true) }
@@ -69,6 +80,7 @@ class SettingViewModel @Inject constructor(
                     postSideEffect(SettingSideEffect.NavigateToLogin)
                 }
             }
+
         }
     }
 }

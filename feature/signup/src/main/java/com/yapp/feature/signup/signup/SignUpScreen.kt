@@ -47,6 +47,7 @@ import com.yapp.feature.signup.signup.page.position.PositionPage
 fun SignUpRoute(
     viewModel: SignUpViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
+    navigateHome: () -> Unit,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
@@ -55,6 +56,7 @@ fun SignUpRoute(
         when (it) {
             SignUpSideEffect.NavigateBack -> navigateBack()
             SignUpSideEffect.ClearFocus -> focusManager.clearFocus(force = true)
+            SignUpSideEffect.NavigateHome -> navigateHome()
         }
     }
 
