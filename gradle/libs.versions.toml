@@ -4,6 +4,7 @@ kotlin = "2.0.0"
 jetbrainsKotlinJvm = "2.0.0"
 kotlinxSerializationJson = "1.8.0"
 kotlinxCoroutines = "1.8.1"
+googleService = "4.4.2"
 
 coreKtx = "1.13.1"
 appcompat = "1.7.0"
@@ -13,6 +14,8 @@ activityCompose = "1.9.3"
 compose-stable-marker = "1.0.3"
 
 composeBom = "2024.12.01"
+firebaseBom = "32.1.1"
+coroutinesPlayServices = "1.7.3"
 
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -90,6 +93,12 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
+
+coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version = "coroutinesPlayServices" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
@@ -100,3 +109,4 @@ jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrai
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleService" }
