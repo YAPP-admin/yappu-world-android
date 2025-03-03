@@ -54,6 +54,10 @@ dependencies {
     implementation(libs.encrypted.datastore.preference.ksp.annotations)
     implementation(libs.encrypted.datastore.preference.security)
 
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging)
+    implementation(libs.coroutines.play.services)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.kotlin.serialization)

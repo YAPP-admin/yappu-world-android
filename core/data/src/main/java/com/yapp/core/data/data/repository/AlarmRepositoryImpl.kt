@@ -3,21 +3,12 @@ package com.yapp.core.data.data.repository
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import com.yapp.core.data.local.SecurityPreferences
 import com.yapp.core.data.remote.api.AlarmApi
-import com.yapp.core.data.remote.api.UnAuthorizedUserApi
 import com.yapp.core.data.remote.model.request.DeviceAlarmRequest
 import com.yapp.core.data.remote.model.request.FcmTokenRequest
-import com.yapp.core.data.remote.model.request.toData
-import com.yapp.core.data.remote.model.response.toModel
 import com.yapp.dataapi.AlarmRepository
-import com.yapp.dataapi.AuthorizedUserRepository
-import com.yapp.dataapi.UnAuthorizedUserRepository
-import com.yapp.model.SignUpInfo
-import com.yapp.model.SignUpResult
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
-import kotlin.jvm.optionals.getOrNull
 
 internal class AlarmRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
