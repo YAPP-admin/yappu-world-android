@@ -1,15 +1,13 @@
 package com.yapp.domain
 
-import com.yapp.dataapi.AlarmRepository
 import com.yapp.dataapi.AuthorizedUserRepository
 import javax.inject.Inject
 
-class LogoutUseCase @Inject constructor(
+class DeleteAccountUseCase @Inject constructor(
     private val authorizedUserRepository: AuthorizedUserRepository,
-    private val alarmRepository: AlarmRepository,
 ) {
     suspend operator fun invoke() = runCatchingIgnoreCancelled {
-        alarmRepository.updateFcmToken("")
+        authorizedUserRepository.deleteAccount()
         authorizedUserRepository.clearTokens()
     }
 }

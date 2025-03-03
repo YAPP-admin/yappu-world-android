@@ -6,6 +6,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.AlarmRepository
+import com.yapp.domain.DeleteAccountUseCase
 import com.yapp.domain.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -15,6 +16,7 @@ import javax.inject.Inject
 class SettingViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
     private val alarmRepository: AlarmRepository,
+    private val deleteAccountUseCase: DeleteAccountUseCase,
 ) : ViewModel() {
 
     val store: MviIntentStore<SettingState, SettingIntent, SettingSideEffect> =
@@ -43,7 +45,7 @@ class SettingViewModel @Inject constructor(
                     reduce { copy(isNotificationEnabled = enabled) }
                 }
             }
-            SettingIntent.ClickLogoutButton -> {
+            SettingIntent.ClickLogoutItem -> {
                 reduce { copy(showLogoutDialog = true) }
             }
             SettingIntent.ClickBackButton -> {
@@ -58,23 +60,28 @@ class SettingViewModel @Inject constructor(
             SettingIntent.ClickInquiryItem -> {
                 postSideEffect(SettingSideEffect.OpenInquiry)
             }
-            SettingIntent.ClickDeleteAccountButton -> {
+            SettingIntent.ClickDeleteAccountItem -> {
                 reduce { copy(showDeleteAccountDialog = true) }
             }
 
             SettingIntent.DismissDeleteAccountDialog,
-            SettingIntent.ClickDeleteAccountDialogActionButton -> {
+            SettingIntent.ClickDeleteAccountDialogCancelButton -> {
                 reduce { copy(showDeleteAccountDialog = false) }
             }
 
             SettingIntent.DismissLogoutDialog,
-            SettingIntent.ClickLogoutDialogActionButton -> {
+            SettingIntent.ClickLogoutDialogCancelButton -> {
                 reduce { copy(showLogoutDialog = false) }
             }
 
-            SettingIntent.ClickDeleteAccountDialogRecommendActionButton -> TODO()
+            SettingIntent.ClickDeleteAccountDialogDeleteButton -> {
+                viewModelScope.launch {
+                    deleteAccountUseCase()
+                    postSideEffect(SettingSideEffect.NavigateToLogin)
+                }
+            }
 
-            SettingIntent.ClickLogoutDialogRecommendActionButton -> {
+            SettingIntent.ClickLogoutDialogLogoutButton -> {
                 viewModelScope.launch {
                     logoutUseCase()
                     postSideEffect(SettingSideEffect.NavigateToLogin)

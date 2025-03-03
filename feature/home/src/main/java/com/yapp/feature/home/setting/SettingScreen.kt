@@ -35,6 +35,7 @@ import com.yapp.feature.home.setting.component.SettingItemMedium
 fun SettingRoute(
     viewModel: SettingViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
+    navigateLogin: () -> Unit,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
 
@@ -56,6 +57,7 @@ fun SettingRoute(
             }
 
             SettingSideEffect.NavigateToLogin -> {
+                navigateLogin()
             }
         }
     }
@@ -173,7 +175,7 @@ fun SettingScreen(
                 SettingItemLarge(
                     text = stringResource(id = R.string.setting_screen_item_delete_account),
                     onClick = {
-                        onIntent(SettingIntent.ClickDeleteAccountButton)
+                        onIntent(SettingIntent.ClickDeleteAccountItem)
                     }
                 )
             }
@@ -186,7 +188,7 @@ fun SettingScreen(
                     .fillMaxWidth(),
                 text = stringResource(id = R.string.setting_screen_item_logout),
                 onClick = {
-                    onIntent(SettingIntent.ClickLogoutButton)
+                    onIntent(SettingIntent.ClickLogoutItem)
                 }
             )
 
@@ -199,8 +201,8 @@ fun SettingScreen(
                 actionButtonText = stringResource(R.string.logout_dialog_action_button),
                 recommendActionButtonText = stringResource(R.string.logout_dialog_recommend_action_button),
                 onDismissRequest = { onIntent(SettingIntent.DismissLogoutDialog) },
-                onActionButtonClick = { onIntent(SettingIntent.ClickLogoutDialogActionButton) },
-                onRecommendActionButtonClick = { onIntent(SettingIntent.ClickLogoutDialogRecommendActionButton) },
+                onActionButtonClick = { onIntent(SettingIntent.ClickLogoutDialogCancelButton) },
+                onRecommendActionButtonClick = { onIntent(SettingIntent.ClickLogoutDialogLogoutButton) },
             )
         }
 
@@ -211,8 +213,8 @@ fun SettingScreen(
                 actionButtonText = stringResource(R.string.delete_account_dialog_action_button),
                 recommendActionButtonText = stringResource(R.string.delete_account_dialog_recommend_action_button),
                 onDismissRequest = { onIntent(SettingIntent.DismissDeleteAccountDialog) },
-                onActionButtonClick = { onIntent(SettingIntent.ClickDeleteAccountDialogActionButton) },
-                onRecommendActionButtonClick = { onIntent(SettingIntent.ClickDeleteAccountDialogRecommendActionButton) },
+                onActionButtonClick = { onIntent(SettingIntent.ClickDeleteAccountDialogCancelButton) },
+                onRecommendActionButtonClick = { onIntent(SettingIntent.ClickDeleteAccountDialogDeleteButton) },
             )
         }
     }

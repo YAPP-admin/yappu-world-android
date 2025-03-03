@@ -34,8 +34,8 @@ class NavigatorState(
 
     val startDestination = LoginRoute
 
-    fun navigateLoginScreen() {
-        navController.navigateToLogin()
+    fun navigateLoginScreen(navOptions: NavOptions? = null) {
+        navController.navigateToLogin(navOptions)
     }
 
     fun navigateSignUpScreen() {
@@ -58,3 +58,5 @@ class NavigatorState(
         navController.popBackStack()
     }
 }
+
+val clearBackStackNavOptions = NavOptions.Builder().setPopUpTo(0, true).build()
