@@ -2,8 +2,7 @@ package com.yapp.dataapi
 
 import com.yapp.model.UserInfo
 
-interface AuthorizedUserRepository {
-    suspend fun clearTokens()
+interface UserRepository {
     suspend fun deleteAccount()
     suspend fun getUserProfile(): UserInfo
 }

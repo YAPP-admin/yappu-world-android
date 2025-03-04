@@ -3,8 +3,15 @@ package com.yapp.dataapi
 import com.yapp.model.SignUpInfo
 import com.yapp.model.SignUpResult
 
-interface UnAuthorizedUserRepository {
+interface AuthRepository {
     suspend fun signUp(
         request: SignUpInfo,
     ): SignUpResult
+
+    suspend fun clearTokens()
+
+    suspend fun login(
+        email : String,
+        password : String
+    )
 }
