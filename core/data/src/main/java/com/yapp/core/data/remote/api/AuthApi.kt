@@ -8,7 +8,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 import java.util.Optional
 
-internal interface UnAuthorizedUserApi {
+internal interface AuthApi {
     @POST("v1/auth/sign-up")
     suspend fun signUp(
         @Body request: SignUpRequest,

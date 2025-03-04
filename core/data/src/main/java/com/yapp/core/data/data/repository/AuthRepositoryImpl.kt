@@ -7,10 +7,13 @@ import androidx.datastore.core.DataStore
 import com.google.firebase.messaging.FirebaseMessaging
 import com.yapp.core.data.PositionConfigs
 import com.yapp.core.data.local.SecurityPreferences
-import com.yapp.core.data.remote.api.UnAuthorizedUserApi
+import com.yapp.core.data.remote.api.AlarmApi
+import com.yapp.core.data.remote.api.AuthApi
+import com.yapp.core.data.remote.model.request.FcmTokenRequest
+import com.yapp.core.data.remote.model.request.LoginRequest
 import com.yapp.core.data.remote.model.request.toData
 import com.yapp.core.data.remote.model.response.toModel
-import com.yapp.dataapi.UnAuthorizedUserRepository
+import com.yapp.dataapi.AuthRepository
 import com.yapp.model.SignUpInfo
 import com.yapp.model.SignUpResult
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -19,12 +22,13 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import kotlin.jvm.optionals.getOrNull
 
-internal class UnAuthorizedUserRepositoryImpl @Inject constructor(
+internal class AuthRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val api: UnAuthorizedUserApi,
+    private val authApi: AuthApi,
+    private val alarmApi: AlarmApi,
     private val securityPreferences: SecurityPreferences,
     private val dataStore: DataStore<PositionConfigs>,
-): UnAuthorizedUserRepository {
+) : AuthRepository {
 
     override suspend fun signUp(request: SignUpInfo): SignUpResult {
         val positionConfigs = dataStore.data.firstOrNull() ?: PositionConfigs.getDefaultInstance()
@@ -37,7 +41,7 @@ internal class UnAuthorizedUserRepositoryImpl @Inject constructor(
             true // Android 12 이하에서는 자동 허용
         }
 
-        val response = api.signUp(
+        val response = authApi.signUp(
             request.toData(
                 positionConfigs = positionConfigs,
                 fcmToken = fcmToken,
@@ -51,5 +55,21 @@ internal class UnAuthorizedUserRepositoryImpl @Inject constructor(
         }
 
         return response.toModel()
+    }
+
+    override suspend fun login(email: String, password: String) {
+        val response = authApi.login(LoginRequest(email = email, password = password))
+        securityPreferences.setAccessToken(response.accessToken)
+        securityPreferences.setRefreshToken(response.refreshToken)
+        val fcmToken = FirebaseMessaging.getInstance().token.await()
+        alarmApi.putFcmToken(
+            FcmTokenRequest(
+                fcmToken = fcmToken
+            )
+        )
+    }
+
+    override suspend fun clearTokens() {
+        securityPreferences.clearAll()
     }
 }

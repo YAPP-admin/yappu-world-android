@@ -4,7 +4,7 @@ import com.yapp.core.data.remote.model.response.UserProfileResponse
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 
-interface AuthorizedUserApi {
+interface UserApi {
     @GET("v1/users/profile")
     suspend fun getUserProfile() : UserProfileResponse
 
