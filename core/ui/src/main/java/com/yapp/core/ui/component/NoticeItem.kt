@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.component.chip.ChipColorType
 import com.yapp.core.designsystem.component.chip.YappChipSmall
+import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
 
 // 샘플 데이터 .. .. ..
@@ -38,9 +39,12 @@ data class TagInfo(
 fun NoticeItem(
     modifier: Modifier = Modifier,
     noticeInfo: NoticeInfo,
+    onClick: () -> Unit,
 ) {
     Column(
-        modifier = modifier.padding(vertical = 9.dp)
+        modifier = modifier
+            .padding(vertical = 9.dp)
+            .yappClickable(onClick = onClick)
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -118,7 +122,10 @@ fun NoticeItemPreview() {
     YappTheme {
         LazyColumn {
             items(noticeInfo) { item ->
-                NoticeItem(noticeInfo = item)
+                NoticeItem(
+                    noticeInfo = item,
+                    onClick = {}
+                )
             }
         }
     }

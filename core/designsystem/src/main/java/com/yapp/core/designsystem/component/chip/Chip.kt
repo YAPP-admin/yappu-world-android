@@ -30,11 +30,13 @@ internal fun YappChipBasic(
     textStyle: TextStyle,
     contentPaddings: PaddingValues,
     colorType: ChipColorType,
+    colorsFill: ChipFillColors = ChipDefaults.colorsFill,
+    colorsWeak: ChipWeakColors = ChipDefaults.colorsWeak,
     isFill: Boolean,
 ) {
     val colors = when (isFill) {
-        true -> ChipDefaults.colorsFill
-        false ->ChipDefaults.colorsWeak
+        true -> colorsFill
+        false ->colorsWeak
     }
 
     Box(
@@ -82,6 +84,8 @@ fun YappChipSmall(
     textStyle: TextStyle = ChipDefaults.textStyleSmall,
     contentPaddings: PaddingValues = ChipDefaults.contentPaddingsSmall,
     colorType: ChipColorType,
+    colorsFill: ChipFillColors = ChipDefaults.colorsFill,
+    colorsWeak: ChipWeakColors = ChipDefaults.colorsWeak,
     isFill: Boolean,
 ) {
     YappChipBasic(
@@ -91,6 +95,8 @@ fun YappChipSmall(
         textStyle = textStyle,
         contentPaddings = contentPaddings,
         colorType = colorType,
+        colorsFill = colorsFill,
+        colorsWeak = colorsWeak,
         isFill = isFill
     )
 }

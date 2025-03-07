@@ -50,6 +50,10 @@ fun YappNavHost(
             },
             navigateBack = { navigator.popBackStack() }
         )
-        noticeNavGraph()
+        noticeNavGraph(
+            navigateToNoticeDetail = { noticeId ->
+                navigator.navigateToNoticeDetail(noticeId)
+            }
+        )
     }
 }
