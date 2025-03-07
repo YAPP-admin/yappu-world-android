@@ -40,7 +40,10 @@ fun NoticeSection(
                         color = YappTheme.colorScheme.lineNormalAlternative
                     )
                 },
-                noticeInfo = noticeInfo[it]
+                noticeInfo = noticeInfo[it],
+                onClick = {
+                    // TODO
+                }
             )
         }
         Spacer(Modifier.height(8.dp))

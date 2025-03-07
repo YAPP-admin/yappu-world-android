@@ -22,6 +22,7 @@ class NoticeViewModel @Inject constructor() : ViewModel() {
     ) {
         when (intent) {
             NoticeIntent.ClickBackButton -> TODO()
+            is NoticeIntent.ClickNoticeItem -> postSideEffect(NoticeSideEffect.NavigateToNoticeDetail(intent.noticeId))
         }
     }
 }
