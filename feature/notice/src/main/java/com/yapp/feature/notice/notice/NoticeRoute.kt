@@ -14,13 +14,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.yapp.core.designsystem.component.button.outlined.YappOutlinedAssistiveButtonXSmall
 import com.yapp.core.designsystem.component.chip.ChipColorType
 import com.yapp.core.designsystem.component.gradient.GradientBottom
 import com.yapp.core.designsystem.component.header.YappHeaderActionbarExpanded
@@ -33,7 +31,6 @@ import com.yapp.core.ui.extension.borderBottom
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.notice.R
 import com.yapp.feature.notice.notice.component.NoticeCategoryButton
-import com.yapp.feature.notice.notice.component.NoticeFilterBottomDialog
 
 @Composable
 fun NoticeRoute(
@@ -94,20 +91,6 @@ fun NoticeScreen(
                         onCheckedChange = {}
                     )
                 }
-
-                Row {
-                    YappOutlinedAssistiveButtonXSmall(
-                        text = "ALL",
-                        rightIcon = {
-                            Icon(
-                                painter = painterResource(R.drawable.icon_tune),
-                                tint = YappTheme.colorScheme.labelNormal,
-                                contentDescription = null
-                            )
-                        },
-                        onClick = {}
-                    )
-                }
             }
 
             Box {
@@ -141,10 +124,6 @@ fun NoticeScreen(
                     color = YappTheme.colorScheme.staticWhite
                 )
             }
-        }
-
-        if (false) {
-            NoticeFilterBottomDialog()
         }
     }
 }
