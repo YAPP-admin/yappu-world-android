@@ -8,7 +8,9 @@ import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.PostsRepository
 import com.yapp.domain.GetUserProfileUseCase
+import com.yapp.model.NoticeType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -37,44 +39,43 @@ class HomeViewModel @Inject constructor(
         when (intent) {
             HomeIntent.ClickMoreButton -> postSideEffect(HomeSideEffect.NavigateToNotice)
             HomeIntent.ClickSettingButton -> postSideEffect(HomeSideEffect.NavigateToSetting)
-            HomeIntent.EnterHomeScreen -> {
-                loadUserInfo(state, reduce, postSideEffect)
+            HomeIntent.EnterHomeScreen -> { loadHomeInfo( reduce)
             }
         }
     }
 
-    private fun loadUserInfo(
-        state: HomeState,
+    private fun loadHomeInfo(
         reduce: (HomeState.() -> HomeState) -> Unit,
-        postSideEffect: (HomeSideEffect) -> Unit,
     ) = viewModelScope.launch {
         reduce { copy(isLoading = true, isUserInfoLoading = true, isNoticesLoading = true) }
         getUserProfileUseCase()
-            .collect { info ->
+            .collectLatest{ userInfo ->
                 reduce {
                     copy(
                         isUserInfoLoading = false,
-                        name = info.name,
-                        role = UserRole.fromRole(info.role),
-                        activityUnits = info.activityUnits
+                        name = userInfo.name,
+                        role = UserRole.fromRole(userInfo.role),
+                        activityUnits = userInfo.activityUnits
                     )
                 }
             }
 
-        getNoticeListRepository.getNoticeList(noticeType = "전체", lastNoticeId = null, limit = 3)
-            .collect { notices ->
-                reduce { copy(noticeInfo = notices, isNoticesLoading = false) }
-            }
-
-        launch {
-            combine(
-                store.uiState.map { it.isUserInfoLoading },
-                store.uiState.map { it.isNoticesLoading },
-            ) { isUserInfoLoading, isNoticesLoading ->
-                (isUserInfoLoading && isNoticesLoading)
-            }.collect { isLoading ->
-                reduce { copy(isLoading = isLoading) }
-            }
+        getNoticeListRepository.getNoticeList(
+            noticeType = NoticeType.ALL.apiValue,
+            lastNoticeId = null,
+            limit = 3
+        ).collectLatest{ noticeInfo ->
+            reduce { copy(noticeInfo = noticeInfo, isNoticesLoading = false) }
         }
+
+        combine(
+            store.uiState.map { it.isUserInfoLoading },
+            store.uiState.map { it.isNoticesLoading },
+        ) { isUserInfoLoading, isNoticesLoading ->
+            (isUserInfoLoading && isNoticesLoading)
+        }.collect { isLoading ->
+            reduce { copy(isLoading = isLoading) }
+        }
+
     }
 }
