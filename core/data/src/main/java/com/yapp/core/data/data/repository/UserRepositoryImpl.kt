@@ -4,6 +4,7 @@ import com.yapp.core.data.local.SecurityPreferences
 import com.yapp.core.data.remote.api.UserApi
 import com.yapp.dataapi.UserRepository
 import com.yapp.model.UserInfo
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 internal class UserRepositoryImpl @Inject constructor(
@@ -16,5 +17,5 @@ internal class UserRepositoryImpl @Inject constructor(
         securityPreferences.clearAll()
     }
 
-    override suspend fun getUserProfile(): UserInfo = userApi.getUserProfile().toModel()
+    override suspend fun getUserProfile() = flow<UserInfo> {  emit(userApi.getUserProfile().toModel())}
 }

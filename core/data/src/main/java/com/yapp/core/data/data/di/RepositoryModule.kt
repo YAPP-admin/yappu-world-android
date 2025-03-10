@@ -1,13 +1,15 @@
 package com.yapp.core.data.data.di
 
 import com.yapp.core.data.data.repository.AlarmRepositoryImpl
-import com.yapp.core.data.data.repository.UserRepositoryImpl
-import com.yapp.core.data.data.repository.ConfigRepositoryImpl
 import com.yapp.core.data.data.repository.AuthRepositoryImpl
+import com.yapp.core.data.data.repository.ConfigRepositoryImpl
+import com.yapp.core.data.data.repository.PostsRepositoryImpl
+import com.yapp.core.data.data.repository.UserRepositoryImpl
 import com.yapp.dataapi.AlarmRepository
-import com.yapp.dataapi.UserRepository
-import com.yapp.dataapi.ConfigRepository
 import com.yapp.dataapi.AuthRepository
+import com.yapp.dataapi.ConfigRepository
+import com.yapp.dataapi.PostsRepository
+import com.yapp.dataapi.UserRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -36,4 +38,9 @@ internal abstract class RepositoryModule {
     abstract fun bindAlarmRepositoryImpl(
         repositoryImpl: AlarmRepositoryImpl,
     ): AlarmRepository
+
+    @Binds
+    abstract fun bindPostsRepositoryImpl(
+        repositoryImpl: PostsRepositoryImpl,
+    ): PostsRepository
 }

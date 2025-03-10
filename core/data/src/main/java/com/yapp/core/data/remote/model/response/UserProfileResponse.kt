@@ -19,15 +19,14 @@ data class UserProfileResponse(
     )
 }
 
-
 @Serializable
 data class UserActivityUnit(
+    val id: String,
     val generation: Int,
-    val position: String,
+    val position: ActivityUnitPosition,
 ) {
     fun toModel() = ActivityUnit(
         generation = generation,
-        position = position
+        position = position.label
     )
-
 }
