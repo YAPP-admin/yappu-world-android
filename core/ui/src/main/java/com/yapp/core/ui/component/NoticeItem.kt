@@ -4,8 +4,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
@@ -38,8 +40,8 @@ data class TagInfo(
 @Composable
 fun NoticeItem(
     modifier: Modifier = Modifier,
-    noticeInfo: NoticeInfo,
     onClick: () -> Unit,
+    noticeInfo: com.yapp.model.NoticeInfo,
 ) {
     Column(
         modifier = modifier
@@ -50,15 +52,13 @@ fun NoticeItem(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            noticeInfo.tags.forEach { tag ->
-                YappChipSmall(
-                    text = tag.tagText,
-                    colorType = tag.tagColor,
-                    isFill = false
-                )
-            }
+            YappChipSmall(
+                text = noticeInfo.noticeType,
+                colorType = ChipColorType.Gray,
+                isFill = false
+            )
             Text(
-                text = noticeInfo.writer,
+                text = noticeInfo.writerLabel,
                 color = YappTheme.colorScheme.labelAssistive,
                 style = YappTheme.typography.caption1Regular
             )
@@ -68,7 +68,7 @@ fun NoticeItem(
                 style = YappTheme.typography.caption1Regular
             )
             Text(
-                text = noticeInfo.creationDate,
+                text = noticeInfo.createdAt,
                 color = YappTheme.colorScheme.labelAssistive,
                 style = YappTheme.typography.caption1Regular
             )
@@ -83,7 +83,7 @@ fun NoticeItem(
         )
         Spacer(Modifier.height(8.dp))
         Text(
-            text = noticeInfo.bodyText,
+            text = noticeInfo.content,
             color = YappTheme.colorScheme.labelNormal,
             style = YappTheme.typography.label1ReadingRegular,
             maxLines = 2,
@@ -92,6 +92,68 @@ fun NoticeItem(
     }
 }
 
+@Composable
+fun NoticeLoadingItem(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.padding(vertical = 9.dp)
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            YappSkeleton(
+                modifier = Modifier
+                    .width(32.dp)
+                    .height(20.dp)
+            )
+            Text(
+                text = "∙",
+                color = YappTheme.colorScheme.labelAssistive,
+                style = YappTheme.typography.caption1Regular
+            )
+            YappSkeleton(
+                modifier = Modifier
+                    .width(32.dp)
+                    .height(10.5.dp)
+            )
+            YappSkeleton(
+                modifier = Modifier
+                    .width(45.dp)
+                    .height(10.5.dp)
+            )
+
+        }
+        Spacer(Modifier.height(8.dp))
+        YappSkeleton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(13.dp), radius = (18.75)
+        )
+        Spacer(Modifier.height(8.dp))
+        YappSkeleton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(12.dp)
+                .padding(end = 5.dp),
+            radius = (17.5)
+        )
+        Spacer(Modifier.height(8.dp))
+        YappSkeleton(
+            modifier = Modifier
+                .width(200.dp)
+                .height(12.25.dp), radius = (17.5)
+        )
+        Spacer(Modifier.height(8.dp))
+
+        YappSkeleton(
+            modifier = Modifier
+                .width(264.dp)
+                .height(12.25.dp), radius = (17.5)
+        )
+    }
+}
 
 @Composable
 @Preview(showBackground = true)
@@ -127,6 +189,7 @@ fun NoticeItemPreview() {
                     onClick = {}
                 )
             }
+
         }
     }
 }

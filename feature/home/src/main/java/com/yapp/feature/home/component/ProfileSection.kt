@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.RoleChip
 import com.yapp.core.ui.component.UserRole
+import com.yapp.core.ui.component.YappSkeleton
 
 @Composable
 fun ProfileSection(
@@ -57,6 +58,41 @@ fun ProfileSection(
         }
     }
 }
+
+
+@Composable
+fun ProfileLoadingSection(
+    name: String
+) {
+    HomeSectionBackground {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = name,
+                color = YappTheme.colorScheme.labelNormal,
+                style = YappTheme.typography.title2Bold
+            )
+            Spacer(Modifier.width(8.dp))
+            YappSkeleton(Modifier.width(60.dp).height(20.dp))
+        }
+        Spacer(Modifier.height(4.dp))
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            YappSkeleton(Modifier.width(32.dp).height(20.dp))
+            Text(
+                text = "∙",
+                color = YappTheme.colorScheme.labelAssistive,
+                style = YappTheme.typography.label1NormalMedium
+            )
+            YappSkeleton(Modifier.width(60.dp).height(20.dp))
+
+        }
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable
