@@ -13,4 +13,5 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
     implementation(libs.material)
+    implementation(libs.compose.markdown)
 }
