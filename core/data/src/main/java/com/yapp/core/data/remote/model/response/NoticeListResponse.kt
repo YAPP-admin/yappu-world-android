@@ -2,7 +2,7 @@ package com.yapp.core.data.remote.model.response
 
 import com.yapp.model.NoticeInfo
 import com.yapp.model.NoticeList
-import kotlinx.serialization.SerialName
+import com.yapp.model.NoticeType
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -26,14 +26,14 @@ data class NoticeData(
 ){
     fun toNoticeModel() = NoticeInfo(
         id = notice.id,
-        writerName = writer.activityUnitPosition.name,
+        writerName = writer.name,
         writerId = writer.userId,
         writerPosition = writer.activityUnitPosition.label,
         writerGeneration = writer.activityUnitGeneration,
         createdAt = notice.createdAt,
         title = notice.title,
         content = notice.content,
-        noticeType = notice.noticeType.displayName
+        noticeType = NoticeType.fromApiValue(notice.noticeType)
     )
 }
 
@@ -43,12 +43,13 @@ data class Notice(
     val createdAt: String,
     val title: String,
     val content: String,
-    val noticeType: NoticeType
+    val noticeType: String
 )
 
 @Serializable
 data class Writer(
     val userId: String,
+    val name : String,
     val activityUnitGeneration: Int,
     val activityUnitPosition: ActivityUnitPosition
 )
@@ -58,25 +59,3 @@ data class ActivityUnitPosition(
     val name: String,
     val label: String
 )
-
-@Serializable
-enum class NoticeType(val displayName: String) {
-    @SerialName("ALL")
-    ALL("전체"),
-
-    @SerialName("SESSION")
-    SESSION("세션"),
-
-    @SerialName("OPERATION")
-    OPERATION("운영");
-
-    override fun toString(): String {
-        return name
-    }
-
-    companion object {
-        fun fromDisplayName(displayName: String): String {
-            return (entries.find { it.displayName == displayName })?.name ?: "ALL"
-        }
-    }
-}
