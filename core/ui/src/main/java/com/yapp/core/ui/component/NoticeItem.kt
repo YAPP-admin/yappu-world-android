@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,38 +20,29 @@ import com.yapp.core.designsystem.component.chip.ChipColorType
 import com.yapp.core.designsystem.component.chip.YappChipSmall
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
+import com.yapp.model.NoticeInfo
+import dev.jeziellago.compose.markdowntext.MarkdownText
 
-// 샘플 데이터 .. .. ..
-data class NoticeInfo(
-    val tags: List<TagInfo>,
-    val writer: String,
-    val creationDate: String,
-    val title: String,
-    val bodyText: String,
-)
-
-data class TagInfo(
-    val tagText: String,
-    val tagColor: ChipColorType,
-)
 
 @Composable
 fun NoticeItem(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    noticeInfo: com.yapp.model.NoticeInfo,
+    onClick: (() -> Unit)? = null,
+    noticeInfo: NoticeInfo,
 ) {
+    val columModifier = modifier
+        .padding(vertical = 9.dp)
+        .then(onClick?.let { Modifier.yappClickable(onClick = it) } ?: Modifier)
+
     Column(
-        modifier = modifier
-            .padding(vertical = 9.dp)
-            .yappClickable(onClick = onClick)
+        modifier = columModifier
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             YappChipSmall(
-                text = noticeInfo.noticeType,
+                text = noticeInfo.noticeType.displayValue,
                 colorType = ChipColorType.Gray,
                 isFill = false
             )
@@ -82,19 +71,17 @@ fun NoticeItem(
             overflow = TextOverflow.Ellipsis
         )
         Spacer(Modifier.height(8.dp))
-        Text(
-            text = noticeInfo.content,
-            color = YappTheme.colorScheme.labelNormal,
+        MarkdownText(
             style = YappTheme.typography.label1ReadingRegular,
+            markdown = noticeInfo.content,
             maxLines = 2,
-            overflow = TextOverflow.Ellipsis
         )
     }
 }
 
 @Composable
 fun NoticeLoadingItem(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.padding(vertical = 9.dp)
@@ -146,7 +133,6 @@ fun NoticeLoadingItem(
                 .height(12.25.dp), radius = (17.5)
         )
         Spacer(Modifier.height(8.dp))
-
         YappSkeleton(
             modifier = Modifier
                 .width(264.dp)
@@ -158,38 +144,8 @@ fun NoticeLoadingItem(
 @Composable
 @Preview(showBackground = true)
 fun NoticeItemPreview() {
-    val noticeInfo = listOf(
-        NoticeInfo(
-            tags = listOf(TagInfo("운영", ChipColorType.Gray), TagInfo("정회원", ChipColorType.Sub)),
-            creationDate = "2023-08-13",
-            writer = "20기 홍길동",
-            title = "심장 건강을 책임지는 스마트 워치,심박수 감시와 예방 기능 탑재",
-            bodyText = "한반도의 경제 협력이 새로운 국면을 맞이하며 남북 간 첫 연합 기업이 설립되었습니다. 이 기업은 에너지, 통신, 제조 등 다양한 분야에서 남북 간 협력 모델을 제시하며 경제적 도약을 목표로 하고 있습니다. 특히, 이번 연합 기업은 지속 가능한 발전을 위한 친환경 기술과 공동 연구 개발을 핵심 과제로 삼고 있으며, 이를 통해 글로벌 시장에서도 경쟁력을 확보하고자 합니다. 전문가들은 이러한 경제 협력이 한반도뿐만 아니라 동아시아 전체의 경제적 안정과 성장에도 기여할 것으로 예상하고 있습니다."
-        ),
-        NoticeInfo(
-            tags = listOf(TagInfo("세션", ChipColorType.Main), TagInfo("정회원", ChipColorType.Sub)),
-            creationDate = "2023-08-13",
-            writer = "20기 홍길동",
-            title = "심장 건강을 책임지는 스마트 워치,심박수 감시와 예방 기능 탑재심장 건강을 책임지는 스마트 워치,심박수 감시와 예방 기능 탑재",
-            bodyText = "한반도의 경제 협력이 새로운 국면을 맞이하며 남북 간 첫 연합 기업이 설립되었습니다. 이 기업은 에너지, 통신, 제조 등 다양한 분야에서 남북 간 협력 모델을 제시하며 경제적 도약을 목표로 하고 있습니다. 특히, 이번 연합 기업은 지속 가능한 발전을 위한 친환경 기술과 공동 연구 개발을 핵심 과제로 삼고 있으며, 이를 통해 글로벌 시장에서도 경쟁력을 확보하고자 합니다. 전문가들은 이러한 경제 협력이 한반도뿐만 아니라 동아시아 전체의 경제적 안정과 성장에도 기여할 것으로 예상하고 있습니다."
-        ),
-        NoticeInfo(
-            tags = listOf(TagInfo("세션", ChipColorType.Main), TagInfo("정회원", ChipColorType.Sub)),
-            creationDate = "2023-08-13",
-            writer = "20기 홍길동",
-            title = "심장 건강을 책임지는 스마트 워치,심박수 감시와 예방 기능 탑재",
-            bodyText = "한반도의 경제 협력이 새로운 국면을 맞이하며 남북 간 첫 연합 기업이 설립되었습니다. 이 기업은 에너지, 통신, 제조 등 다양한 분야에서 남북 간 협력 모델을 제시하며 경제적 도약을 목표로 하고 있습니다. 특히, 이번 연합 기업은 지속 가능한 발전을 위한 친환경 기술과 공동 연구 개발을 핵심 과제로 삼고 있으며, 이를 통해 글로벌 시장에서도 경쟁력을 확보하고자 합니다. 전문가들은 이러한 경제 협력이 한반도뿐만 아니라 동아시아 전체의 경제적 안정과 성장에도 기여할 것으로 예상하고 있습니다."
-        )
-    )
     YappTheme {
         LazyColumn {
-            items(noticeInfo) { item ->
-                NoticeItem(
-                    noticeInfo = item,
-                    onClick = {}
-                )
-            }
-
         }
     }
 }

@@ -21,7 +21,6 @@ data class UserProfileResponse(
 
 @Serializable
 data class UserActivityUnit(
-    val id: String,
     val generation: Int,
     val position: ActivityUnitPosition,
 ) {

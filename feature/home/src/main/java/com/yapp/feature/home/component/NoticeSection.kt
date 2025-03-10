@@ -10,9 +10,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.component.button.outlined.YappOutlinedAssistiveButtonMedium
-import com.yapp.core.designsystem.component.chip.ChipColorType
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.component.NoticeInfo
 import com.yapp.core.ui.component.NoticeItem
 import com.yapp.core.ui.component.NoticeLoadingItem
 import com.yapp.core.ui.extension.borderBottom
@@ -54,8 +52,7 @@ fun NoticeSection(
                             color = YappTheme.colorScheme.lineNormalAlternative
                         )
                     },
-                    noticeInfo = noticeInfo.notices[it],
-                    onClick = {}
+                    noticeInfo = noticeInfo.notices[it]
                 )
             }
         }
