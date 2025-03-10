@@ -2,6 +2,8 @@ package com.yapp.core.designsystem.theme
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 internal val LightColorScheme = YappColorScheme(
@@ -44,7 +46,16 @@ internal val LightColorScheme = YappColorScheme(
 
     materialDimmer = Color(0x85171719),
 
-    semanticFillString = Color(0x2970737C)
+    semanticFillString = Color(0x2970737C),
+
+    skeleton = Brush.linearGradient(
+        colors = listOf(
+            Color(0xFFEDEDED),
+            Color(0x0DDBDBDB)
+        ),
+        start = Offset(0f, 0f),
+        end = Offset(500f, 0f)
+    )
 )
 
 @Immutable
@@ -89,7 +100,10 @@ data class YappColorScheme(
     val materialDimmer: Color,
 
     val semanticFillString: Color,
-)
+
+    val skeleton: Brush,
+
+    )
 
 val LocalColorScheme = staticCompositionLocalOf {
     YappColorScheme(
@@ -124,5 +138,8 @@ val LocalColorScheme = staticCompositionLocalOf {
         staticBlack = Color.Unspecified,
         materialDimmer = Color.Unspecified,
         semanticFillString = Color.Unspecified,
+        skeleton = Brush.linearGradient(
+            colors = listOf(Color.Unspecified, Color.Unspecified)
+        )
     )
 }
