@@ -54,7 +54,7 @@ internal val LightColorScheme = YappColorScheme(
             Color(0x0DDBDBDB)
         ),
         start = Offset(0f, 0f),
-        end = Offset(500f, 0f)
+        end = Offset(1000f, 0f)
     )
 )
 
