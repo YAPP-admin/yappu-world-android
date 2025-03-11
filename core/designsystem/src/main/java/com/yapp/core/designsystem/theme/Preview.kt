@@ -12,9 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -97,6 +95,23 @@ private fun YappColorPreview() {
         ) {
             items(colors) { (name, color) ->
                 ColorPreview(color = color, name = name)
+            }
+            item {
+                Column {
+                    BasicText(
+                        text = "Skeleton",
+                        style = TextStyle(color = YappTheme.colorScheme.staticBlack, fontSize = 14.sp)
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(40.dp)
+                            .background(YappTheme.colorScheme.skeleton)
+                            .border(width = 1.dp, color = YappTheme.colorScheme.lineSolidNormal)
+                    )
+                    Spacer(Modifier.height(12.dp))
+                }
             }
         }
     }

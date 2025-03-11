@@ -14,20 +14,20 @@ import com.yapp.core.designsystem.theme.YappTheme
 fun NoticeCategoryButton(
     name: String,
     checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
+    onCheckedChange: () -> Unit,
 ) {
     if (checked) {
         YappSolidPrimaryButtonXSmall(
             text = name,
             onClick = {
-                onCheckedChange(false)
+                onCheckedChange()
             }
         )
     } else {
         YappOutlinedAssistiveButtonXSmall(
             text = name,
             onClick = {
-                onCheckedChange(true)
+                onCheckedChange()
             }
         )
     }
@@ -41,9 +41,7 @@ private fun NoticeCategoryPreview() {
         NoticeCategoryButton(
             name = "전체",
             checked = checked,
-            onCheckedChange = {
-                checked = it
-            }
+            onCheckedChange = {}
         )
     }
 }

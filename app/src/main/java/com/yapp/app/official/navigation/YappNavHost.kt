@@ -2,7 +2,6 @@ package com.yapp.app.official.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import com.yapp.app.official.ui.NavigatorState
 import com.yapp.app.official.ui.clearBackStackNavOptions
@@ -53,7 +52,8 @@ fun YappNavHost(
         noticeNavGraph(
             navigateToNoticeDetail = { noticeId ->
                 navigator.navigateToNoticeDetail(noticeId)
-            }
+            },
+            navigateBack = {navigator.popBackStack()}
         )
     }
 }

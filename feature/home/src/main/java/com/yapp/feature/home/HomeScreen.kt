@@ -22,6 +22,7 @@ import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.home.component.NoticeSection
+import com.yapp.feature.home.component.ProfileLoadingSection
 import com.yapp.feature.home.component.ProfileSection
 
 @Composable
@@ -31,7 +32,7 @@ internal fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
-        viewModel.store.onIntent(HomeIntent.LoadMyInfo)
+        viewModel.store.onIntent(HomeIntent.EnterHomeScreen)
     }
 
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
@@ -71,17 +72,23 @@ fun HomeScreen(
                     .verticalScroll(scrollState)
                     .padding(horizontal = 20.dp, vertical = 16.dp)
             ) {
-                ProfileSection(
-                    name = homeState.name,
-                    activityStatus = homeState.role,
-                    generation = (homeState.activityUnits.firstOrNull()?.generation) ?: 25,
-                    position = (homeState.activityUnits.firstOrNull()?.position) ?: "Android"
-                )
-                Spacer(Modifier.height(8.dp))
-                NoticeSection(
-                    noticeInfo = homeState.noticeInfo,
-                    onMoreButtonClick = { onIntent(HomeIntent.ClickMoreButton) }
-                )
+                if (homeState.isLoading) {
+                    ProfileLoadingSection(homeState.name)
+                    Spacer(Modifier.height(8.dp))
+                    NoticeSection(null, onMoreButtonClick = { onIntent(HomeIntent.ClickMoreButton)})
+                } else {
+                    ProfileSection(
+                        name = homeState.name,
+                        activityStatus = homeState.role,
+                        generation = (homeState.activityUnits.firstOrNull()?.generation) ?: 25,
+                        position = (homeState.activityUnits.firstOrNull()?.position) ?: "Android"
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    NoticeSection(
+                        noticeInfo = homeState.noticeInfo,
+                        onMoreButtonClick = { onIntent(HomeIntent.ClickMoreButton) }
+                    )
+                }
             }
         }
     }

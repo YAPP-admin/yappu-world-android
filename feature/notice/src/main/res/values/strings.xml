@@ -5,4 +5,5 @@
     <string name="notice_filter_bottom_dialog_title">필터</string>
     <string name="notice_filter_bottom_dialog_expose">노출 대상</string>
     <string name="notice_filter_bottom_dialog_button_text">적용</string>
+    <string name="notice_list_empty_text">아직 작성된 공지사항이 없어요</string>
 </resources>
