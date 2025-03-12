@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
+import com.yapp.domain.GetUserProfileUseCase
 import com.yapp.domain.LoginUseCase
 import com.yapp.model.Regex
 import com.yapp.model.exceptions.InvalidRequestArgument
@@ -14,7 +15,9 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
+    private val getUserProfileUseCase: GetUserProfileUseCase
 ) : ViewModel() {
+
     val store: MviIntentStore<LoginState, LoginIntent, LoginSideEffect> =
         mviIntentStore(
             initialState = LoginState(),
@@ -72,9 +75,9 @@ class LoginViewModel @Inject constructor(
                 }
                 postSideEffect(LoginSideEffect.NavigateToSignUp)
             }
-
             LoginIntent.ClickTerms -> postSideEffect(LoginSideEffect.ShowTerms)
             LoginIntent.ClickPersonalPolicy -> postSideEffect(LoginSideEffect.ShowPersonalPolicy)
+            LoginIntent.EnterLoginScreen -> checkAccessToken(postSideEffect)
         }
     }
 
@@ -117,6 +120,13 @@ class LoginViewModel @Inject constructor(
                         }
                     }
                 }
+        }
+    }
+
+    private fun checkAccessToken(postSideEffect: (LoginSideEffect) -> Unit) = viewModelScope.launch {
+        val accessToken = getUserProfileUseCase.getUserAccessToken()
+        if (accessToken.isNotBlank()){
+            postSideEffect(LoginSideEffect.NavigateToHome)
         }
     }
 }
