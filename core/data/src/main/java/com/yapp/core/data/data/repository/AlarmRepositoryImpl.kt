@@ -3,6 +3,7 @@ package com.yapp.core.data.data.repository
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import com.yapp.core.data.local.SecurityPreferences
 import com.yapp.core.data.remote.api.AlarmApi
 import com.yapp.core.data.remote.model.request.DeviceAlarmRequest
 import com.yapp.core.data.remote.model.request.FcmTokenRequest
@@ -13,7 +14,8 @@ import javax.inject.Inject
 internal class AlarmRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val alarmApi: AlarmApi,
-) : AlarmRepository {
+    private val securityPreferences: SecurityPreferences,
+    ) : AlarmRepository {
 
     override suspend fun updateFcmToken(fcmToken: String) {
         alarmApi.putFcmToken(FcmTokenRequest(fcmToken))
