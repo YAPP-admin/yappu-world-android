@@ -106,13 +106,11 @@ fun NoticeScreen(
                 }
             }
 
-
-            Box {
+            Box(modifier = Modifier.fillMaxSize()) {
                 if (uiState.isNoticeEmpty) {
                     Column(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(bottom = 52.dp),
+                            .fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {

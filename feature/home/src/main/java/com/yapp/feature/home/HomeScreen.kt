@@ -29,6 +29,7 @@ import com.yapp.feature.home.component.ProfileSection
 internal fun HomeRoute(
     navigateToNotice: () -> Unit,
     navigateToSetting: () -> Unit,
+    navigateToLogin: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
@@ -44,6 +45,7 @@ internal fun HomeRoute(
             is HomeSideEffect.ShowToast -> {
                 Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
             }
+            HomeSideEffect.NavigateToLogin -> navigateToLogin()
         }
     }
 
@@ -98,6 +100,6 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenPreview() {
     YappTheme {
-        HomeRoute({}, {})
+        HomeRoute({}, {},{})
     }
 }

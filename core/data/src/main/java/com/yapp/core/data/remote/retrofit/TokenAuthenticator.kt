@@ -34,19 +34,29 @@ internal class TokenAuthenticator @Inject constructor(
                 authApi.reissueToken(request)
             }
 
-            if (newTokenResponse.isSuccessful){
-                val newAccessToken = newTokenResponse.body()?.accessToken ?: return null
-                val newRefreshToken = newTokenResponse.body()?.refreshToken ?: return null
+            if (newTokenResponse.isSuccessful) {
+                val newAccessToken = newTokenResponse.body()?.accessToken ?: ""
+                val newRefreshToken = newTokenResponse.body()?.refreshToken ?: ""
                 runBlocking {
                     securityPreferences.setAccessToken(newAccessToken)
                     securityPreferences.setRefreshToken(newRefreshToken)
+                }
+                if (newAccessToken.isBlank() || newRefreshToken.isBlank()){
+                    return null
                 }
                 return response.request.newBuilder()
                     .header("Authorization", "Bearer $newAccessToken")
                     .build()
             }
+            resetToken()
             return null
         }
     }
 
+    private fun resetToken(){
+        runBlocking {
+            securityPreferences.setAccessToken("")
+            securityPreferences.setRefreshToken("")
+        }
+    }
 }
