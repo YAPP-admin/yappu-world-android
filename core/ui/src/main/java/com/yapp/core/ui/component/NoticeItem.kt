@@ -31,6 +31,7 @@ fun NoticeItem(
     noticeInfo: NoticeInfo,
 ) {
     val columModifier = modifier
+        .fillMaxWidth()
         .padding(vertical = 9.dp)
         .then(onClick?.let { Modifier.yappClickable(onClick = it) } ?: Modifier)
 
