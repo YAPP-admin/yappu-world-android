@@ -8,6 +8,7 @@ class GetUserProfileUseCase @Inject constructor(
 ) {
     suspend operator fun invoke() = userRepository.getUserProfile()
 
+    suspend fun getUserAccessToken() = userRepository.getUserAccessToken()
 }
 
 

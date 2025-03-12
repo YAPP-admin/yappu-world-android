@@ -26,6 +26,7 @@ sealed interface LoginIntent {
     data object ClickNextButton : LoginIntent
     data object ClickTerms : LoginIntent
     data object ClickPersonalPolicy : LoginIntent
+    data object EnterLoginScreen : LoginIntent
 }
 
 sealed interface LoginSideEffect {
