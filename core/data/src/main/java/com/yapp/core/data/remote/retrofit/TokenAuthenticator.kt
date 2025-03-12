@@ -17,43 +17,37 @@ internal class TokenAuthenticator @Inject constructor(
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
-        synchronized(this) {
-            val accessToken = runBlocking {
-                securityPreferences.flowAccessToken().firstOrNull() ?: ""
-            }
-            val refreshToken = runBlocking {
-                securityPreferences.flowRefreshToken().firstOrNull() ?: ""
-            }
+        return runBlocking {
+            val accessToken = securityPreferences.flowAccessToken().firstOrNull().orEmpty()
+            val refreshToken = securityPreferences.flowRefreshToken().firstOrNull().orEmpty()
 
             val request = ReissueTokenRequest(
                 accessToken = accessToken,
                 refreshToken = refreshToken
             )
 
-            val newTokenResponse = runBlocking {
-                authApi.reissueToken(request)
+            val (newAccessToken, newRefreshToken) = try {
+                val response = authApi.reissueToken(request)
+                securityPreferences.setAccessToken(response.accessToken)
+                securityPreferences.setRefreshToken(response.refreshToken)
+
+                response.accessToken to response.refreshToken
+            } catch (e: Exception) {
+                "" to ""
             }
 
-            if (newTokenResponse.isSuccessful) {
-                val newAccessToken = newTokenResponse.body()?.accessToken ?: ""
-                val newRefreshToken = newTokenResponse.body()?.refreshToken ?: ""
-                runBlocking {
-                    securityPreferences.setAccessToken(newAccessToken)
-                    securityPreferences.setRefreshToken(newRefreshToken)
-                }
-                if (newAccessToken.isBlank() || newRefreshToken.isBlank()){
-                    return null
-                }
-                return response.request.newBuilder()
-                    .header("Authorization", "Bearer $newAccessToken")
-                    .build()
+            if (newAccessToken.isBlank() || newRefreshToken.isBlank()) {
+                resetToken()
+                return@runBlocking null
             }
-            resetToken()
-            return null
+
+            response.request.newBuilder()
+                .header("Authorization", "Bearer $newAccessToken")
+                .build()
         }
     }
 
-    private fun resetToken(){
+    private fun resetToken() {
         runBlocking {
             securityPreferences.setAccessToken("")
             securityPreferences.setRefreshToken("")
