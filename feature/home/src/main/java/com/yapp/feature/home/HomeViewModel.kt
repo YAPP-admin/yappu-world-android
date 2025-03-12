@@ -9,7 +9,10 @@ import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.PostsRepository
 import com.yapp.domain.GetUserProfileUseCase
 import com.yapp.model.NoticeType
+import com.yapp.model.exceptions.InvalidTokenException
+import com.yapp.model.exceptions.UserNotFoundForEmailException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -39,16 +42,22 @@ class HomeViewModel @Inject constructor(
         when (intent) {
             HomeIntent.ClickMoreButton -> postSideEffect(HomeSideEffect.NavigateToNotice)
             HomeIntent.ClickSettingButton -> postSideEffect(HomeSideEffect.NavigateToSetting)
-            HomeIntent.EnterHomeScreen -> { loadHomeInfo( reduce)
-            }
+            HomeIntent.EnterHomeScreen -> { loadHomeInfo( reduce,postSideEffect)  }
         }
     }
 
     private fun loadHomeInfo(
         reduce: (HomeState.() -> HomeState) -> Unit,
+        postSideEffect: (HomeSideEffect) -> Unit
     ) = viewModelScope.launch {
         reduce { copy(isLoading = true, isUserInfoLoading = true, isNoticesLoading = true) }
         getUserProfileUseCase()
+            .catch { error->
+                when(error) {
+                    is UserNotFoundForEmailException, is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
+                    else -> throw error
+                }
+            }
             .collectLatest{ userInfo ->
                 reduce {
                     copy(

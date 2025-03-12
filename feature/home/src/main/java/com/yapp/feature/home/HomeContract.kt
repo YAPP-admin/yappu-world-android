@@ -23,5 +23,6 @@ sealed interface HomeIntent {
 sealed interface HomeSideEffect {
     data object NavigateToNotice : HomeSideEffect
     data object NavigateToSetting : HomeSideEffect
+    data object NavigateToLogin : HomeSideEffect
     data class ShowToast(val message: String) : HomeSideEffect
 }

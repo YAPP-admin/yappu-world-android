@@ -14,7 +14,11 @@ enum class YappServerError(val exception: YappException) {
     USR_1102(SignUpPendingException()),
     USR_1103(RecentSignUpRejectedException()),
     USR_1104(LoginBlockedException()),
-    USR_1105(LoginException())
+    USR_1105(LoginException()),
+
+    //토큰 만료
+    TKN_0001(InvalidTokenException()),
+    TKN_0002(InvalidTokenException())
 }
 
 class InternalServerException : YappException()
@@ -27,6 +31,7 @@ class SignUpPendingException : YappException("회원가입 처리가 진행 중�
 class RecentSignUpRejectedException : YappException("최근의 회원가입 신청은 거절되었습니다.")
 class LoginBlockedException : YappException("로그인이 불가능한 회원 상태입니다.")
 class LoginException : YappException("로그인에 실패했습니다. 계정 정보를 다시 확인하세요.")
+class InvalidTokenException : YappException("비정상 토큰입니다")
 
 open class YappException(message: String = "") : Exception(message) {
     private var _message: String = message

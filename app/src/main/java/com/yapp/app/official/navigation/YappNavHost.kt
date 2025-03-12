@@ -39,7 +39,10 @@ fun YappNavHost(
         )
         homeNavGraph(
             navigateNotice = { navigator.navigateNoticeScreen() },
-            navigateSetting = { navigator.navigateSettingScreen() }
+            navigateSetting = { navigator.navigateSettingScreen() },
+            navigateLogin = {navigator.navigateLoginScreen(
+                navOptions = clearBackStackNavOptions
+            )}
         )
         settingNavGraph(
             navigateLogin = {
