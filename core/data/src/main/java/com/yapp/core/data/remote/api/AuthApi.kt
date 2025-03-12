@@ -1,9 +1,11 @@
 package com.yapp.core.data.remote.api
 
 import com.yapp.core.data.remote.model.request.LoginRequest
+import com.yapp.core.data.remote.model.request.ReissueTokenRequest
 import com.yapp.core.data.remote.model.request.SignUpRequest
 import com.yapp.core.data.remote.model.response.LoginResponse
 import com.yapp.core.data.remote.model.response.SignUpResponse
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
 import java.util.Optional
@@ -18,4 +20,9 @@ internal interface AuthApi {
     suspend fun login(
         @Body request : LoginRequest
     ) : LoginResponse
+
+    @POST("v1/auth/reissue-token")
+    suspend fun reissueToken(
+        @Body request: ReissueTokenRequest
+    ): Response<LoginResponse>
 }

@@ -4,21 +4,22 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import com.yapp.core.data.remote.Tag
 import com.yapp.core.data.remote.retrofit.NullOnEmptyConverterFactory
 import com.yapp.core.data.remote.retrofit.ResultCallAdapterFactory
+import com.yapp.core.data.remote.retrofit.TokenAuthenticator
 import com.yapp.core.data.remote.retrofit.TokenInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONArray
 import org.json.JSONObject
+import retrofit2.OptionalConverterFactory
 import retrofit2.Retrofit
 import timber.log.Timber
 import javax.inject.Singleton
-import kotlinx.serialization.json.Json
-import retrofit2.OptionalConverterFactory
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -57,10 +58,12 @@ internal object NetworkModule {
     @AuthOkHttpClient
     fun provideAuthOkHttpClient(
         tokenInterceptor: TokenInterceptor,
+        tokenAuthenticator: TokenAuthenticator,
         loggingInterceptor: HttpLoggingInterceptor,
     ): OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(tokenInterceptor)
         .addInterceptor(loggingInterceptor)
+        .authenticator(tokenAuthenticator)
         .build()
 
     @Singleton
