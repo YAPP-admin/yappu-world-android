@@ -47,10 +47,8 @@ internal class TokenAuthenticator @Inject constructor(
         }
     }
 
-    private fun resetToken() {
-        runBlocking {
-            securityPreferences.setAccessToken("")
-            securityPreferences.setRefreshToken("")
-        }
+    private suspend fun resetToken() {
+        securityPreferences.setAccessToken("")
+        securityPreferences.setRefreshToken("")
     }
 }
