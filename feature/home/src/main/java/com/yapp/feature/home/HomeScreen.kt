@@ -100,6 +100,10 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenPreview() {
     YappTheme {
-        HomeRoute({}, {},{})
+        HomeRoute(
+            navigateToLogin = {},
+            navigateToNotice = {},
+            navigateToSetting = {}
+        )
     }
 }
