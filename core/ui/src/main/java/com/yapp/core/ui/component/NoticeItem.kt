@@ -74,7 +74,7 @@ fun NoticeItem(
         Spacer(Modifier.height(8.dp))
         MarkdownText(
             style = YappTheme.typography.label1ReadingRegular,
-            markdown = noticeInfo.content,
+            markdown = runCatching { noticeInfo.content }.getOrDefault("내용을 불러올 수 없습니다."),
             maxLines = 2,
         )
     }
