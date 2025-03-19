@@ -1,16 +1,19 @@
 package com.yapp.feature.notice.noticedetail
 
-import android.util.Log
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
+import com.yapp.dataapi.PostsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class NoticeDetailViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val postsRepository: PostsRepository,
 ) : ViewModel() {
     val store: MviIntentStore<NoticeDetailState, NoticeDetailIntent, NoticeDetailSideEffect> =
         mviIntentStore(
@@ -18,27 +21,33 @@ class NoticeDetailViewModel @Inject constructor(
             onIntent = ::onIntent
         )
 
-    private val noticeId: String =
-        requireNotNull(savedStateHandle.get<String>(NOTICE_ID_KEY)) { "noticeId is required." }
-
     private fun onIntent(
         intent: NoticeDetailIntent,
         state: NoticeDetailState,
         reduce: (NoticeDetailState.() -> NoticeDetailState) -> Unit,
-        postSideEffect: (NoticeDetailSideEffect) -> Unit
+        postSideEffect: (NoticeDetailSideEffect) -> Unit,
     ) {
         when (intent) {
-            NoticeDetailIntent.ClickBackButton -> TODO()
-            NoticeDetailIntent.EnterScreen -> {
-                reduce {
-                    copy(dummyData = markdown1)
-                }
+            NoticeDetailIntent.ClickBackButton -> {
+                postSideEffect(NoticeDetailSideEffect.NavigateToBack)
+            }
+
+            is NoticeDetailIntent.EnterScreen -> {
+                loadNoticeData(intent.noticeId, state, reduce)
             }
         }
     }
 
-    companion object {
-        private const val NOTICE_ID_KEY = "noticeId"
+    private fun loadNoticeData(
+        noticeId: String,
+        state: NoticeDetailState,
+        reduce: (NoticeDetailState.() -> NoticeDetailState) -> Unit,
+    ) = viewModelScope.launch {
+        reduce { copy(isLoadingNotice = true) }
+        postsRepository.getNoticeItem(noticeId).collectLatest { noticeItem ->
+            delay(1000) // 임의로 넣어둠
+            reduce { copy(notice = noticeItem, isLoadingNotice = false) }
+        }
     }
 }
 
