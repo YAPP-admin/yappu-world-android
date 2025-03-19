@@ -1,4 +1,4 @@
-package com.yapp.feature.NoticeDetail.NoticeDetaildetail
+package com.yapp.feature.notice.noticedetail
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -12,6 +12,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.component.chip.ChipColorType
-import com.yapp.core.designsystem.component.chip.ChipDefaults
 import com.yapp.core.designsystem.component.chip.YappChipSmall
 import com.yapp.core.designsystem.component.gradient.GradientBottom
 import com.yapp.core.designsystem.component.header.YappHeaderActionbar
@@ -35,18 +35,24 @@ import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.notice.R
-import com.yapp.feature.notice.noticedetail.NoticeDetailIntent
-import com.yapp.feature.notice.noticedetail.NoticeDetailState
-import com.yapp.feature.notice.noticedetail.NoticeDetailViewModel
+import com.yapp.feature.notice.noticedetail.component.NoticeDetailLoading
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @Composable
 fun NoticeDetailRoute(
-    viewModel: NoticeDetailViewModel = hiltViewModel()
+    viewModel: NoticeDetailViewModel = hiltViewModel(),
+    navigateBack: () -> Unit,
+    noticeId: String,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
     viewModel.store.sideEffects.collectWithLifecycle { sideEffect ->
+        when (sideEffect) {
+            NoticeDetailSideEffect.NavigateToBack -> navigateBack()
+        }
+    }
 
+    LaunchedEffect(Unit) {
+        viewModel.store.onIntent(NoticeDetailIntent.EnterScreen(noticeId))
     }
 
     NoticeDetailScreen(
@@ -57,7 +63,7 @@ fun NoticeDetailRoute(
 
 @Composable
 fun NoticeDetailScreen(
-    uiState: NoticeDetailState = NoticeDetailState(),
+    uiState: NoticeDetailState,
     onIntent: (NoticeDetailIntent) -> Unit = {},
 ) {
     var isRowVisible by remember { mutableStateOf(true) }
@@ -73,86 +79,78 @@ fun NoticeDetailScreen(
                     onIntent(NoticeDetailIntent.ClickBackButton)
                 },
             )
-
-            BoxWithConstraints {
-                val maxHeight = maxHeight
-                Column(
-                    modifier = Modifier
-                        .padding(
-                            start = 20.dp,
-                            end = 20.dp,
-                            top = 16.dp
-                        )
-                        .verticalScroll(rememberScrollState()),
-                ) {
-                    YappChipSmall(
-                        text = "활동회원",
-                        colorType = ChipColorType.Main,
-                        isFill = false,
-                    )
-
-                    Spacer(Modifier.height(8.dp))
-
-                    Text(
-                        text = "심장 건강을 책임지는 스마트 워치,심박수 감시와 예방 기능 탑재",
-                        style = YappTheme.typography.headline1Bold,
-                        color = YappTheme.colorScheme.labelNormal,
-                    )
-
-                    Spacer(Modifier.height(8.dp))
-
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.onGloballyPositioned { coordinates ->
-                            val rowBottom = coordinates.boundsInWindow().bottom
-                            val screenHeight = density.run { maxHeight.toPx() }
-                            isRowVisible = rowBottom > 0 && rowBottom < screenHeight
-                        }
+            if (uiState.isLoadingNotice) {
+                NoticeDetailLoading()
+            } else {
+                BoxWithConstraints {
+                    val maxHeight = maxHeight
+                    Column(
+                        modifier = Modifier
+                            .padding(
+                                start = 20.dp,
+                                end = 20.dp,
+                                top = 16.dp
+                            )
+                            .verticalScroll(rememberScrollState()),
                     ) {
-                        YappChipSmall(
-                            text = "운영",
-                            colorType = ChipColorType.White,
-                            colorsWeak = ChipDefaults.colorsWeak.copy(
-                                whiteWeakTextColor = YappTheme.colorScheme.labelAssistive
-                            ),
-                            isFill = false,
+                        Text(
+                            text = uiState.notice.title,
+                            style = YappTheme.typography.headline1Bold,
+                            color = YappTheme.colorScheme.labelNormal,
                         )
 
-                        Text(
-                            text = "20기 홍길동",
-                            style = YappTheme.typography.caption1Regular,
-                            color = YappTheme.colorScheme.labelAssistive,
-                        )
+                        Spacer(Modifier.height(8.dp))
 
-                        Text(
-                            text = "∙",
-                            style = YappTheme.typography.caption1Regular,
-                            color = YappTheme.colorScheme.labelAssistive,
-                        )
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.onGloballyPositioned { coordinates ->
+                                val rowBottom = coordinates.boundsInWindow().bottom
+                                val screenHeight = density.run { maxHeight.toPx() }
+                                isRowVisible = rowBottom > 0 && rowBottom < screenHeight
+                            }
+                        ) {
+                            YappChipSmall(
+                                text = uiState.notice.noticeType.displayValue,
+                                colorType = ChipColorType.Gray,
+                                isFill = false
+                            )
 
-                        Text(
-                            text = "2023-08-13",
-                            style = YappTheme.typography.caption1Regular,
-                            color = YappTheme.colorScheme.labelAssistive,
+                            Text(
+                                text = uiState.notice.writerLabel,
+                                style = YappTheme.typography.caption1Regular,
+                                color = YappTheme.colorScheme.labelAssistive,
+                            )
+
+                            Text(
+                                text = "∙",
+                                style = YappTheme.typography.caption1Regular,
+                                color = YappTheme.colorScheme.labelAssistive,
+                            )
+
+                            Text(
+                                text = uiState.notice.createdAt,
+                                style = YappTheme.typography.caption1Regular,
+                                color = YappTheme.colorScheme.labelAssistive,
+                            )
+                        }
+
+                        Spacer(Modifier.height(24.dp))
+
+                        MarkdownText(
+                            style = YappTheme.typography.body2ReadingRegular,
+                            markdown = runCatching { uiState.notice.content }.getOrDefault("내용을 불러올 수 없습니다."),
                         )
                     }
 
-                    Spacer(Modifier.height(24.dp))
-
-                    MarkdownText(
-                        style = YappTheme.typography.body2ReadingRegular,
-                        markdown = uiState.dummyData,
-                    )
-                }
-
-                if (isRowVisible.not()) {
-                    GradientBottom(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(40.dp),
-                        color = YappTheme.colorScheme.staticWhite
-                    )
+                    if (isRowVisible.not()) {
+                        GradientBottom(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(40.dp),
+                            color = YappTheme.colorScheme.staticWhite
+                        )
+                    }
                 }
             }
         }
@@ -163,6 +161,9 @@ fun NoticeDetailScreen(
 @Composable
 private fun NoticeDetailScreenPreview() {
     YappTheme {
-        NoticeDetailScreen()
+        NoticeDetailRoute(
+            navigateBack = {},
+            noticeId = ""
+        )
     }
 }
