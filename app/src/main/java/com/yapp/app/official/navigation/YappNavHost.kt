@@ -8,6 +8,8 @@ import com.yapp.app.official.ui.clearBackStackNavOptions
 import com.yapp.feature.home.navigation.homeNavGraph
 import com.yapp.feature.home.navigation.settingNavGraph
 import com.yapp.feature.login.navigation.loginNavGraph
+import com.yapp.feature.notice.navigation.NoticeDetailRoute
+import com.yapp.feature.notice.navigation.noticeDetailNavGraph
 import com.yapp.feature.notice.navigation.noticeNavGraph
 import com.yapp.feature.signup.navigation.signupNavGraph
 
@@ -56,6 +58,9 @@ fun YappNavHost(
             navigateToNoticeDetail = { noticeId ->
                 navigator.navigateToNoticeDetail(noticeId)
             },
+            navigateBack = {navigator.popBackStack()}
+        )
+        noticeDetailNavGraph(
             navigateBack = {navigator.popBackStack()}
         )
     }
