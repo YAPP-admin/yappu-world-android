@@ -4,10 +4,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.yapp.feature.NoticeDetail.NoticeDetaildetail.NoticeDetailRoute
+import androidx.navigation.toRoute
 import com.yapp.feature.notice.notice.NoticeRoute
-import com.yapp.feature.notice.notice.NoticeScreen
-import com.yapp.feature.notice.notice.NoticeRoute
+import com.yapp.feature.notice.noticedetail.NoticeDetailRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -23,13 +22,13 @@ fun NavController.navigateToNotice(navOptions: NavOptions? = null) {
 }
 
 fun NavController.navigateToNoticeDetail(noticeId: String, navOptions: NavOptions? = null) {
-    navigate(NoticeDetailRoute(noticeId = noticeId), navOptions)
+    navigate(route = NoticeDetailRoute(noticeId = noticeId), navOptions)
 }
 
 fun NavGraphBuilder.noticeNavGraph(
     navigateToNoticeDetail: (String) -> Unit,
     navigateBack: () -> Unit,
-    ) {
+) {
     composable<NoticeRoute> {
         NoticeRoute(
             navigateToNoticeDetail = { noticeId ->
@@ -37,6 +36,15 @@ fun NavGraphBuilder.noticeNavGraph(
             },
             navigateBack = navigateBack
         )
+    }
+}
+
+fun NavGraphBuilder.noticeDetailNavGraph(
+    navigateBack: () -> Unit,
+) {
+    composable<NoticeDetailRoute> { backStackEntry ->
+        val noticeId = backStackEntry.toRoute<NoticeDetailRoute>().noticeId
+        NoticeDetailRoute(noticeId = noticeId, navigateBack = navigateBack)
     }
 }
 

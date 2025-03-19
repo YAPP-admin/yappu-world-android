@@ -47,7 +47,7 @@ fun NoticeRoute(
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
     viewModel.store.sideEffects.collectWithLifecycle { sideEffect ->
         when (sideEffect) {
-            is NoticeSideEffect.NavigateToNoticeDetail -> {}
+            is NoticeSideEffect.NavigateToNoticeDetail -> { navigateToNoticeDetail(sideEffect.noticeId)}
             NoticeSideEffect.NavigateToBack -> navigateBack()
         }
     }
