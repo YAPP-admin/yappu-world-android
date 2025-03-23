@@ -5,10 +5,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,12 +28,12 @@ import com.yapp.feature.signup.R
 @Composable
 fun EmailPage(
     viewModel: EmailViewModel = hiltViewModel(),
-    onEmailChanged: (String) -> Unit,
+    onEmailChanged: (String, Boolean) -> Unit,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
     viewModel.store.sideEffects.collectWithLifecycle {
         when (it) {
-            is EmailSideEffect.EmailChanged -> onEmailChanged(it.email)
+            is EmailSideEffect.EmailChanged -> onEmailChanged(it.email, it.verified)
         }
     }
 
@@ -68,7 +73,35 @@ fun EmailContent(
             placeholder = stringResource(R.string.signup_screen_email_input_placeholder),
             value = uiState.email,
             isError = uiState.isEmailError,
-            description = uiState.emailErrorDescription,
+            leftIcon = if (uiState.email.isEmpty()) {
+                null
+            } else if (uiState.isEmailChecking) {
+                {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp).padding(2.dp),
+                        strokeWidth = 2.dp,
+                        color = YappTheme.colorScheme.labelNormal,
+                        trackColor = YappTheme.colorScheme.labelNormal.copy(alpha = 0.1f)
+                    )
+                }
+            } else if (uiState.isEmailVerified) {
+                {
+                    Icon(
+                        painter = painterResource(R.drawable.icon_circle_check),
+                        tint = Color.Unspecified,
+                        contentDescription = null
+                    )
+                }
+            } else {
+                {
+                    Icon(
+                        painter = painterResource(R.drawable.icon_circle_block),
+                        tint = YappTheme.colorScheme.statusNegative,
+                        contentDescription = null
+                    )
+                }
+            },
+            description = uiState.emailDescription,
             onValueChange = { onIntent(EmailIntent.ChangeEmail(it)) },
         )
     }

@@ -7,13 +7,30 @@ import com.yapp.model.Regex
 
 data class EmailState(
     val email: String = "",
+    val isEmailDuplicated: Boolean = false,
+    val isEmailChecking: Boolean = false,
 ) {
-    val isEmailError =
-        email.matches(Regex.email).not() && email.isNotEmpty()
+    val isEmailRegexFailed = email.matches(Regex.email).not() && email.isNotEmpty()
 
-    val emailErrorDescription: String?
+    val isEmailError =
+        isEmailRegexFailed || isEmailDuplicated
+
+    val isEmailVerified = isEmailError.not() && isEmailChecking.not() && email.isNotEmpty()
+
+    val emailDescription: String?
         @Composable
-        get() = if (isEmailError) stringResource(R.string.signup_screen_email_input_text_description) else null
+        get() = when {
+            isEmailDuplicated -> {
+                stringResource(R.string.signup_screen_email_input_duplicate_text_description)
+            }
+            isEmailRegexFailed -> {
+                stringResource(R.string.signup_screen_email_input_error_text_description)
+            }
+            isEmailVerified -> {
+                stringResource(R.string.signup_screen_email_input_verified_text_description)
+            }
+            else -> null
+        }
 }
 
 sealed interface EmailIntent {
@@ -21,5 +38,5 @@ sealed interface EmailIntent {
 }
 
 sealed interface EmailSideEffect {
-    data class EmailChanged(val email: String) : EmailSideEffect
+    data class EmailChanged(val email: String, val verified: Boolean = false) : EmailSideEffect
 }

@@ -9,6 +9,7 @@ import com.yapp.core.data.PositionConfigs
 import com.yapp.core.data.local.SecurityPreferences
 import com.yapp.core.data.remote.api.AlarmApi
 import com.yapp.core.data.remote.api.AuthApi
+import com.yapp.core.data.remote.model.request.CheckEmailRequest
 import com.yapp.core.data.remote.model.request.FcmTokenRequest
 import com.yapp.core.data.remote.model.request.LoginRequest
 import com.yapp.core.data.remote.model.request.toData
@@ -71,5 +72,9 @@ internal class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun clearTokens() {
         securityPreferences.clearAll()
+    }
+
+    override suspend fun checkEmail(email: String) {
+        authApi.checkEmail(CheckEmailRequest(email = email))
     }
 }

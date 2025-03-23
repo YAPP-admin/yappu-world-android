@@ -11,7 +11,9 @@ interface AuthRepository {
     suspend fun clearTokens()
 
     suspend fun login(
-        email : String,
-        password : String
+        email: String,
+        password: String
     )
+
+    suspend fun checkEmail(email: String)
 }

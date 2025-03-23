@@ -1,5 +1,6 @@
 package com.yapp.core.data.remote.api
 
+import com.yapp.core.data.remote.model.request.CheckEmailRequest
 import com.yapp.core.data.remote.model.request.LoginRequest
 import com.yapp.core.data.remote.model.request.ReissueTokenRequest
 import com.yapp.core.data.remote.model.request.SignUpRequest
@@ -24,4 +25,9 @@ internal interface AuthApi {
     suspend fun reissueToken(
         @Body request: ReissueTokenRequest
     ): LoginResponse
+
+    @POST("v1/auth/check-email")
+    suspend fun checkEmail(
+        @Body request: CheckEmailRequest
+    )
 }

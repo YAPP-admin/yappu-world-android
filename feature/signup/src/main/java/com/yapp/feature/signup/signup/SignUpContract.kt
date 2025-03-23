@@ -35,7 +35,7 @@ sealed interface SignUpIntent {
     data object ClickBackButton : SignUpIntent
     data object BackPressed : SignUpIntent
     data class NameChanged(val name: String) : SignUpIntent
-    data class EmailChanged(val email: String) : SignUpIntent
+    data class EmailChanged(val email: String, val verified: Boolean) : SignUpIntent
     data class PasswordChanged(val password: String) : SignUpIntent
     data class PasswordConfirmChanged(val passwordConfirm: String) : SignUpIntent
     data class ActivityUnitsChanged(val activityUnits: List<ActivityUnit>) : SignUpIntent
