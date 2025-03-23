@@ -2,12 +2,12 @@ package com.yapp.core.data.data.di
 
 import com.yapp.core.data.data.repository.AlarmRepositoryImpl
 import com.yapp.core.data.data.repository.AuthRepositoryImpl
-import com.yapp.core.data.data.repository.ConfigRepositoryImpl
+import com.yapp.core.data.data.repository.OperationsRepositoryImpl
 import com.yapp.core.data.data.repository.PostsRepositoryImpl
 import com.yapp.core.data.data.repository.UserRepositoryImpl
 import com.yapp.dataapi.AlarmRepository
 import com.yapp.dataapi.AuthRepository
-import com.yapp.dataapi.ConfigRepository
+import com.yapp.dataapi.OperationsRepository
 import com.yapp.dataapi.PostsRepository
 import com.yapp.dataapi.UserRepository
 import dagger.Binds
@@ -30,9 +30,9 @@ internal abstract class RepositoryModule {
     ): UserRepository
 
     @Binds
-    abstract fun bindConfigRepositoryImpl(
-        repositoryImpl: ConfigRepositoryImpl,
-    ): ConfigRepository
+    abstract fun bindOperationsRepositoryImpl(
+        repositoryImpl: OperationsRepositoryImpl,
+    ): OperationsRepository
 
     @Binds
     abstract fun bindAlarmRepositoryImpl(

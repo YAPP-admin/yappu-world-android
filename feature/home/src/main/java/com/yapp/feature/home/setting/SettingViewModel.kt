@@ -2,13 +2,14 @@ package com.yapp.feature.home.setting
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.AlarmRepository
+import com.yapp.dataapi.OperationsRepository
 import com.yapp.domain.DeleteAccountUseCase
 import com.yapp.domain.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,7 +18,11 @@ class SettingViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
     private val alarmRepository: AlarmRepository,
     private val deleteAccountUseCase: DeleteAccountUseCase,
+    private val operationsRepository: OperationsRepository,
 ) : ViewModel() {
+    private var privacyPolicyLink = ""
+    private var termsLink = ""
+    private var inquiryLink = ""
 
     val store: MviIntentStore<SettingState, SettingIntent, SettingSideEffect> =
         mviIntentStore(
@@ -37,6 +42,21 @@ class SettingViewModel @Inject constructor(
                     val enabled = alarmRepository.getMasterAlarmStatus()
                     reduce { copy(isNotificationEnabled = enabled) }
                 }
+
+                viewModelScope.launch {
+                    combine(
+                        operationsRepository.getPrivacyPolicyLink(),
+                        operationsRepository.getTermsOfServiceLink(),
+                        operationsRepository.getUsageInquiryLink()
+                    ) {
+                        privacyPolicyLink, termsLink, inquiryLink ->
+                        Triple(privacyPolicyLink, termsLink, inquiryLink)
+                    }.collect { (privacyPolicyLink, termsLink, inquiryLink) ->
+                        this@SettingViewModel.privacyPolicyLink = privacyPolicyLink
+                        this@SettingViewModel.termsLink = termsLink
+                        this@SettingViewModel.inquiryLink = inquiryLink
+                    }
+                }
             }
 
             is SettingIntent.ClickNotificationSwitch -> {
@@ -52,13 +72,13 @@ class SettingViewModel @Inject constructor(
                 postSideEffect(SettingSideEffect.NavigateBack)
             }
             SettingIntent.ClickPrivacyPolicyItem -> {
-                postSideEffect(SettingSideEffect.OpenPrivacyPolicy)
+                postSideEffect(SettingSideEffect.OpenWebBrowser(privacyPolicyLink))
             }
             SettingIntent.ClickTermsItem -> {
-                postSideEffect(SettingSideEffect.OpenTerms)
+                postSideEffect(SettingSideEffect.OpenWebBrowser(termsLink))
             }
             SettingIntent.ClickInquiryItem -> {
-                postSideEffect(SettingSideEffect.OpenInquiry)
+                postSideEffect(SettingSideEffect.OpenWebBrowser(inquiryLink))
             }
             SettingIntent.ClickDeleteAccountItem -> {
                 reduce { copy(showDeleteAccountDialog = true) }
@@ -87,7 +107,6 @@ class SettingViewModel @Inject constructor(
                     postSideEffect(SettingSideEffect.NavigateToLogin)
                 }
             }
-
         }
     }
 }

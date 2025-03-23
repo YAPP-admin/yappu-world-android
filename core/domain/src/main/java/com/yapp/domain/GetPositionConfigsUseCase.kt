@@ -1,10 +1,10 @@
 package com.yapp.domain
 
-import com.yapp.dataapi.ConfigRepository
+import com.yapp.dataapi.OperationsRepository
 import javax.inject.Inject
 
 class GetPositionConfigsUseCase @Inject constructor(
-    private val configRepository: ConfigRepository,
+    private val operationsRepository: OperationsRepository,
 ) {
-    operator fun invoke() = configRepository.getPositionConfigs()
+    operator fun invoke() = operationsRepository.getPositionConfigs()
 }

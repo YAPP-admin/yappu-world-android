@@ -25,8 +25,6 @@ sealed interface SettingIntent {
 
 sealed interface SettingSideEffect {
     data object NavigateBack : SettingSideEffect
-    data object OpenPrivacyPolicy : SettingSideEffect
-    data object OpenTerms : SettingSideEffect
-    data object OpenInquiry : SettingSideEffect
+    data class OpenWebBrowser(val link: String) : SettingSideEffect
     data object NavigateToLogin : SettingSideEffect
 }
