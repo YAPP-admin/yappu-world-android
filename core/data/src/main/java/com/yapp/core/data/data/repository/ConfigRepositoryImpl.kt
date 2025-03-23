@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import com.yapp.core.data.PositionConfigs
 import com.yapp.core.data.data.Dispatcher
 import com.yapp.core.data.data.YappDispatchers
-import com.yapp.core.data.remote.api.ConfigApi
+import com.yapp.core.data.remote.api.OperationsApi
 import com.yapp.core.data.remote.model.response.PositionConfigResponse
 import com.yapp.dataapi.ConfigRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 internal class ConfigRepositoryImpl @Inject constructor(
-    private val configApi: ConfigApi,
+    private val operationsApi: OperationsApi,
     private val dataStore: DataStore<PositionConfigs>,
     @Dispatcher(YappDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
 ) : ConfigRepository {
@@ -26,7 +26,7 @@ internal class ConfigRepositoryImpl @Inject constructor(
             emit(localPositionConfigs.configsList.map { it.label })
         }
 
-        val remotePositionConfigs = configApi.getPositionConfigs()
+        val remotePositionConfigs = operationsApi.getPositionConfigs()
         emit(remotePositionConfigs.positions.map { it.label })
 
         updatePositionConfigs(remotePositionConfigs)
