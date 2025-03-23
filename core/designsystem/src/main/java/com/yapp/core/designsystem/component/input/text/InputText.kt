@@ -42,6 +42,7 @@ fun YappBasicInputText(
     placeholder: String = "",
     description: String? = null,
     isError: Boolean = false,
+    leftIcon: (@Composable () -> Unit)? = null,
     rightIcon: (@Composable () -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -123,8 +124,15 @@ fun YappBasicInputText(
                 interactionSource = interactionSource,
                 cursorBrush = SolidColor(value = YappTheme.colorScheme.primaryNormal),
             ) { innerTextField ->
-                Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                    Box {
+                Row {
+                    if (leftIcon != null) {
+                        leftIcon()
+                        Spacer(Modifier.width(spacings.leftIconEndSpacing))
+                    }
+
+                    Box(
+                        modifier = Modifier.weight(1f)
+                    ) {
                         if (value.isEmpty()) {
                             Text(
                                 text = placeholder,
@@ -158,13 +166,15 @@ fun YappBasicInputText(
 
 @Composable
 fun YappInputTextLarge(
-    modifier: Modifier = Modifier,
-    label: String? = null,
     value: String,
     onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    label: String? = null,
     placeholder: String = "",
     description: String? = null,
     isError: Boolean = false,
+    leftIcon: (@Composable () -> Unit)? = null,
+    rightIcon: (@Composable () -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     singleLine: Boolean = false,
@@ -188,6 +198,8 @@ fun YappInputTextLarge(
         placeholder = placeholder,
         description = description,
         isError = isError,
+        leftIcon = leftIcon,
+        rightIcon = rightIcon,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         singleLine = singleLine,

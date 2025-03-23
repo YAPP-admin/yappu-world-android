@@ -56,12 +56,14 @@ object InputTextDefaults {
     val spacingsLarge = InputTextSpacings(
         labelBottomSpacing = 4.dp,
         rightIconStartSpacing = 12.dp,
+        leftIconEndSpacing = 12.dp,
         descriptionTopSpacing = 8.dp,
     )
 
     // TODO 아직 정의되지 않음
     val spacingsMedium = InputTextSpacings(
         labelBottomSpacing = Dp.Unspecified,
+        leftIconEndSpacing = Dp.Unspecified,
         rightIconStartSpacing = Dp.Unspecified,
         descriptionTopSpacing = Dp.Unspecified,
     )
@@ -137,6 +139,7 @@ data class InputTextColors(
 data class InputTextSpacings(
     val labelBottomSpacing: Dp,
     val rightIconStartSpacing: Dp,
+    val leftIconEndSpacing: Dp,
     val descriptionTopSpacing: Dp,
 )
 

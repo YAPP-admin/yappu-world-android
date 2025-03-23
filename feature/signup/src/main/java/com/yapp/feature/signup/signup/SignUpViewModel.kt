@@ -110,8 +110,8 @@ class SignUpViewModel @Inject constructor(
             }
 
             is SignUpIntent.EmailChanged -> {
-                signUpInfo = signUpInfo.copy(email = intent.email)
-                reduce { copy(primaryButtonEnable = signUpInfo.isEmailValid) }
+                signUpInfo = signUpInfo.copy(email = intent.email, isEmailVerified = intent.verified)
+                reduce { copy(primaryButtonEnable = intent.verified) }
             }
 
             is SignUpIntent.PasswordChanged -> {
@@ -189,7 +189,7 @@ class SignUpViewModel @Inject constructor(
     private fun getPrimaryButtonEnable(step: SignUpStep): Boolean {
         return when (step) {
             SignUpStep.Name -> signUpInfo.name.isNotBlank()
-            SignUpStep.Email -> signUpInfo.isEmailValid
+            SignUpStep.Email -> signUpInfo.isEmailVerified
             SignUpStep.Password -> signUpInfo.isAllPasswordConditionValid
             SignUpStep.Position -> signUpInfo.isActivityUnitsValid
             SignUpStep.Complete,

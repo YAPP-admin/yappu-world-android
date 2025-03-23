@@ -114,7 +114,7 @@ fun SignUpScreen(
                     )
 
                     SignUpStep.Email -> EmailPage(
-                        onEmailChanged = { onIntent(SignUpIntent.EmailChanged(it)) }
+                        onEmailChanged = { email, verified -> onIntent(SignUpIntent.EmailChanged(email, verified)) }
                     )
 
                     SignUpStep.Password -> PasswordPage(

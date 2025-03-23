@@ -15,7 +15,9 @@
     <string name="signup_screen_email_title">아이디로 사용할\n이메일 정보를 알려주세요.</string>
     <string name="signup_screen_email_input_text_label">이메일</string>
     <string name="signup_screen_email_input_placeholder">YAPP@email.com</string>
-    <string name="signup_screen_email_input_text_description">올바르지 않은 이메일 형식이에요. 다시 입력해주세요.</string>
+    <string name="signup_screen_email_input_error_text_description">올바르지 않은 이메일 형식이에요. 다시 입력해주세요.</string>
+    <string name="signup_screen_email_input_duplicate_text_description">사용 중인 이메일이어서 사용할 수 없어요.</string>
+    <string name="signup_screen_email_input_verified_text_description">사용 가능한 이메일이에요!</string>
 
     <string name="signup_screen_step_3">STEP 3</string>
     <string name="signup_screen_password_title">비밀번호를 설정할게요.</string>
