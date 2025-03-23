@@ -65,12 +65,7 @@ private class OptionalApiResultCall<R: Any>(
                 .valueOf(errorBody.errorCode)
                 .exception
                 .apply {
-                    when (errorBody.errorCode) {
-                        YappServerError.COM_0001.name, YappServerError.COM_0002.name -> {
-                            setMessage(errorBody.message)
-                        }
-                        else -> setMessage(message)
-                    }
+                    setMessage(errorBody.message)
                 }
             callback.onFailure(this@OptionalApiResultCall, exception)
         }.onFailure {
