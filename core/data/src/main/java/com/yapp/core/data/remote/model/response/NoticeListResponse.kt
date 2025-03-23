@@ -27,7 +27,7 @@ data class NoticeData(
     fun toNoticeModel() = NoticeInfo(
         id = notice.id,
         writerName = writer.name,
-        writerId = writer.userId,
+        writerId = writer.id,
         writerPosition = writer.activityUnitPosition.label,
         writerGeneration = writer.activityUnitGeneration,
         createdAt = notice.createdAt,
@@ -48,7 +48,7 @@ data class Notice(
 
 @Serializable
 data class Writer(
-    val userId: String,
+    val id: String,
     val name : String,
     val activityUnitGeneration: Int,
     val activityUnitPosition: ActivityUnitPosition

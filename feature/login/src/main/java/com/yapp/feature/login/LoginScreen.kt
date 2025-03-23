@@ -18,8 +18,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
-import com.yapp.core.ui.constant.Url
 import com.yapp.core.ui.extension.collectWithLifecycle
+import com.yapp.core.ui.extension.openUrl
 import com.yapp.feature.login.component.AgreementBottomDialog
 import com.yapp.feature.login.component.LoginDivider
 import com.yapp.feature.login.component.LoginInputSection
@@ -44,12 +44,9 @@ internal fun LoginRoute(
     viewModel.store.sideEffects.collectWithLifecycle { effect ->
         when (effect) {
             LoginSideEffect.NavigateToSignUp -> navigateToSignup()
-            LoginSideEffect.ShowTerms -> {
-                Url.moveToUrl(context, Url.TERMS)
-            }
 
-            LoginSideEffect.ShowPersonalPolicy -> {
-                Url.moveToUrl(context, Url.PRIVACY_POLICY)
+            is LoginSideEffect.OpenWebBrowser -> {
+                context.openUrl(effect.link)
             }
 
             LoginSideEffect.NavigateToHome -> navigateToHome()

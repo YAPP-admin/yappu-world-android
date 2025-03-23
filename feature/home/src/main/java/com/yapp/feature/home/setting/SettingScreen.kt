@@ -24,9 +24,9 @@ import com.yapp.core.designsystem.component.control.switches.YappSwitchMedium
 import com.yapp.core.designsystem.component.header.YappHeaderActionbarExpanded
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
-import com.yapp.core.ui.constant.Url
 import com.yapp.core.ui.extension.borderBottom
 import com.yapp.core.ui.extension.collectWithLifecycle
+import com.yapp.core.ui.extension.openUrl
 import com.yapp.feature.home.R
 import com.yapp.feature.home.setting.component.SettingItemLarge
 import com.yapp.feature.home.setting.component.SettingItemMedium
@@ -45,15 +45,8 @@ fun SettingRoute(
         when (sideEffect) {
             SettingSideEffect.NavigateBack -> navigateBack()
 
-            SettingSideEffect.OpenPrivacyPolicy -> {
-                Url.moveToUrl(context, Url.PRIVACY_POLICY)
-            }
-
-            SettingSideEffect.OpenTerms -> {
-                Url.moveToUrl(context, Url.TERMS)
-            }
-
-            SettingSideEffect.OpenInquiry -> {
+            is SettingSideEffect.OpenWebBrowser -> {
+                context.openUrl(sideEffect.link)
             }
 
             SettingSideEffect.NavigateToLogin -> {

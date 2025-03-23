@@ -4,19 +4,24 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
+import com.yapp.dataapi.OperationsRepository
 import com.yapp.domain.CheckLoginStatusUseCase
 import com.yapp.domain.LoginUseCase
 import com.yapp.model.Regex
 import com.yapp.model.exceptions.InvalidRequestArgument
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val checkLoginStatusUseCase: CheckLoginStatusUseCase
+    private val checkLoginStatusUseCase: CheckLoginStatusUseCase,
+    private val operationsRepository: OperationsRepository,
 ) : ViewModel() {
+    private var privacyPolicyLink = ""
+    private var termsLink = ""
 
     val store: MviIntentStore<LoginState, LoginIntent, LoginSideEffect> =
         mviIntentStore(
@@ -75,9 +80,13 @@ class LoginViewModel @Inject constructor(
                 }
                 postSideEffect(LoginSideEffect.NavigateToSignUp)
             }
-            LoginIntent.ClickTerms -> postSideEffect(LoginSideEffect.ShowTerms)
-            LoginIntent.ClickPersonalPolicy -> postSideEffect(LoginSideEffect.ShowPersonalPolicy)
-            LoginIntent.EnterLoginScreen -> checkAccessToken(postSideEffect)
+
+            LoginIntent.ClickTerms -> postSideEffect(LoginSideEffect.OpenWebBrowser(termsLink))
+            LoginIntent.ClickPersonalPolicy -> postSideEffect(LoginSideEffect.OpenWebBrowser(privacyPolicyLink))
+            LoginIntent.EnterLoginScreen -> {
+                checkAccessToken(postSideEffect)
+                loadUrl()
+            }
         }
     }
 
@@ -123,10 +132,24 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun checkAccessToken(postSideEffect: (LoginSideEffect) -> Unit) = viewModelScope.launch {
-        val accessToken = checkLoginStatusUseCase.invoke()
-        if (accessToken){
-            postSideEffect(LoginSideEffect.NavigateToHome)
+    // FIXME Splash Screen으로 위치 및 네이밍 변경 필요
+    private fun checkAccessToken(postSideEffect: (LoginSideEffect) -> Unit) =
+        viewModelScope.launch {
+            val isLoggedIn = checkLoginStatusUseCase.invoke()
+            if (isLoggedIn) {
+                postSideEffect(LoginSideEffect.NavigateToHome)
+            }
+        }
+
+    private fun loadUrl() = viewModelScope.launch {
+        combine(
+            operationsRepository.getPrivacyPolicyLink(),
+            operationsRepository.getTermsOfServiceLink(),
+        ) { privacyPolicyLink, termsLink ->
+            Pair(privacyPolicyLink, termsLink)
+        }.collect { (privacyPolicyLink, termsLink) ->
+            this@LoginViewModel.privacyPolicyLink = privacyPolicyLink
+            this@LoginViewModel.termsLink = termsLink
         }
     }
 }
