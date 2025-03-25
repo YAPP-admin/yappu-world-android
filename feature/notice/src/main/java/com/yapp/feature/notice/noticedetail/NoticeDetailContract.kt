@@ -15,8 +15,7 @@ data class NoticeDetailState(
         content = "",
         noticeType = NoticeType.ALL
     ),
-    val isLoadingNotice: Boolean = false,
-    val dummyData: String = markdown1,
+    val isLoadingNotice: Boolean = false
 )
 
 sealed interface NoticeDetailIntent {
