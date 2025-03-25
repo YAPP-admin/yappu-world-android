@@ -7,7 +7,6 @@ import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.PostsRepository
 import com.yapp.model.NoticeType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -62,7 +61,6 @@ class NoticeViewModel @Inject constructor(
         getNoticeListRepository
             .getNoticeList(null, 30, noticeType.apiValue)
             .collectLatest { noticeList ->
-                delay(1000) // 임의로 넣어둠
                 reduce { copy(notices = noticeList, isNoticesLoading = false) }
             }
     }
