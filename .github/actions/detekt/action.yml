@@ -1,0 +1,26 @@
+name: "Detekt With Review dogs"
+description: "내부 코드 품질 개선 액션"
+
+inputs:
+  GH_TOKEN:
+    description: 'github token in actions'
+    required: true
+
+runs:
+  using: 'composite' # 외부에서 사용하도록 처리
+  steps:
+    # detekt 머지 처리
+    - name: Build detekt
+      shell: bash
+      run: ./gradlew detekt reportMerge --continue
+
+    - name: Run Default reviewdog
+      env:
+        REVIEWDOG_GITHUB_API_TOKEN: ${{ inputs.GH_TOKEN }}
+      shell: bash
+      run: |
+        cat build/reports/detekt/merge.xml | reviewdog -f=checkstyle -name="detekt-default" -reporter="github-pr-review" -level="info"
+    
+    
+
+      
