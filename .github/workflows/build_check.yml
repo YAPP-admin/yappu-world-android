@@ -1,0 +1,28 @@
+on:
+  workflow_call:
+    inputs:
+      ref:
+        required: true
+        type: string
+
+jobs:
+  build_check:
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout
+        name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          ref: ${{ inputs.ref }}
+
+      - id: build-configuration
+        name: Build Configuration
+        uses: ./.github/actions/build-configuration
+
+      - id: dekekt
+        name: Dekekt
+        uses: ./.github/actions/detekt
+        with:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
