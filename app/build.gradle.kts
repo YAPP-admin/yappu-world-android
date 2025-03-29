@@ -7,6 +7,14 @@ plugins {
 
 android {
     setNamespace("app.official")
+
+    defaultConfig {
+        applicationId = "com.yapp.app.official"
+        versionCode = 1
+        versionName = "0.0.0"
+
+        targetSdk = 35
+    }
 }
 
 dependencies {
@@ -16,6 +24,7 @@ dependencies {
     implementation(project(":feature:login"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:data")) // For di
+    implementation(project(":core:data-api"))
     implementation(project(":core:domain"))
 
     implementation(platform(libs.firebase.bom))

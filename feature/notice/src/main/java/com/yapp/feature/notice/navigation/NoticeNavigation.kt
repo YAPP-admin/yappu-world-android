@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import com.yapp.feature.notice.notice.NoticeRoute
 import com.yapp.feature.notice.noticedetail.NoticeDetailRoute
@@ -14,7 +15,7 @@ data object NoticeRoute
 
 @Serializable
 data class NoticeDetailRoute(
-    val noticeId: String,
+    val id: String,
 )
 
 fun NavController.navigateToNotice(navOptions: NavOptions? = null) {
@@ -22,7 +23,7 @@ fun NavController.navigateToNotice(navOptions: NavOptions? = null) {
 }
 
 fun NavController.navigateToNoticeDetail(noticeId: String, navOptions: NavOptions? = null) {
-    navigate(route = NoticeDetailRoute(noticeId = noticeId), navOptions)
+    navigate(route = NoticeDetailRoute(id = noticeId), navOptions)
 }
 
 fun NavGraphBuilder.noticeNavGraph(
@@ -42,8 +43,14 @@ fun NavGraphBuilder.noticeNavGraph(
 fun NavGraphBuilder.noticeDetailNavGraph(
     navigateBack: () -> Unit,
 ) {
-    composable<NoticeDetailRoute> { backStackEntry ->
-        val noticeId = backStackEntry.toRoute<NoticeDetailRoute>().noticeId
+    composable<NoticeDetailRoute>(
+        deepLinks = listOf(
+            navDeepLink<NoticeDetailRoute>(
+                basePath = "https://yapp.co.kr/notices"
+            )
+        )
+    ) { backStackEntry ->
+        val noticeId = backStackEntry.toRoute<NoticeDetailRoute>().id
         NoticeDetailRoute(noticeId = noticeId, navigateBack = navigateBack)
     }
 }
