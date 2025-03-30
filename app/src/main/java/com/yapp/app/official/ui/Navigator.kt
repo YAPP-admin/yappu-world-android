@@ -36,7 +36,7 @@ class NavigatorState(
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
 
-    var startDestination: Any = mutableStateOf(LoginRoute)
+    var startDestination: Any by mutableStateOf(LoginRoute)
 
     fun navigateLoginScreen(navOptions: NavOptions? = null) {
         navController.navigateToLogin(navOptions)
