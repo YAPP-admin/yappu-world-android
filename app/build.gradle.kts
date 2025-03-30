@@ -24,6 +24,7 @@ dependencies {
     implementation(projects.feature.login)
     implementation(projects.core.designsystem)
     implementation(projects.core.data) // For di
+    implementation(projects.core.dataApi) // For di
     implementation(projects.core.domain)
     implementation(projects.detekt)
 

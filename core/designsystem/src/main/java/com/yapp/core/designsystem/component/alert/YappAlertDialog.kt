@@ -15,21 +15,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.yapp.core.designsystem.component.button.outlined.YappOutlinedSecondaryButtonXLarge
 import com.yapp.core.designsystem.component.button.solid.YappSolidPrimaryButtonXLarge
 import com.yapp.core.designsystem.theme.YappTheme
 
 @Composable
 fun YappAlertDialog(
+    onDismissRequest: () -> Unit,
     title: String? = null,
     body: String? = null,
     actionButtonText: String? = null,
     recommendActionButtonText: String? = null,
     onActionButtonClick: (() -> Unit)? = null,
     onRecommendActionButtonClick: (() -> Unit)? = null,
-    onDismissRequest: () -> Unit,
 ) {
-    Dialog(onDismissRequest = onDismissRequest) {
+    Dialog(
+        onDismissRequest = onDismissRequest,
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
