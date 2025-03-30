@@ -11,6 +11,7 @@ import androidx.core.net.toUri
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.yapp.app.official.MainActivity
+import com.yapp.app.official.R
 import com.yapp.core.data.data.Dispatcher
 import com.yapp.core.data.data.YappDispatchers
 import com.yapp.dataapi.AlarmRepository
@@ -66,7 +67,7 @@ class FirebaseMessagingService : FirebaseMessagingService() {
         }
 
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setSmallIcon(R.drawable.icon_notification)
             .setContentTitle(title)
             .setContentText(body)
             .setAutoCancel(true)
