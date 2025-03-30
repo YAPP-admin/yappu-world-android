@@ -84,7 +84,6 @@ class LoginViewModel @Inject constructor(
             LoginIntent.ClickTerms -> postSideEffect(LoginSideEffect.OpenWebBrowser(termsLink))
             LoginIntent.ClickPersonalPolicy -> postSideEffect(LoginSideEffect.OpenWebBrowser(privacyPolicyLink))
             LoginIntent.EnterLoginScreen -> {
-                checkAccessToken(postSideEffect)
                 loadUrl()
             }
         }
@@ -131,15 +130,6 @@ class LoginViewModel @Inject constructor(
                 }
         }
     }
-
-    // FIXME Splash Screen으로 위치 및 네이밍 변경 필요
-    private fun checkAccessToken(postSideEffect: (LoginSideEffect) -> Unit) =
-        viewModelScope.launch {
-            val isLoggedIn = checkLoginStatusUseCase.invoke()
-            if (isLoggedIn) {
-                postSideEffect(LoginSideEffect.NavigateToHome)
-            }
-        }
 
     private fun loadUrl() = viewModelScope.launch {
         combine(

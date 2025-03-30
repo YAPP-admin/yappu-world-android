@@ -6,6 +6,8 @@ import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -24,6 +26,9 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.core.net.toUri
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.yapp.domain.CheckLoginStatusUseCase
+import com.yapp.feature.home.navigation.HomeRoute
 
 
 @AndroidEntryPoint
@@ -34,9 +39,14 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var operationsRepository: OperationsRepository
 
+    @Inject
+    lateinit var checkLoginStatusUseCase: CheckLoginStatusUseCase
+
     private var showForceUpdateDialog by mutableStateOf(false)
 
     private val scope = MainScope()
+
+    private var showSplashScreen by mutableStateOf(true)
 
     private val requestPermissionLauncher = registerForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
@@ -44,38 +54,57 @@ class MainActivity : ComponentActivity() {
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        splashScreen.setKeepOnScreenCondition {
+            showSplashScreen
+        }
+
         enableEdgeToEdge()
         setContent {
             val navigator = rememberNavigator()
+
+            LaunchedEffect(Unit) {
+                if (checkLoginStatusUseCase()) {
+                    navigator.startDestination = HomeRoute
+                }
+                showSplashScreen = false
+            }
+
+            LaunchedEffect(Unit) {
+                runCatchingIgnoreCancelled {
+                    showForceUpdateDialog = operationsRepository.isForceUpdateRequired()
+                }
+            }
+
             YappTheme {
-                YappApp(navigator)
+                if (showSplashScreen.not()) {
+                    YappApp(navigator)
+                }
 
                 if (showForceUpdateDialog) {
-                    YappAlertDialog(
-                        onDismissRequest = {},
-                        title = stringResource(R.string.main_activity_force_update_dialog_title),
-                        body = stringResource(R.string.main_activity_force_update_dialog_body),
-                        recommendActionButtonText = stringResource(R.string.main_activity_force_update_dialog_button_text),
-                        onRecommendActionButtonClick = {
-                            val intent = Intent(Intent.ACTION_VIEW).apply {
-                                data = "market://details?id=${packageName}".toUri()
-                                setPackage("com.android.vending")
-                            }
-                            startActivity(intent)
-                        }
-                    )
+                    ForceUpdateDialog()
                 }
             }
         }
+    }
 
-        scope.launch {
-            runCatchingIgnoreCancelled {
-                showForceUpdateDialog = operationsRepository.isForceUpdateRequired()
+    @Composable
+    private fun ForceUpdateDialog() {
+        YappAlertDialog(
+            onDismissRequest = {},
+            title = stringResource(R.string.main_activity_force_update_dialog_title),
+            body = stringResource(R.string.main_activity_force_update_dialog_body),
+            recommendActionButtonText = stringResource(R.string.main_activity_force_update_dialog_button_text),
+            onRecommendActionButtonClick = {
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+                    data = "market://details?id=${packageName}".toUri()
+                    setPackage("com.android.vending")
+                }
+                startActivity(intent)
             }
-        }
-
-        requestNotificationPermissionIfNeeded()
+        )
     }
 
     override fun onResume() {
@@ -101,4 +130,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
