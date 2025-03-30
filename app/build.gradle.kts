@@ -34,5 +34,6 @@ dependencies {
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.splashscreen)
     implementation(libs.timber)
 }

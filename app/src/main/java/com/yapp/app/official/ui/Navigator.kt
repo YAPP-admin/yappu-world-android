@@ -1,7 +1,10 @@
 package com.yapp.app.official.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
@@ -33,7 +36,7 @@ class NavigatorState(
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
 
-    val startDestination = LoginRoute
+    var startDestination: Any = mutableStateOf(LoginRoute)
 
     fun navigateLoginScreen(navOptions: NavOptions? = null) {
         navController.navigateToLogin(navOptions)
