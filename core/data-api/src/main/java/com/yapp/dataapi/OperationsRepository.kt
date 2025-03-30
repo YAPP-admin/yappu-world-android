@@ -10,4 +10,6 @@ interface OperationsRepository {
     fun getTermsOfServiceLink(): Flow<String>
 
     fun getPrivacyPolicyLink(): Flow<String>
+
+    suspend fun isForceUpdateRequired(): Boolean
 }

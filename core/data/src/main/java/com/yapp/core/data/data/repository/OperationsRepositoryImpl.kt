@@ -1,5 +1,6 @@
 package com.yapp.core.data.data.repository
 
+import android.content.Context
 import androidx.datastore.core.DataStore
 import com.yapp.core.data.PositionConfigs
 import com.yapp.core.data.data.Dispatcher
@@ -7,6 +8,7 @@ import com.yapp.core.data.data.YappDispatchers
 import com.yapp.core.data.remote.api.OperationsApi
 import com.yapp.core.data.remote.model.response.PositionConfigResponse
 import com.yapp.dataapi.OperationsRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
@@ -18,6 +20,7 @@ internal class OperationsRepositoryImpl @Inject constructor(
     private val operationsApi: OperationsApi,
     private val dataStore: DataStore<PositionConfigs>,
     @Dispatcher(YappDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
+    @ApplicationContext private val context: Context,
 ) : OperationsRepository {
 
     override fun getPositionConfigs(): Flow<List<String>> = flow {
@@ -58,4 +61,11 @@ internal class OperationsRepositoryImpl @Inject constructor(
 
         emit(operationsApi.getPrivacyPolicyLink().link)
     }.flowOn(ioDispatcher)
+
+    override suspend fun isForceUpdateRequired(): Boolean {
+        val version = context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: ""
+        return operationsApi.isForceUpdateRequired(
+            version = version,
+        ).needForceUpdate
+    }
 }
