@@ -29,7 +29,6 @@
             <intent-filter>
                 <data android:scheme="https" />
                 <data android:host="yapp.co.kr" />
-                <data android:host="www.yapp.co.kr" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
