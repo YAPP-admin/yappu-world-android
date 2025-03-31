@@ -19,7 +19,7 @@ internal interface OperationsApi {
     @GET("v1/operations/links/privacy-policy")
     suspend fun getPrivacyPolicyLink(): LinkResponse
 
-    @GET("/v1/operations/force-update")
+    @GET("v1/operations/force-update")
     suspend fun isForceUpdateRequired(
         @Query("version") version: String,
         @Query("platform") platform: String = "Android"
