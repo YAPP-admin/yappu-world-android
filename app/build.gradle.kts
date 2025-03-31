@@ -18,17 +18,14 @@ android {
 }
 
 dependencies {
-    implementation(project(":feature:home"))
-    implementation(project(":feature:notice"))
-    implementation(project(":feature:signup"))
-    implementation(project(":feature:login"))
-
-    implementation(project(":core:designsystem"))
-    implementation(project(":core:data")) // For di
-    implementation(project(":core:data-api"))
-    implementation(project(":core:domain"))
-
-    implementation(project(":detekt"))
+    implementation(projects.feature.home)
+    implementation(projects.feature.notice)
+    implementation(projects.feature.signup)
+    implementation(projects.feature.login)
+    implementation(projects.core.designsystem)
+    implementation(projects.core.data) // For di
+    implementation(projects.core.domain)
+    implementation(projects.detekt)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
