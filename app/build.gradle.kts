@@ -22,10 +22,13 @@ dependencies {
     implementation(project(":feature:notice"))
     implementation(project(":feature:signup"))
     implementation(project(":feature:login"))
+
     implementation(project(":core:designsystem"))
     implementation(project(":core:data")) // For di
     implementation(project(":core:data-api"))
     implementation(project(":core:domain"))
+
+    implementation(project(":detekt"))
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
