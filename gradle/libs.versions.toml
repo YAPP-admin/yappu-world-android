@@ -40,6 +40,7 @@ protobufPlugin = "0.9.4"
 room = "2.6.1"
 
 composeMarkdown = "0.5.5"
+detekt = "1.23.8"
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
@@ -101,6 +102,7 @@ firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 
 coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version = "coroutinesPlayServices" }
+detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-api", version.ref = "detekt" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -113,3 +115,4 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleService" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }

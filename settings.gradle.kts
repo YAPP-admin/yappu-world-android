@@ -24,6 +24,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "YappOfficial"
 include(":app")
+include(":detekt")
 
 // core
 include(

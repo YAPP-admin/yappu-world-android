@@ -1,0 +1,106 @@
+yapp-rule:
+  active: true
+  ServiceRules:
+    active: true
+  DeepLinkTypeRule:
+    active: true
+  MissingScreenTestRule:
+    active: true
+
+complexity:
+  TooManyFunctions:
+    active: false
+  LongParameterList:
+    active: false
+  ComplexCondition:
+    active: false
+  LargeClass:
+    active: false
+  LongMethod:
+    active: false
+  NestedBlockDepth:
+    active: false
+  CyclomaticComplexMethod:
+    active: false
+
+
+style:
+  NewLineAtEndOfFile:
+    active: true
+  MagicNumber:
+    active: false
+  UnusedParameter:
+    active: true
+  UnusedImports:
+    active: true
+  MaxLineLength:
+    active: false
+  UseCheckOrError:
+    active: false
+  ReturnCount:
+    active: false
+  WildcardImport:
+    active: true
+  ForbiddenAnnotation:
+    active: true
+    annotations:
+      - reason: 'it is a java annotation. Use `Suppress` instead.'
+        value: 'java.lang.SuppressWarnings'
+      - reason: 'it is a java annotation. Use `kotlin.Deprecated` instead.'
+        value: 'java.lang.Deprecated'
+      - reason: 'it is a java annotation. Use `kotlin.annotation.MustBeDocumented` instead.'
+        value: 'java.lang.annotation.Documented'
+      - reason: 'it is a java annotation. Use `kotlin.annotation.Target` instead.'
+        value: 'java.lang.annotation.Target'
+      - reason: 'it is a java annotation. Use `kotlin.annotation.Retention` instead.'
+        value: 'java.lang.annotation.Retention'
+      - reason: 'it is a java annotation. Use `kotlin.annotation.Repeatable` instead.'
+        value: 'java.lang.annotation.Repeatable'
+      - reason: 'Kotlin does not support @Inherited annotation, see https://youtrack.jetbrains.com/issue/KT-22265'
+        value: 'java.lang.annotation.Inherited'
+  ForbiddenComment:
+    active: false
+  UnusedPrivateMember:
+    active: true
+    ignoreAnnotated:
+      - 'Preview'
+  SerialVersionUIDInSerializableClass:
+    active: false
+  DestructuringDeclarationWithTooManyEntries:
+    active: false
+  UseRequire:
+    active: false
+
+empty-blocks:
+  EmptyFunctionBlock:
+    active: true
+    ignoreOverridden: true
+
+exceptions:
+  TooGenericExceptionCaught:
+    active: false
+  SwallowedException:
+    active: false
+
+naming:
+  FunctionNaming:
+    active: true
+    excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**' ]
+    functionPattern: '[a-z][a-zA-Z0-9]*'
+    excludeClassPattern: '$^'
+    ignoreAnnotated: [ 'Composable' ]
+  TopLevelPropertyNaming:
+    active: true
+    constantPattern: '[A-Z][_A-Z0-9]*'
+    propertyPattern: '[A-Za-z][_A-Za-z0-9]*'
+    privatePropertyPattern: '_?[A-Za-z][_A-Za-z0-9]*'
+  EnumNaming:
+    active: false
+  PackageNaming:
+    active: true
+    packagePattern: '[a-zA-Z0-9]+([-_.][a-zA-Z0-9]+)*'
+  ConstructorParameterNaming:
+    active: true
+    privateParameterPattern: '(_)?[a-z][A-Za-z0-9]*'
+  MatchingDeclarationName:
+    active: false
