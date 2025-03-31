@@ -1,0 +1,29 @@
+name: Android CI Action
+
+on:
+  pull_request:
+    types: [ opened, synchronize ]
+
+permissions: write-all
+
+jobs:
+  ready_to_ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          clean: true
+          ref: ${{ github.event.pull_request.head.ref }}
+
+
+  ci_dev:
+    needs: ready_to_ci
+    uses: ./.github/workflows/build_check.yml
+    strategy:
+      matrix:
+        include:
+          - name: test
+            command: "./gradlew clean testDebugUnitTest"
+          - name: build
+            command: "./gradlew app:assembleDebug"
