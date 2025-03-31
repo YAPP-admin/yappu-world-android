@@ -10,8 +10,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:model"))
-    implementation(project(":core:designsystem"))
+    implementation(projects.core.model)
+    implementation(projects.core.designsystem)
     implementation(libs.androidx.appcompat)
     implementation(libs.compose.markdown)
 }

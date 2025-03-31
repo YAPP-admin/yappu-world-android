@@ -43,8 +43,8 @@ androidComponents {
 }
 
 dependencies {
-    implementation(project(":core:model"))
-    implementation(project(":core:data-api"))
+    implementation(projects.core.model)
+    implementation(projects.core.dataApi)
 
     implementation(libs.androidx.datastore.core)
     implementation(libs.androidx.datastore.preferences)

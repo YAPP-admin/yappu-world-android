@@ -9,8 +9,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:model"))
-    implementation(project(":core:data-api"))
+    implementation(projects.core.model)
+    implementation(projects.core.dataApi)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.hilt.core)
