@@ -11,7 +11,7 @@ android {
     defaultConfig {
         applicationId = "com.yapp.app.official"
         versionCode = 1
-        versionName = "0.0.0"
+        versionName = "1.0.0"
 
         targetSdk = 35
     }
