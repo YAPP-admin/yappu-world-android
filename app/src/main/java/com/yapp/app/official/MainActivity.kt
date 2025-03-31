@@ -3,6 +3,7 @@ package com.yapp.app.official
 import android.content.pm.PackageManager
 import android.os.Build
 import android.content.Intent
+import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -60,6 +61,8 @@ class MainActivity : ComponentActivity() {
         splashScreen.setKeepOnScreenCondition {
             showSplashScreen
         }
+
+        requestNotificationPermissionIfNeeded()
 
         enableEdgeToEdge()
         setContent {
