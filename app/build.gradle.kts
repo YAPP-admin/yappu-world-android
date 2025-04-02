@@ -26,6 +26,7 @@ dependencies {
     implementation(projects.core.data) // For di
     implementation(projects.core.dataApi)
     implementation(projects.core.domain)
+    implementation(projects.core.commonAndroid)
     implementation(projects.detekt)
 
     implementation(platform(libs.firebase.bom))
