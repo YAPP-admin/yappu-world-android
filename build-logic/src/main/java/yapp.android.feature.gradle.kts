@@ -21,4 +21,5 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:domain"))
     implementation(project(":core:data-api"))
+    implementation(project(":core:common-android"))
 }

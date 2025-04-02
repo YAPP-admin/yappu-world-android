@@ -3,8 +3,8 @@ import com.yapp.app.setNamespace
 plugins {
     id("yapp.android.application")
     alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
-
 android {
     setNamespace("app.official")
 
@@ -24,13 +24,14 @@ dependencies {
     implementation(projects.feature.login)
     implementation(projects.core.designsystem)
     implementation(projects.core.data) // For di
-    implementation(projects.core.dataApi) // For di
+    implementation(projects.core.dataApi)
     implementation(projects.core.domain)
     implementation(projects.detekt)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.crashlytics)
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.runtime.ktx)
