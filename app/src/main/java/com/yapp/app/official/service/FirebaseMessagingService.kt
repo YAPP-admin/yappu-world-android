@@ -12,6 +12,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.yapp.app.official.MainActivity
 import com.yapp.app.official.R
+import com.yapp.core.common.android.record
 import com.yapp.core.data.data.Dispatcher
 import com.yapp.core.data.data.YappDispatchers
 import com.yapp.dataapi.AlarmRepository
@@ -19,6 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.retry
@@ -41,6 +43,7 @@ class FirebaseMessagingService : FirebaseMessagingService() {
 
         flow<Unit> { alarmRepository.updateFcmToken(token) }
             .retry(3)
+            .catch { e -> e.record() }
             .launchIn(scope)
     }
 
