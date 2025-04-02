@@ -15,6 +15,7 @@ compose-stable-marker = "1.0.3"
 
 composeBom = "2024.12.01"
 firebaseBom = "32.1.1"
+firebaseCrashlytics = "2.9.9"
 coroutinesPlayServices = "1.7.3"
 
 junit = "4.13.2"
@@ -100,8 +101,9 @@ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
-firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
 
 coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version = "coroutinesPlayServices" }
 detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-api", version.ref = "detekt" }
@@ -118,3 +120,4 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleService" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlytics" }

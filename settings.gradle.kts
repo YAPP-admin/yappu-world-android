@@ -43,3 +43,4 @@ include(
     ":feature:signup",
     ":feature:login"
 )
+include(":core:common-android")
