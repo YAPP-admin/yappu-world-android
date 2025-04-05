@@ -2,22 +2,24 @@ package com.yapp.feature.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yapp.core.common.android.record
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.OperationsRepository
-import com.yapp.domain.CheckLoginStatusUseCase
 import com.yapp.domain.LoginUseCase
 import com.yapp.model.Regex
 import com.yapp.model.exceptions.InvalidRequestArgument
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val checkLoginStatusUseCase: CheckLoginStatusUseCase,
     private val operationsRepository: OperationsRepository,
 ) : ViewModel() {
     private var privacyPolicyLink = ""
@@ -82,7 +84,12 @@ class LoginViewModel @Inject constructor(
             }
 
             LoginIntent.ClickTerms -> postSideEffect(LoginSideEffect.OpenWebBrowser(termsLink))
-            LoginIntent.ClickPersonalPolicy -> postSideEffect(LoginSideEffect.OpenWebBrowser(privacyPolicyLink))
+            LoginIntent.ClickPersonalPolicy -> postSideEffect(
+                LoginSideEffect.OpenWebBrowser(
+                    privacyPolicyLink
+                )
+            )
+
             LoginIntent.EnterLoginScreen -> {
                 loadUrl()
             }
@@ -131,16 +138,18 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun loadUrl() = viewModelScope.launch {
+    private fun loadUrl() {
         combine(
             operationsRepository.getPrivacyPolicyLink(),
             operationsRepository.getTermsOfServiceLink(),
         ) { privacyPolicyLink, termsLink ->
             Pair(privacyPolicyLink, termsLink)
-        }.collect { (privacyPolicyLink, termsLink) ->
+        }.onEach { (privacyPolicyLink, termsLink) ->
             this@LoginViewModel.privacyPolicyLink = privacyPolicyLink
             this@LoginViewModel.termsLink = termsLink
-        }
+        }.catch { e ->
+            e.record()
+        }.launchIn(viewModelScope)
     }
 }
 
