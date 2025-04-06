@@ -66,10 +66,13 @@ class SignUpViewModel @Inject constructor(
                     SignUpStep.Position -> SignUpStep.Password
                     SignUpStep.Password -> SignUpStep.Email
                     SignUpStep.Email -> SignUpStep.Name
-                    SignUpStep.Complete,
                     SignUpStep.Pending,
                     SignUpStep.Name -> {
                         postSideEffect(SignUpSideEffect.NavigateBack)
+                        return
+                    }
+                    SignUpStep.Complete -> {
+                        postSideEffect(SignUpSideEffect.NavigateHome)
                         return
                     }
                 }
