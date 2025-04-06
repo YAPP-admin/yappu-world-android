@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +33,7 @@ import com.yapp.core.designsystem.component.header.YappHeaderActionbar
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
+import com.yapp.core.ui.extension.openUrl
 import com.yapp.core.ui.util.keyboardAsState
 import com.yapp.feature.signup.R
 import com.yapp.feature.signup.signup.component.SignUpCodeBottomDialog
@@ -51,12 +53,14 @@ fun SignUpRoute(
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
 
     viewModel.store.sideEffects.collectWithLifecycle {
         when (it) {
             SignUpSideEffect.NavigateBack -> navigateBack()
             SignUpSideEffect.ClearFocus -> focusManager.clearFocus(force = true)
             SignUpSideEffect.NavigateHome -> navigateHome()
+            is SignUpSideEffect.OpenWebBrowser -> context.openUrl(it.link)
         }
     }
 
@@ -114,7 +118,14 @@ fun SignUpScreen(
                     )
 
                     SignUpStep.Email -> EmailPage(
-                        onEmailChanged = { email, verified -> onIntent(SignUpIntent.EmailChanged(email, verified)) }
+                        onEmailChanged = { email, verified ->
+                            onIntent(
+                                SignUpIntent.EmailChanged(
+                                    email,
+                                    verified
+                                )
+                            )
+                        }
                     )
 
                     SignUpStep.Password -> PasswordPage(
@@ -169,20 +180,10 @@ private fun SignUpScreenButton(
                 .padding(horizontal = 20.dp)
                 .fillMaxWidth(),
             text = stringResource(R.string.signup_screen_pending_assistive_button),
-            onClick = {}
+            onClick = { onIntent(SignUpIntent.ClickPendingButton) }
         )
 
-        Spacer(Modifier.height(8.dp))
-
-        YappOutlinedPrimaryButtonXLarge(
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .fillMaxWidth(),
-            text = stringResource(R.string.signup_screen_pending_outlined_button),
-            onClick = {}
-        )
-
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(20.dp))
         return
     }
 
