@@ -42,6 +42,8 @@ sealed interface SignUpIntent {
     data object DismissSignUpCodeBottomDialog : SignUpIntent
     data object ClickNoSignUpCodeButton : SignUpIntent
     data object ClickInputCompleteButton : SignUpIntent
+    data object ClickPendingButton : SignUpIntent
+
     data class ChangeSignUpCode(val signUpCode: String) : SignUpIntent
 }
 
@@ -49,6 +51,7 @@ sealed interface SignUpSideEffect {
     data object NavigateBack : SignUpSideEffect
     data object NavigateHome : SignUpSideEffect
     data object ClearFocus : SignUpSideEffect
+    data class OpenWebBrowser(val link: String) : SignUpSideEffect
 }
 
 enum class SignUpStep {

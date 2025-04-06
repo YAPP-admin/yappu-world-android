@@ -2,8 +2,10 @@ package com.yapp.feature.signup.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yapp.core.common.android.record
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
+import com.yapp.dataapi.OperationsRepository
 import com.yapp.domain.GetPositionConfigsUseCase
 import com.yapp.domain.SignUpUseCase
 import com.yapp.model.SignUpInfo
@@ -22,8 +24,10 @@ import kotlin.math.sign
 class SignUpViewModel @Inject constructor(
     private val signUpUseCase: SignUpUseCase,
     private val getPositionConfigsUseCase: GetPositionConfigsUseCase,
+    private val operationsRepository: OperationsRepository,
 ) : ViewModel() {
     private var signUpInfo = SignUpInfo()
+    private var inquiryLink = ""
 
     val store: MviIntentStore<SignUpState, SignUpIntent, SignUpSideEffect> =
         mviIntentStore(
@@ -44,8 +48,15 @@ class SignUpViewModel @Inject constructor(
                         reduce { copy(positions = it) }
                     }
                     .catch {
-//                        throw it // TODO 에러 처리
+                        it.record()
                     }
+                    .launchIn(viewModelScope)
+
+                operationsRepository.getUsageInquiryLink()
+                    .onEach {
+                        inquiryLink = it
+                    }
+                    .catch { it.record() }
                     .launchIn(viewModelScope)
             }
 
@@ -159,6 +170,10 @@ class SignUpViewModel @Inject constructor(
                     postSideEffect = postSideEffect,
                 )
             }
+
+            SignUpIntent.ClickPendingButton -> {
+                postSideEffect(SignUpSideEffect.OpenWebBrowser(link = inquiryLink))
+            }
         }
     }
 
@@ -181,7 +196,7 @@ class SignUpViewModel @Inject constructor(
             .onFailure {
                 when (it) {
                     is SignUpCodeException -> reduce { copy(signUpErrorInputTextDescription = it.message) }
-                    else -> throw it // TODO 예외 처리
+                    else -> it.record()
                 }
             }
     }
