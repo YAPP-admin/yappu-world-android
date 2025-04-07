@@ -1,5 +1,6 @@
 package com.yapp.feature.signup.signup
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yapp.core.common.android.record
@@ -25,15 +26,25 @@ class SignUpViewModel @Inject constructor(
     private val signUpUseCase: SignUpUseCase,
     private val getPositionConfigsUseCase: GetPositionConfigsUseCase,
     private val operationsRepository: OperationsRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private var signUpInfo = SignUpInfo()
     private var inquiryLink = ""
+
+    companion object {
+        private const val STEP_ID_KEY = "currentStep"
+    }
+
+    private val step: String =
+        requireNotNull(savedStateHandle.get<String>(STEP_ID_KEY)) { "Name" }
+
 
     val store: MviIntentStore<SignUpState, SignUpIntent, SignUpSideEffect> =
         mviIntentStore(
             initialState = SignUpState(),
             onIntent = ::onIntent
         )
+
 
     private fun onIntent(
         intent: SignUpIntent,
@@ -42,7 +53,8 @@ class SignUpViewModel @Inject constructor(
         postSideEffect: (SignUpSideEffect) -> Unit,
     ) {
         when (intent) {
-            SignUpIntent.EnterScreen -> {
+            is SignUpIntent.EnterScreen -> {
+                reduce{copy(currentStep= SignUpStep.from(step))}
                 getPositionConfigsUseCase()
                     .onEach {
                         reduce { copy(positions = it) }

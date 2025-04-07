@@ -32,6 +32,7 @@ sealed interface LoginIntent {
 sealed interface LoginSideEffect {
     data object NavigateToSignUp : LoginSideEffect
     data object NavigateToHome : LoginSideEffect
+    data object NavigateToSignUpPending : LoginSideEffect
     data class OpenWebBrowser(val link: String) : LoginSideEffect
     data class ShowToast(val message: String) : LoginSideEffect
 }

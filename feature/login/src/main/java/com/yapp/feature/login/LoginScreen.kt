@@ -29,7 +29,7 @@ import com.yapp.feature.login.component.TopTitle
 
 @Composable
 internal fun LoginRoute(
-    navigateToSignup: () -> Unit,
+    navigateToSignup: (String) -> Unit,
     navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
@@ -43,8 +43,7 @@ internal fun LoginRoute(
 
     viewModel.store.sideEffects.collectWithLifecycle { effect ->
         when (effect) {
-            LoginSideEffect.NavigateToSignUp -> navigateToSignup()
-
+            LoginSideEffect.NavigateToSignUp -> navigateToSignup("Name")
             is LoginSideEffect.OpenWebBrowser -> {
                 context.openUrl(effect.link)
             }
@@ -53,6 +52,7 @@ internal fun LoginRoute(
             is LoginSideEffect.ShowToast -> {
                 Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
             }
+            LoginSideEffect.NavigateToSignUpPending -> navigateToSignup("Pending")
         }
     }
     LoginScreen(
