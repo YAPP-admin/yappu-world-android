@@ -1,6 +1,5 @@
 package com.yapp.feature.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yapp.core.common.android.record
@@ -42,6 +41,7 @@ class HomeViewModel @Inject constructor(
             HomeIntent.ClickMoreButton -> postSideEffect(HomeSideEffect.NavigateToNotice)
             HomeIntent.ClickSettingButton -> postSideEffect(HomeSideEffect.NavigateToSetting)
             HomeIntent.EnterHomeScreen -> { loadHomeInfo( reduce,postSideEffect)  }
+            is HomeIntent.ClickNoticeItem -> postSideEffect(HomeSideEffect.NavigateToNoticeDetail(intent.noticeId))
         }
     }
 
