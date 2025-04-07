@@ -80,6 +80,7 @@ class SignUpViewModel @Inject constructor(
                     SignUpStep.Password -> SignUpStep.Email
                     SignUpStep.Email -> SignUpStep.Name
                     SignUpStep.Pending,
+                    SignUpStep.Reject,
                     SignUpStep.Name -> {
                         postSideEffect(SignUpSideEffect.NavigateBack)
                         return
@@ -115,6 +116,7 @@ class SignUpViewModel @Inject constructor(
                     SignUpStep.Password -> SignUpStep.Position
                     SignUpStep.Position,
                     SignUpStep.Complete,
+                    SignUpStep.Reject,
                     SignUpStep.Pending -> return
                 }
 
@@ -225,6 +227,7 @@ class SignUpViewModel @Inject constructor(
             SignUpStep.Password -> signUpInfo.isAllPasswordConditionValid
             SignUpStep.Position -> signUpInfo.isActivityUnitsValid
             SignUpStep.Complete,
+            SignUpStep.Reject,
             SignUpStep.Pending -> true
         }
     }

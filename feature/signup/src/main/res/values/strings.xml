@@ -46,6 +46,8 @@
     <string name="signup_screen_complete_description">정상적으로 회원가입이 완료되었습니다.\n이제 즐거운 YAPP 즐길 준비 완료!!</string>
     <string name="signup_screen_pending_title">아직 가입 대기중이에요...</string>
     <string name="signup_screen_pending_description">회원가입을 완료하려면 승인이 필요해요.\n운영진에게 승인을 요청해보세요.</string>
+    <string name="signup_screen_reject_title">회원가입이 거절되었어요.</string>
+    <string name="signup_screen_reject_assistive_button">운영진에게 문의하기</string>
     <string name="signup_screen_position_previous_generation">이전 기수 %d</string>
     <string name="signup_screen_position_previous_delete_content_description">이전 활동 기수 %d 삭제</string>
     <string name="signup_screen_pending_assistive_button">대기상태가 계속되고 있나요?</string>

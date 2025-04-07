@@ -53,6 +53,7 @@ internal fun LoginRoute(
                 Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
             }
             LoginSideEffect.NavigateToSignUpPending -> navigateToSignup("Pending")
+            LoginSideEffect.NavigateToSignUpReject -> navigateToSignup("Reject")
         }
     }
     LoginScreen(
