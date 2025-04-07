@@ -39,6 +39,7 @@ import com.yapp.feature.signup.signup.component.SignUpCodeBottomDialog
 import com.yapp.feature.signup.signup.extension.signUpAnimatedContentTransitionSpec
 import com.yapp.feature.signup.signup.page.CompletePage
 import com.yapp.feature.signup.signup.page.PendingPage
+import com.yapp.feature.signup.signup.page.RejectPage
 import com.yapp.feature.signup.signup.page.email.EmailPage
 import com.yapp.feature.signup.signup.page.name.NamePage
 import com.yapp.feature.signup.signup.page.password.PasswordPage
@@ -140,6 +141,7 @@ fun SignUpScreen(
 
                     SignUpStep.Complete -> CompletePage()
                     SignUpStep.Pending -> PendingPage()
+                    SignUpStep.Reject -> RejectPage()
                 }
             }
 
@@ -181,7 +183,18 @@ private fun SignUpScreenButton(
             text = stringResource(R.string.signup_screen_pending_assistive_button),
             onClick = { onIntent(SignUpIntent.ClickPendingButton) }
         )
+        Spacer(Modifier.height(20.dp))
+        return
+    }
 
+    if (uiState.showRejectButton){
+        YappTextAssistiveButtonMedium(
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .fillMaxWidth(),
+            text = stringResource(R.string.signup_screen_reject_assistive_button),
+            onClick = { onIntent(SignUpIntent.ClickPendingButton) }
+        )
         Spacer(Modifier.height(20.dp))
         return
     }

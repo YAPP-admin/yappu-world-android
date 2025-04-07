@@ -9,6 +9,7 @@ import com.yapp.dataapi.OperationsRepository
 import com.yapp.domain.LoginUseCase
 import com.yapp.model.Regex
 import com.yapp.model.exceptions.InvalidRequestArgument
+import com.yapp.model.exceptions.RecentSignUpRejectedException
 import com.yapp.model.exceptions.SignUpPendingException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
@@ -134,7 +135,9 @@ class LoginViewModel @Inject constructor(
                             // 회원가입 대기 화면으로 이동
                             postSideEffect(LoginSideEffect.NavigateToSignUpPending)
                         }
-
+                        is RecentSignUpRejectedException -> {
+                            postSideEffect(LoginSideEffect.NavigateToSignUpReject)
+                        }
                         else -> {
                             postSideEffect(LoginSideEffect.ShowToast(errorMessage))
                         }
