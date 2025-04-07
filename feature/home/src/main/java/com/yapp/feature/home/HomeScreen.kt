@@ -94,7 +94,7 @@ fun HomeScreen(
                     )
                     Spacer(Modifier.height(8.dp))
                     NoticeSection(
-                        noticeInfo = hmeState.noticeInfo,
+                        noticeInfo = homeState.noticeInfo,
                         onMoreButtonClick = { onIntent(HomeIntent.ClickMoreButton) },
                         onNoticeDetailClick = { onIntent(HomeIntent.ClickNoticeItem(it)) }
                     )
