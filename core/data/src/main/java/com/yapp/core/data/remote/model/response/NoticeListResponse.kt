@@ -8,13 +8,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class NoticeListResponse(
     val data: List<NoticeData>,
-    val lastCursor: String,
+    val lastCursor: String?,
     val limit: Int,
     val hasNext: Boolean
 ){
     fun toNoticeListModel() = NoticeList(
         notices = data.map { it.toNoticeModel() },
-        lastNoticeId = lastCursor,
+        lastNoticeId = lastCursor?: "",
         hasNext = hasNext
     )
 }
