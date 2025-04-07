@@ -10,6 +10,7 @@ enum class YappServerError(val exception: YappException) {
     USR_1003(UnprocessedSignUpException()),
 
     // 로그인
+    USR_0002(InternalServerException()),
     USR_1101(UserNotFoundForEmailException()),
     USR_1102(SignUpPendingException()),
     USR_1103(RecentSignUpRejectedException()),

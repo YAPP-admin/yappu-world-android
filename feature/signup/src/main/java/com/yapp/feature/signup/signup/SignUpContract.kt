@@ -55,7 +55,7 @@ sealed interface SignUpSideEffect {
 }
 
 enum class SignUpStep {
-    Name, Email, Password, Position, Complete, NamePending;
+    Name, Email, Password, Position, Complete, Pending;
 
     companion object {
         fun from(value: String?): SignUpStep {
