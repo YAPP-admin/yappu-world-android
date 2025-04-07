@@ -20,6 +20,7 @@ import com.yapp.model.NoticeList
 @Composable
 fun NoticeSection(
     noticeInfo: NoticeList?,
+    onNoticeDetailClick: (String) -> Unit,
     onMoreButtonClick: () -> Unit,
 ) {
     HomeSectionBackground {
@@ -52,7 +53,8 @@ fun NoticeSection(
                             color = YappTheme.colorScheme.lineNormalAlternative
                         )
                     },
-                    noticeInfo = noticeInfo.notices[it]
+                    noticeInfo = noticeInfo.notices[it],
+                    onClick = { onNoticeDetailClick(noticeInfo.notices[it].id)}
                 )
             }
         }
