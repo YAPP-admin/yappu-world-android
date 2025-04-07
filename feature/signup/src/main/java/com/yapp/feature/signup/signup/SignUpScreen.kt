@@ -25,7 +25,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.yapp.core.designsystem.component.button.outlined.YappOutlinedPrimaryButtonXLarge
 import com.yapp.core.designsystem.component.button.solid.YappSolidPrimaryButtonLarge
 import com.yapp.core.designsystem.component.button.solid.YappSolidPrimaryButtonXLarge
 import com.yapp.core.designsystem.component.button.text.YappTextAssistiveButtonMedium

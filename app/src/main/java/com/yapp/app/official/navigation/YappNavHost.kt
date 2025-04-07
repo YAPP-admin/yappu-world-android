@@ -27,7 +27,7 @@ fun YappNavHost(
         exitTransition = { ExitTransition.None },
     ) {
         loginNavGraph(
-            navigateSignUp = { navigator.navigateSignUpScreen() },
+            navigateSignUp = { step -> navigator.navigateSignUpScreen(step) },
             navigateHome = {
                 navigator.navigateHomeScreen(
                     navOptions = clearBackStackNavOptions

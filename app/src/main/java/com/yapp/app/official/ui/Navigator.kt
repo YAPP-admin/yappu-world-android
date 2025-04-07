@@ -42,8 +42,8 @@ class NavigatorState(
         navController.navigateToLogin(navOptions)
     }
 
-    fun navigateSignUpScreen() {
-        navController.navigateToSignUp()
+    fun navigateSignUpScreen(step : String) {
+        navController.navigateToSignUp(step)
     }
 
     fun navigateHomeScreen(navOptions: NavOptions? = null) {

@@ -9,6 +9,7 @@ import com.yapp.dataapi.OperationsRepository
 import com.yapp.domain.LoginUseCase
 import com.yapp.model.Regex
 import com.yapp.model.exceptions.InvalidRequestArgument
+import com.yapp.model.exceptions.SignUpPendingException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
@@ -128,6 +129,10 @@ class LoginViewModel @Inject constructor(
                                     passwordErrorDescription = "비밀번호가 달라요. 입력하신 비밀번호를 확인해주세요."
                                 )
                             }
+                        }
+                        is SignUpPendingException -> {
+                            // 회원가입 대기 화면으로 이동
+                            postSideEffect(LoginSideEffect.NavigateToSignUpPending)
                         }
 
                         else -> {
