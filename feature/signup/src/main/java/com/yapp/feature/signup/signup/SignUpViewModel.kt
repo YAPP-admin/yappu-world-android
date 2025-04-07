@@ -12,6 +12,7 @@ import com.yapp.domain.SignUpUseCase
 import com.yapp.model.SignUpInfo
 import com.yapp.model.SignUpResult
 import com.yapp.model.exceptions.SignUpCodeException
+import com.yapp.model.exceptions.UnprocessedSignUpException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
@@ -211,6 +212,7 @@ class SignUpViewModel @Inject constructor(
             .onFailure {
                 when (it) {
                     is SignUpCodeException -> reduce { copy(signUpErrorInputTextDescription = it.message) }
+                    is UnprocessedSignUpException -> reduce { copy(currentStep = SignUpStep.Pending, showSignUpCodeBottomDialog = false)}
                     else -> it.record()
                 }
             }
