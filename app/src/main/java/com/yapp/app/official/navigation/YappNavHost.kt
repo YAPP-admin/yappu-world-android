@@ -13,6 +13,7 @@ import com.yapp.feature.login.navigation.loginNavGraph
 import com.yapp.feature.notice.navigation.noticeDetailNavGraph
 import com.yapp.feature.notice.navigation.noticeNavGraph
 import com.yapp.feature.signup.navigation.signupNavGraph
+import com.yapp.feature.signup.signup.SignUpStep
 
 @Composable
 fun YappNavHost(
@@ -27,7 +28,9 @@ fun YappNavHost(
         exitTransition = { ExitTransition.None },
     ) {
         loginNavGraph(
-            navigateSignUp = { step -> navigator.navigateSignUpScreen(step) },
+            navigateSignUpName = { navigator.navigateSignUpScreen(SignUpStep.Name.name) },
+            navigateSignUpPending = {navigator.navigateSignUpScreen(SignUpStep.Pending.name)},
+            navigateSignUpReject = {navigator.navigateSignUpScreen(SignUpStep.Reject.name)},
             navigateHome = {
                 navigator.navigateHomeScreen(
                     navOptions = clearBackStackNavOptions
