@@ -12,10 +12,17 @@ import kotlinx.serialization.Serializable
 fun NavController.navigateToLogin(navOptions: NavOptions? = null) { navigate(LoginRoute, navOptions) }
 
 fun NavGraphBuilder.loginNavGraph(
-    navigateSignUp: (String) -> Unit,
+    navigateSignUpName: () -> Unit,
+    navigateSignUpPending : () -> Unit,
+    navigateSignUpReject : () -> Unit,
     navigateHome: () -> Unit,
     ){
     composable<LoginRoute> {
-        LoginRoute(navigateSignUp,navigateHome)
+        LoginRoute(
+            navigateToSignupName = navigateSignUpName,
+            navigateToSignupPending = navigateSignUpPending,
+            navigateToSignupReject =navigateSignUpReject ,
+            navigateToHome = navigateHome
+        )
     }
 }
