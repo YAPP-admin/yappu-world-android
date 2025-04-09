@@ -1,4 +1,5 @@
 import com.yapp.app.setNamespace
+import java.util.Properties
 
 plugins {
     id("yapp.android.application")
@@ -6,6 +7,18 @@ plugins {
     alias(libs.plugins.firebase.crashlytics)
 }
 android {
+    signingConfigs {
+        val keyStoreProperties = Properties()
+        keyStoreProperties.load(
+            project.rootProject.file("keystore.properties").bufferedReader()
+        )
+        create("release") {
+            storeFile = file(keyStoreProperties["store.file.path"] as String)
+            storePassword = keyStoreProperties["store.password"] as String
+            keyPassword = keyStoreProperties["key.password"] as String
+            keyAlias = keyStoreProperties["key.alias"] as String
+        }
+    }
     setNamespace("app.official")
 
     defaultConfig {
@@ -14,6 +27,11 @@ android {
         versionName = "1.0.0"
 
         targetSdk = 35
+    }
+    buildTypes {
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
+        }
     }
 }
 

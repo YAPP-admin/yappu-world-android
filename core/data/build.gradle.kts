@@ -10,6 +10,10 @@ plugins {
 
 android {
     setNamespace("core.data")
+
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 protobuf {
