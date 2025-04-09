@@ -1,6 +1,7 @@
 package com.yapp.core.data.remote.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.yapp.core.data.BuildConfig
 import com.yapp.core.data.remote.Tag
 import com.yapp.core.data.remote.retrofit.NullOnEmptyConverterFactory
 import com.yapp.core.data.remote.retrofit.ResultCallAdapterFactory
@@ -25,7 +26,12 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 internal object NetworkModule {
 
-    private const val BASE_URL = "https://dev-yappuworld.yapp.co.kr/"
+    private val BASE_URL: String
+        get() = if (BuildConfig.DEBUG) {
+            "https://dev-yappuworld.yapp.co.kr/"
+        } else {
+            "https://api-yappuworld.yapp.co.kr/"
+        }
 
     @Singleton
     @Provides
@@ -33,9 +39,9 @@ internal object NetworkModule {
         json: Json,
     ): HttpLoggingInterceptor = HttpLoggingInterceptor { message ->
         when {
-            !message.isJsonObject() && !message.isJsonArray() ->
+            !message.isJsonObject() && !message.isJsonArray() -> {
                 Timber.tag(Tag.Retrofit).d("CONNECTION INFO -> $message")
-            else -> kotlin.runCatching {
+            } else -> kotlin.runCatching {
                 json.encodeToString(Json.parseToJsonElement(message))
             }.onSuccess {
                 Timber.tag(Tag.Retrofit).d(it)
