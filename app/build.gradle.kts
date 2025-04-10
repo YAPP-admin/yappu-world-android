@@ -37,11 +37,13 @@ android {
 
 dependencies {
     implementation(projects.feature.home)
+    implementation(projects.feature.schedule)
     implementation(projects.feature.notice)
+    implementation(projects.feature.profile)
     implementation(projects.feature.signup)
     implementation(projects.feature.login)
     implementation(projects.core.designsystem)
-    implementation(projects.core.data) // For di
+    implementation(projects.core.data)
     implementation(projects.core.dataApi)
     implementation(projects.core.domain)
     implementation(projects.core.commonAndroid)
