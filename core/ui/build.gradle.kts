@@ -13,5 +13,6 @@ dependencies {
     implementation(projects.core.model)
     implementation(projects.core.designsystem)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.material3)
     implementation(libs.compose.markdown)
 }
