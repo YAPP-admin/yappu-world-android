@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.yapp.featrue.profile.navigation.navigateToProfile
 import com.yapp.feature.home.navigation.navigateToHome
 import com.yapp.feature.home.navigation.navigateToSetting
 import com.yapp.feature.login.navigation.LoginRoute
@@ -48,6 +49,10 @@ class NavigatorState(
 
     fun navigateHomeScreen(navOptions: NavOptions? = null) {
         navController.navigateToHome(navOptions = navOptions)
+    }
+
+    fun navigateProfileScreen(navOptions: NavOptions? = null) {
+        navController.navigateToProfile(navOptions = navOptions)
     }
 
     fun navigateSettingScreen(){

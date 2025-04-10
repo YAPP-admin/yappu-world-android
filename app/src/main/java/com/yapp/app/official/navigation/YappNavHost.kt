@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.yapp.app.official.ui.NavigatorState
 import com.yapp.app.official.ui.clearBackStackNavOptions
+import com.yapp.featrue.profile.navigation.profileNavGraph
 import com.yapp.feature.home.navigation.homeNavGraph
 import com.yapp.feature.home.navigation.settingNavGraph
 import com.yapp.feature.login.navigation.loginNavGraph
@@ -29,8 +30,8 @@ fun YappNavHost(
     ) {
         loginNavGraph(
             navigateSignUpName = { navigator.navigateSignUpScreen(SignUpStep.Name.name) },
-            navigateSignUpPending = {navigator.navigateSignUpScreen(SignUpStep.Pending.name)},
-            navigateSignUpReject = {navigator.navigateSignUpScreen(SignUpStep.Reject.name)},
+            navigateSignUpPending = { navigator.navigateSignUpScreen(SignUpStep.Pending.name) },
+            navigateSignUpReject = { navigator.navigateSignUpScreen(SignUpStep.Reject.name) },
             navigateHome = {
                 navigator.navigateHomeScreen(
                     navOptions = clearBackStackNavOptions
@@ -48,9 +49,11 @@ fun YappNavHost(
         homeNavGraph(
             navigateNotice = { navigator.navigateNoticeScreen() },
             navigateSetting = { navigator.navigateSettingScreen() },
-            navigateLogin = {navigator.navigateLoginScreen(
-                navOptions = clearBackStackNavOptions
-            )},
+            navigateLogin = {
+                navigator.navigateLoginScreen(
+                    navOptions = clearBackStackNavOptions
+                )
+            },
             navigateToNoticeDetail = { noticeId ->
                 navigator.navigateToNoticeDetail(noticeId)
             }
@@ -67,10 +70,11 @@ fun YappNavHost(
             navigateToNoticeDetail = { noticeId ->
                 navigator.navigateToNoticeDetail(noticeId)
             },
-            navigateBack = {navigator.popBackStack()}
+            navigateBack = { navigator.popBackStack() }
         )
         noticeDetailNavGraph(
-            navigateBack = {navigator.popBackStack()}
+            navigateBack = { navigator.popBackStack() }
         )
+        profileNavGraph()
     }
 }
