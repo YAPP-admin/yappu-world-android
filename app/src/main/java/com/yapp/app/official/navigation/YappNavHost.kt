@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import com.yapp.app.official.ui.NavigatorState
 import com.yapp.app.official.ui.clearBackStackNavOptions
 import com.yapp.feature.home.navigation.homeNavGraph
+import com.yapp.feature.home.navigation.settingNavGraph
 import com.yapp.feature.login.navigation.loginNavGraph
 import com.yapp.feature.notice.navigation.noticeDetailNavGraph
 import com.yapp.feature.notice.navigation.noticeNavGraph
@@ -56,6 +57,13 @@ fun YappNavHost(
             },
             navigateToNoticeDetail = { noticeId ->
                 navigator.navigateToNoticeDetail(noticeId)
+            }
+        )
+        settingNavGraph(
+            navigateLogin = {
+                navigator.navigateLoginScreen(
+                    navOptions = clearBackStackNavOptions
+                )
             },
             navigateBack = { navigator.popBackStack() }
         )
