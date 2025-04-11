@@ -44,6 +44,8 @@ internal val LightColorScheme = YappColorScheme(
     staticWhite = Color(0xFFFFFFFF),
     staticBlack = Color(0xFF000000),
 
+    orange99 = Color(0xFFFFF8F5),
+
     materialDimmer = Color(0x85171719),
 
     semanticFillString = Color(0x2970737C),
@@ -97,6 +99,8 @@ data class YappColorScheme(
     val staticWhite: Color,
     val staticBlack: Color,
 
+    val orange99: Color,
+
     val materialDimmer: Color,
 
     val semanticFillString: Color,
@@ -136,6 +140,7 @@ val LocalColorScheme = staticCompositionLocalOf {
         statusNegative = Color.Unspecified,
         staticWhite = Color.Unspecified,
         staticBlack = Color.Unspecified,
+        orange99 = Color.Unspecified,
         materialDimmer = Color.Unspecified,
         semanticFillString = Color.Unspecified,
         skeleton = Brush.linearGradient(

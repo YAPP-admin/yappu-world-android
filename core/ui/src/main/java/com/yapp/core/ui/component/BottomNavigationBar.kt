@@ -29,7 +29,7 @@ import com.yapp.core.designsystem.theme.YappTheme
 @Composable
 fun BottomNavigationBar(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = Color.White,
+    backgroundColor: Color = YappTheme.colorScheme.staticWhite,
     borderWidth: Dp = 1.dp,
     content: @Composable RowScope.() -> Unit
 ) {
