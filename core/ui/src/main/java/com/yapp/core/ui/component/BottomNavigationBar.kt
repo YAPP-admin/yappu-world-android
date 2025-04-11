@@ -48,21 +48,18 @@ fun BottomNavigationBar(
             },
         color = backgroundColor,
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 4.dp)
-                .selectableGroup()
+                .padding(
+                    horizontal = 20.dp,
+                    vertical = 4.dp
+                )
+                .selectableGroup(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                content()
-            }
+            content()
         }
     }
 }
