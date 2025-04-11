@@ -37,9 +37,15 @@ fun rememberNavigator(
 class NavigatorState(
     val navController: NavHostController,
 ) {
-    private val currentDestination: NavDestination?
+    val currentDestination: NavDestination?
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
+
+    val shouldShowBottomBar: Boolean
+        @Composable get() {
+            val topLevelRoutes = TopLevelDestination.entries.map { it.route.qualifiedName }
+            return currentDestination?.route in topLevelRoutes
+        }
 
     var startDestination: Any by mutableStateOf(LoginRoute)
 
