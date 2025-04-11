@@ -17,7 +17,6 @@ enum class TopLevelDestination(
         unselectedIcon = R.drawable.icon_home_unselected,
         iconTextId = R.string.menu_home,
         route = com.yapp.feature.home.navigation.HomeRoute::class,
-        baseRoute = com.yapp.feature.home.navigation.HomeBaseRoute::class
     ),
     SCHEDULE(
         selectedIcon = R.drawable.icon_schedule_selected,

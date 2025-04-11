@@ -25,7 +25,7 @@ import com.yapp.dataapi.OperationsRepository
 import com.yapp.domain.CheckLoginStatusUseCase
 import com.yapp.domain.UpdateDeviceAlarmUseCase
 import com.yapp.domain.runCatchingIgnoreCancelled
-import com.yapp.feature.home.navigation.HomeBaseRoute
+import com.yapp.feature.home.navigation.HomeRoute
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -70,7 +70,7 @@ class MainActivity : ComponentActivity() {
 
             LaunchedEffect(Unit) {
                 if (checkLoginStatusUseCase()) {
-                    navigator.startDestination = HomeBaseRoute
+                    navigator.startDestination = HomeRoute
                 }
                 showSplashScreen = false
             }
