@@ -61,7 +61,7 @@ class NavigatorState(
         navController.navigateToHome(navOptions = navOptions)
     }
 
-    fun navigateToScheduleScreen(navOptions: NavOptions? = null) {
+    fun navigateScheduleScreen(navOptions: NavOptions? = null) {
         navController.navigateToSchedule(navOptions = navOptions)
     }
 
