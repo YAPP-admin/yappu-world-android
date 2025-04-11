@@ -43,6 +43,7 @@ dependencies {
     implementation(projects.feature.signup)
     implementation(projects.feature.login)
     implementation(projects.core.designsystem)
+    implementation(projects.core.ui)
     implementation(projects.core.data)
     implementation(projects.core.dataApi)
     implementation(projects.core.domain)
