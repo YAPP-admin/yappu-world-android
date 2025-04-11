@@ -1,5 +1,8 @@
 package com.yapp.app.official.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -18,15 +21,20 @@ import kotlin.reflect.KClass
 fun YappApp(navigator: NavigatorState) {
     Scaffold(
         bottomBar = {
-            val destinations = TopLevelDestination.entries
-            val currentDestination = navigator.navController.currentDestination
-            YappBottomNavigationBar(
-                destinations = destinations,
-                currentDestination = currentDestination,
-                onNavigateToDestination = { destination ->
-                    navigator.navigateToTopLevelDestination(destination)
-                }
-            )
+            AnimatedVisibility(
+                navigator.shouldShowBottomBar,
+                enter = slideInVertically { it },
+                exit = slideOutVertically { it },
+            ) {
+                val destinations = TopLevelDestination.entries
+                YappBottomNavigationBar(
+                    destinations = destinations,
+                    currentDestination = navigator.currentDestination,
+                    onNavigateToDestination = { destination ->
+                        navigator.navigateToTopLevelDestination(destination)
+                    }
+                )
+            }
         },
     ) { padding ->
         YappNavHost(navigator, modifier = Modifier.padding(padding))
@@ -44,7 +52,7 @@ private fun YappBottomNavigationBar(
         modifier = modifier
     ) {
         destinations.forEach { destination ->
-            val selected = currentDestination.isRouteInHierarchy(destination.route)
+            val selected = currentDestination.isRouteInHierarchy(destination.baseRoute)
 
             BottomNavigationBarItem(
                 selected = selected,
@@ -65,7 +73,3 @@ private fun NavDestination?.isRouteInHierarchy(route: KClass<*>) =
     this?.hierarchy?.any {
         it.hasRoute(route)
     } ?: false
-
-private fun NavDestination?.isCurrentRoute(route: KClass<*>): Boolean {
-    return this?.route == route.simpleName
-}
