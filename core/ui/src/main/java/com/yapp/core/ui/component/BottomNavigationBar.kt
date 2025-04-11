@@ -15,10 +15,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
@@ -26,7 +22,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.theme.YappTheme
@@ -80,10 +75,10 @@ fun BottomNavigationBarItem(
     @StringRes iconTextId: Int,
     @DrawableRes selectedIcon: Int,
     @DrawableRes unselectedIcon: Int,
-    selectedContentColor: Color,
-    unselectedContentColor: Color,
-    selectedBackgroundColor: Color,
-    unselectedBackgroundColor: Color,
+    selectedContentColor: Color = YappTheme.colorScheme.primaryNormal,
+    unselectedContentColor: Color = YappTheme.colorScheme.labelAssistive,
+    selectedBackgroundColor: Color = Color(0xFFFFF8F5),
+    unselectedBackgroundColor: Color = YappTheme.colorScheme.staticWhite,
     onClick: () -> Unit
 ) {
     val contentColor = if (selected) selectedContentColor else unselectedContentColor
@@ -116,27 +111,6 @@ fun BottomNavigationBarItem(
                 style = YappTheme.typography.caption2Bold,
                 color = contentColor
             )
-        }
-    }
-}
-
-@Preview
-@Composable
-fun BottomNavigationBarItemPreview() {
-    YappTheme {
-        var isSelected by remember { mutableStateOf(false) }
-
-        BottomNavigationBarItem(
-            selected = isSelected,
-            iconTextId = com.yapp.core.designsystem.R.string.icon_home,
-            selectedIcon = com.yapp.core.designsystem.R.drawable.icon_home_selected,
-            unselectedIcon = com.yapp.core.designsystem.R.drawable.icon_home_unselected,
-            selectedContentColor = YappTheme.colorScheme.primaryNormal,
-            unselectedContentColor = YappTheme.colorScheme.labelAssistive,
-            selectedBackgroundColor = Color(0xFFFFF8F5),
-            unselectedBackgroundColor = YappTheme.colorScheme.staticWhite
-        ) {
-            isSelected = !isSelected
         }
     }
 }

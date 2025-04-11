@@ -1,4 +1,4 @@
-package com.yapp.featrue.profile.navigation
+package com.yapp.feature.profile.navigation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
