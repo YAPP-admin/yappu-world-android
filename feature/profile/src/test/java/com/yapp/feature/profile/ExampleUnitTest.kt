@@ -1,4 +1,4 @@
-package com.yapp.featrue.profile
+package com.yapp.feature.profile
 
 import org.junit.Assert.*
 import org.junit.Test
