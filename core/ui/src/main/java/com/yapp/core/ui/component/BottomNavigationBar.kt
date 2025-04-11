@@ -46,7 +46,6 @@ fun BottomNavigationBar(
                     strokeWidth = borderWidth.toPx()
                 )
             },
-        shadowElevation = 10.dp,
         color = backgroundColor,
     ) {
         Column(
