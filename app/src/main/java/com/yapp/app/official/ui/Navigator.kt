@@ -17,6 +17,7 @@ import com.yapp.feature.login.navigation.LoginRoute
 import com.yapp.feature.login.navigation.navigateToLogin
 import com.yapp.feature.notice.navigation.navigateToNotice
 import com.yapp.feature.notice.navigation.navigateToNoticeDetail
+import com.yapp.feature.schedule.navigation.navigateToSchedule
 import com.yapp.feature.signup.navigation.navigateToSignUp
 
 
@@ -49,6 +50,10 @@ class NavigatorState(
 
     fun navigateHomeScreen(navOptions: NavOptions? = null) {
         navController.navigateToHome(navOptions = navOptions)
+    }
+
+    fun navigateToScheduleScreen(navOptions: NavOptions? = null) {
+        navController.navigateToSchedule(navOptions = navOptions)
     }
 
     fun navigateProfileScreen(navOptions: NavOptions? = null) {
