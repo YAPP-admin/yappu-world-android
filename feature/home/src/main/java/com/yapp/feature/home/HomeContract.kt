@@ -8,7 +8,7 @@ data class HomeState(
     val name : String = "",
     val role : UserRole = UserRole.ACTIVE,
     val activityUnits : List<ActivityUnit> = listOf(ActivityUnit(position = "", generation = 0)),
-    var noticeInfo: NoticeList = NoticeList(notices = listOf(), lastNoticeId = "", hasNext = false),
+    val noticeInfo: NoticeList = NoticeList(notices = listOf(), lastNoticeId = "", hasNext = false),
     val isLoading: Boolean = true,  // 전체 스켈레톤 여부
     val isUserInfoLoading: Boolean = true, // 사용자 정보 로딩 여부
     val isNoticesLoading: Boolean = true,  // 공지사항 로딩 여부
