@@ -20,6 +20,7 @@ sealed interface NoticeIntent {
     data object ClickBackButton : NoticeIntent
     data class ClickNoticeType(val noticeType: NoticeType) : NoticeIntent
     data class ClickNoticeItem(val noticeId: String) : NoticeIntent
+    data object LoadMoreNoticeItem : NoticeIntent
 }
 
 sealed interface NoticeSideEffect {

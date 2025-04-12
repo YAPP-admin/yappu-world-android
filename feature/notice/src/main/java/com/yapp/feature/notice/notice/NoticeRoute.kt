@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.component.gradient.GradientBottom
 import com.yapp.core.designsystem.component.header.YappHeaderActionbarExpanded
+import com.yapp.core.designsystem.extension.OnBottomReached
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.NoticeItem
 import com.yapp.core.ui.component.NoticeLoadingItem
@@ -67,6 +70,8 @@ fun NoticeScreen(
     uiState: NoticeState = NoticeState(),
     onIntent: (NoticeIntent) -> Unit = {},
 ) {
+    val lazyScrollState = rememberLazyListState()
+
     YappBackground {
         Column {
             YappHeaderActionbarExpanded(
@@ -131,6 +136,7 @@ fun NoticeScreen(
                     LazyColumn(
                         modifier = Modifier.padding(horizontal = 20.dp),
                         contentPadding = PaddingValues(vertical = 16.dp),
+                        state = lazyScrollState
                     ) {
                         if (uiState.isNoticesLoading) {
                             items(count = 7) {
@@ -162,6 +168,10 @@ fun NoticeScreen(
             }
         }
 
+    }
+
+    lazyScrollState.OnBottomReached {
+        onIntent.invoke(NoticeIntent.LoadMoreNoticeItem)
     }
 }
 
