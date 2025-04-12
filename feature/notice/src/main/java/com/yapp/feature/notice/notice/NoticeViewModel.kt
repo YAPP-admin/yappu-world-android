@@ -30,7 +30,7 @@ class NoticeViewModel @Inject constructor(
     ) {
         when (intent) {
             NoticeIntent.ClickBackButton -> postSideEffect(NoticeSideEffect.NavigateToBack)
-            NoticeIntent.EnterNoticeScreen -> loadInitNoticeList(state, reduce)
+            NoticeIntent.EnterNoticeScreen -> loadNotices(state, reduce)
             is NoticeIntent.ClickNoticeItem -> postSideEffect(
                 NoticeSideEffect.NavigateToNoticeDetail(intent.noticeId)
             )
@@ -38,18 +38,24 @@ class NoticeViewModel @Inject constructor(
             is NoticeIntent.ClickNoticeType -> {
                 loadNoticeTypeList(reduce, intent.noticeType)
             }
+
+            NoticeIntent.LoadMoreNoticeItem -> if (state.notices.hasNext) loadNotices(state, reduce)
         }
     }
 
-    private fun loadInitNoticeList(
+    private fun loadNotices(
         state: NoticeState,
         reduce: (NoticeState.() -> NoticeState) -> Unit,
     ) = viewModelScope.launch {
-        reduce { copy(isNoticesLoading = true) }
+
+        if (state.isNoticeEmpty) {
+            reduce { copy(isNoticesLoading = true) }
+        }
+
         getNoticeListRepository
-            .getNoticeList(null, 30, state.noticeType.apiValue)
+            .getNoticeList(state.notices.lastNoticeId.ifEmpty { null }, 30, state.noticeType.apiValue)
             .collectLatest { noticeList ->
-                reduce { copy(notices = noticeList, isNoticesLoading = false) }
+                reduce { copy(notices = noticeList.copy(notices = noticeList.notices + state.notices.notices), isNoticesLoading = false) }
             }
     }
 
