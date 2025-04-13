@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="schedule_screen_title">일정</string>
+    <string name="schedule_tab_all">전체</string>
+    <string name="schedule_tab_session">세션</string>
 </resources>
