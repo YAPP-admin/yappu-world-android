@@ -171,7 +171,7 @@ fun NoticeScreen(
     }
 
     lazyScrollState.OnBottomReached {
-        onIntent.invoke(NoticeIntent.LoadMoreNoticeItem)
+        onIntent(NoticeIntent.LoadMoreNoticeItem)
     }
 }
 
