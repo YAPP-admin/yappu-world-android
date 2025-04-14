@@ -32,6 +32,12 @@ android {
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
         }
+
+        create("qa") {
+            initWith(getByName("release"))
+            signingConfig = signingConfigs.getByName("release")
+            matchingFallbacks += listOf("release")
+        }
     }
 }
 
