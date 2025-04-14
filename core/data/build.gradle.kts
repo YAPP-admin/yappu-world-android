@@ -1,6 +1,7 @@
 import com.yapp.app.setNamespace
 import org.gradle.internal.extensions.stdlib.capitalized
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.Properties
 
 plugins {
     id("yapp.android.library")
@@ -13,6 +14,25 @@ android {
 
     buildFeatures {
         buildConfig = true
+    }
+
+    buildTypes {
+        val localProperties = Properties()
+        localProperties.load(
+            project.rootProject.file("local.properties").bufferedReader()
+        )
+
+        getByName("debug") {
+            buildConfigField("String", "BASE_URL", "\"${localProperties["base.url.debug"]}\"")
+        }
+        getByName("release") {
+            buildConfigField("String", "BASE_URL", "\"${localProperties["base.url.release"]}\"")
+        }
+        create("qa") {
+            initWith(getByName("release"))
+            matchingFallbacks += listOf("release")
+            buildConfigField("String", "BASE_URL", "\"${localProperties["base.url.qa"]}\"")
+        }
     }
 }
 
