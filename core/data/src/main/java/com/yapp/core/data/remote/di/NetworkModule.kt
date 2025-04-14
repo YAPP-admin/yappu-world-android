@@ -26,12 +26,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 internal object NetworkModule {
 
-    private val BASE_URL: String
-        get() = if (BuildConfig.DEBUG) {
-            "https://dev-yappuworld.yapp.co.kr/"
-        } else {
-            "https://api-yappuworld.yapp.co.kr/"
-        }
+    private const val BASE_URL: String = BuildConfig.BASE_URL
 
     @Singleton
     @Provides
