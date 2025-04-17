@@ -18,7 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.feature.schedule.R
 
 @Composable
 internal fun SessionItem(
@@ -82,7 +81,7 @@ internal fun SessionItem(
             Spacer(modifier = Modifier.height(6.dp))
 
             IconWithText(
-                iconResId = R.drawable.icon_time,
+                iconResId = com.yapp.core.designsystem.R.drawable.icon_time,
                 text = time,
                 contentDescription = null,
             )
@@ -90,7 +89,7 @@ internal fun SessionItem(
             Spacer(modifier = Modifier.height(4.dp))
 
             IconWithText(
-                iconResId = R.drawable.icon_location,
+                iconResId = com.yapp.core.designsystem.R.drawable.icon_location,
                 text = location,
                 contentDescription = null,
             )
