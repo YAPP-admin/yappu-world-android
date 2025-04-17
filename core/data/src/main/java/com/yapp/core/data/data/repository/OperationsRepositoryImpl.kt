@@ -65,8 +65,12 @@ internal class OperationsRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getAppVersion(): String {
+        return context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: ""
+    }
+
     override suspend fun isForceUpdateRequired(): Boolean {
-        val version = context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: ""
+        val version = getAppVersion()
         return operationsApi.isForceUpdateRequired(
             version = version,
         ).needForceUpdate
