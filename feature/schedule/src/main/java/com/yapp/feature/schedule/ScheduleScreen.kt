@@ -141,57 +141,35 @@ private fun ScheduleSessionScreen(
             )
         }
 
-        item {
-            SessionItem(
-                id = 1,
-                title = "세션 제목",
-                status = AttendanceStatus.SCHEDULED,
-                date = "12. 6",
-                dayOfWeek = "금",
-                location = "공덕 창업허브",
-                time = "오후 2시 - 오후 6시",
-                onClick = {}
-            )
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .padding(horizontal = 20.dp)
-                    .background(YappTheme.colorScheme.lineNormalAlternative)
-            )
-        }
+        val statuses = listOf(
+            AttendanceStatus.SCHEDULED,
+            AttendanceStatus.ATTENDED,
+            AttendanceStatus.LATE
+        )
 
-        item {
-            SessionItem(
-                id = 2,
-                title = "세션 제목",
-                status = AttendanceStatus.ATTENDED,
-                date = "12. 5",
-                dayOfWeek = "금",
-                location = "공덕 창업허브",
-                time = "오후 2시 - 오후 6시",
-                onClick = {}
-            )
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .padding(horizontal = 20.dp)
-                    .background(YappTheme.colorScheme.lineNormalAlternative)
-            )
-        }
+        statuses.forEachIndexed { index, status ->
+            item {
+                SessionItem(
+                    id = index.toLong(),
+                    title = "세션 제목",
+                    status = status,
+                    date = "12. ${6 - index}",
+                    dayOfWeek = "금",
+                    location = "공덕 창업허브",
+                    time = "오후 2시 - 오후 6시",
+                    onClick = {}
+                )
 
-        item {
-            SessionItem(
-                id = 3,
-                title = "세션 제목",
-                status = AttendanceStatus.LATE,
-                date = "12. 4",
-                dayOfWeek = "금",
-                location = "공덕 창업허브",
-                time = "오후 2시 - 오후 6시",
-                onClick = {}
-            )
+                if (index != statuses.lastIndex) {
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .padding(horizontal = 20.dp)
+                            .background(YappTheme.colorScheme.lineNormalAlternative)
+                    )
+                }
+            }
         }
     }
 }
