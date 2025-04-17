@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.theme.YappTheme
+import com.yapp.feature.schedule.component.AssignmentItem
 import com.yapp.feature.schedule.component.AttendanceStatus
 import com.yapp.feature.schedule.component.ScheduleTabRow
 import com.yapp.feature.schedule.component.SessionItem
@@ -53,6 +54,7 @@ internal fun ScheduleScreen(
     ) {
         ScheduleHeader()
         Spacer(modifier = Modifier.height(6.dp))
+
         ScheduleTabRow(
             selectedTabIndex = selectedTabIndex,
             tabList = listOf(
@@ -62,22 +64,20 @@ internal fun ScheduleScreen(
             onTabSelected = { selectedTabIndex = it }
         )
 
-        if (selectedTabIndex == 0) {
-            ScheduleAllScreen()
-        } else {
-            ScheduleSessionScreen()
+        when (selectedTabIndex) {
+            0 -> ScheduleAllScreen()
+            1 -> ScheduleSessionScreen()
         }
     }
 }
 
 @Composable
 private fun ScheduleAllScreen() {
-    LazyColumn(
-        modifier = Modifier.padding(horizontal = 20.dp)
-    ) {
+    LazyColumn {
         item {
             Spacer(modifier = Modifier.height(20.dp))
             MonthHeader(
+                modifier = Modifier.padding(horizontal = 20.dp),
                 year = 2024,
                 month = 12,
                 onPreviousMonthClick = {},
@@ -86,7 +86,51 @@ private fun ScheduleAllScreen() {
             Spacer(modifier = Modifier.height(8.dp))
         }
 
+        val statuses = listOf(
+            AttendanceStatus.SCHEDULED,
+            AttendanceStatus.ATTENDED,
+            AttendanceStatus.LATE
+        )
 
+        for (index in 0..6) {
+            item {
+                SessionItem(
+                    id = index.toLong(),
+                    title = "세션 제목",
+                    assignmentTitle = if (index == 1) "과제 제목" else null,
+                    assignmentContent = if (index == 1) "과제 내용" else null,
+                    status = statuses[index % statuses.size],
+                    date = "${9 - index}",
+                    dayOfWeek = "금",
+                    isToday = index == 0,
+                    isPast = index > 0,
+                    location = "공덕 창업허브",
+                    time = "오후 2시 - 오후 6시",
+                    onClick = {}
+                )
+
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .padding(horizontal = 20.dp)
+                        .background(YappTheme.colorScheme.lineNormalAlternative)
+                )
+            }
+        }
+
+        item {
+            AssignmentItem(
+                id = 0,
+                title = "과제 제목",
+                content = "과제 내용",
+                date = "2",
+                dayOfWeek = "금",
+                isToday = false,
+                isPast = true,
+                onClick = {}
+            )
+        }
     }
 }
 
@@ -147,13 +191,13 @@ private fun ScheduleSessionScreen(
             AttendanceStatus.LATE
         )
 
-        statuses.forEachIndexed { index, status ->
+        for (index in 0..7) {
             item {
                 SessionItem(
                     id = index.toLong(),
                     title = "세션 제목",
-                    status = status,
-                    date = "12. ${6 - index}",
+                    status = statuses[index % statuses.size],
+                    date = "12. ${9 - index}",
                     dayOfWeek = "금",
                     isToday = index == 0,
                     isPast = index > 0,
@@ -162,7 +206,7 @@ private fun ScheduleSessionScreen(
                     onClick = {}
                 )
 
-                if (index != statuses.lastIndex) {
+                if (index != 7) {
                     Spacer(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -198,12 +242,14 @@ private fun ScheduleHeader(
 
 @Composable
 private fun MonthHeader(
+    modifier: Modifier = Modifier,
     year: Int,
     month: Int,
     onPreviousMonthClick: () -> Unit,
     onNextMonthClick: () -> Unit,
 ) {
     Row(
+        modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
