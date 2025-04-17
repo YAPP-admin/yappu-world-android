@@ -88,7 +88,7 @@ internal fun AssignmentItem(
     showBackground = true
 )
 @Composable
-private  fun AssignmentItemPreview() {
+private fun AssignmentItemPreview() {
     YappTheme {
         AssignmentItem(
             id = 0,

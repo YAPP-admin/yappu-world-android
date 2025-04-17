@@ -54,7 +54,7 @@ fun ScheduleTabRow(
             tabList.forEachIndexed { index, tab ->
                 ScheduleTab(
                     label = tab,
-                    selected = selectedTabIndex== index,
+                    selected = selectedTabIndex == index,
                     onClick = {
                         onTabSelected(index)
                     }
@@ -103,7 +103,7 @@ private fun ScheduleTab(
 
 @Preview
 @Composable
-fun ExploreTabRowPreview() {
+private fun ScheduleTabRowPreview() {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
     YappTheme {

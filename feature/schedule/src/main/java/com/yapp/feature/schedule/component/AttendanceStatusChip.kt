@@ -19,7 +19,6 @@ enum class AttendanceStatus {
     LATE
 }
 
-
 @Composable
 internal fun AttendanceStatusChip(
     status: AttendanceStatus,
