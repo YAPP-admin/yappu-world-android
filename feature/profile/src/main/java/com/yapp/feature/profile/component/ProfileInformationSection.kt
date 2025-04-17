@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.component.chip.ChipColorType
-import com.yapp.core.designsystem.component.chip.YappChipLarge
+import com.yapp.core.designsystem.component.chip.YappChipSmall
 import com.yapp.core.designsystem.theme.YappTheme
 
 @Composable
@@ -32,7 +32,7 @@ internal fun ProfileInformationSection(
         Column {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(text = userName, style = YappTheme.typography.title2Bold)
-                YappChipLarge(text = userRole, colorType = ChipColorType.Main, isFill = true)
+                YappChipSmall(text = userRole, colorType = ChipColorType.Main, isFill = true)
             }
             Text("${userGeneration}, $userPosition")
         }
