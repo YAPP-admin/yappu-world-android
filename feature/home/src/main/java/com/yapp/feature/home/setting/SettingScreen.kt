@@ -2,7 +2,6 @@ package com.yapp.feature.home.setting
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -18,8 +17,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.yapp.core.designsystem.component.alert.YappAlertDialog
-import com.yapp.core.designsystem.component.button.outlined.YappOutlinedSecondaryButtonXLarge
 import com.yapp.core.designsystem.component.control.switches.YappSwitchMedium
 import com.yapp.core.designsystem.component.header.YappHeaderActionbarExpanded
 import com.yapp.core.designsystem.theme.YappTheme
