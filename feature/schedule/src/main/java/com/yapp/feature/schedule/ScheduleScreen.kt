@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -20,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -253,12 +253,23 @@ private fun MonthHeader(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            modifier = Modifier.yappClickable { onPreviousMonthClick() },
-            painter = painterResource(id = R.drawable.icon_arrow_left),
-            contentDescription = null,
-            tint = Color.Unspecified
-        )
+        Box(
+            modifier = Modifier
+                .size(24.dp)
+                .yappClickable(
+                    rippleBounded = false,
+                    rippleRadius = 24.dp
+                ) {
+                    onPreviousMonthClick()
+                },
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                painter = painterResource(id = com.yapp.core.designsystem.R.drawable.icon_chevron_left),
+                contentDescription = null,
+                tint = YappTheme.colorScheme.labelAssistive
+            )
+        }
 
         Text(
             text = "${year}년 ${month}월",
@@ -267,10 +278,15 @@ private fun MonthHeader(
         )
 
         Icon(
-            modifier = Modifier.yappClickable { onNextMonthClick() },
-            painter = painterResource(id = R.drawable.icon_arrow_right),
+            modifier = Modifier.yappClickable(
+                rippleBounded = false,
+                rippleRadius = 24.dp
+            ) {
+                onNextMonthClick()
+            },
+            painter = painterResource(id = com.yapp.core.designsystem.R.drawable.icon_chevron_right),
             contentDescription = null,
-            tint = Color.Unspecified
+            tint = YappTheme.colorScheme.labelAssistive
         )
     }
 }
