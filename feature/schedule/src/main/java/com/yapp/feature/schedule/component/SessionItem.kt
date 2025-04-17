@@ -68,7 +68,7 @@ internal fun SessionItem(
             )
         }
 
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.width(20.dp))
 
         Column(modifier = Modifier.weight(1f)) {
             Spacer(modifier = Modifier.height(2.dp))
