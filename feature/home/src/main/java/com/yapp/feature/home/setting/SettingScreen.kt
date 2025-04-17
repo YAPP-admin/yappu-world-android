@@ -152,63 +152,19 @@ fun SettingScreen(
                         .borderBottom(
                             color = YappTheme.colorScheme.lineNormalAlternative,
                         ),
-                    text = stringResource(id = R.string.setting_screen_item_inquiry),
+                    text = stringResource(id = R.string.setting_screen_item_app_version),
                     onClick = {
                         onIntent(SettingIntent.ClickInquiryItem)
                     },
                     slot = {
-                        Icon(
-                            painter = painterResource(id = com.yapp.core.designsystem.R.drawable.icon_chevron_right),
-                            contentDescription = null,
-                            tint = YappTheme.colorScheme.labelAssistive,
+                        Text(
+                            text = uiState.appVersion,
+                            style = YappTheme.typography.body1NormalRegular,
+                            color = YappTheme.colorScheme.labelAlternative
                         )
                     }
                 )
-
-                SettingItemLarge(
-                    text = stringResource(id = R.string.setting_screen_item_delete_account),
-                    onClick = {
-                        onIntent(SettingIntent.ClickDeleteAccountItem)
-                    }
-                )
             }
-
-            Spacer(Modifier.weight(1f))
-
-            YappOutlinedSecondaryButtonXLarge(
-                modifier = Modifier
-                    .padding(horizontal = 20.dp)
-                    .fillMaxWidth(),
-                text = stringResource(id = R.string.setting_screen_item_logout),
-                onClick = {
-                    onIntent(SettingIntent.ClickLogoutItem)
-                }
-            )
-
-            Spacer(Modifier.height(16.dp))
-        }
-
-        if (uiState.showLogoutDialog) {
-            YappAlertDialog(
-                title = stringResource(R.string.logout_dialog_title),
-                actionButtonText = stringResource(R.string.logout_dialog_action_button),
-                recommendActionButtonText = stringResource(R.string.logout_dialog_recommend_action_button),
-                onDismissRequest = { onIntent(SettingIntent.DismissLogoutDialog) },
-                onActionButtonClick = { onIntent(SettingIntent.ClickLogoutDialogCancelButton) },
-                onRecommendActionButtonClick = { onIntent(SettingIntent.ClickLogoutDialogLogoutButton) },
-            )
-        }
-
-        if (uiState.showDeleteAccountDialog) {
-            YappAlertDialog(
-                title = stringResource(R.string.delete_account_dialog_title),
-                body = stringResource(R.string.delete_account_dialog_body),
-                actionButtonText = stringResource(R.string.delete_account_dialog_action_button),
-                recommendActionButtonText = stringResource(R.string.delete_account_dialog_recommend_action_button),
-                onDismissRequest = { onIntent(SettingIntent.DismissDeleteAccountDialog) },
-                onActionButtonClick = { onIntent(SettingIntent.ClickDeleteAccountDialogCancelButton) },
-                onRecommendActionButtonClick = { onIntent(SettingIntent.ClickDeleteAccountDialogDeleteButton) },
-            )
         }
     }
 }
