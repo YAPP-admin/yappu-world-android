@@ -18,7 +18,6 @@ import com.yapp.core.designsystem.component.chip.YappChipSmall
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.extension.dashedBorder
-import com.yapp.feature.schedule.R
 
 @Composable
 internal fun TodaySessionSection(
@@ -74,7 +73,7 @@ internal fun TodaySessionSection(
         Spacer(modifier = Modifier.height(12.dp))
 
         IconWithText(
-            iconResId = R.drawable.icon_location,
+            iconResId = com.yapp.core.designsystem.R.drawable.icon_location,
             text = location,
             contentDescription = null,
         )
@@ -82,7 +81,7 @@ internal fun TodaySessionSection(
         Spacer(modifier = Modifier.height(4.dp))
 
         IconWithText(
-            iconResId = R.drawable.icon_time,
+            iconResId = com.yapp.core.designsystem.R.drawable.icon_time,
             text = time,
             contentDescription = null,
         )
