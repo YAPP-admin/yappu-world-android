@@ -77,6 +77,8 @@ fun YappNavHost(
         noticeDetailNavGraph(
             navigateBack = { navigator.popBackStack() }
         )
-        profileNavGraph()
+        profileNavGraph(
+            onNavigateToSetting = { navigator.navigateSettingScreen() }
+        )
     }
 }
