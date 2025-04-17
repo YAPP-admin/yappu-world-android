@@ -27,19 +27,22 @@ internal fun SessionItem(
     status: AttendanceStatus,
     date: String,
     dayOfWeek: String,
+    isPast: Boolean = false,
+    isToday: Boolean = false,
     location: String,
     time: String,
     onClick: (Long) -> Unit,
 ) {
+    val dateColor = if (isToday) {
+        YappTheme.colorScheme.primaryNormal
+    } else {
+        YappTheme.colorScheme.labelNeutral
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .graphicsLayer {
-                alpha = when (status) {
-                    AttendanceStatus.SCHEDULED -> 1f
-                    AttendanceStatus.ATTENDED, AttendanceStatus.LATE -> 0.5f
-                }
-            }
+            .graphicsLayer { if (isPast) alpha = 0.5f }
             .clickable { onClick(id) }
             .padding(
                 horizontal = 20.dp,
@@ -53,13 +56,13 @@ internal fun SessionItem(
             Text(
                 text = date,
                 style = YappTheme.typography.body1NormalBold,
-                color = YappTheme.colorScheme.labelNeutral
+                color = dateColor
             )
 
             Text(
                 text = "(${dayOfWeek})",
                 style = YappTheme.typography.caption1Medium,
-                color = YappTheme.colorScheme.labelNeutral
+                color = dateColor
             )
         }
 
