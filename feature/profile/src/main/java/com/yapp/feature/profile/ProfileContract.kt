@@ -17,7 +17,7 @@ sealed interface ProfileIntent {
     data object OnClickAttendHistory : ProfileIntent
     data object OnClickPreviousHistory : ProfileIntent
     data object OnClickUsage : ProfileIntent
-    data object OnClickWithDraw : ProfileIntent
+    data object OnClickWithdraw : ProfileIntent
     data object OnClickLogout : ProfileIntent
     data object OnCancelLogout : ProfileIntent
     data object OnDismissLogout : ProfileIntent
