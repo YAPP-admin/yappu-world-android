@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.theme.YappTheme
@@ -84,25 +85,54 @@ private fun ScheduleAllScreen() {
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
+
+
     }
 }
 
 @Composable
-private fun ScheduleSessionScreen() {
+private fun ScheduleSessionScreen(
+    hasTodaySession: Boolean = true,
+) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth()
     ) {
         item {
-            TodaySessionSection(
-                id = 0,
-                title = "오늘의 세션",
-                date = "2024.12.25",
-                dayOfWeek = "화요일",
-                location = "서울시 강남구",
-                time = "오후 2:00 - 오후 3:00",
-                remainingDays = 2,
-                onClick = {}
-            )
+            Column(
+                modifier = Modifier.padding(20.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.today_session_section_title),
+                    style = YappTheme.typography.headline2Bold,
+                    color = YappTheme.colorScheme.labelNormal
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                if (hasTodaySession) {
+                    TodaySessionSection(
+                        id = 0,
+                        title = "오늘의 세션",
+                        date = "2024.12.25",
+                        dayOfWeek = "화요일",
+                        location = "서울시 강남구",
+                        time = "오후 2:00 - 오후 3:00",
+                        remainingDays = 2,
+                        onClick = {}
+                    )
+                } else {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 12.dp),
+                        text = stringResource(id = R.string.today_session_empty_message),
+                        style = YappTheme.typography.label2Regular,
+                        color = YappTheme.colorScheme.labelAlternative,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+            }
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -221,7 +251,7 @@ private fun MonthHeader(
 
 @Preview(showBackground = true)
 @Composable
-private fun ScheduleHeaderPreview() {
+private fun ScheduleScreenPreview() {
     YappTheme {
         ScheduleRoute()
     }

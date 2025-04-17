@@ -12,7 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.component.chip.ChipColorType
@@ -35,72 +34,58 @@ internal fun TodaySessionSection(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(20.dp)
+            .clickable { onClick(id) }
+            .dashedBorder(
+                color = Color(0xFFFED9CB),
+                dashLength = 2.dp,
+                gapLength = 2.dp,
+                cornerRadius = 10.dp,
+            )
+            .padding(12.dp)
     ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                modifier = Modifier.padding(top = 2.dp),
+                text = title,
+                style = YappTheme.typography.body1ReadingBold,
+                color = YappTheme.colorScheme.labelNormal
+            )
+
+            YappChipSmall(
+                text = if (remainingDays > 0) {
+                    "D-${remainingDays}"
+                } else {
+                    "D-day"
+                },
+                colorType = ChipColorType.Main,
+                isFill = true
+            )
+        }
+
         Text(
-            text = stringResource(id = R.string.today_session_section_title),
-            style = YappTheme.typography.headline2Bold,
-            color = YappTheme.colorScheme.labelNormal
+            text = "$date ($dayOfWeek)",
+            style = YappTheme.typography.caption1Medium,
+            color = YappTheme.colorScheme.labelNeutral
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onClick(id) }
-                .dashedBorder(
-                    color = Color(0xFFFED9CB),
-                    dashLength = 2.dp,
-                    gapLength = 2.dp,
-                    cornerRadius = 10.dp,
-                )
-                .padding(12.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    modifier = Modifier.padding(top = 2.dp),
-                    text = title,
-                    style = YappTheme.typography.body1ReadingBold,
-                    color = YappTheme.colorScheme.labelNormal
-                )
+        IconWithText(
+            iconResId = R.drawable.icon_location,
+            text = location,
+            contentDescription = null,
+        )
 
-                YappChipSmall(
-                    text = if (remainingDays > 0) {
-                        "D-${remainingDays}"
-                    } else {
-                        "D-day"
-                    },
-                    colorType = ChipColorType.Main,
-                    isFill = true
-                )
-            }
+        Spacer(modifier = Modifier.height(4.dp))
 
-            Text(
-                text = "$date ($dayOfWeek)",
-                style = YappTheme.typography.caption1Medium,
-                color = YappTheme.colorScheme.labelNeutral
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            IconWithText(
-                iconResId = R.drawable.icon_location,
-                text = location,
-                contentDescription = null,
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            IconWithText(
-                iconResId = R.drawable.icon_time,
-                text = time,
-                contentDescription = null,
-            )
-        }
+        IconWithText(
+            iconResId = R.drawable.icon_time,
+            text = time,
+            contentDescription = null,
+        )
     }
 }
 
