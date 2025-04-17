@@ -49,7 +49,7 @@ internal class ProfileViewModel @Inject constructor(
             ProfileIntent.OnClickSettings -> {
                 sideEffect(ProfileSideEffect.NavigateToSetting)
             }
-            ProfileIntent.OnClickWithDraw -> {
+            ProfileIntent.OnClickWithdraw -> {
                 reduce {
                     copy(showWithDrawDialog = state.showWithDrawDialog.not())
                 }
