@@ -1,6 +1,5 @@
 package com.yapp.feature.schedule.component
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.component.chip.ChipColorType
 import com.yapp.core.designsystem.component.chip.YappChipSmall
+import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.extension.dashedBorder
 import com.yapp.feature.schedule.R
@@ -34,7 +34,7 @@ internal fun TodaySessionSection(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick(id) }
+            .yappClickable { onClick(id) }
             .dashedBorder(
                 color = Color(0xFFFED9CB),
                 dashLength = 2.dp,

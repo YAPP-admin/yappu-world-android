@@ -1,7 +1,6 @@
 package com.yapp.feature.schedule
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.feature.schedule.component.AssignmentItem
 import com.yapp.feature.schedule.component.AttendanceStatus
@@ -254,7 +254,7 @@ private fun MonthHeader(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            modifier = Modifier.clickable { onPreviousMonthClick() },
+            modifier = Modifier.yappClickable { onPreviousMonthClick() },
             painter = painterResource(id = R.drawable.icon_arrow_left),
             contentDescription = null,
             tint = Color.Unspecified
@@ -267,7 +267,7 @@ private fun MonthHeader(
         )
 
         Icon(
-            modifier = Modifier.clickable { onNextMonthClick() },
+            modifier = Modifier.yappClickable { onNextMonthClick() },
             painter = painterResource(id = R.drawable.icon_arrow_right),
             contentDescription = null,
             tint = Color.Unspecified

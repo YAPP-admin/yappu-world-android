@@ -1,7 +1,6 @@
 package com.yapp.feature.schedule.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.feature.schedule.R
 
@@ -45,7 +45,7 @@ internal fun SessionItem(
         modifier = Modifier
             .fillMaxWidth()
             .graphicsLayer { if (isPast) alpha = 0.5f }
-            .clickable { onClick(id) }
+            .yappClickable { onClick(id) }
             .padding(
                 horizontal = 20.dp,
                 vertical = 16.dp
