@@ -51,7 +51,7 @@ internal class ProfileViewModel @Inject constructor(
             }
             ProfileIntent.OnClickWithDraw -> {
                 reduce {
-                    copy(showWithDrawDialog = state.showLogoutDialog.not())
+                    copy(showWithDrawDialog = state.showWithDrawDialog.not())
                 }
             }
             ProfileIntent.OnClickAttendHistory -> {
