@@ -24,6 +24,8 @@ import com.yapp.feature.schedule.R
 internal fun SessionItem(
     id: Long,
     title: String,
+    assignmentTitle: String? = null,
+    assignmentContent: String? = null,
     status: AttendanceStatus,
     date: String,
     dayOfWeek: String,
@@ -94,6 +96,24 @@ internal fun SessionItem(
             )
 
             Spacer(modifier = Modifier.height(4.dp))
+
+            if (assignmentTitle != null && assignmentContent != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = assignmentTitle,
+                    style = YappTheme.typography.label1NormalBold,
+                    color = YappTheme.colorScheme.labelNormal
+                )
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Text(
+                    text = assignmentContent,
+                    style = YappTheme.typography.caption1Medium,
+                    color = YappTheme.colorScheme.labelNeutral
+                )
+            }
         }
 
         AttendanceStatusChip(status = status)
@@ -129,6 +149,8 @@ private fun PreviewSessionItem() {
             SessionItem(
                 id = 2,
                 title = "세션 제목",
+                assignmentTitle = "과제 제목",
+                assignmentContent = "과제 내용",
                 status = AttendanceStatus.ATTENDED,
                 date = "12. 5",
                 dayOfWeek = "금",
