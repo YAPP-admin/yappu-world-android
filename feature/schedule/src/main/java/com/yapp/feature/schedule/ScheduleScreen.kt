@@ -15,6 +15,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,7 +27,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.theme.YappTheme
+import com.yapp.feature.schedule.component.AttendanceStatus
 import com.yapp.feature.schedule.component.ScheduleTabRow
+import com.yapp.feature.schedule.component.SessionItem
+import com.yapp.feature.schedule.component.TodaySessionSection
 
 @Composable
 internal fun ScheduleRoute(
@@ -36,6 +43,8 @@ internal fun ScheduleRoute(
 internal fun ScheduleScreen(
 
 ) {
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -44,27 +53,115 @@ internal fun ScheduleScreen(
         ScheduleHeader()
         Spacer(modifier = Modifier.height(6.dp))
         ScheduleTabRow(
-            selectedTabIndex = 0,
+            selectedTabIndex = selectedTabIndex,
             tabList = listOf(
                 stringResource(id = R.string.schedule_tab_all),
                 stringResource(id = R.string.schedule_tab_session)
             ),
-            onTabSelected = {}
+            onTabSelected = { selectedTabIndex = it }
         )
 
-        LazyColumn(
-            modifier = Modifier.padding(horizontal = 20.dp)
-        ) {
-            item {
-                Spacer(modifier = Modifier.height(20.dp))
-                MonthHeader(
-                    year = 2024,
-                    month = 12,
-                    onPreviousMonthClick = {},
-                    onNextMonthClick = {}
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
+        if (selectedTabIndex == 0) {
+            ScheduleAllScreen()
+        } else {
+            ScheduleSessionScreen()
+        }
+    }
+}
+
+@Composable
+private fun ScheduleAllScreen() {
+    LazyColumn(
+        modifier = Modifier.padding(horizontal = 20.dp)
+    ) {
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+            MonthHeader(
+                year = 2024,
+                month = 12,
+                onPreviousMonthClick = {},
+                onNextMonthClick = {}
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+    }
+}
+
+@Composable
+private fun ScheduleSessionScreen() {
+    LazyColumn(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        item {
+            TodaySessionSection(
+                id = 0,
+                title = "오늘의 세션",
+                date = "2024.12.25",
+                dayOfWeek = "화요일",
+                location = "서울시 강남구",
+                time = "오후 2:00 - 오후 3:00",
+                remainingDays = 2,
+                onClick = {}
+            )
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(12.dp)
+                    .background(YappTheme.colorScheme.lineNormalAlternative)
+            )
+        }
+
+        item {
+            SessionItem(
+                id = 1,
+                title = "세션 제목",
+                status = AttendanceStatus.SCHEDULED,
+                date = "12. 6",
+                dayOfWeek = "금",
+                location = "공덕 창업허브",
+                time = "오후 2시 - 오후 6시",
+                onClick = {}
+            )
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .padding(horizontal = 20.dp)
+                    .background(YappTheme.colorScheme.lineNormalAlternative)
+            )
+        }
+
+        item {
+            SessionItem(
+                id = 2,
+                title = "세션 제목",
+                status = AttendanceStatus.ATTENDED,
+                date = "12. 5",
+                dayOfWeek = "금",
+                location = "공덕 창업허브",
+                time = "오후 2시 - 오후 6시",
+                onClick = {}
+            )
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .padding(horizontal = 20.dp)
+                    .background(YappTheme.colorScheme.lineNormalAlternative)
+            )
+        }
+
+        item {
+            SessionItem(
+                id = 3,
+                title = "세션 제목",
+                status = AttendanceStatus.LATE,
+                date = "12. 4",
+                dayOfWeek = "금",
+                location = "공덕 창업허브",
+                time = "오후 2시 - 오후 6시",
+                onClick = {}
+            )
         }
     }
 }
