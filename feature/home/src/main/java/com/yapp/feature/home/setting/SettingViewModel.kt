@@ -6,8 +6,6 @@ import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.AlarmRepository
 import com.yapp.dataapi.OperationsRepository
-import com.yapp.domain.DeleteAccountUseCase
-import com.yapp.domain.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -16,9 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingViewModel @Inject constructor(
-    private val logoutUseCase: LogoutUseCase,
     private val alarmRepository: AlarmRepository,
-    private val deleteAccountUseCase: DeleteAccountUseCase,
     private val operationsRepository: OperationsRepository,
 ) : ViewModel() {
     private var privacyPolicyLink: String? = null
@@ -41,7 +37,8 @@ class SettingViewModel @Inject constructor(
             SettingIntent.EnterScreen -> {
                 viewModelScope.launch {
                     val enabled = alarmRepository.getMasterAlarmStatus()
-                    reduce { copy(isNotificationEnabled = enabled) }
+                    val appVersion = operationsRepository.getAppVersion()
+                    reduce { copy(isNotificationEnabled = enabled, appVersion = appVersion) }
                     updateUrl()
                 }
             }
@@ -51,10 +48,6 @@ class SettingViewModel @Inject constructor(
                     val enabled = alarmRepository.updateMasterAlarmStatus()
                     reduce { copy(isNotificationEnabled = enabled) }
                 }
-            }
-
-            SettingIntent.ClickLogoutItem -> {
-                reduce { copy(showLogoutDialog = true) }
             }
 
             SettingIntent.ClickBackButton -> {
@@ -91,34 +84,6 @@ class SettingViewModel @Inject constructor(
                     } ?: run {
                         postSideEffect(SettingSideEffect.ShowUrlLoadFailToast)
                     }
-                }
-            }
-
-            SettingIntent.ClickDeleteAccountItem -> {
-                reduce { copy(showDeleteAccountDialog = true) }
-            }
-
-            SettingIntent.DismissDeleteAccountDialog,
-            SettingIntent.ClickDeleteAccountDialogCancelButton -> {
-                reduce { copy(showDeleteAccountDialog = false) }
-            }
-
-            SettingIntent.DismissLogoutDialog,
-            SettingIntent.ClickLogoutDialogCancelButton -> {
-                reduce { copy(showLogoutDialog = false) }
-            }
-
-            SettingIntent.ClickDeleteAccountDialogDeleteButton -> {
-                viewModelScope.launch {
-                    deleteAccountUseCase()
-                    postSideEffect(SettingSideEffect.NavigateToLogin)
-                }
-            }
-
-            SettingIntent.ClickLogoutDialogLogoutButton -> {
-                viewModelScope.launch {
-                    logoutUseCase()
-                    postSideEffect(SettingSideEffect.NavigateToLogin)
                 }
             }
         }
