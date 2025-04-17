@@ -3,4 +3,6 @@
     <string name="schedule_screen_title">일정</string>
     <string name="schedule_tab_all">전체</string>
     <string name="schedule_tab_session">세션</string>
+
+    <string name="today_session_section_title">오늘의 섹션</string>
 </resources>
