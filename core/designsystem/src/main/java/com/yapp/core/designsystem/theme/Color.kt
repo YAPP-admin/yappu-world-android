@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.Color
 
 internal val LightColorScheme = YappColorScheme(
     primaryNormal = Color(0xFFFA6027),
+    secondaryNormal = Color(0xFFFFAD31),
 
     labelNormal = Color(0xFF171719),
     labelStrong = Color(0xFF000000),
@@ -44,7 +45,12 @@ internal val LightColorScheme = YappColorScheme(
     staticWhite = Color(0xFFFFFFFF),
     staticBlack = Color(0xFF000000),
 
+    accentLightBlue = Color(0xFF00AEFF),
+    accentLightBlueWeak = Color(0xFFE5F7FF),
+
+    coolNeutral50 = Color(0xFF70737C),
     orange99 = Color(0xFFFFF8F5),
+    yellow95 = Color(0xFFFFF7EA),
 
     materialDimmer = Color(0x85171719),
 
@@ -63,6 +69,7 @@ internal val LightColorScheme = YappColorScheme(
 @Immutable
 data class YappColorScheme(
     val primaryNormal: Color,
+    val secondaryNormal: Color,
 
     val labelNormal: Color,
     val labelStrong: Color,
@@ -99,7 +106,12 @@ data class YappColorScheme(
     val staticWhite: Color,
     val staticBlack: Color,
 
+    val accentLightBlue: Color,
+    val accentLightBlueWeak: Color,
+
+    val coolNeutral50: Color,
     val orange99: Color,
+    val yellow95: Color,
 
     val materialDimmer: Color,
 
@@ -112,6 +124,7 @@ data class YappColorScheme(
 val LocalColorScheme = staticCompositionLocalOf {
     YappColorScheme(
         primaryNormal = Color.Unspecified,
+        secondaryNormal = Color.Unspecified,
         labelNormal = Color.Unspecified,
         labelStrong = Color.Unspecified,
         labelNeutral = Color.Unspecified,
@@ -140,7 +153,11 @@ val LocalColorScheme = staticCompositionLocalOf {
         statusNegative = Color.Unspecified,
         staticWhite = Color.Unspecified,
         staticBlack = Color.Unspecified,
+        accentLightBlue = Color.Unspecified,
+        accentLightBlueWeak = Color.Unspecified,
+        coolNeutral50 = Color.Unspecified,
         orange99 = Color.Unspecified,
+        yellow95 = Color.Unspecified,
         materialDimmer = Color.Unspecified,
         semanticFillString = Color.Unspecified,
         skeleton = Brush.linearGradient(
