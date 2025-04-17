@@ -1,7 +1,6 @@
 package com.yapp.feature.schedule.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -23,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
 
 @Composable
@@ -77,7 +77,7 @@ private fun ScheduleTab(
         modifier = modifier
             .width(IntrinsicSize.Max)
             .background(Color.Transparent)
-            .clickable { onClick() },
+            .yappClickable { onClick() },
         contentAlignment = Alignment.BottomCenter
     ) {
         Text(
