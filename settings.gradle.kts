@@ -41,8 +41,8 @@ include(
     ":feature:home",
     ":feature:notice",
     ":feature:signup",
-    ":feature:login"
+    ":feature:login",
+    ":feature:schedule",
+    ":feature:profile",
 )
 include(":core:common-android")
-include(":feature:profile")
-include(":feature:schedule")
