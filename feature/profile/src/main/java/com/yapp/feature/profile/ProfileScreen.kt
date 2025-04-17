@@ -62,9 +62,9 @@ internal fun ProfileRoute(
 
     if (uiState.showLogoutDialog) {
         YappAlertDialog(
-            title = "로그아웃 할까요?",
-            actionButtonText = "아니요!",
-            recommendActionButtonText = "로그아웃",
+            title = stringResource(R.string.profile_logout_title),
+            actionButtonText = stringResource(R.string.profile_logout_action_button),
+            recommendActionButtonText = stringResource(R.string.profile_logout_recommend_button),
             onDismissRequest = { viewModel.store.onIntent(ProfileIntent.OnDismissLogout) },
             onActionButtonClick = { viewModel.store.onIntent(ProfileIntent.OnCancelLogout) },
             onRecommendActionButtonClick = { viewModel.store.onIntent(ProfileIntent.OnLaunchedLogout) },
@@ -118,7 +118,7 @@ private fun ProfileScreen(
                 Spacer(modifier = Modifier.height(12.dp))
                 ProfileSectionItem(
                     onClickItem = onClickAttendHistory,
-                    title = "출석내역",
+                    title = stringResource(R.string.profile_attend_title),
                     slot = {
                         Icon(
                             painter = painterResource(id = com.yapp.core.designsystem.R.drawable.icon_chevron_right),
@@ -129,7 +129,7 @@ private fun ProfileScreen(
                 )
                 ProfileSectionItem(
                     onClickItem = onClickPreviousHistory,
-                    title = "이전 활동 내역",
+                    title = stringResource(R.string.profile_previous_history),
                     slot = {
                         Icon(
                             painter = painterResource(id = com.yapp.core.designsystem.R.drawable.icon_chevron_right),
@@ -140,7 +140,7 @@ private fun ProfileScreen(
                 )
                 ProfileSectionItem(
                     onClickItem = onClickQuestion,
-                    title = "이용문의",
+                    title = stringResource(R.string.profile_question_title),
                     slot = {
                         Icon(
                             painter = painterResource(id = com.yapp.core.designsystem.R.drawable.icon_chevron_right),
@@ -151,13 +151,13 @@ private fun ProfileScreen(
                 )
                 ProfileSectionItem(
                     onClickItem = onClickWithdraw,
-                    title = "회원탈퇴"
+                    title = stringResource(R.string.profile_withdraw_title)
                 )
             }
             Column {
                 YappOutlinedSecondaryButtonLarge(
                     modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
-                    text = "로그아웃",
+                    text = stringResource(R.string.profile_logout_button),
                     onClick = onCLickLogout
                 )
             }

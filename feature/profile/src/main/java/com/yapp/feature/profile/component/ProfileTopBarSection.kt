@@ -8,9 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.yapp.core.designsystem.R
+import com.yapp.core.designsystem.R as coreDesignR
 import com.yapp.core.designsystem.extension.yappClickable
+import com.yapp.feature.profile.R
 
 @Composable
 internal fun ProfileTopBarSection(
@@ -21,10 +23,10 @@ internal fun ProfileTopBarSection(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(modifier = Modifier.weight(1f), text = "마이페이지")
+        Text(modifier = Modifier.weight(1f), text = stringResource(R.string.profile_title))
         Icon(
             modifier = Modifier.yappClickable(onClick = onClickSettings),
-            painter = painterResource(R.drawable.icon_setting),
+            painter = painterResource(coreDesignR.drawable.icon_setting),
             contentDescription = "setting"
         )
     }
