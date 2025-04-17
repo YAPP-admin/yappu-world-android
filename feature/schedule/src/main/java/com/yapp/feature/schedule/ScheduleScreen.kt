@@ -155,6 +155,8 @@ private fun ScheduleSessionScreen(
                     status = status,
                     date = "12. ${6 - index}",
                     dayOfWeek = "금",
+                    isToday = index == 0,
+                    isPast = index > 0,
                     location = "공덕 창업허브",
                     time = "오후 2시 - 오후 6시",
                     onClick = {}
