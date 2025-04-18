@@ -18,6 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
+import com.yapp.core.ui.component.AttendanceStatus
+import com.yapp.core.ui.component.AttendanceStatusChip
 
 @Composable
 internal fun SessionItem(

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="attendance_status_scheduled">예정</string>
+    <string name="attendance_status_attended">출석</string>
+    <string name="attendance_status_late">지각</string>
+</resources>
