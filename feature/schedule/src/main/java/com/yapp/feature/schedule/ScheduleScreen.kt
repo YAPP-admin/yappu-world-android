@@ -28,8 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
+import com.yapp.core.ui.component.AttendanceStatus
 import com.yapp.feature.schedule.component.AssignmentItem
-import com.yapp.feature.schedule.component.AttendanceStatus
 import com.yapp.feature.schedule.component.ScheduleTabRow
 import com.yapp.feature.schedule.component.SessionItem
 import com.yapp.feature.schedule.component.TodaySessionSection

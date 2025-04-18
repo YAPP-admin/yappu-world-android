@@ -1,4 +1,4 @@
-package com.yapp.feature.schedule.component
+package com.yapp.core.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,7 +20,7 @@ enum class AttendanceStatus {
 }
 
 @Composable
-internal fun AttendanceStatusChip(
+fun AttendanceStatusChip(
     status: AttendanceStatus,
 ) {
     val text = when (status) {
