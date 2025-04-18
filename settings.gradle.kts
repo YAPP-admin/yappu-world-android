@@ -46,3 +46,6 @@ include(
     ":feature:profile",
 )
 include(":core:common-android")
+include(":feature:profile")
+include(":feature:schedule")
+include(":feature:history")

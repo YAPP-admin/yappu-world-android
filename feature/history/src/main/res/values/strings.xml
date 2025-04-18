@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="attendance_title">출석내역</string>
+    <string name="attendance_my_status">내 출석 현황</string>
+    <string name="attendance_total_score">총 점수</string>
+    <string name="attendance_item">출석</string>
+    <string name="late_item">지각</string>
+    <string name="absence_item">결석</string>
+    <string name="latePass_item">지각 면제권</string>
+    <string name="session_title">세션 현황</string>
+    <string name="total_session_count_title">전체 세션</string>
+    <string name="total_remain_session_count_title">남은 세션</string>
+    <string name="total_remain_session_progress_rate_title">진행률</string>
+</resources>
