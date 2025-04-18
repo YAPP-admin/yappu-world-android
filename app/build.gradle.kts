@@ -48,6 +48,7 @@ dependencies {
     implementation(projects.feature.profile)
     implementation(projects.feature.signup)
     implementation(projects.feature.login)
+    implementation(projects.feature.history)
     implementation(projects.core.designsystem)
     implementation(projects.core.ui)
     implementation(projects.core.data)
