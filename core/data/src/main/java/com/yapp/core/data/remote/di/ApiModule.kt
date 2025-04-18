@@ -1,15 +1,18 @@
 package com.yapp.core.data.remote.di
 
 import com.yapp.core.data.remote.api.AlarmApi
+import com.yapp.core.data.remote.api.AttendanceApi
 import com.yapp.core.data.remote.api.AuthApi
 import com.yapp.core.data.remote.api.OperationsApi
 import com.yapp.core.data.remote.api.PostsApi
+import com.yapp.core.data.remote.api.SessionApi
 import com.yapp.core.data.remote.api.UserApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -45,4 +48,14 @@ internal object ApiModule {
     fun providePostsApi(retrofit: Retrofit): PostsApi {
         return retrofit.create(PostsApi::class.java)
     }
+
+    @Singleton
+    @Provides
+    fun provideAttendanceApi(retrofit: Retrofit): AttendanceApi {
+        return retrofit.create()
+    }
+
+    @Singleton
+    @Provides
+    fun providesSessionsApi(retrofit: Retrofit) = retrofit.create<SessionApi>()
 }
