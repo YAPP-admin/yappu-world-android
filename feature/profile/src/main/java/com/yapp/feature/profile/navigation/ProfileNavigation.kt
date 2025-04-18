@@ -15,11 +15,17 @@ fun NavController.navigateToProfile(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.profileNavGraph(
-    onNavigateToSetting: () -> Unit
+    onNavigateToSetting: () -> Unit,
+    onNavigateToAttendHistory: () -> Unit,
+    onNavigateToPreviousHistory: () -> Unit,
+    onNavigateToLogin: () -> Unit
 ) {
     composable<ProfileRoute> {
         ProfileRoute(
-            onNavigateToSettings = onNavigateToSetting
+            onNavigateToSettings = onNavigateToSetting,
+            onNavigateToAttendHistory = onNavigateToAttendHistory,
+            onNavigateToLogin = onNavigateToLogin,
+            onNavigateToPreviousHistory = onNavigateToPreviousHistory
         )
     }
 }

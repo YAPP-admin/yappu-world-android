@@ -32,7 +32,10 @@ import com.yapp.feature.profile.ProfileSideEffect as SideEffect
 @Composable
 internal fun ProfileRoute(
     viewModel: ProfileViewModel = hiltViewModel(),
-    onNavigateToSettings: () -> Unit
+    onNavigateToSettings: () -> Unit,
+    onNavigateToAttendHistory: () -> Unit,
+    onNavigateToPreviousHistory: () -> Unit,
+    onNavigateToLogin: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
@@ -48,13 +51,13 @@ internal fun ProfileRoute(
                     onNavigateToSettings()
                 }
                 SideEffect.NavigateToAttendHistory -> {
-
+                    onNavigateToAttendHistory()
                 }
                 SideEffect.NavigateToPreviousHistory -> {
-
+                    onNavigateToPreviousHistory()
                 }
                 SideEffect.NavigateToLogin -> {
-
+                    onNavigateToLogin()
                 }
             }
         }.launchIn(scope)
@@ -78,7 +81,7 @@ internal fun ProfileRoute(
         userRole = uiState.role.role,
         onClickSettings = { viewModel.store.onIntent(ProfileIntent.OnClickSettings) },
         onClickPreviousHistory = {},
-        onClickAttendHistory = {},
+        onClickAttendHistory = { viewModel.store.onIntent(ProfileIntent.OnClickAttendHistory) },
         onClickQuestion = {},
         onClickWithdraw = {},
         onCLickLogout = { viewModel.store.onIntent(ProfileIntent.OnClickLogout) }
