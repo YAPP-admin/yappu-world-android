@@ -52,10 +52,12 @@ internal object ApiModule {
     @Singleton
     @Provides
     fun provideAttendanceApi(@AuthRetrofit retrofit: Retrofit): AttendanceApi {
-        return retrofit.create()
+        return retrofit.create(AttendanceApi::class.java)
     }
 
     @Singleton
     @Provides
-    fun providesSessionsApi(@AuthRetrofit retrofit: Retrofit) = retrofit.create<SessionApi>()
+    fun providesSessionsApi(@AuthRetrofit retrofit: Retrofit): SessionApi {
+        return retrofit.create(SessionApi::class.java)
+    }
 }
