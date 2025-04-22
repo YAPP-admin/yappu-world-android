@@ -14,15 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.R
-
-enum class AttendanceStatus {
-    SCHEDULED,
-    ATTENDED,
-    LATE,
-    ABSENT,
-    EARLY_LEAVE,
-    EXCUSED,
-}
+import com.yapp.model.AttendanceStatus
 
 @Composable
 fun AttendanceStatusChip(

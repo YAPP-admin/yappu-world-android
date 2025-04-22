@@ -1,5 +1,6 @@
 package com.yapp.core.data.remote.model.response
 
+import com.yapp.model.AttendanceStatus
 import com.yapp.model.DateGroupedSchedule
 import com.yapp.model.ScheduleInfo
 import com.yapp.model.ScheduleList
@@ -77,9 +78,10 @@ data class ScheduleResponse(
         date = date,
         endDate = endDate,
         time = time,
+        endTime = endTime,
         scheduleType = ScheduleType.fromApiValue(scheduleType),
         sessionType = sessionType?.let { SessionType.fromApiValue(it) },
         scheduleProgressPhase = ScheduleProgressPhase.fromApiValue(scheduleProgressPhase),
-        attendanceStatus = attendanceStatus
+        attendanceStatus = attendanceStatus?.let { AttendanceStatus.fromApiValue(it) } ?: AttendanceStatus.SCHEDULED,
     )
 }
