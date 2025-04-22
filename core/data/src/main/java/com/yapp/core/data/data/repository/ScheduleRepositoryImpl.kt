@@ -1,16 +1,16 @@
 package com.yapp.core.data.data.repository
 
-import com.yapp.core.data.remote.api.SessionApi
-import com.yapp.dataapi.SessionRepository
+import com.yapp.core.data.remote.api.ScheduleApi
+import com.yapp.dataapi.ScheduleRepository
 import com.yapp.model.Sessions
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-internal class SessionsRepositoryImpl @Inject constructor(
-    private val sessionApi: SessionApi
-): SessionRepository{
+internal class ScheduleRepositoryImpl @Inject constructor(
+    private val scheduleApi: ScheduleApi
+): ScheduleRepository{
     override fun getSessions() = flow {
-        emit(sessionApi.getSessions().map { result ->
+        emit(scheduleApi.getSessions().map { result ->
             Sessions(
                 id = result.id,
                 name = result.name,
@@ -22,5 +22,9 @@ internal class SessionsRepositoryImpl @Inject constructor(
                 progressPhase = result.progressPhase
             )
         })
+    }
+
+    override fun getSchedules(year: Int, month: Int) = flow {
+        emit(scheduleApi.getSchedules(year, month).toScheduleListModel())
     }
 }
