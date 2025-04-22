@@ -1,5 +1,6 @@
 package com.yapp.feature.schedule
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,41 +13,60 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.component.AttendanceStatus
-import com.yapp.feature.schedule.component.AssignmentItem
+import com.yapp.core.ui.extension.collectWithLifecycle
+import com.yapp.feature.schedule.component.DateGroupedScheduleItem
 import com.yapp.feature.schedule.component.ScheduleTabRow
-import com.yapp.feature.schedule.component.SessionItem
 import com.yapp.feature.schedule.component.TodaySessionSection
+import com.yapp.model.ScheduleList
+import com.yapp.model.ScheduleProgressPhase
 
 @Composable
 internal fun ScheduleRoute(
-
+    viewModel: ScheduleViewModel = hiltViewModel(),
 ) {
-    ScheduleScreen()
+    LaunchedEffect(Unit) {
+        viewModel.store.onIntent(ScheduleIntent.EnterScheduleScreen)
+    }
+
+    val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    viewModel.store.sideEffects.collectWithLifecycle { effect ->
+        when (effect) {
+            is ScheduleSideEffect.ShowToast -> {
+                Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    ScheduleScreen(
+        scheduleState = uiState,
+        onIntent = { viewModel.store.onIntent(it) }
+    )
 }
 
 @Composable
 internal fun ScheduleScreen(
-
+    scheduleState: ScheduleState,
+    onIntent: (ScheduleIntent) -> Unit = {},
 ) {
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -56,80 +76,56 @@ internal fun ScheduleScreen(
         Spacer(modifier = Modifier.height(6.dp))
 
         ScheduleTabRow(
-            selectedTabIndex = selectedTabIndex,
+            selectedTabIndex = scheduleState.selectedTabIndex,
             tabList = listOf(
                 stringResource(id = R.string.schedule_tab_all),
                 stringResource(id = R.string.schedule_tab_session)
             ),
-            onTabSelected = { selectedTabIndex = it }
+            onTabSelected = {
+                if (it == scheduleState.selectedTabIndex) return@ScheduleTabRow
+                onIntent(ScheduleIntent.SelectTab(it))
+            }
         )
 
-        when (selectedTabIndex) {
-            0 -> ScheduleAllScreen()
+        when (scheduleState.selectedTabIndex) {
+            0 -> ScheduleAllScreen(
+                selectedYear = scheduleState.selectedYear,
+                selectedMonth = scheduleState.selectedMonth,
+                schedules = scheduleState.schedules,
+                onIntent = onIntent
+            )
             1 -> ScheduleSessionScreen()
         }
     }
 }
 
 @Composable
-private fun ScheduleAllScreen() {
+private fun ScheduleAllScreen(
+    selectedYear: Int,
+    selectedMonth: Int,
+    schedules: ScheduleList,
+    onIntent: (ScheduleIntent) -> Unit
+) {
     LazyColumn {
         item {
             Spacer(modifier = Modifier.height(20.dp))
             MonthHeader(
                 modifier = Modifier.padding(horizontal = 20.dp),
-                year = 2024,
-                month = 12,
-                onPreviousMonthClick = {},
-                onNextMonthClick = {}
+                year = selectedYear,
+                month = selectedMonth,
+                onPreviousMonthClick = { onIntent(ScheduleIntent.ClickPreviousMonth) },
+                onNextMonthClick = { onIntent(ScheduleIntent.ClickNextMonth) }
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        val statuses = listOf(
-            AttendanceStatus.SCHEDULED,
-            AttendanceStatus.ATTENDED,
-            AttendanceStatus.LATE
-        )
-
-        for (index in 0..6) {
-            item {
-                SessionItem(
-                    id = index.toLong(),
-                    title = "세션 제목",
-                    assignmentTitle = if (index == 1) "과제 제목" else null,
-                    assignmentContent = if (index == 1) "과제 내용" else null,
-                    status = statuses[index % statuses.size],
-                    date = "${9 - index}",
-                    dayOfWeek = "금",
-                    isToday = index == 0,
-                    isPast = index > 0,
-                    location = "공덕 창업허브",
-                    time = "오후 2시 - 오후 6시",
-                    onClick = {}
-                )
-
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .padding(horizontal = 20.dp)
-                        .background(YappTheme.colorScheme.lineNormalAlternative)
-                )
-            }
-        }
-
-        item {
-            AssignmentItem(
-                id = 0,
-                title = "과제 제목",
-                content = "과제 내용",
-                date = "2",
-                dayOfWeek = "금",
-                isToday = false,
-                isPast = true,
-                onClick = {}
-            )
+        items(items = schedules.dates) {
+            DateGroupedScheduleItem(
+                date = it.date,
+                dayOfWeek = "",
+                scheduleProgressPhase = ScheduleProgressPhase.ONGOING,
+                schedules = it.schedules,
+            ) { }
         }
     }
 }
@@ -185,38 +181,6 @@ private fun ScheduleSessionScreen(
             )
         }
 
-        val statuses = listOf(
-            AttendanceStatus.SCHEDULED,
-            AttendanceStatus.ATTENDED,
-            AttendanceStatus.LATE
-        )
-
-        for (index in 0..7) {
-            item {
-                SessionItem(
-                    id = index.toLong(),
-                    title = "세션 제목",
-                    status = statuses[index % statuses.size],
-                    date = "12. ${9 - index}",
-                    dayOfWeek = "금",
-                    isToday = index == 0,
-                    isPast = index > 0,
-                    location = "공덕 창업허브",
-                    time = "오후 2시 - 오후 6시",
-                    onClick = {}
-                )
-
-                if (index != 7) {
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(1.dp)
-                            .padding(horizontal = 20.dp)
-                            .background(YappTheme.colorScheme.lineNormalAlternative)
-                    )
-                }
-            }
-        }
     }
 }
 
