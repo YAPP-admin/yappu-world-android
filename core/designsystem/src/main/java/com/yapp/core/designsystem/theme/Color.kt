@@ -48,13 +48,22 @@ internal val LightColorScheme = YappColorScheme(
     accentLightBlue = Color(0xFF00AEFF),
     accentLightBlueWeak = Color(0xFFE5F7FF),
 
+    accentRed = Color(0xFFE32908),
+    accentRedWeak = Color(0xFFFEE6E1),
+
+    accentViolet = Color(0xFF6541F2),
+    accentVioletWeak = Color(0xFFECE7FD),
+
     coolNeutral50 = Color(0xFF70737C),
+    neutral40 = Color(0xFF5C5C5C),
+    neutral95 = Color(0xFFDCDCDC),
     orange99 = Color(0xFFFFF8F5),
     yellow95 = Color(0xFFFFF7EA),
 
     materialDimmer = Color(0x85171719),
 
     semanticFillString = Color(0x2970737C),
+    semanticFillAlternative = Color(0xFFDFDFDF),
 
     skeleton = Brush.linearGradient(
         colors = listOf(
@@ -109,13 +118,22 @@ data class YappColorScheme(
     val accentLightBlue: Color,
     val accentLightBlueWeak: Color,
 
+    val accentRed: Color,
+    val accentRedWeak: Color,
+
+    val accentViolet: Color,
+    val accentVioletWeak: Color,
+
     val coolNeutral50: Color,
+    val neutral40: Color,
+    val neutral95: Color,
     val orange99: Color,
     val yellow95: Color,
 
     val materialDimmer: Color,
 
     val semanticFillString: Color,
+    val semanticFillAlternative: Color,
 
     val skeleton: Brush,
 
@@ -155,11 +173,18 @@ val LocalColorScheme = staticCompositionLocalOf {
         staticBlack = Color.Unspecified,
         accentLightBlue = Color.Unspecified,
         accentLightBlueWeak = Color.Unspecified,
+        accentRed = Color.Unspecified,
+        accentRedWeak = Color.Unspecified,
+        accentViolet = Color.Unspecified,
+        accentVioletWeak = Color.Unspecified,
         coolNeutral50 = Color.Unspecified,
+        neutral40 = Color.Unspecified,
+        neutral95 = Color.Unspecified,
         orange99 = Color.Unspecified,
         yellow95 = Color.Unspecified,
         materialDimmer = Color.Unspecified,
         semanticFillString = Color.Unspecified,
+        semanticFillAlternative = Color.Unspecified,
         skeleton = Brush.linearGradient(
             colors = listOf(Color.Unspecified, Color.Unspecified)
         )
