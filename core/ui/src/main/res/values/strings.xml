@@ -3,4 +3,7 @@
     <string name="attendance_status_scheduled">예정</string>
     <string name="attendance_status_attended">출석</string>
     <string name="attendance_status_late">지각</string>
+    <string name="attendance_status_absent">결석</string>
+    <string name="attendance_status_early_leave">조퇴</string>
+    <string name="attendance_status_excused">공결</string>
 </resources>
