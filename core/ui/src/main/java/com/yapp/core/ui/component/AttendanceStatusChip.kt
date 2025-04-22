@@ -9,14 +9,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.theme.YappTheme
+import com.yapp.core.ui.R
 
 enum class AttendanceStatus {
     SCHEDULED,
     ATTENDED,
-    LATE
+    LATE,
+    ABSENT,
+    EARLY_LEAVE,
+    EXCUSED,
 }
 
 @Composable
@@ -24,21 +29,30 @@ fun AttendanceStatusChip(
     status: AttendanceStatus,
 ) {
     val text = when (status) {
-        AttendanceStatus.SCHEDULED -> "예정"
-        AttendanceStatus.ATTENDED -> "출석"
-        AttendanceStatus.LATE -> "지각"
+        AttendanceStatus.SCHEDULED -> stringResource(id = R.string.attendance_status_scheduled)
+        AttendanceStatus.ATTENDED -> stringResource(id = R.string.attendance_status_attended)
+        AttendanceStatus.LATE -> stringResource(id = R.string.attendance_status_late)
+        AttendanceStatus.ABSENT -> stringResource(id = R.string.attendance_status_absent)
+        AttendanceStatus.EARLY_LEAVE -> stringResource(id = R.string.attendance_status_early_leave)
+        AttendanceStatus.EXCUSED -> stringResource(id = R.string.attendance_status_excused)
     }
 
     val backgroundColor = when (status) {
         AttendanceStatus.SCHEDULED -> YappTheme.colorScheme.yellow95
         AttendanceStatus.ATTENDED -> YappTheme.colorScheme.accentLightBlueWeak
-        AttendanceStatus.LATE -> YappTheme.colorScheme.coolNeutral50.copy(alpha = 0.05f)
+        AttendanceStatus.LATE -> YappTheme.colorScheme.semanticFillAlternative
+        AttendanceStatus.ABSENT -> YappTheme.colorScheme.accentRedWeak
+        AttendanceStatus.EARLY_LEAVE -> YappTheme.colorScheme.accentVioletWeak
+        AttendanceStatus.EXCUSED -> YappTheme.colorScheme.neutral95
     }
 
     val textColor = when (status) {
         AttendanceStatus.SCHEDULED -> YappTheme.colorScheme.secondaryNormal
         AttendanceStatus.ATTENDED -> YappTheme.colorScheme.accentLightBlue
         AttendanceStatus.LATE -> YappTheme.colorScheme.coolNeutral50
+        AttendanceStatus.ABSENT -> YappTheme.colorScheme.accentRed
+        AttendanceStatus.EARLY_LEAVE -> YappTheme.colorScheme.accentViolet
+        AttendanceStatus.EXCUSED -> YappTheme.colorScheme.neutral40
     }
 
     Box(
@@ -79,6 +93,18 @@ private fun AttendanceStatusChipPreview() {
 
             AttendanceStatusChip(
                 status = AttendanceStatus.LATE
+            )
+
+            AttendanceStatusChip(
+                status = AttendanceStatus.ABSENT
+            )
+
+            AttendanceStatusChip(
+                status = AttendanceStatus.EARLY_LEAVE
+            )
+
+            AttendanceStatusChip(
+                status = AttendanceStatus.EXCUSED
             )
         }
     }
