@@ -16,10 +16,11 @@ data class ScheduleInfo(
     val date: String,
     val endDate: String?,
     val time: String?,
+    val endTime: String?,
     val scheduleType: ScheduleType,
     val sessionType: SessionType?,
     val scheduleProgressPhase: ScheduleProgressPhase,
-    val attendanceStatus: String?,
+    val attendanceStatus: AttendanceStatus,
 )
 
 enum class ScheduleType {
@@ -52,3 +53,12 @@ enum class ScheduleProgressPhase {
     }
 }
 
+enum class AttendanceStatus {
+    SCHEDULED, ATTENDED, LATE, ABSENT, EARLY_LEAVE, EXCUSED;
+
+    companion object {
+        fun fromApiValue(apiValue: String): AttendanceStatus {
+            return (entries.find { it.name == apiValue }) ?: SCHEDULED
+        }
+    }
+}
