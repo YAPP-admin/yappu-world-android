@@ -18,13 +18,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.yapp.core.designsystem.component.button.outlined.YappOutlinedPrimaryButtonXLarge
 import com.yapp.core.designsystem.component.button.solid.YappSolidPrimaryButtonLarge
 import com.yapp.core.designsystem.component.button.solid.YappSolidPrimaryButtonXLarge
 import com.yapp.core.designsystem.component.button.text.YappTextAssistiveButtonMedium
@@ -32,12 +32,14 @@ import com.yapp.core.designsystem.component.header.YappHeaderActionbar
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
+import com.yapp.core.ui.extension.openUrl
 import com.yapp.core.ui.util.keyboardAsState
 import com.yapp.feature.signup.R
 import com.yapp.feature.signup.signup.component.SignUpCodeBottomDialog
 import com.yapp.feature.signup.signup.extension.signUpAnimatedContentTransitionSpec
 import com.yapp.feature.signup.signup.page.CompletePage
 import com.yapp.feature.signup.signup.page.PendingPage
+import com.yapp.feature.signup.signup.page.RejectPage
 import com.yapp.feature.signup.signup.page.email.EmailPage
 import com.yapp.feature.signup.signup.page.name.NamePage
 import com.yapp.feature.signup.signup.page.password.PasswordPage
@@ -51,12 +53,14 @@ fun SignUpRoute(
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
 
     viewModel.store.sideEffects.collectWithLifecycle {
         when (it) {
             SignUpSideEffect.NavigateBack -> navigateBack()
             SignUpSideEffect.ClearFocus -> focusManager.clearFocus(force = true)
             SignUpSideEffect.NavigateHome -> navigateHome()
+            is SignUpSideEffect.OpenWebBrowser -> context.openUrl(it.link)
         }
     }
 
@@ -114,7 +118,14 @@ fun SignUpScreen(
                     )
 
                     SignUpStep.Email -> EmailPage(
-                        onEmailChanged = { email, verified -> onIntent(SignUpIntent.EmailChanged(email, verified)) }
+                        onEmailChanged = { email, verified ->
+                            onIntent(
+                                SignUpIntent.EmailChanged(
+                                    email,
+                                    verified
+                                )
+                            )
+                        }
                     )
 
                     SignUpStep.Password -> PasswordPage(
@@ -130,6 +141,7 @@ fun SignUpScreen(
 
                     SignUpStep.Complete -> CompletePage()
                     SignUpStep.Pending -> PendingPage()
+                    SignUpStep.Reject -> RejectPage()
                 }
             }
 
@@ -169,20 +181,21 @@ private fun SignUpScreenButton(
                 .padding(horizontal = 20.dp)
                 .fillMaxWidth(),
             text = stringResource(R.string.signup_screen_pending_assistive_button),
-            onClick = {}
+            onClick = { onIntent(SignUpIntent.ClickPendingButton) }
         )
+        Spacer(Modifier.height(20.dp))
+        return
+    }
 
-        Spacer(Modifier.height(8.dp))
-
-        YappOutlinedPrimaryButtonXLarge(
+    if (uiState.showRejectButton){
+        YappTextAssistiveButtonMedium(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
                 .fillMaxWidth(),
-            text = stringResource(R.string.signup_screen_pending_outlined_button),
-            onClick = {}
+            text = stringResource(R.string.signup_screen_reject_assistive_button),
+            onClick = { onIntent(SignUpIntent.ClickPendingButton) }
         )
-
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(20.dp))
         return
     }
 

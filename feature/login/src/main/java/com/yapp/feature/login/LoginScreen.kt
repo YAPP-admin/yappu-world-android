@@ -29,7 +29,9 @@ import com.yapp.feature.login.component.TopTitle
 
 @Composable
 internal fun LoginRoute(
-    navigateToSignup: () -> Unit,
+    navigateToSignupName: () -> Unit,
+    navigateToSignupPending: () -> Unit,
+    navigateToSignupReject: () -> Unit,
     navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
@@ -43,8 +45,7 @@ internal fun LoginRoute(
 
     viewModel.store.sideEffects.collectWithLifecycle { effect ->
         when (effect) {
-            LoginSideEffect.NavigateToSignUp -> navigateToSignup()
-
+            LoginSideEffect.NavigateToSignUp -> navigateToSignupName()
             is LoginSideEffect.OpenWebBrowser -> {
                 context.openUrl(effect.link)
             }
@@ -53,6 +54,8 @@ internal fun LoginRoute(
             is LoginSideEffect.ShowToast -> {
                 Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
             }
+            LoginSideEffect.NavigateToSignUpPending -> navigateToSignupPending()
+            LoginSideEffect.NavigateToSignUpReject -> navigateToSignupReject()
         }
     }
     LoginScreen(
@@ -115,6 +118,11 @@ fun LoginScreen(
 @Composable
 private fun LoginScreenPreview() {
     YappTheme {
-        LoginRoute({}, {})
+        LoginRoute(
+            navigateToSignupName = {},
+            navigateToSignupPending = {},
+            navigateToSignupReject = {},
+            navigateToHome = {}
+        )
     }
 }

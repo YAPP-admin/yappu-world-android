@@ -8,10 +8,10 @@ import com.yapp.feature.signup.signup.SignUpRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object SignUpRoute
+data class SignUpRoute(val currentStep : String)
 
-fun NavController.navigateToSignUp(navOptions: NavOptions? = null) {
-    navigate(SignUpRoute, navOptions)
+fun NavController.navigateToSignUp(step : String, navOptions: NavOptions? = null) {
+    navigate(SignUpRoute(step), navOptions)
 }
 
 fun NavGraphBuilder.signupNavGraph(

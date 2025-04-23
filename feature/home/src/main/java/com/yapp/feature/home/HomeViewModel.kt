@@ -1,8 +1,8 @@
 package com.yapp.feature.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yapp.core.common.android.record
 import com.yapp.core.ui.component.UserRole
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
@@ -37,12 +37,11 @@ class HomeViewModel @Inject constructor(
         reduce: (HomeState.() -> HomeState) -> Unit,
         postSideEffect: (HomeSideEffect) -> Unit,
     ) {
-        Log.d("HomeViewModel", "intent :: $intent")
-
         when (intent) {
             HomeIntent.ClickMoreButton -> postSideEffect(HomeSideEffect.NavigateToNotice)
             HomeIntent.ClickSettingButton -> postSideEffect(HomeSideEffect.NavigateToSetting)
             HomeIntent.EnterHomeScreen -> { loadHomeInfo( reduce,postSideEffect)  }
+            is HomeIntent.ClickNoticeItem -> postSideEffect(HomeSideEffect.NavigateToNoticeDetail(intent.noticeId))
         }
     }
 
@@ -55,7 +54,7 @@ class HomeViewModel @Inject constructor(
             .catch { error->
                 when(error) {
                     is UserNotFoundForEmailException, is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
-                    else -> throw error
+                    else -> error.record()
                 }
             }
             .collectLatest{ userInfo ->

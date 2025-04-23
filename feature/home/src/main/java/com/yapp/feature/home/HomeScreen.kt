@@ -30,6 +30,7 @@ internal fun HomeRoute(
     navigateToNotice: () -> Unit,
     navigateToSetting: () -> Unit,
     navigateToLogin: () -> Unit,
+    navigateToNoticeDetail: (String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
@@ -45,7 +46,9 @@ internal fun HomeRoute(
             is HomeSideEffect.ShowToast -> {
                 Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
             }
+
             HomeSideEffect.NavigateToLogin -> navigateToLogin()
+            is HomeSideEffect.NavigateToNoticeDetail -> navigateToNoticeDetail(effect.noticeId)
         }
     }
 
@@ -77,7 +80,11 @@ fun HomeScreen(
                 if (homeState.isLoading) {
                     ProfileLoadingSection(homeState.name)
                     Spacer(Modifier.height(8.dp))
-                    NoticeSection(null, onMoreButtonClick = { onIntent(HomeIntent.ClickMoreButton)})
+                    NoticeSection(
+                        null,
+                        onMoreButtonClick = { onIntent(HomeIntent.ClickMoreButton) },
+                        onNoticeDetailClick = { onIntent(HomeIntent.ClickNoticeItem(it)) }
+                    )
                 } else {
                     ProfileSection(
                         name = homeState.name,
@@ -88,7 +95,8 @@ fun HomeScreen(
                     Spacer(Modifier.height(8.dp))
                     NoticeSection(
                         noticeInfo = homeState.noticeInfo,
-                        onMoreButtonClick = { onIntent(HomeIntent.ClickMoreButton) }
+                        onMoreButtonClick = { onIntent(HomeIntent.ClickMoreButton) },
+                        onNoticeDetailClick = { onIntent(HomeIntent.ClickNoticeItem(it)) }
                     )
                 }
             }
@@ -103,7 +111,8 @@ private fun HomeScreenPreview() {
         HomeRoute(
             navigateToLogin = {},
             navigateToNotice = {},
-            navigateToSetting = {}
+            navigateToSetting = {},
+            navigateToNoticeDetail = {}
         )
     }
 }

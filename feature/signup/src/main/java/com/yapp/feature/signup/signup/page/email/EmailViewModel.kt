@@ -42,6 +42,7 @@ class EmailViewModel @Inject constructor(
                 reduce { newState }
                 postSideEffect(EmailSideEffect.EmailChanged(intent.email))
 
+                if (newState.email.isEmpty()) return
                 if (newState.isEmailRegexFailed) return
 
                 checkEmailJob = viewModelScope.launch {

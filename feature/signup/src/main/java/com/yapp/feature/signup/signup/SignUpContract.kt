@@ -27,6 +27,7 @@ data class SignUpState(
     }
 
     val showPendingButton = currentStep == SignUpStep.Pending
+    val showRejectButton = currentStep == SignUpStep.Reject
 }
 
 sealed interface SignUpIntent {
@@ -42,6 +43,7 @@ sealed interface SignUpIntent {
     data object DismissSignUpCodeBottomDialog : SignUpIntent
     data object ClickNoSignUpCodeButton : SignUpIntent
     data object ClickInputCompleteButton : SignUpIntent
+    data object ClickPendingButton : SignUpIntent
     data class ChangeSignUpCode(val signUpCode: String) : SignUpIntent
 }
 
@@ -49,8 +51,19 @@ sealed interface SignUpSideEffect {
     data object NavigateBack : SignUpSideEffect
     data object NavigateHome : SignUpSideEffect
     data object ClearFocus : SignUpSideEffect
+    data class OpenWebBrowser(val link: String) : SignUpSideEffect
 }
 
 enum class SignUpStep {
-    Name, Email, Password, Position, Complete, Pending
+    Name, Email, Password, Position, Complete, Pending, Reject;
+
+    companion object {
+        fun from(value: String?): SignUpStep {
+            return try {
+                value?.let { valueOf(it) } ?: Name
+            } catch (e: Exception) {
+                Name
+            }
+        }
+    }
 }

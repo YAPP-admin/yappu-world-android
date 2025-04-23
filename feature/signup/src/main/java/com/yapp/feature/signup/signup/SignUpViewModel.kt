@@ -1,14 +1,18 @@
 package com.yapp.feature.signup.signup
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yapp.core.common.android.record
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
+import com.yapp.dataapi.OperationsRepository
 import com.yapp.domain.GetPositionConfigsUseCase
 import com.yapp.domain.SignUpUseCase
 import com.yapp.model.SignUpInfo
 import com.yapp.model.SignUpResult
 import com.yapp.model.exceptions.SignUpCodeException
+import com.yapp.model.exceptions.UnprocessedSignUpException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
@@ -22,14 +26,26 @@ import kotlin.math.sign
 class SignUpViewModel @Inject constructor(
     private val signUpUseCase: SignUpUseCase,
     private val getPositionConfigsUseCase: GetPositionConfigsUseCase,
+    private val operationsRepository: OperationsRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private var signUpInfo = SignUpInfo()
+    private var inquiryLink = ""
+
+    companion object {
+        private const val STEP_ID_KEY = "currentStep"
+    }
+
+    private val step: String =
+        requireNotNull(savedStateHandle.get<String>(STEP_ID_KEY)) { "Name" }
+
 
     val store: MviIntentStore<SignUpState, SignUpIntent, SignUpSideEffect> =
         mviIntentStore(
             initialState = SignUpState(),
             onIntent = ::onIntent
         )
+
 
     private fun onIntent(
         intent: SignUpIntent,
@@ -38,14 +54,22 @@ class SignUpViewModel @Inject constructor(
         postSideEffect: (SignUpSideEffect) -> Unit,
     ) {
         when (intent) {
-            SignUpIntent.EnterScreen -> {
+            is SignUpIntent.EnterScreen -> {
+                reduce{copy(currentStep= SignUpStep.from(step))}
                 getPositionConfigsUseCase()
                     .onEach {
                         reduce { copy(positions = it) }
                     }
                     .catch {
-//                        throw it // TODO 에러 처리
+                        it.record()
                     }
+                    .launchIn(viewModelScope)
+
+                operationsRepository.getUsageInquiryLink()
+                    .onEach {
+                        inquiryLink = it
+                    }
+                    .catch { it.record() }
                     .launchIn(viewModelScope)
             }
 
@@ -55,10 +79,14 @@ class SignUpViewModel @Inject constructor(
                     SignUpStep.Position -> SignUpStep.Password
                     SignUpStep.Password -> SignUpStep.Email
                     SignUpStep.Email -> SignUpStep.Name
-                    SignUpStep.Complete,
                     SignUpStep.Pending,
+                    SignUpStep.Reject,
                     SignUpStep.Name -> {
                         postSideEffect(SignUpSideEffect.NavigateBack)
+                        return
+                    }
+                    SignUpStep.Complete -> {
+                        postSideEffect(SignUpSideEffect.NavigateHome)
                         return
                     }
                 }
@@ -88,6 +116,7 @@ class SignUpViewModel @Inject constructor(
                     SignUpStep.Password -> SignUpStep.Position
                     SignUpStep.Position,
                     SignUpStep.Complete,
+                    SignUpStep.Reject,
                     SignUpStep.Pending -> return
                 }
 
@@ -159,6 +188,10 @@ class SignUpViewModel @Inject constructor(
                     postSideEffect = postSideEffect,
                 )
             }
+
+            SignUpIntent.ClickPendingButton -> {
+                postSideEffect(SignUpSideEffect.OpenWebBrowser(link = inquiryLink))
+            }
         }
     }
 
@@ -181,7 +214,8 @@ class SignUpViewModel @Inject constructor(
             .onFailure {
                 when (it) {
                     is SignUpCodeException -> reduce { copy(signUpErrorInputTextDescription = it.message) }
-                    else -> throw it // TODO 예외 처리
+                    is UnprocessedSignUpException -> reduce { copy(currentStep = SignUpStep.Pending, showSignUpCodeBottomDialog = false)}
+                    else -> it.record()
                 }
             }
     }
@@ -193,6 +227,7 @@ class SignUpViewModel @Inject constructor(
             SignUpStep.Password -> signUpInfo.isAllPasswordConditionValid
             SignUpStep.Position -> signUpInfo.isActivityUnitsValid
             SignUpStep.Complete,
+            SignUpStep.Reject,
             SignUpStep.Pending -> true
         }
     }
