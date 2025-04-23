@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="signup_screen_title">회원가입</string>
+    <string name="signup_screen_button_next">다음</string>
+    <string name="signup_screen_button_start">시작하기</string>
+
+    <string name="signup_screen_step_1">STEP 1</string>
+    <string name="signup_screen_name_title">만나서 반가워요 :)\n이름이 어떻게 되세요?</string>
+    <string name="signup_screen_name_description">출석 확인을 위해 실명으로 입력해주세요.</string>
+    <string name="signup_screen_name_input_text_label">이름</string>
+    <string name="signup_screen_name_input_text_placeholder">홍길동</string>
+    <string name="signup_screen_header_icon_descrption">뒤로가기 버튼</string>
+
+    <string name="signup_screen_step_2">STEP 2</string>
+    <string name="signup_screen_email_title">아이디로 사용할\n이메일 정보를 알려주세요.</string>
+    <string name="signup_screen_email_input_text_label">이메일</string>
+    <string name="signup_screen_email_input_placeholder">YAPP@email.com</string>
+    <string name="signup_screen_email_input_error_text_description">올바르지 않은 이메일 형식이에요. 다시 입력해주세요.</string>
+    <string name="signup_screen_email_input_duplicate_text_description">사용 중인 이메일이어서 사용할 수 없어요.</string>
+    <string name="signup_screen_email_input_verified_text_description">사용 가능한 이메일이에요!</string>
+
+    <string name="signup_screen_step_3">STEP 3</string>
+    <string name="signup_screen_password_title">비밀번호를 설정할게요.</string>
+    <string name="signup_screen_password_description">영문+숫자+특수문자를 사용해, 8~20자 이내로 설정해주세요.</string>
+    <string name="signup_screen_password_input_text_label">비밀번호</string>
+    <string name="signup_screen_password_input_text_description">비밀번호 설정 조건에 맞지 않아요. 다시 입력 해주세요.</string>
+    <string name="signup_screen_password_input_text_placeholder">••••••••</string>
+    <string name="signup_screen_password_confirm_input_text_label">비밀번호 확인</string>
+    <string name="signup_screen_password_confirm_input_text_description">입력하신 비밀번호와 달라요. 확인후 다시 입력해주세요.</string>
+    <string name="signup_screen_password_confirm_input_text_placeholder">••••••••</string>
+
+    <string name="signup_screen_step_4">STEP 4</string>
+    <string name="signup_screen_position_title">%s님은 어떤 역할이신가요?</string>
+    <string name="signup_screen_position_description">현재 활동 중이라면 진행 중인 기수를,\n활동하지 않고 있다면 이전 기수를 입력해 주세요.</string>
+    <string name="signup_screen_position_generation_input_text_label">활동기수</string>
+    <string name="signup_screen_position_generation_input_text_placeholder">25</string>
+    <string name="signup_screen_position_position_input_text_label">직군</string>
+    <string name="signup_screen_position_position_input_text_placeholder">선택해주세요</string>
+    <string name="signup_screen_add_previous_generation_button">이전 활동 기수 추가하기</string>
+    <string name="signup_code_bottom_dialog_title">잠깐! 가입 코드가 있다면, 입력해주세요.</string>
+    <string name="signup_code_bottom_dialog_input_text_label">가입코드</string>
+    <string name="signup_code_bottom_dialog_input_text_placeholder">입력해주세요</string>
+    <string name="signup_code_bottom_dialog_complete_button">입력 완료</string>
+    <string name="signup_code_bottom_dialog_no_code_button">코드가 없어요</string>
+    <string name="signup_screen_complete_title">회원가입 완료!</string>
+    <string name="signup_screen_complete_description">정상적으로 회원가입이 완료되었습니다.\n이제 즐거운 YAPP 즐길 준비 완료!!</string>
+    <string name="signup_screen_pending_title">아직 가입 대기중이에요...</string>
+    <string name="signup_screen_pending_description">회원가입을 완료하려면 승인이 필요해요.\n운영진에게 승인을 요청해보세요.</string>
+    <string name="signup_screen_reject_title">회원가입이 거절되었어요.</string>
+    <string name="signup_screen_reject_assistive_button">운영진에게 문의하기</string>
+    <string name="signup_screen_position_previous_generation">이전 기수 %d</string>
+    <string name="signup_screen_position_previous_delete_content_description">이전 활동 기수 %d 삭제</string>
+    <string name="signup_screen_pending_assistive_button">대기상태가 계속되고 있나요?</string>
+    <string name="signup_screen_pending_outlined_button">승인요청하기</string>
+</resources>

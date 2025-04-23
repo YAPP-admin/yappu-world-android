@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_title">당신의 작은 아이디어가\n세상을 바꿉니다.</string>
+    <string name="login_title_email">이메일</string>
+    <string name="login_title_pw">비밀번호</string>
+    <string name="login_placeholder_pw">••••••••</string>
+    <string name="login_placeholder_email">YAPP@email.com</string>
+    <string name="login_btn">로그인</string>
+    <string name="login_title_signup">아직 회원이 아니신가요?</string>
+    <string name="login_btn_signup">회원가입</string>
+    <string name="login_divider">또는</string>
+
+    
+    <string name="agreement_bottom_dialog_title">서비스 이용약관</string>
+    <string name="agreement_bottom_dialog_terms">서비스 이용약관에 동의</string>
+    <string name="agreement_bottom_dialog_personal_policy">개인정보 수집 및 이용 동의</string>
+    <string name="agreement_bottom_dialog_button_next">다음</string>
+    <string name="agreement_bottom_dialog_text_essential">(필수)</string>
+    <string name="agreement_bottom_dialog_button_detail">보기</string>
+</resources>

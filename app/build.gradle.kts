@@ -1,59 +1,65 @@
+import com.yapp.app.setNamespace
+import java.util.Properties
+
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
+    id("yapp.android.application")
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
-
 android {
-    namespace = "com.yapp.official"
-    compileSdk = 34
-
-    defaultConfig {
-        applicationId = "com.yapp.official"
-        minSdk = 28
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+    signingConfigs {
+        val keyStoreProperties = Properties()
+        keyStoreProperties.load(
+            project.rootProject.file("keystore.properties").bufferedReader()
+        )
+        create("release") {
+            storeFile = file(keyStoreProperties["store.file.path"] as String)
+            storePassword = keyStoreProperties["store.password"] as String
+            keyPassword = keyStoreProperties["key.password"] as String
+            keyAlias = keyStoreProperties["key.alias"] as String
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+    setNamespace("app.official")
+
+    defaultConfig {
+        applicationId = "com.yapp.app.official"
+        versionCode = 2
+        versionName = "1.0.0"
+
+        targetSdk = 35
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-    buildFeatures {
-        compose = true
+    buildTypes {
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
+        }
+
+        create("qa") {
+            initWith(getByName("release"))
+            signingConfig = signingConfigs.getByName("release")
+            matchingFallbacks += listOf("release")
+        }
     }
 }
 
 dependencies {
+    implementation(projects.feature.home)
+    implementation(projects.feature.notice)
+    implementation(projects.feature.signup)
+    implementation(projects.feature.login)
+    implementation(projects.core.designsystem)
+    implementation(projects.core.data) // For di
+    implementation(projects.core.dataApi)
+    implementation(projects.core.domain)
+    implementation(projects.core.commonAndroid)
+    implementation(projects.detekt)
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.crashlytics)
+
     implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.splashscreen)
+    implementation(libs.timber)
 }
