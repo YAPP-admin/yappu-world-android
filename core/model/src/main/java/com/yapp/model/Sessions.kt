@@ -11,6 +11,6 @@ data class Sessions(
     val progressPhase: String
 ) {
     enum class AttendType {
-
+        OFFLINE, TEAM
     }
 }
