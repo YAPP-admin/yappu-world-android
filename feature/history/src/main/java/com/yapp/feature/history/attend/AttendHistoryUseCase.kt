@@ -1,4 +1,4 @@
-package com.yapp.feature.history
+package com.yapp.feature.history.attend
 
 import com.yapp.dataapi.AttendanceRepository
 import com.yapp.dataapi.SessionRepository
