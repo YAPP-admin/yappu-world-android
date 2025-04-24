@@ -1,4 +1,4 @@
-package com.yapp.feature.history
+package com.yapp.feature.history.attend
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

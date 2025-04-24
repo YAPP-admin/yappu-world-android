@@ -1,4 +1,4 @@
-package com.yapp.feature.history.components
+package com.yapp.feature.history.attend.components
 
 import androidx.compose.runtime.Composable
 

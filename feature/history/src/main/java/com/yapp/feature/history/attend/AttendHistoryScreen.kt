@@ -1,4 +1,4 @@
-package com.yapp.feature.history
+package com.yapp.feature.history.attend
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,13 +18,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.component.header.YappHeaderActionbar
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.feature.history.components.AttendanceStatusSection
-import com.yapp.feature.history.components.StatusItem
+import com.yapp.feature.history.R
+import com.yapp.feature.history.attend.components.AttendanceStatusSection
+import com.yapp.feature.history.attend.components.StatusItem
 import com.yapp.model.Sessions
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import com.yapp.feature.history.AttendHistoryIntent as Intent
-import com.yapp.feature.history.AttendHistorySideEffect as SideEffect
+import com.yapp.feature.history.attend.AttendHistoryIntent as Intent
+import com.yapp.feature.history.attend.AttendHistorySideEffect as SideEffect
 import com.yapp.core.designsystem.R as coreDesignR
 
 @Composable
