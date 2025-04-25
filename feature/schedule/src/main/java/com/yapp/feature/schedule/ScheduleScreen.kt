@@ -114,7 +114,10 @@ private fun ScheduleAllScreen(
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        items(items = schedules.dates) {
+        items(
+            items = schedules.dates,
+            key = { it.date },
+        ) {
             DateGroupedScheduleItem(
                 date = it.date,
                 dayOfWeek = it.dayOfTheWeek,
