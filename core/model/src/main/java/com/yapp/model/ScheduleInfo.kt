@@ -6,6 +6,8 @@ data class ScheduleList(
 
 data class DateGroupedSchedule(
     val date: String,
+    val isToday: Boolean,
+    val dayOfTheWeek: String,
     val schedules: List<ScheduleInfo>
 )
 
