@@ -12,9 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.theme.YappTheme
+import com.yapp.core.ui.util.formatTimeRange
+import com.yapp.core.ui.util.formatToDay
+import com.yapp.core.ui.util.isPastDate
 import com.yapp.model.AttendanceStatus
 import com.yapp.model.ScheduleInfo
 import com.yapp.model.ScheduleProgressPhase
@@ -24,20 +28,22 @@ import com.yapp.model.ScheduleType
 internal fun DateGroupedScheduleItem(
     date: String,
     dayOfWeek: String,
-    scheduleProgressPhase: ScheduleProgressPhase,
+    isToday: Boolean,
     schedules: List<ScheduleInfo>,
     onClick: (String) -> Unit,
 ) {
+    val context = LocalContext.current
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .graphicsLayer { if (scheduleProgressPhase == ScheduleProgressPhase.DONE) alpha = 0.5f }
+            .graphicsLayer { if (isPastDate(date)) alpha = 0.5f }
             .padding(
                 horizontal = 20.dp,
                 vertical = 16.dp
             )
     ) {
-        val dateColor = if (scheduleProgressPhase == ScheduleProgressPhase.TODAY) {
+        val dateColor = if (isToday) {
             YappTheme.colorScheme.primaryNormal
         } else {
             YappTheme.colorScheme.labelNeutral
@@ -48,7 +54,7 @@ internal fun DateGroupedScheduleItem(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = date,
+                text = formatToDay(context, date),
                 style = YappTheme.typography.body1NormalBold,
                 color = dateColor
             )
@@ -73,7 +79,7 @@ internal fun DateGroupedScheduleItem(
                             title = schedule.name,
                             status = schedule.attendanceStatus,
                             location = schedule.place,
-                            time = schedule.time,
+                            duration = formatTimeRange(context, schedule.time, schedule.endTime),
                             onClick = onClick,
                         )
                     }
@@ -101,7 +107,7 @@ private fun DateGroupedScheduleItemPreview() {
         DateGroupedScheduleItem(
             date = "5",
             dayOfWeek = "일",
-            scheduleProgressPhase = ScheduleProgressPhase.TODAY,
+            isToday = true,
             schedules = listOf(
                 ScheduleInfo(
                     id = "1",
@@ -109,8 +115,8 @@ private fun DateGroupedScheduleItemPreview() {
                     scheduleType = ScheduleType.SESSION,
                     attendanceStatus = AttendanceStatus.SCHEDULED,
                     place = "공덕 창업허브",
-                    time = "오후 2시",
-                    endTime = "오후 4시",
+                    time = "14:00",
+                    endTime = "18:00",
                     sessionType = null,
                     scheduleProgressPhase = ScheduleProgressPhase.ONGOING,
                     date = "2023.10.01",
@@ -122,8 +128,8 @@ private fun DateGroupedScheduleItemPreview() {
                     scheduleType = ScheduleType.TASK,
                     attendanceStatus = AttendanceStatus.SCHEDULED,
                     place = null,
-                    time = "오후 2시",
-                    endTime = "오후 4시",
+                    time = "14:00",
+                    endTime = "18:00",
                     sessionType = null,
                     scheduleProgressPhase = ScheduleProgressPhase.TODAY,
                     date = "2023.10.01",
@@ -135,8 +141,8 @@ private fun DateGroupedScheduleItemPreview() {
                     scheduleType = ScheduleType.SESSION,
                     attendanceStatus = AttendanceStatus.SCHEDULED,
                     place = "공덕 창업허브",
-                    time = "오후 2시",
-                    endTime = "오후 4시",
+                    time = "14:00",
+                    endTime = "18:00",
                     sessionType = null,
                     scheduleProgressPhase = ScheduleProgressPhase.ONGOING,
                     date = "2023.10.01",

@@ -23,7 +23,7 @@ internal fun SessionItem(
     title: String,
     status: AttendanceStatus,
     location: String?,
-    time: String?,
+    duration: String?,
     onClick: (String) -> Unit,
 ) {
     Row(
@@ -42,10 +42,10 @@ internal fun SessionItem(
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            time?.let {
+            duration?.let {
                 IconWithText(
                     iconResId = R.drawable.icon_time,
-                    text = time,
+                    text = duration,
                     contentDescription = null,
                 )
             }
@@ -78,7 +78,7 @@ private fun PreviewSessionItem() {
                 title = "세션 제목",
                 status = AttendanceStatus.SCHEDULED,
                 location = "공덕 창업허브",
-                time = "오후 2시 - 오후 6시",
+                duration = "오후 2시 - 오후 6시",
                 onClick = {}
             )
 
@@ -87,7 +87,7 @@ private fun PreviewSessionItem() {
                 title = "세션 제목",
                 status = AttendanceStatus.ATTENDED,
                 location = "공덕 창업허브",
-                time = "오후 2시 - 오후 6시",
+                duration = "오후 2시 - 오후 6시",
                 onClick = {}
             )
 
@@ -96,7 +96,7 @@ private fun PreviewSessionItem() {
                 title = "세션 제목",
                 status = AttendanceStatus.LATE,
                 location = "공덕 창업허브",
-                time = "오후 2시 - 오후 6시",
+                duration = "오후 2시 - 오후 6시",
                 onClick = {}
             )
         }

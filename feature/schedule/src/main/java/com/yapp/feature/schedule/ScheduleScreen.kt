@@ -36,7 +36,6 @@ import com.yapp.feature.schedule.component.DateGroupedScheduleItem
 import com.yapp.feature.schedule.component.ScheduleTabRow
 import com.yapp.feature.schedule.component.TodaySessionSection
 import com.yapp.model.ScheduleList
-import com.yapp.model.ScheduleProgressPhase
 
 @Composable
 internal fun ScheduleRoute(
@@ -122,8 +121,8 @@ private fun ScheduleAllScreen(
         items(items = schedules.dates) {
             DateGroupedScheduleItem(
                 date = it.date,
-                dayOfWeek = "",
-                scheduleProgressPhase = ScheduleProgressPhase.ONGOING,
+                dayOfWeek = it.dayOfTheWeek,
+                isToday = it.isToday,
                 schedules = it.schedules,
             ) { }
         }
