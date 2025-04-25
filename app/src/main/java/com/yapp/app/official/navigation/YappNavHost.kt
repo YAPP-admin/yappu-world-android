@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import com.yapp.app.official.ui.NavigatorState
 import com.yapp.app.official.ui.clearBackStackNavOptions
 import com.yapp.feature.history.navigation.attendanceHistoryNavGraph
+import com.yapp.feature.history.navigation.previousHistoryNavGraph
 import com.yapp.feature.home.navigation.homeNavGraph
 import com.yapp.feature.home.navigation.settingNavGraph
 import com.yapp.feature.login.navigation.loginNavGraph
@@ -81,10 +82,13 @@ fun YappNavHost(
         profileNavGraph(
             onNavigateToSetting = { navigator.navigateSettingScreen() },
             onNavigateToLogin = { navigator.navigateLoginScreen(clearBackStackNavOptions) },
-            onNavigateToPreviousHistory = {},
+            onNavigateToPreviousHistory = { navigator.navigateToPreviousHistory() },
             onNavigateToAttendHistory = { navigator.navigateToAttendance() }
         )
         attendanceHistoryNavGraph(
+            navigateToBack = { navigator.popBackStack() }
+        )
+        previousHistoryNavGraph(
             navigateToBack = { navigator.popBackStack() }
         )
     }
