@@ -9,4 +9,8 @@
     <string name="profile_question_title">이용문의</string>
     <string name="profile_withdraw_title">회원탈퇴</string>
     <string name="profile_logout_button">로그아웃</string>
+
+    <string name="profile_withdraw_dialog_title">정말 탈퇴하시겠어요?</string>
+    <string name="profile_withdraw_dialog_message">탈퇴하시면 모든 정보가 삭제돼요.</string>
+    <string name="profile_withdraw_dialog_recommend_button">탈퇴하기</string>
 </resources>

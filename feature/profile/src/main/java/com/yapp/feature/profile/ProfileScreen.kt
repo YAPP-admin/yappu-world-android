@@ -59,6 +59,9 @@ internal fun ProfileRoute(
                 SideEffect.NavigateToLogin -> {
                     onNavigateToLogin()
                 }
+                SideEffect.NavigateToUsage -> {
+
+                }
             }
         }.launchIn(scope)
     }
@@ -74,16 +77,28 @@ internal fun ProfileRoute(
         )
     }
 
+    if (uiState.showWithDrawDialog) {
+        YappAlertDialog(
+            title = stringResource(R.string.profile_withdraw_dialog_title),
+            body = stringResource(R.string.profile_withdraw_dialog_message),
+            actionButtonText = stringResource(R.string.profile_logout_action_button),
+            recommendActionButtonText = stringResource(R.string.profile_withdraw_dialog_recommend_button),
+            onDismissRequest = { viewModel.store.onIntent(ProfileIntent.OnCancelWithdraw) },
+            onActionButtonClick = { viewModel.store.onIntent(ProfileIntent.OnCancelWithdraw) },
+            onRecommendActionButtonClick = { viewModel.store.onIntent(ProfileIntent.OnLaunchedWithdraw) }
+        )
+    }
+
     ProfileScreen(
         userName = uiState.name,
         userGeneration = "${uiState.generation}기",
         userPosition = uiState.position,
         userRole = uiState.role.role,
         onClickSettings = { viewModel.store.onIntent(ProfileIntent.OnClickSettings) },
-        onClickPreviousHistory = {},
+        onClickPreviousHistory = { viewModel.store.onIntent(ProfileIntent.OnClickPreviousHistory) },
         onClickAttendHistory = { viewModel.store.onIntent(ProfileIntent.OnClickAttendHistory) },
-        onClickQuestion = {},
-        onClickWithdraw = {},
+        onClickQuestion = { viewModel.store.onIntent(ProfileIntent.OnClickUsage) },
+        onClickWithdraw = { viewModel.store.onIntent(ProfileIntent.OnClickWithdraw) },
         onCLickLogout = { viewModel.store.onIntent(ProfileIntent.OnClickLogout) }
     )
 }
