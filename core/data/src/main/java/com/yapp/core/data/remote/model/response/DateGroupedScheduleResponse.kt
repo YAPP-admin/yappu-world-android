@@ -27,11 +27,19 @@ data class ScheduleListResponse(
     @SerialName("date")
     val date: String,
 
+    @SerialName("isToday")
+    val isToday: Boolean,
+
+    @SerialName("dayOfTheWeek")
+    val dayOfTheWeek: String,
+
     @SerialName("schedules")
     val schedules: List<ScheduleResponse>,
 ) {
     fun toScheduleListModel() = DateGroupedSchedule(
         date = date,
+        isToday = isToday,
+        dayOfTheWeek = dayOfTheWeek,
         schedules = schedules.map { it.toScheduleModel() }
     )
 }
