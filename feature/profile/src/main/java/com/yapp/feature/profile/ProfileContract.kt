@@ -22,6 +22,8 @@ sealed interface ProfileIntent {
     data object OnCancelLogout : ProfileIntent
     data object OnDismissLogout : ProfileIntent
     data object OnLaunchedLogout : ProfileIntent
+    data object OnLaunchedWithdraw : ProfileIntent
+    data object OnCancelWithdraw : ProfileIntent
 }
 
 sealed interface ProfileSideEffect {
@@ -29,4 +31,5 @@ sealed interface ProfileSideEffect {
     data object NavigateToAttendHistory : ProfileSideEffect
     data object NavigateToPreviousHistory : ProfileSideEffect
     data object NavigateToLogin : ProfileSideEffect
+    data object NavigateToUsage : ProfileSideEffect
 }

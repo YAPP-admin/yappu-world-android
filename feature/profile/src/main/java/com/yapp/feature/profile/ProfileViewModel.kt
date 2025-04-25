@@ -6,7 +6,9 @@ import com.yapp.core.common.android.record
 import com.yapp.core.ui.component.UserRole
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
+import com.yapp.domain.DeleteAccountUseCase
 import com.yapp.domain.GetUserProfileUseCase
+import com.yapp.domain.LogoutUseCase
 import com.yapp.model.exceptions.InvalidTokenException
 import com.yapp.model.exceptions.UserNotFoundForEmailException
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,10 +16,13 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.log
 
 @HiltViewModel
 internal class ProfileViewModel @Inject constructor(
-    private val getUserProfileUseCase: GetUserProfileUseCase
+    private val getUserProfileUseCase: GetUserProfileUseCase,
+    private val logoutUseCase: LogoutUseCase,
+    private val userDeleteAccountUseCase: DeleteAccountUseCase
 ) : ViewModel() {
     val store: MviIntentStore<ProfileState, ProfileIntent, ProfileSideEffect> =
         mviIntentStore(
@@ -38,8 +43,13 @@ internal class ProfileViewModel @Inject constructor(
                     reduce = reduce
                 )
             }
+            ProfileIntent.OnCancelWithdraw -> {
+                reduce {
+                    copy(showWithDrawDialog = state.showWithDrawDialog.not())
+                }
+            }
             ProfileIntent.OnClickUsage -> {
-
+                sideEffect(ProfileSideEffect.NavigateToUsage)
             }
             ProfileIntent.OnClickLogout -> {
                 reduce {
@@ -66,7 +76,18 @@ internal class ProfileViewModel @Inject constructor(
                 }
             }
             ProfileIntent.OnLaunchedLogout -> {
-
+                viewModelScope.launch {
+                    logoutUseCase().onSuccess {
+                        sideEffect(ProfileSideEffect.NavigateToLogin)
+                    }
+                }
+            }
+            ProfileIntent.OnLaunchedWithdraw -> {
+                viewModelScope.launch {
+                    userDeleteAccountUseCase().onSuccess {
+                        sideEffect(ProfileSideEffect.NavigateToLogin)
+                    }
+                }
             }
         }
     }
