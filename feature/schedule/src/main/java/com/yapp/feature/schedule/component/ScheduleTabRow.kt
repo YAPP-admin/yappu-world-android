@@ -13,25 +13,27 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
+import com.yapp.feature.schedule.ScheduleTab
 
 @Composable
 fun ScheduleTabRow(
     modifier: Modifier = Modifier,
     containerColor: Color = YappTheme.colorScheme.staticWhite,
-    selectedTabIndex: Int,
-    tabList: List<String>,
-    onTabSelected: (Int) -> Unit
+    selectedTab: ScheduleTab,
+    tabList: List<ScheduleTab> = listOf(ScheduleTab.ALL, ScheduleTab.SESSION),
+    onTabSelected: (ScheduleTab) -> Unit
 ) {
     Box(
         modifier = modifier.background(containerColor),
@@ -51,13 +53,11 @@ fun ScheduleTabRow(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            tabList.forEachIndexed { index, tab ->
+            tabList.forEach { tab ->
                 ScheduleTab(
-                    label = tab,
-                    selected = selectedTabIndex == index,
-                    onClick = {
-                        onTabSelected(index)
-                    }
+                    labelResId = tab.labelResId,
+                    selected = tab.index == selectedTab.index,
+                    onClick = { onTabSelected(tab) }
                 )
             }
         }
@@ -67,7 +67,7 @@ fun ScheduleTabRow(
 @Composable
 private fun ScheduleTab(
     modifier: Modifier = Modifier,
-    label: String,
+    labelResId: Int,
     selected: Boolean,
     onClick: () -> Unit,
 ) {
@@ -82,7 +82,7 @@ private fun ScheduleTab(
     ) {
         Text(
             modifier = Modifier.padding(6.dp),
-            text = label,
+            text = stringResource(id = labelResId),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             style = YappTheme.typography.body1ReadingRegular,
@@ -104,13 +104,14 @@ private fun ScheduleTab(
 @Preview
 @Composable
 private fun ScheduleTabRowPreview() {
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
+    val tabList = ScheduleTab.entries
+    var selectedTab by remember { mutableStateOf(ScheduleTab.ALL) }
 
     YappTheme {
         ScheduleTabRow(
-            selectedTabIndex = selectedTabIndex,
-            tabList = listOf("전체", "세션"),
-            onTabSelected = { selectedTabIndex = it }
+            selectedTab = selectedTab,
+            tabList = tabList,
+            onTabSelected = { selectedTab = it }
         )
     }
 }
