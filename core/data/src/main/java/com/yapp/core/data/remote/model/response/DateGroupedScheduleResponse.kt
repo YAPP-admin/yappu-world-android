@@ -79,9 +79,44 @@ data class ScheduleResponse(
         endDate = endDate,
         time = time,
         endTime = endTime,
-        scheduleType = ScheduleType.fromApiValue(scheduleType),
-        sessionType = sessionType?.let { SessionType.fromApiValue(it) },
-        scheduleProgressPhase = ScheduleProgressPhase.fromApiValue(scheduleProgressPhase),
-        attendanceStatus = attendanceStatus?.let { AttendanceStatus.fromApiValue(it) } ?: AttendanceStatus.SCHEDULED,
+        scheduleType = toScheduleType(scheduleType),
+        sessionType = toSessionType(sessionType),
+        scheduleProgressPhase = toScheduleProgressPhase(scheduleProgressPhase),
+        attendanceStatus = toAttendanceStatus(attendanceStatus),
     )
+
+    companion object {
+        fun toScheduleType(value: String): ScheduleType =
+            when (value) {
+                "SESSION" -> ScheduleType.SESSION
+                "TASK" -> ScheduleType.TASK
+                else -> ScheduleType.ETC
+            }
+
+        fun toSessionType(value: String?): SessionType? =
+            when (value) {
+                "OFFLINE" -> SessionType.OFFLINE
+                "ONLINE" -> SessionType.ONLINE
+                "TEAM" -> SessionType.TEAM
+                else -> null
+            }
+
+        fun toScheduleProgressPhase(value: String): ScheduleProgressPhase =
+            when (value) {
+                "DONE" -> ScheduleProgressPhase.DONE
+                "TODAY" -> ScheduleProgressPhase.TODAY
+                "ONGOING" -> ScheduleProgressPhase.ONGOING
+                else -> ScheduleProgressPhase.PENDING
+            }
+
+        fun toAttendanceStatus(value: String?): AttendanceStatus =
+            when (value) {
+                "ATTENDED" -> AttendanceStatus.ATTENDED
+                "LATE" -> AttendanceStatus.LATE
+                "ABSENT" -> AttendanceStatus.ABSENT
+                "EARLY_LEAVE" -> AttendanceStatus.EARLY_LEAVE
+                "EXCUSED" -> AttendanceStatus.EXCUSED
+                else -> AttendanceStatus.SCHEDULED
+            }
+    }
 }
