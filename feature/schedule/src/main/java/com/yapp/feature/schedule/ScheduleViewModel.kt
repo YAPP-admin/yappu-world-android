@@ -30,7 +30,11 @@ class ScheduleViewModel @Inject constructor(
     ) {
         when (intent) {
             ScheduleIntent.EnterScheduleScreen -> loadScheduleInfo(state.selectedYear, state.selectedMonth, reduce)
-            is ScheduleIntent.SelectTab -> reduce { copy(selectedTabIndex = intent.tabIndex) }
+            is ScheduleIntent.SelectTab -> {
+                if (state.selectedTab != intent.tab) {
+                    reduce { copy(selectedTab = intent.tab) }
+                }
+            }
             ScheduleIntent.ClickPreviousMonth -> {
                 val (newYear, newMonth) = calculatePreviousMonth(state.selectedYear, state.selectedMonth)
                 reduce { copy(selectedYear = newYear, selectedMonth = newMonth) }

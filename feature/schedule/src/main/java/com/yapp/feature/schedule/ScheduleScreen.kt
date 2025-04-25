@@ -75,25 +75,21 @@ internal fun ScheduleScreen(
         Spacer(modifier = Modifier.height(6.dp))
 
         ScheduleTabRow(
-            selectedTabIndex = scheduleState.selectedTabIndex,
-            tabList = listOf(
-                stringResource(id = R.string.schedule_tab_all),
-                stringResource(id = R.string.schedule_tab_session)
-            ),
+            selectedTab = scheduleState.selectedTab,
+            tabList = ScheduleTab.entries,
             onTabSelected = {
-                if (it == scheduleState.selectedTabIndex) return@ScheduleTabRow
                 onIntent(ScheduleIntent.SelectTab(it))
             }
         )
 
-        when (scheduleState.selectedTabIndex) {
-            0 -> ScheduleAllScreen(
+        when (scheduleState.selectedTab) {
+            ScheduleTab.ALL -> ScheduleAllScreen(
                 selectedYear = scheduleState.selectedYear,
                 selectedMonth = scheduleState.selectedMonth,
                 schedules = scheduleState.schedules,
                 onIntent = onIntent
             )
-            1 -> ScheduleSessionScreen()
+            ScheduleTab.SESSION -> ScheduleSessionScreen()
         }
     }
 }
