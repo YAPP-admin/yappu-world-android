@@ -87,44 +87,24 @@ data class ScheduleResponse(
         endDate = endDate,
         time = time,
         endTime = endTime,
-        scheduleType = toScheduleType(scheduleType),
-        sessionType = toSessionType(sessionType),
-        scheduleProgressPhase = toScheduleProgressPhase(scheduleProgressPhase),
-        attendanceStatus = toAttendanceStatus(attendanceStatus),
+        scheduleType = scheduleType.toScheduleType(),
+        sessionType = sessionType.toSessionType(),
+        scheduleProgressPhase = scheduleProgressPhase.toScheduleProgressPhase(),
+        attendanceStatus = attendanceStatus.toAttendanceStatus(),
     )
 
     companion object {
-        fun toScheduleType(value: String): ScheduleType =
-            when (value) {
-                "SESSION" -> ScheduleType.SESSION
-                "TASK" -> ScheduleType.TASK
-                else -> ScheduleType.ETC
-            }
+        fun String.toScheduleType() =
+            ScheduleType.entries.firstOrNull { it.name == this } ?: ScheduleType.ETC
 
-        fun toSessionType(value: String?): SessionType? =
-            when (value) {
-                "OFFLINE" -> SessionType.OFFLINE
-                "ONLINE" -> SessionType.ONLINE
-                "TEAM" -> SessionType.TEAM
-                else -> null
-            }
+        fun String?.toSessionType() =
+            SessionType.entries.firstOrNull { it.name == this }
 
-        fun toScheduleProgressPhase(value: String): ScheduleProgressPhase =
-            when (value) {
-                "DONE" -> ScheduleProgressPhase.DONE
-                "TODAY" -> ScheduleProgressPhase.TODAY
-                "ONGOING" -> ScheduleProgressPhase.ONGOING
-                else -> ScheduleProgressPhase.PENDING
-            }
+        fun String?.toScheduleProgressPhase() =
+            ScheduleProgressPhase.entries.firstOrNull { it.name == this }
+                ?: ScheduleProgressPhase.PENDING
 
-        fun toAttendanceStatus(value: String?): AttendanceStatus =
-            when (value) {
-                "ATTENDED" -> AttendanceStatus.ATTENDED
-                "LATE" -> AttendanceStatus.LATE
-                "ABSENT" -> AttendanceStatus.ABSENT
-                "EARLY_LEAVE" -> AttendanceStatus.EARLY_LEAVE
-                "EXCUSED" -> AttendanceStatus.EXCUSED
-                else -> AttendanceStatus.SCHEDULED
-            }
+        fun String?.toAttendanceStatus() =
+            AttendanceStatus.entries.firstOrNull { it.name == this } ?: AttendanceStatus.SCHEDULED
     }
 }
