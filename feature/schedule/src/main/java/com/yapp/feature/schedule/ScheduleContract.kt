@@ -25,10 +25,4 @@ sealed interface ScheduleSideEffect {
 enum class ScheduleTab(val index: Int, val labelResId: Int) {
     ALL(0, R.string.schedule_tab_all),
     SESSION(1, R.string.schedule_tab_session);
-
-    companion object {
-        fun fromIndex(index: Int): ScheduleTab {
-            return entries.find { it.index == index } ?: ALL
-        }
-    }
 }
