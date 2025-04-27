@@ -5,14 +5,16 @@ import com.yapp.model.ActivityUnit
 import com.yapp.model.NoticeList
 
 data class HomeState(
-    val name : String = "",
-    val role : UserRole = UserRole.ACTIVE,
-    val activityUnits : List<ActivityUnit> = listOf(ActivityUnit(position = "", generation = 0)),
-    val noticeInfo: NoticeList = NoticeList(notices = listOf(), lastNoticeId = "", hasNext = false),
-    val isLoading: Boolean = true,  // 전체 스켈레톤 여부
-    val isUserInfoLoading: Boolean = true, // 사용자 정보 로딩 여부
-    val isNoticesLoading: Boolean = true,  // 공지사항 로딩 여부
-)
+    val sessions: List<Session> = emptyList()
+) {
+    data class Session(
+        val title: String,
+        val date: String,
+        val place: String,
+        val startTime: String,
+        val endTime: String
+    )
+}
 
 sealed interface HomeIntent {
     data object ClickMoreButton : HomeIntent
