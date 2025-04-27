@@ -3,10 +3,12 @@ package com.yapp.feature.history.previous
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,10 +27,20 @@ internal fun HistoryItems(
     position: String,
     slot: @Composable (() -> Unit)? = null
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(2.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(modifier = Modifier.weight(1f), text = position, style = YappTheme.typography.heading2Bold)
-            Image(painter = painterResource(coreDesignR.drawable.icon_yapp), contentDescription = null)
+            Box(modifier = Modifier.size(20.dp)) {
+                Image(
+                    modifier = Modifier.size(16.dp).align(Alignment.Center),
+                    painter = painterResource(coreDesignR.drawable.icon_yapp),
+                    contentDescription = null
+                )
+            }
+
             Text("${generation}기", style = YappTheme.typography.label1NormalMedium)
         }
 
