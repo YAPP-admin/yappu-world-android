@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface ScheduleApi {
     @GET("v1/sessions")
-    suspend fun getSessions(): List<SessionResponse>
+    suspend fun getSessions(): SessionResponse
 
     @GET("v1/schedules")
     suspend fun getSchedules(
