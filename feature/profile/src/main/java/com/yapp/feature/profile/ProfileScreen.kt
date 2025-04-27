@@ -122,7 +122,7 @@ private fun ProfileScreen(
                     userPosition = userPosition,
                     userRole = userRole
                 )
-                HorizontalDivider(thickness = 12.dp, color = YappTheme.colorScheme.lineNormalNormal)
+                HorizontalDivider(thickness = 12.dp, color = YappTheme.colorScheme.lineNormalNormal.copy(alpha = 0.08f))
                 Spacer(modifier = Modifier.height(12.dp))
                 ProfileSectionItem(
                     onClickItem = { onIntent(ProfileIntent.ClickAttendHistory) },
