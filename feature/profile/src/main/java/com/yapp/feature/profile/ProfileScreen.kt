@@ -22,11 +22,10 @@ import com.yapp.core.designsystem.component.alert.YappAlertDialog
 import com.yapp.core.designsystem.component.button.outlined.YappOutlinedSecondaryButtonLarge
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
+import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.profile.component.ProfileInformationSection
 import com.yapp.feature.profile.component.ProfileSectionItem
 import com.yapp.feature.profile.component.ProfileTopBarSection
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import com.yapp.feature.profile.ProfileSideEffect as SideEffect
 
 @Composable
@@ -37,33 +36,30 @@ internal fun ProfileRoute(
     onNavigateToPreviousHistory: () -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
-    val scope = rememberCoroutineScope()
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.store.onIntent(ProfileIntent.EntryScreen)
     }
 
-    LaunchedEffect(viewModel.store.sideEffects) {
-        viewModel.store.sideEffects.onEach { effect ->
-            when (effect) {
-                SideEffect.NavigateToSetting -> {
-                    onNavigateToSettings()
-                }
-                SideEffect.NavigateToAttendHistory -> {
-                    onNavigateToAttendHistory()
-                }
-                SideEffect.NavigateToPreviousHistory -> {
-                    onNavigateToPreviousHistory()
-                }
-                SideEffect.NavigateToLogin -> {
-                    onNavigateToLogin()
-                }
-                SideEffect.NavigateToUsage -> {
-
-                }
+    viewModel.store.sideEffects.collectWithLifecycle { effect ->
+        when (effect) {
+            SideEffect.NavigateToSetting -> {
+                onNavigateToSettings()
             }
-        }.launchIn(scope)
+            SideEffect.NavigateToAttendHistory -> {
+                onNavigateToAttendHistory()
+            }
+            SideEffect.NavigateToPreviousHistory -> {
+                onNavigateToPreviousHistory()
+            }
+            SideEffect.NavigateToLogin -> {
+                onNavigateToLogin()
+            }
+            SideEffect.NavigateToUsage -> {
+
+            }
+        }
     }
 
     if (uiState.showLogoutDialog) {
