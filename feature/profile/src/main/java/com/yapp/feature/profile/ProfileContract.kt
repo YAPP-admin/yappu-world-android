@@ -12,18 +12,18 @@ data class ProfileState(
 )
 
 sealed interface ProfileIntent {
-    data object OnEntryScreen : ProfileIntent
-    data object OnClickSettings : ProfileIntent
-    data object OnClickAttendHistory : ProfileIntent
-    data object OnClickPreviousHistory : ProfileIntent
-    data object OnClickUsage : ProfileIntent
-    data object OnClickWithdraw : ProfileIntent
-    data object OnClickLogout : ProfileIntent
-    data object OnCancelLogout : ProfileIntent
-    data object OnDismissLogout : ProfileIntent
-    data object OnLaunchedLogout : ProfileIntent
-    data object OnLaunchedWithdraw : ProfileIntent
-    data object OnCancelWithdraw : ProfileIntent
+    data object EntryScreen : ProfileIntent
+    data object ClickSettings : ProfileIntent
+    data object ClickAttendHistory : ProfileIntent
+    data object ClickPreviousHistory : ProfileIntent
+    data object ClickUsage : ProfileIntent
+    data object ClickWithdraw : ProfileIntent
+    data object ClickLogout : ProfileIntent
+    data object CancelLogout : ProfileIntent
+    data object DismissLogout : ProfileIntent
+    data object LaunchedLogout : ProfileIntent
+    data object LaunchedWithdraw : ProfileIntent
+    data object CancelWithdraw : ProfileIntent
 }
 
 sealed interface ProfileSideEffect {

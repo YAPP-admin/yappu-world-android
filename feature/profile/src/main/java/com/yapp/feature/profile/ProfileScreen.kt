@@ -41,7 +41,7 @@ internal fun ProfileRoute(
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.store.onIntent(ProfileIntent.OnEntryScreen)
+        viewModel.store.onIntent(ProfileIntent.EntryScreen)
     }
 
     LaunchedEffect(viewModel.store.sideEffects) {
@@ -71,9 +71,9 @@ internal fun ProfileRoute(
             title = stringResource(R.string.profile_logout_title),
             actionButtonText = stringResource(R.string.profile_logout_action_button),
             recommendActionButtonText = stringResource(R.string.profile_logout_recommend_button),
-            onDismissRequest = { viewModel.store.onIntent(ProfileIntent.OnDismissLogout) },
-            onActionButtonClick = { viewModel.store.onIntent(ProfileIntent.OnCancelLogout) },
-            onRecommendActionButtonClick = { viewModel.store.onIntent(ProfileIntent.OnLaunchedLogout) },
+            onDismissRequest = { viewModel.store.onIntent(ProfileIntent.DismissLogout) },
+            onActionButtonClick = { viewModel.store.onIntent(ProfileIntent.CancelLogout) },
+            onRecommendActionButtonClick = { viewModel.store.onIntent(ProfileIntent.LaunchedLogout) },
         )
     }
 
@@ -83,9 +83,9 @@ internal fun ProfileRoute(
             body = stringResource(R.string.profile_withdraw_dialog_message),
             actionButtonText = stringResource(R.string.profile_logout_action_button),
             recommendActionButtonText = stringResource(R.string.profile_withdraw_dialog_recommend_button),
-            onDismissRequest = { viewModel.store.onIntent(ProfileIntent.OnCancelWithdraw) },
-            onActionButtonClick = { viewModel.store.onIntent(ProfileIntent.OnCancelWithdraw) },
-            onRecommendActionButtonClick = { viewModel.store.onIntent(ProfileIntent.OnLaunchedWithdraw) }
+            onDismissRequest = { viewModel.store.onIntent(ProfileIntent.CancelWithdraw) },
+            onActionButtonClick = { viewModel.store.onIntent(ProfileIntent.CancelWithdraw) },
+            onRecommendActionButtonClick = { viewModel.store.onIntent(ProfileIntent.LaunchedWithdraw) }
         )
     }
 
@@ -114,7 +114,7 @@ private fun ProfileScreen(
                     modifier = Modifier
                         .padding(horizontal = 20.dp)
                         .height(56.dp),
-                    onClickSettings = { onIntent(ProfileIntent.OnClickLogout) }
+                    onClickSettings = { onIntent(ProfileIntent.ClickLogout) }
                 )
                 ProfileInformationSection(
                     userName = userName,
@@ -125,7 +125,7 @@ private fun ProfileScreen(
                 HorizontalDivider(thickness = 12.dp, color = YappTheme.colorScheme.lineNormalNormal)
                 Spacer(modifier = Modifier.height(12.dp))
                 ProfileSectionItem(
-                    onClickItem = { onIntent(ProfileIntent.OnClickAttendHistory) },
+                    onClickItem = { onIntent(ProfileIntent.ClickAttendHistory) },
                     title = stringResource(R.string.profile_attend_title),
                     slot = {
                         Icon(
@@ -136,7 +136,7 @@ private fun ProfileScreen(
                     }
                 )
                 ProfileSectionItem(
-                    onClickItem = { onIntent(ProfileIntent.OnClickPreviousHistory) },
+                    onClickItem = { onIntent(ProfileIntent.ClickPreviousHistory) },
                     title = stringResource(R.string.profile_previous_history),
                     slot = {
                         Icon(
@@ -147,7 +147,7 @@ private fun ProfileScreen(
                     }
                 )
                 ProfileSectionItem(
-                    onClickItem = { onIntent(ProfileIntent.OnClickUsage) },
+                    onClickItem = { onIntent(ProfileIntent.ClickUsage) },
                     title = stringResource(R.string.profile_question_title),
                     slot = {
                         Icon(
@@ -158,7 +158,7 @@ private fun ProfileScreen(
                     }
                 )
                 ProfileSectionItem(
-                    onClickItem = { onIntent(ProfileIntent.OnClickWithdraw) },
+                    onClickItem = { onIntent(ProfileIntent.ClickWithdraw) },
                     title = stringResource(R.string.profile_withdraw_title)
                 )
             }
@@ -166,7 +166,7 @@ private fun ProfileScreen(
                 YappOutlinedSecondaryButtonLarge(
                     modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
                     text = stringResource(R.string.profile_logout_button),
-                    onClick = { onIntent(ProfileIntent.OnClickLogout) }
+                    onClick = { onIntent(ProfileIntent.ClickLogout) }
                 )
             }
         }
