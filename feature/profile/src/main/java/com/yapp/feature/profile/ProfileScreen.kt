@@ -94,12 +94,7 @@ internal fun ProfileRoute(
         userGeneration = "${uiState.generation}기",
         userPosition = uiState.position,
         userRole = uiState.role.role,
-        onClickSettings = { viewModel.store.onIntent(ProfileIntent.OnClickSettings) },
-        onClickPreviousHistory = { viewModel.store.onIntent(ProfileIntent.OnClickPreviousHistory) },
-        onClickAttendHistory = { viewModel.store.onIntent(ProfileIntent.OnClickAttendHistory) },
-        onClickQuestion = { viewModel.store.onIntent(ProfileIntent.OnClickUsage) },
-        onClickWithdraw = { viewModel.store.onIntent(ProfileIntent.OnClickWithdraw) },
-        onCLickLogout = { viewModel.store.onIntent(ProfileIntent.OnClickLogout) }
+        onIntent = viewModel.store::onIntent
     )
 }
 
@@ -110,12 +105,7 @@ private fun ProfileScreen(
     userGeneration: String,
     userPosition: String,
     userRole: String,
-    onClickSettings: () -> Unit,
-    onClickAttendHistory: () -> Unit,
-    onClickPreviousHistory: () -> Unit,
-    onClickQuestion: () -> Unit,
-    onClickWithdraw: () -> Unit,
-    onCLickLogout: () -> Unit
+    onIntent: (ProfileIntent) -> Unit
 ) {
     YappBackground {
         Column {
@@ -124,7 +114,7 @@ private fun ProfileScreen(
                     modifier = Modifier
                         .padding(horizontal = 20.dp)
                         .height(56.dp),
-                    onClickSettings = onClickSettings
+                    onClickSettings = { onIntent(ProfileIntent.OnClickLogout) }
                 )
                 ProfileInformationSection(
                     userName = userName,
@@ -135,7 +125,7 @@ private fun ProfileScreen(
                 HorizontalDivider(thickness = 12.dp, color = YappTheme.colorScheme.lineNormalNormal)
                 Spacer(modifier = Modifier.height(12.dp))
                 ProfileSectionItem(
-                    onClickItem = onClickAttendHistory,
+                    onClickItem = { onIntent(ProfileIntent.OnClickAttendHistory) },
                     title = stringResource(R.string.profile_attend_title),
                     slot = {
                         Icon(
@@ -146,7 +136,7 @@ private fun ProfileScreen(
                     }
                 )
                 ProfileSectionItem(
-                    onClickItem = onClickPreviousHistory,
+                    onClickItem = { onIntent(ProfileIntent.OnClickPreviousHistory) },
                     title = stringResource(R.string.profile_previous_history),
                     slot = {
                         Icon(
@@ -157,7 +147,7 @@ private fun ProfileScreen(
                     }
                 )
                 ProfileSectionItem(
-                    onClickItem = onClickQuestion,
+                    onClickItem = { onIntent(ProfileIntent.OnClickUsage) },
                     title = stringResource(R.string.profile_question_title),
                     slot = {
                         Icon(
@@ -168,7 +158,7 @@ private fun ProfileScreen(
                     }
                 )
                 ProfileSectionItem(
-                    onClickItem = onClickWithdraw,
+                    onClickItem = { onIntent(ProfileIntent.OnClickWithdraw) },
                     title = stringResource(R.string.profile_withdraw_title)
                 )
             }
@@ -176,7 +166,7 @@ private fun ProfileScreen(
                 YappOutlinedSecondaryButtonLarge(
                     modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
                     text = stringResource(R.string.profile_logout_button),
-                    onClick = onCLickLogout
+                    onClick = { onIntent(ProfileIntent.OnClickLogout) }
                 )
             }
         }
@@ -192,12 +182,7 @@ private fun ProfileRoutePreview() {
             userGeneration = "25기",
             userPosition = "Android",
             userRole = "ADMIN",
-            onClickQuestion = {},
-            onClickSettings = {},
-            onClickAttendHistory = {},
-            onClickPreviousHistory = {},
-            onCLickLogout = {},
-            onClickWithdraw = {}
+            onIntent = {}
         )
     }
 }
