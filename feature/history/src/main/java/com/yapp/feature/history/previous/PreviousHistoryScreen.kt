@@ -29,7 +29,7 @@ import com.yapp.feature.history.previous.PreviousHistoryState.History
 @Composable
 internal fun PreviousHistoryRoute(
     viewModel: PreviousHistoryViewModel = hiltViewModel(),
-    onClickBackButton: () -> Unit
+    navigateToBack: () -> Unit
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
 
@@ -40,7 +40,7 @@ internal fun PreviousHistoryRoute(
     viewModel.store.sideEffects.collectWithLifecycle { effect ->
         when (effect) {
             SideEffect.Finish -> {
-                onClickBackButton()
+                navigateToBack()
             }
         }
     }
@@ -49,7 +49,7 @@ internal fun PreviousHistoryRoute(
 
     PreviousHistoryScreen(
         items = uiState.items,
-        onClickBackButton = onClickBackButton
+        onClickBackButton = navigateToBack
     )
 }
 
