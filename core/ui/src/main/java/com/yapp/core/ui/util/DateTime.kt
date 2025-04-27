@@ -5,6 +5,7 @@ import com.yapp.core.ui.R
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 fun formatToDay(context: Context, date: String): String {
     return try {
@@ -24,25 +25,15 @@ fun formatTimeRange(context: Context, startTime: String?, endTime: String?): Str
 fun formatToKoreanTime(context: Context, time: String): String {
     return try {
         val parsedTime = LocalTime.parse(time)
-        val hour = parsedTime.hour
-        val minute = parsedTime.minute
 
-        val isAm = hour < 12
-        val hour12 = if (hour == 0 || hour == 12) 12 else hour % 12
+        val pattern = context.getString(R.string.time_format_base)
+        val formatter = DateTimeFormatter.ofPattern(pattern, Locale.KOREAN)
+        val base = parsedTime.format(formatter)
 
-        when (minute) {
-            0 -> context.getString(
-                if (isAm) R.string.time_format_hour else R.string.time_format_hour_pm,
-                hour12
-            )
-            30 -> context.getString(
-                if (isAm) R.string.time_format_half_hour else R.string.time_format_half_hour_pm,
-                hour12
-            )
-            else -> context.getString(
-                if (isAm) R.string.time_format_hour_minute else R.string.time_format_hour_minute_pm,
-                hour12, minute
-            )
+        when (parsedTime.minute) {
+            0 -> base
+            30 -> context.getString(R.string.time_format_half_hour_with_base, base)
+            else -> context.getString(R.string.time_format_hour_minute_with_base, base, parsedTime.minute)
         }
     } catch (e: Exception) {
         time
