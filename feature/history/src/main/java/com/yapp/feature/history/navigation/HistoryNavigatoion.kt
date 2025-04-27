@@ -33,6 +33,6 @@ fun NavGraphBuilder.previousHistoryNavGraph(
     navigateToBack: () -> Unit
 ) {
     composable<PreviousHistory> {
-        PreviousHistoryRoute(onClickBackButton = navigateToBack)
+        PreviousHistoryRoute(navigateToBack = navigateToBack)
     }
 }
