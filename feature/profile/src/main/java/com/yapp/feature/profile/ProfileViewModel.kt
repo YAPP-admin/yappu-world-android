@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.log
 
 @HiltViewModel
 internal class ProfileViewModel @Inject constructor(
@@ -37,52 +36,52 @@ internal class ProfileViewModel @Inject constructor(
         sideEffect: (ProfileSideEffect) -> Unit
     ) {
         when (intent) {
-            ProfileIntent.OnEntryScreen -> {
+            ProfileIntent.EntryScreen -> {
                 onCollectGetUserProfile(
                     postSideEffect = sideEffect,
                     reduce = reduce
                 )
             }
-            ProfileIntent.OnCancelWithdraw -> {
+            ProfileIntent.CancelWithdraw -> {
                 reduce {
                     copy(showWithDrawDialog = state.showWithDrawDialog.not())
                 }
             }
-            ProfileIntent.OnClickUsage -> {
+            ProfileIntent.ClickUsage -> {
                 sideEffect(ProfileSideEffect.NavigateToUsage)
             }
-            ProfileIntent.OnClickLogout -> {
+            ProfileIntent.ClickLogout -> {
                 reduce {
                     copy(showLogoutDialog = state.showLogoutDialog.not())
                 }
             }
-            ProfileIntent.OnClickSettings -> {
+            ProfileIntent.ClickSettings -> {
                 sideEffect(ProfileSideEffect.NavigateToSetting)
             }
-            ProfileIntent.OnClickWithdraw -> {
+            ProfileIntent.ClickWithdraw -> {
                 reduce {
                     copy(showWithDrawDialog = state.showWithDrawDialog.not())
                 }
             }
-            ProfileIntent.OnClickAttendHistory -> {
+            ProfileIntent.ClickAttendHistory -> {
                 sideEffect(ProfileSideEffect.NavigateToAttendHistory)
             }
-            ProfileIntent.OnClickPreviousHistory -> {
+            ProfileIntent.ClickPreviousHistory -> {
                 sideEffect(ProfileSideEffect.NavigateToPreviousHistory)
             }
-            ProfileIntent.OnCancelLogout, ProfileIntent.OnDismissLogout -> {
+            ProfileIntent.CancelLogout, ProfileIntent.DismissLogout -> {
                 reduce {
                     copy(showLogoutDialog = state.showLogoutDialog.not())
                 }
             }
-            ProfileIntent.OnLaunchedLogout -> {
+            ProfileIntent.LaunchedLogout -> {
                 viewModelScope.launch {
                     logoutUseCase().onSuccess {
                         sideEffect(ProfileSideEffect.NavigateToLogin)
                     }
                 }
             }
-            ProfileIntent.OnLaunchedWithdraw -> {
+            ProfileIntent.LaunchedWithdraw -> {
                 viewModelScope.launch {
                     userDeleteAccountUseCase().onSuccess {
                         sideEffect(ProfileSideEffect.NavigateToLogin)
