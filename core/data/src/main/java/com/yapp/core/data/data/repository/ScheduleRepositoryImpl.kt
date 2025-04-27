@@ -10,7 +10,7 @@ internal class ScheduleRepositoryImpl @Inject constructor(
     private val scheduleApi: ScheduleApi
 ): ScheduleRepository{
     override fun getSessions() = flow {
-        emit(scheduleApi.getSessions().map { result ->
+        emit(scheduleApi.getSessions().sessions.map { result ->
             Sessions(
                 id = result.id,
                 name = result.name,
