@@ -34,7 +34,8 @@ internal class ScheduleRepositoryImpl @Inject constructor(
                 relativeDays = result.relativeDays,
                 type = Sessions.AttendType.valueOf(result.type),
                 progressPhase = result.progressPhase,
-                attendanceStatus = result.attendanceStatus
+                attendanceStatus = result.attendanceStatus,
+                startTime = result.starTime
             )
         })
     }

@@ -7,6 +7,7 @@ import com.yapp.core.ui.component.UserRole
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.PostsRepository
+import com.yapp.dataapi.SessionRepository
 import com.yapp.domain.GetUserProfileUseCase
 import com.yapp.model.NoticeType
 import com.yapp.model.exceptions.InvalidTokenException
@@ -20,9 +21,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val getUserProfileUseCase: GetUserProfileUseCase,
-    private val getNoticeListRepository: PostsRepository,
+internal class HomeViewModel @Inject constructor(
+    private val sessionsUseCase: SessionsUseCase,
 ) : ViewModel() {
 
     val store: MviIntentStore<HomeState, HomeIntent, HomeSideEffect> =
@@ -49,41 +49,18 @@ class HomeViewModel @Inject constructor(
         reduce: (HomeState.() -> HomeState) -> Unit,
         postSideEffect: (HomeSideEffect) -> Unit
     ) = viewModelScope.launch {
-        reduce { copy(isLoading = true, isUserInfoLoading = true, isNoticesLoading = true) }
-        getUserProfileUseCase()
-            .catch { error->
-                when(error) {
+        sessionsUseCase.invoke()
+            .catch { error ->
+                when (error) {
                     is UserNotFoundForEmailException, is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
                     else -> error.record()
                 }
-            }
-            .collectLatest{ userInfo ->
+            }.collectLatest { sessions ->
                 reduce {
                     copy(
-                        isUserInfoLoading = false,
-                        name = userInfo.name,
-                        role = UserRole.fromRole(userInfo.role),
-                        activityUnits = userInfo.activityUnits
+                        sessions = sessions
                     )
                 }
             }
-
-        getNoticeListRepository.getNoticeList(
-            noticeType = NoticeType.ALL.apiValue,
-            lastNoticeId = null,
-            limit = 3
-        ).collectLatest{ noticeInfo ->
-            reduce { copy(noticeInfo = noticeInfo, isNoticesLoading = false) }
-        }
-
-        combine(
-            store.uiState.map { it.isUserInfoLoading },
-            store.uiState.map { it.isNoticesLoading },
-        ) { isUserInfoLoading, isNoticesLoading ->
-            (isUserInfoLoading && isNoticesLoading)
-        }.collect { isLoading ->
-            reduce { copy(isLoading = isLoading) }
-        }
-
     }
 }

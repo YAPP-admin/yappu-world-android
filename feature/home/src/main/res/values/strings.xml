@@ -17,4 +17,6 @@
     <string name="delete_account_dialog_recommend_action_button">탈퇴하기</string>
     <string name="home_notice_more_button">더보기</string>
     <string name="home_notice_title">공지사항</string>
+    <string name="home_generation_title">이번 기수 세션</string>
+    <string name="home_session_all_title">전체보기</string>
 </resources>
