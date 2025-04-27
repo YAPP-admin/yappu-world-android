@@ -9,10 +9,8 @@
     <string name="toast_message_error_loading_url">관련 URL을 불러오지 못했어요.</string>
 
     <string name="time_format_day">%1$d일</string>
-    <string name="time_format_hour">오전 %1$d시</string>
-    <string name="time_format_hour_pm">오후 %1$d시</string>
-    <string name="time_format_half_hour">오전 %1$d시 반</string>
-    <string name="time_format_half_hour_pm">오후 %1$d시 반</string>
-    <string name="time_format_hour_minute">오전 %1$d시 %2$d분</string>
-    <string name="time_format_hour_minute_pm">오후 %1$d시 %2$d분</string>
+
+    <string name="time_format_base">a h시</string>
+    <string name="time_format_half_hour_with_base">%1$s 반</string>
+    <string name="time_format_hour_minute_with_base">%1$s %2$d분</string>
 </resources>
