@@ -80,7 +80,7 @@ private fun PreviousHistoryScreen(
                         position = item.position,
                         generation = item.generation,
                         slot = {
-                            if (item.activityEndDate.orEmpty().isNotEmpty() && item.activityStartDate.orEmpty().isNotEmpty()) {
+                            if (item.showSlot) {
                                 Text("${item.activityStartDate} - ${item.activityEndDate}")
                             }
                         }

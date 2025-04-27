@@ -8,7 +8,9 @@ data class PreviousHistoryState(
         val position: String,
         val activityStartDate: String?,
         val activityEndDate: String?
-    )
+    ) {
+        val showSlot = activityEndDate.orEmpty().isNotEmpty() && activityStartDate.orEmpty().isNotEmpty()
+    }
 }
 
 sealed interface PreviousHistorySideEffect {
