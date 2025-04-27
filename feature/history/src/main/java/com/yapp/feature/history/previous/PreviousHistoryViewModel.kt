@@ -5,15 +5,17 @@ import androidx.lifecycle.viewModelScope
 import com.yapp.core.common.android.record
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
+import com.yapp.dataapi.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
 internal class PreviousHistoryViewModel @Inject constructor(
-    private val previousHistoryUseCase: PreviousHistoryUseCase
+    private val userRepository: UserRepository
 ): ViewModel() {
 
     val store: MviIntentStore<PreviousHistoryState, PreviousHistoryIntent, PreviousHistorySideEffect> = mviIntentStore(
@@ -32,13 +34,24 @@ internal class PreviousHistoryViewModel @Inject constructor(
                 sideEffect(PreviousHistorySideEffect.Finish)
             }
             PreviousHistoryIntent.OnEntryScreen -> {
-                previousHistoryUseCase.invoke()
-                    .catch { it.record() }
-                    .onEach { result ->
-                        reduce {
-                            copy(items = result.items)
+                userRepository.getUserActivityHistories().map { result ->
+                    PreviousHistoryState(
+                        items = result.activityUnits.map { unit ->
+                            PreviousHistoryState.History(
+                                generation = unit.generation,
+                                position = unit.position,
+                                activityStartDate = unit.activityStartDate,
+                                activityEndDate = unit.activityEndDate
+                            )
                         }
-                    }.launchIn(viewModelScope)
+                    )
+                }.catch {
+                    it.record()
+                }.onEach { result ->
+                    reduce {
+                        copy(items = result.items)
+                    }
+                }.launchIn(viewModelScope)
             }
         }
     }
