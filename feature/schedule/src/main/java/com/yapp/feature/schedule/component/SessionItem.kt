@@ -14,14 +14,16 @@ import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.R
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.component.AttendanceStatusChip
+import com.yapp.core.ui.component.ScheduleStatusChip
 import com.yapp.model.AttendanceStatus
+import com.yapp.model.ScheduleProgressPhase
 
 @Composable
 internal fun SessionItem(
     id: String,
     title: String,
-    status: AttendanceStatus,
+    attendanceStatus: AttendanceStatus?,
+    scheduleProgressPhase: ScheduleProgressPhase,
     location: String?,
     duration: String?,
     onClick: (String) -> Unit,
@@ -61,7 +63,10 @@ internal fun SessionItem(
             }
         }
 
-        AttendanceStatusChip(status = status)
+        ScheduleStatusChip(
+            attendanceStatus = attendanceStatus,
+            scheduleProgressPhase = scheduleProgressPhase,
+        )
     }
 }
 
@@ -76,7 +81,8 @@ private fun PreviewSessionItem() {
             SessionItem(
                 id = "1",
                 title = "세션 제목",
-                status = AttendanceStatus.SCHEDULED,
+                attendanceStatus = AttendanceStatus.LATE,
+                scheduleProgressPhase = ScheduleProgressPhase.DONE,
                 location = "공덕 창업허브",
                 duration = "오후 2시 - 오후 6시",
                 onClick = {}
@@ -85,7 +91,8 @@ private fun PreviewSessionItem() {
             SessionItem(
                 id = "2",
                 title = "세션 제목",
-                status = AttendanceStatus.ATTENDED,
+                attendanceStatus = AttendanceStatus.ATTENDED,
+                scheduleProgressPhase = ScheduleProgressPhase.DONE,
                 location = "공덕 창업허브",
                 duration = "오후 2시 - 오후 6시",
                 onClick = {}
@@ -94,7 +101,8 @@ private fun PreviewSessionItem() {
             SessionItem(
                 id = "3",
                 title = "세션 제목",
-                status = AttendanceStatus.LATE,
+                attendanceStatus = AttendanceStatus.EARLY_LEAVE,
+                scheduleProgressPhase = ScheduleProgressPhase.DONE,
                 location = "공덕 창업허브",
                 duration = "오후 2시 - 오후 6시",
                 onClick = {}
