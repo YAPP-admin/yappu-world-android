@@ -1,5 +1,6 @@
 package com.yapp.feature.history.attend.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,13 +33,14 @@ internal fun AttendanceStatusSection(
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = YappTheme.colorScheme.backgroundNormalAlternative)
+        colors = CardDefaults.cardColors(containerColor = YappTheme.colorScheme.staticWhite),
+        border = BorderStroke(width = 1.dp, color = YappTheme.colorScheme.lineSolidAlternative)
     ) {
         Column {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(YappTheme.colorScheme.labelDisable)
+                    .background(YappTheme.colorScheme.backgroundElevatedAlternative)
                     .padding(horizontal = 16.dp, vertical = 10.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
