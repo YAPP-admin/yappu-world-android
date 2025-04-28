@@ -1,8 +1,10 @@
 package com.yapp.feature.history.attend.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -18,6 +20,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.theme.YappTheme
@@ -52,11 +57,28 @@ internal fun AttendanceStatusSection(
                 )
                 Text(style = YappTheme.typography.label2Medium, text = subTitle)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    style = YappTheme.typography.body2NormalBold,
-                    text = totalRate,
-                    color = YappTheme.colorScheme.primaryNormal
-                )
+                Box(
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Canvas(modifier = Modifier
+                        .matchParentSize()
+                    ) {
+                        val canvasHeight = size.height
+                        val canvasWidth = size.width
+
+                        drawRect(
+                            color = Color(0xFFFA6027).copy(alpha = 0.1f),
+                            topLeft = Offset(0f, canvasHeight / 2f),
+                            size = Size(canvasWidth, canvasHeight / 2f)
+                        )
+                    }
+
+                    Text(
+                        text = totalRate,
+                        style = YappTheme.typography.body2NormalBold,
+                        color = YappTheme.colorScheme.primaryNormal
+                    )
+                }
             }
             Row(
                 modifier = Modifier
