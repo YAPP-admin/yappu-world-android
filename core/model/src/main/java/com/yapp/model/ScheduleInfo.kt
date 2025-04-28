@@ -22,7 +22,7 @@ data class ScheduleInfo(
     val scheduleType: ScheduleType,
     val sessionType: SessionType?,
     val scheduleProgressPhase: ScheduleProgressPhase,
-    val attendanceStatus: AttendanceStatus,
+    val attendanceStatus: AttendanceStatus?,
 )
 
 enum class ScheduleType {
@@ -37,6 +37,12 @@ enum class ScheduleProgressPhase {
     DONE, TODAY, ONGOING, PENDING;
 }
 
-enum class AttendanceStatus {
-    SCHEDULED, ATTENDED, LATE, ABSENT, EARLY_LEAVE, EXCUSED;
+enum class AttendanceStatus(
+    val label: String,
+) {
+    ATTENDED("출석"),
+    LATE("지각"),
+    ABSENT("결석"),
+    EARLY_LEAVE("조퇴"),
+    EXCUSED("공결");
 }
