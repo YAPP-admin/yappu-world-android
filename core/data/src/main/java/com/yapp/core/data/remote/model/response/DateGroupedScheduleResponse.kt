@@ -105,6 +105,6 @@ data class ScheduleResponse(
                 ?: ScheduleProgressPhase.PENDING
 
         fun String?.toAttendanceStatus() =
-            AttendanceStatus.entries.firstOrNull { it.name == this } ?: AttendanceStatus.SCHEDULED
+            AttendanceStatus.entries.firstOrNull { it.label == this }
     }
 }
