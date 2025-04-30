@@ -11,6 +11,7 @@ data class ScheduleState(
     val selectedMonth: Int = LocalDate.now().monthValue,
     val schedules: ScheduleList = ScheduleList(dates = emptyList()),
     val upcomingSessionInfo: UpcomingSessionInfo? = null,
+    val sessions: ScheduleList = ScheduleList(dates = emptyList()),
 )
 
 sealed interface ScheduleIntent {
