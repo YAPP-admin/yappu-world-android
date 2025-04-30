@@ -37,7 +37,10 @@ class ScheduleViewModel @Inject constructor(
                     reduce { copy(selectedTab = intent.tab) }
                     when (intent.tab) {
                         ScheduleTab.ALL -> loadScheduleInfo(state.selectedYear, state.selectedMonth, reduce)
-                        ScheduleTab.SESSION -> loadUpcomingSessionInfo(reduce)
+                        ScheduleTab.SESSION -> {
+                            loadUpcomingSessionInfo(reduce)
+                            loadSessions(reduce)
+                        }
                     }
                 }
             }
@@ -72,6 +75,15 @@ class ScheduleViewModel @Inject constructor(
         scheduleRepository.getUpcomingSessions()
             .collectLatest { upcomingSessionInfo ->
                 reduce { copy(upcomingSessionInfo = upcomingSessionInfo) }
+            }
+    }
+
+    private fun loadSessions(
+        reduce: (ScheduleState.() -> ScheduleState) -> Unit
+    ) = viewModelScope.launch {
+        scheduleRepository.getDateGroupedSessions()
+            .collectLatest { sessions ->
+                reduce { copy(sessions = sessions) }
             }
     }
 
