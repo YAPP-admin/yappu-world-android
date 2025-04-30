@@ -1,6 +1,7 @@
 package com.yapp.feature.schedule
 
 import com.yapp.model.ScheduleList
+import com.yapp.model.UpcomingSessionInfo
 import java.time.LocalDate
 
 data class ScheduleState(
@@ -8,7 +9,8 @@ data class ScheduleState(
     val selectedTab: ScheduleTab = ScheduleTab.ALL,
     val selectedYear: Int = LocalDate.now().year,
     val selectedMonth: Int = LocalDate.now().monthValue,
-    val schedules: ScheduleList = ScheduleList(dates = emptyList())
+    val schedules: ScheduleList = ScheduleList(dates = emptyList()),
+    val upcomingSessionInfo: UpcomingSessionInfo? = null,
 )
 
 sealed interface ScheduleIntent {
