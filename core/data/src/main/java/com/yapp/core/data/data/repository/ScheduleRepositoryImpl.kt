@@ -1,7 +1,9 @@
 package com.yapp.core.data.data.repository
 
 import com.yapp.core.data.remote.api.ScheduleApi
+import com.yapp.core.data.remote.model.response.toDateGroupedScheduleList
 import com.yapp.dataapi.ScheduleRepository
+import com.yapp.model.ScheduleList
 import com.yapp.model.Sessions
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -17,11 +19,20 @@ internal class ScheduleRepositoryImpl @Inject constructor(
                 place = result.place,
                 date = result.date,
                 endDate = result.endDate,
+                startDayOfWeek = result.startDayOfWeek,
+                endDayOfWeek = result.endDayOfWeek,
                 time = result.time,
+                endTime = result.endTime,
+                relativeDays = result.relativeDays,
                 type = Sessions.AttendType.valueOf(result.type),
-                progressPhase = result.progressPhase
+                progressPhase = result.progressPhase,
+                attendanceStatus = result.attendanceStatus
             )
         })
+    }
+
+    override fun getDateGroupedSessions() = flow {
+        emit(ScheduleList(scheduleApi.getSessions().sessions.toDateGroupedScheduleList()))
     }
 
     override fun getUpcomingSessions() = flow {
