@@ -7,10 +7,14 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-fun formatToDay(context: Context, date: String): String {
+fun formatToDay(context: Context, date: String, showMonth: Boolean = false): String {
     return try {
         val parsedDate = LocalDate.parse(date)
-        context.getString(R.string.time_format_day, parsedDate.dayOfMonth)
+        if (showMonth) {
+            context.getString(R.string.time_format_month_day, parsedDate.monthValue, parsedDate.dayOfMonth)
+        } else {
+            context.getString(R.string.time_format_day, parsedDate.dayOfMonth)
+        }
     } catch (e: Exception) {
         date
     }
