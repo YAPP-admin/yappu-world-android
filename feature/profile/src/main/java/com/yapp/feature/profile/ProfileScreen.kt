@@ -110,7 +110,7 @@ private fun ProfileScreen(
                     modifier = Modifier
                         .padding(horizontal = 20.dp)
                         .height(56.dp),
-                    onClickSettings = { onIntent(ProfileIntent.ClickLogout) }
+                    onClickSettings = { onIntent(ProfileIntent.ClickSettings) }
                 )
                 ProfileInformationSection(
                     userName = userName,
