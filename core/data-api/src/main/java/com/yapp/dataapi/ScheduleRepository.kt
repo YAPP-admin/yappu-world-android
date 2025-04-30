@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.Flow
 interface ScheduleRepository {
     fun getSessions(): Flow<List<Sessions>>
 
+    fun getDateGroupedSessions(): Flow<ScheduleList>
+
     fun getUpcomingSessions(): Flow<UpcomingSessionInfo>
 
     fun getSchedules(year: Int, month: Int): Flow<ScheduleList>
