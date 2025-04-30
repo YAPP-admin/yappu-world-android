@@ -30,6 +30,7 @@ internal fun DateGroupedScheduleItem(
     dayOfWeek: String,
     isToday: Boolean,
     schedules: List<ScheduleInfo>,
+    showMonth: Boolean = false,
     onClick: (String) -> Unit,
 ) {
     val context = LocalContext.current
@@ -54,7 +55,7 @@ internal fun DateGroupedScheduleItem(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = formatToDay(context, date),
+                text = formatToDay(context, date, showMonth),
                 style = YappTheme.typography.body1NormalBold,
                 color = dateColor
             )
@@ -150,6 +151,7 @@ private fun DateGroupedScheduleItemPreview() {
                     endDate = "2023.10.01"
                 ),
             ),
+            showMonth = true,
             onClick = {}
         )
     }
