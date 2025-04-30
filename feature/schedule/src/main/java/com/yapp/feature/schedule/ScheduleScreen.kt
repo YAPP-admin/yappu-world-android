@@ -93,7 +93,8 @@ internal fun ScheduleScreen(
                 onIntent = onIntent
             )
             ScheduleTab.SESSION -> ScheduleSessionScreen(
-                upcomingSessionInfo = scheduleState.upcomingSessionInfo
+                upcomingSessionInfo = scheduleState.upcomingSessionInfo,
+                sessions = scheduleState.sessions
             )
         }
     }
@@ -135,7 +136,8 @@ private fun ScheduleAllScreen(
 
 @Composable
 private fun ScheduleSessionScreen(
-    upcomingSessionInfo: UpcomingSessionInfo?
+    upcomingSessionInfo: UpcomingSessionInfo?,
+    sessions: ScheduleList
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth()
@@ -200,6 +202,18 @@ private fun ScheduleSessionScreen(
             )
         }
 
+        items(
+            items = sessions.dates,
+            key = { it.date },
+        ) {
+            DateGroupedScheduleItem(
+                date = it.date,
+                dayOfWeek = it.dayOfTheWeek,
+                isToday = it.isToday,
+                showMonth = true,
+                schedules = it.schedules,
+            ) { }
+        }
     }
 }
 
