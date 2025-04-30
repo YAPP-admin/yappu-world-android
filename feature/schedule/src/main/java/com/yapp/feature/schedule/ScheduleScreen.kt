@@ -29,13 +29,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.yapp.core.designsystem.component.chip.ChipColorType
+import com.yapp.core.designsystem.component.chip.YappChipSmall
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.schedule.component.DateGroupedScheduleItem
 import com.yapp.feature.schedule.component.ScheduleTabRow
-import com.yapp.feature.schedule.component.TodaySessionSection
+import com.yapp.feature.schedule.component.UpcomingSessionSection
 import com.yapp.model.ScheduleList
+import com.yapp.model.UpcomingSessionInfo
 
 @Composable
 internal fun ScheduleRoute(
@@ -89,7 +92,9 @@ internal fun ScheduleScreen(
                 schedules = scheduleState.schedules,
                 onIntent = onIntent
             )
-            ScheduleTab.SESSION -> ScheduleSessionScreen()
+            ScheduleTab.SESSION -> ScheduleSessionScreen(
+                upcomingSessionInfo = scheduleState.upcomingSessionInfo
+            )
         }
     }
 }
@@ -130,7 +135,7 @@ private fun ScheduleAllScreen(
 
 @Composable
 private fun ScheduleSessionScreen(
-    hasTodaySession: Boolean = true,
+    upcomingSessionInfo: UpcomingSessionInfo?
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth()
@@ -139,23 +144,40 @@ private fun ScheduleSessionScreen(
             Column(
                 modifier = Modifier.padding(20.dp)
             ) {
-                Text(
-                    text = stringResource(id = R.string.today_session_section_title),
-                    style = YappTheme.typography.headline2Bold,
-                    color = YappTheme.colorScheme.labelNormal
-                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.upcoming_session_section_title),
+                        style = YappTheme.typography.headline2Bold,
+                        color = YappTheme.colorScheme.labelNormal
+                    )
+
+                    if (upcomingSessionInfo != null) {
+                        YappChipSmall(
+                            text = if (upcomingSessionInfo.remainingDays > 0) {
+                                stringResource(id = R.string.d_day_remaining, upcomingSessionInfo.remainingDays)
+                            } else {
+                                stringResource(id = R.string.d_day)
+                            },
+                            colorType = ChipColorType.Main,
+                            isFill = true
+                        )
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                if (hasTodaySession) {
-                    TodaySessionSection(
-                        id = 0,
-                        title = "오늘의 세션",
-                        date = "2024.12.25",
-                        dayOfWeek = "화요일",
-                        location = "서울시 강남구",
-                        time = "오후 2:00 - 오후 3:00",
-                        remainingDays = 2,
+                if (upcomingSessionInfo != null) {
+                    UpcomingSessionSection(
+                        id = upcomingSessionInfo.sessionId,
+                        title = upcomingSessionInfo.name,
+                        date = upcomingSessionInfo.startDate,
+                        dayOfWeek = upcomingSessionInfo.startDayOfTheWeek,
+                        location = upcomingSessionInfo.location,
+                        startTime = upcomingSessionInfo.startTime,
+                        endTime = upcomingSessionInfo.endTime,
                         onClick = {}
                     )
                 } else {
@@ -163,13 +185,12 @@ private fun ScheduleSessionScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 12.dp),
-                        text = stringResource(id = R.string.today_session_empty_message),
+                        text = stringResource(id = R.string.upcoming_session_empty_message),
                         style = YappTheme.typography.label2Regular,
                         color = YappTheme.colorScheme.labelAlternative,
                         textAlign = TextAlign.Center
                     )
                 }
-
             }
             Spacer(
                 modifier = Modifier
