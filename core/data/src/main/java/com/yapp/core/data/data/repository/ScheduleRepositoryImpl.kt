@@ -24,6 +24,10 @@ internal class ScheduleRepositoryImpl @Inject constructor(
         })
     }
 
+    override fun getUpcomingSessions() = flow {
+        emit(scheduleApi.getUpcomingSessions().toUpcomingSessionInfoModel())
+    }
+
     override fun getSchedules(year: Int, month: Int) = flow {
         emit(scheduleApi.getSchedules(year, month).toScheduleListModel())
     }
