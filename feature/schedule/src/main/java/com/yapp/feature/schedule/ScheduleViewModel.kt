@@ -29,10 +29,16 @@ class ScheduleViewModel @Inject constructor(
         postSideEffect: (ScheduleSideEffect) -> Unit,
     ) {
         when (intent) {
-            ScheduleIntent.EnterScheduleScreen -> loadScheduleInfo(state.selectedYear, state.selectedMonth, reduce)
+            ScheduleIntent.EnterScheduleScreen -> {
+                loadScheduleInfo(state.selectedYear, state.selectedMonth, reduce)
+            }
             is ScheduleIntent.SelectTab -> {
                 if (state.selectedTab != intent.tab) {
                     reduce { copy(selectedTab = intent.tab) }
+                    when (intent.tab) {
+                        ScheduleTab.ALL -> loadScheduleInfo(state.selectedYear, state.selectedMonth, reduce)
+                        ScheduleTab.SESSION -> loadUpcomingSessionInfo(reduce)
+                    }
                 }
             }
             ScheduleIntent.ClickPreviousMonth -> {
@@ -57,6 +63,15 @@ class ScheduleViewModel @Inject constructor(
         scheduleRepository.getSchedules(year = year, month = month)
             .collectLatest { schedules ->
                 reduce { copy(schedules = schedules, isLoading = false) }
+            }
+    }
+
+    private fun loadUpcomingSessionInfo(
+        reduce: (ScheduleState.() -> ScheduleState) -> Unit
+    ) = viewModelScope.launch {
+        scheduleRepository.getUpcomingSessions()
+            .collectLatest { upcomingSessionInfo ->
+                reduce { copy(upcomingSessionInfo = upcomingSessionInfo) }
             }
     }
 
