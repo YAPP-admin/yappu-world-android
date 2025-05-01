@@ -8,7 +8,7 @@
     <string name="attendance_status_excused">공결</string>
 
     <string name="time_format_day">%1$d일</string>
-    <string name="time_format_month_day">%1$02d.%2$02d일</string>
+    <string name="time_format_month_day">%1$02d.%2$02d</string>
 
     <string name="time_format_base">a h시</string>
     <string name="time_format_half_hour_with_base">%1$s 반</string>
