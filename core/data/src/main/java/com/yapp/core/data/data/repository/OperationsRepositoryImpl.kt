@@ -22,6 +22,9 @@ internal class OperationsRepositoryImpl @Inject constructor(
     @Dispatcher(YappDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     @ApplicationContext private val context: Context,
 ) : OperationsRepository {
+    private var usageInquiryLink: String? = null
+    private var termsOfServiceLink: String? = null
+    private var privacyPolicyLink: String? = null
 
     override fun getPositionConfigs(): Flow<List<String>> = flow {
         val localPositionConfigs = dataStore.data.firstOrNull()
@@ -44,23 +47,23 @@ internal class OperationsRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getUsageInquiryLink(): Flow<String> = flow {
-        emit("http://pf.kakao.com/_ixmUxjn/chat")
+    override suspend fun getUsageInquiryLink(): String {
+        return usageInquiryLink ?: operationsApi.getUsageInquiryLink().link.also {
+            usageInquiryLink = it
+        }
+    }
 
-        emit(operationsApi.getUsageInquiryLink().link)
-    }.flowOn(ioDispatcher)
+    override suspend fun getTermsOfServiceLink(): String {
+        return termsOfServiceLink ?: operationsApi.getTermsOfServiceLink().link.also {
+            termsOfServiceLink = it
+        }
+    }
 
-    override fun getTermsOfServiceLink(): Flow<String> = flow {
-        emit("https://yapp-workspace.notion.site/48f4eb2ffdd94740979e8a3b37ca260d?pvs=4")
-
-        emit(operationsApi.getTermsOfServiceLink().link)
-    }.flowOn(ioDispatcher)
-
-    override fun getPrivacyPolicyLink(): Flow<String> = flow {
-        emit("https://yapp-workspace.notion.site/fc24f8ba29c34f9eb30eb945c621c1ca?pvs=4")
-
-        emit(operationsApi.getPrivacyPolicyLink().link)
-    }.flowOn(ioDispatcher)
+    override suspend fun getPrivacyPolicyLink(): String {
+        return privacyPolicyLink ?: operationsApi.getPrivacyPolicyLink().link.also {
+            privacyPolicyLink = it
+        }
+    }
 
     override fun getAppVersion(): String {
         return context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: ""

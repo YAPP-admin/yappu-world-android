@@ -14,13 +14,13 @@ import com.yapp.model.SignUpResult
 import com.yapp.model.exceptions.SignUpCodeException
 import com.yapp.model.exceptions.UnprocessedSignUpException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.sign
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
@@ -30,7 +30,7 @@ class SignUpViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private var signUpInfo = SignUpInfo()
-    private var inquiryLink = ""
+    private var inquiryLink: String? = null
 
     companion object {
         private const val STEP_ID_KEY = "currentStep"
@@ -65,12 +65,7 @@ class SignUpViewModel @Inject constructor(
                     }
                     .launchIn(viewModelScope)
 
-                operationsRepository.getUsageInquiryLink()
-                    .onEach {
-                        inquiryLink = it
-                    }
-                    .catch { it.record() }
-                    .launchIn(viewModelScope)
+                updateUrl()
             }
 
             SignUpIntent.BackPressed,
@@ -190,7 +185,12 @@ class SignUpViewModel @Inject constructor(
             }
 
             SignUpIntent.ClickPendingButton -> {
-                postSideEffect(SignUpSideEffect.OpenWebBrowser(link = inquiryLink))
+                inquiryLink?.let { inquiryLink ->
+                    postSideEffect(SignUpSideEffect.OpenWebBrowser(link = inquiryLink))
+                } ?: run {
+                    updateUrl()
+                    postSideEffect(SignUpSideEffect.ShowUrlLoadFailToast)
+                }
             }
         }
     }
@@ -229,6 +229,20 @@ class SignUpViewModel @Inject constructor(
             SignUpStep.Complete,
             SignUpStep.Reject,
             SignUpStep.Pending -> true
+        }
+    }
+
+    private fun updateUrl() {
+        viewModelScope.launch {
+            val inquiryDeferred = async {
+                if (inquiryLink == null) {
+                    runCatching { operationsRepository.getTermsOfServiceLink() }
+                } else {
+                    Result.success(inquiryLink)
+                }
+            }
+
+            inquiryLink = inquiryDeferred.await().getOrNull()
         }
     }
 }

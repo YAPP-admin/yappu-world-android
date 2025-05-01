@@ -1,5 +1,6 @@
 package com.yapp.feature.home.setting
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -11,6 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,8 +25,9 @@ import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.borderBottom
 import com.yapp.core.ui.extension.collectWithLifecycle
-import com.yapp.core.ui.extension.openUrl
+import com.yapp.core.ui.extension.safeOpenUri
 import com.yapp.feature.home.R
+import com.yapp.core.ui.R as coreR
 import com.yapp.feature.home.setting.component.SettingItemLarge
 import com.yapp.feature.home.setting.component.SettingItemMedium
 
@@ -37,17 +40,22 @@ fun SettingRoute(
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
+    val uriHandler = LocalUriHandler.current
 
     viewModel.store.sideEffects.collectWithLifecycle { sideEffect ->
         when (sideEffect) {
             SettingSideEffect.NavigateBack -> navigateBack()
 
             is SettingSideEffect.OpenWebBrowser -> {
-                context.openUrl(sideEffect.link)
+                uriHandler.safeOpenUri(sideEffect.link)
             }
 
             SettingSideEffect.NavigateToLogin -> {
                 navigateLogin()
+            }
+
+            is SettingSideEffect.ShowUrlLoadFailToast -> {
+                Toast.makeText(context, context.getString(coreR.string.toast_message_error_loading_url), Toast.LENGTH_SHORT).show()
             }
         }
     }
