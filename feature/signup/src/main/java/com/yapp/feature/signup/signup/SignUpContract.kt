@@ -52,6 +52,7 @@ sealed interface SignUpSideEffect {
     data object NavigateHome : SignUpSideEffect
     data object ClearFocus : SignUpSideEffect
     data class OpenWebBrowser(val link: String) : SignUpSideEffect
+    data object ShowUrlLoadFailToast : SignUpSideEffect
 }
 
 enum class SignUpStep {

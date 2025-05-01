@@ -6,4 +6,5 @@
     <string name="attendance_status_absent">결석</string>
     <string name="attendance_status_early_leave">조퇴</string>
     <string name="attendance_status_excused">공결</string>
+    <string name="toast_message_error_loading_url">관련 URL을 불러오지 못했어요.</string>
 </resources>

@@ -5,11 +5,11 @@ import kotlinx.coroutines.flow.Flow
 interface OperationsRepository {
     fun getPositionConfigs(): Flow<List<String>>
 
-    fun getUsageInquiryLink(): Flow<String>
+    suspend fun getUsageInquiryLink(): String
 
-    fun getTermsOfServiceLink(): Flow<String>
+    suspend fun getTermsOfServiceLink(): String
 
-    fun getPrivacyPolicyLink(): Flow<String>
+    suspend fun getPrivacyPolicyLink(): String
 
     suspend fun isForceUpdateRequired(): Boolean
 }
