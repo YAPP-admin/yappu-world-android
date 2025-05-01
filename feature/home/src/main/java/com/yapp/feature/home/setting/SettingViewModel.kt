@@ -2,16 +2,12 @@ package com.yapp.feature.home.setting
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yapp.core.common.android.record
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.AlarmRepository
 import com.yapp.dataapi.OperationsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,9 +16,9 @@ class SettingViewModel @Inject constructor(
     private val alarmRepository: AlarmRepository,
     private val operationsRepository: OperationsRepository,
 ) : ViewModel() {
-    private var privacyPolicyLink = ""
-    private var termsLink = ""
-    private var inquiryLink = ""
+    private var privacyPolicyLink: String? = null
+    private var termsLink: String? = null
+    private var inquiryLink: String? = null
 
     val store: MviIntentStore<SettingState, SettingIntent, SettingSideEffect> =
         mviIntentStore(
@@ -44,19 +40,7 @@ class SettingViewModel @Inject constructor(
                     reduce { copy(isNotificationEnabled = enabled, appVersion = appVersion) }
                 }
 
-                combine(
-                    operationsRepository.getPrivacyPolicyLink(),
-                    operationsRepository.getTermsOfServiceLink(),
-                    operationsRepository.getUsageInquiryLink(),
-                ) { privacyPolicyLink, termsLink, inquiryLink ->
-                    Triple(privacyPolicyLink, termsLink, inquiryLink)
-                }.onEach { (privacyPolicyLink, termsLink, inquiryLink) ->
-                    this@SettingViewModel.privacyPolicyLink = privacyPolicyLink
-                    this@SettingViewModel.termsLink = termsLink
-                    this@SettingViewModel.inquiryLink = inquiryLink
-                }.catch {
-                    it.record()
-                }.launchIn(viewModelScope)
+                updateUrl()
             }
 
             is SettingIntent.ClickNotificationSwitch -> {
@@ -71,16 +55,60 @@ class SettingViewModel @Inject constructor(
             }
 
             SettingIntent.ClickPrivacyPolicyItem -> {
-                postSideEffect(SettingSideEffect.OpenWebBrowser(privacyPolicyLink))
+                privacyPolicyLink?.let {
+                    postSideEffect(SettingSideEffect.OpenWebBrowser(it))
+                } ?: run {
+                    updateUrl()
+                    postSideEffect(SettingSideEffect.ShowUrlLoadFailToast)
+                }
             }
 
             SettingIntent.ClickTermsItem -> {
-                postSideEffect(SettingSideEffect.OpenWebBrowser(termsLink))
+                termsLink?.let {
+                    postSideEffect(SettingSideEffect.OpenWebBrowser(it))
+                } ?: run {
+                    updateUrl()
+                    postSideEffect(SettingSideEffect.ShowUrlLoadFailToast)
+                }
             }
 
             SettingIntent.ClickInquiryItem -> {
-                postSideEffect(SettingSideEffect.OpenWebBrowser(inquiryLink))
+                inquiryLink?.let {
+                    postSideEffect(SettingSideEffect.OpenWebBrowser(it))
+                } ?: run {
+                    updateUrl()
+                    postSideEffect(SettingSideEffect.ShowUrlLoadFailToast)
+                }
             }
         }
     }
+
+    private fun updateUrl() = viewModelScope.launch {
+        val privacyPolicyDeferred = async {
+            if (privacyPolicyLink == null) {
+                runCatching { operationsRepository.getPrivacyPolicyLink() }
+            } else {
+                Result.success(privacyPolicyLink)
+            }
+        }
+        val termsDeferred = async {
+            if (termsLink == null) {
+                runCatching { operationsRepository.getTermsOfServiceLink() }
+            } else {
+                Result.success(termsLink)
+            }
+        }
+        val inquiryDeferred = async {
+            if (inquiryLink == null) {
+                runCatching { operationsRepository.getUsageInquiryLink() }
+            } else {
+                Result.success(inquiryLink)
+            }
+        }
+
+        privacyPolicyLink = privacyPolicyDeferred.await().getOrNull()
+        termsLink = termsDeferred.await().getOrNull()
+        inquiryLink = inquiryDeferred.await().getOrNull()
+    }
+
 }
