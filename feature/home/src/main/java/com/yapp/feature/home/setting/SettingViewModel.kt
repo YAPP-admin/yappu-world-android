@@ -8,6 +8,7 @@ import com.yapp.dataapi.AlarmRepository
 import com.yapp.dataapi.OperationsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,9 +39,8 @@ class SettingViewModel @Inject constructor(
                     val enabled = alarmRepository.getMasterAlarmStatus()
                     val appVersion = operationsRepository.getAppVersion()
                     reduce { copy(isNotificationEnabled = enabled, appVersion = appVersion) }
+                    updateUrl()
                 }
-
-                updateUrl()
             }
 
             is SettingIntent.ClickNotificationSwitch -> {
@@ -55,35 +55,41 @@ class SettingViewModel @Inject constructor(
             }
 
             SettingIntent.ClickPrivacyPolicyItem -> {
-                privacyPolicyLink?.let {
-                    postSideEffect(SettingSideEffect.OpenWebBrowser(it))
-                } ?: run {
+                viewModelScope.launch {
                     updateUrl()
-                    postSideEffect(SettingSideEffect.ShowUrlLoadFailToast)
+                    privacyPolicyLink?.let {
+                        postSideEffect(SettingSideEffect.OpenWebBrowser(it))
+                    } ?: run {
+                        postSideEffect(SettingSideEffect.ShowUrlLoadFailToast)
+                    }
                 }
             }
 
             SettingIntent.ClickTermsItem -> {
-                termsLink?.let {
-                    postSideEffect(SettingSideEffect.OpenWebBrowser(it))
-                } ?: run {
+                viewModelScope.launch {
                     updateUrl()
-                    postSideEffect(SettingSideEffect.ShowUrlLoadFailToast)
+                    termsLink?.let {
+                        postSideEffect(SettingSideEffect.OpenWebBrowser(it))
+                    } ?: run {
+                        postSideEffect(SettingSideEffect.ShowUrlLoadFailToast)
+                    }
                 }
             }
 
             SettingIntent.ClickInquiryItem -> {
-                inquiryLink?.let {
-                    postSideEffect(SettingSideEffect.OpenWebBrowser(it))
-                } ?: run {
+                viewModelScope.launch {
                     updateUrl()
-                    postSideEffect(SettingSideEffect.ShowUrlLoadFailToast)
+                    inquiryLink?.let {
+                        postSideEffect(SettingSideEffect.OpenWebBrowser(it))
+                    } ?: run {
+                        postSideEffect(SettingSideEffect.ShowUrlLoadFailToast)
+                    }
                 }
             }
         }
     }
 
-    private fun updateUrl() = viewModelScope.launch {
+    private suspend fun updateUrl() = coroutineScope {
         val privacyPolicyDeferred = async {
             if (privacyPolicyLink == null) {
                 runCatching { operationsRepository.getPrivacyPolicyLink() }
