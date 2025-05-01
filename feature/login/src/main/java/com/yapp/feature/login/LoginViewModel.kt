@@ -12,6 +12,7 @@ import com.yapp.model.exceptions.RecentSignUpRejectedException
 import com.yapp.model.exceptions.SignUpPendingException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -82,24 +83,30 @@ class LoginViewModel @Inject constructor(
             }
 
             LoginIntent.ClickTerms -> {
-                termsLink?.let {
-                    postSideEffect(LoginSideEffect.OpenWebBrowser(it))
-                } ?: run {
+                viewModelScope.launch {
                     updateUrl()
-                    postSideEffect(LoginSideEffect.ShowUrlLoadFailToast)
+                    termsLink?.let {
+                        postSideEffect(LoginSideEffect.OpenWebBrowser(it))
+                    } ?: run {
+                        postSideEffect(LoginSideEffect.ShowUrlLoadFailToast)
+                    }
                 }
             }
             LoginIntent.ClickPersonalPolicy -> {
-                privacyPolicyLink?.let {
-                    postSideEffect(LoginSideEffect.OpenWebBrowser(it))
-                } ?: run {
+                viewModelScope.launch {
                     updateUrl()
-                    postSideEffect(LoginSideEffect.ShowUrlLoadFailToast)
+                    privacyPolicyLink?.let {
+                        postSideEffect(LoginSideEffect.OpenWebBrowser(it))
+                    } ?: run {
+                        postSideEffect(LoginSideEffect.ShowUrlLoadFailToast)
+                    }
                 }
             }
 
             LoginIntent.EnterLoginScreen -> {
-                updateUrl()
+                viewModelScope.launch {
+                    updateUrl()
+                }
             }
         }
     }
@@ -152,7 +159,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun updateUrl() = viewModelScope.launch {
+    private suspend fun updateUrl() = coroutineScope {
         val privacyPolicyDeferred = async {
             if (privacyPolicyLink == null) {
                 runCatching { operationsRepository.getPrivacyPolicyLink() }

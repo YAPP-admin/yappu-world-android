@@ -15,6 +15,7 @@ import com.yapp.model.exceptions.SignUpCodeException
 import com.yapp.model.exceptions.UnprocessedSignUpException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
@@ -55,7 +56,7 @@ class SignUpViewModel @Inject constructor(
     ) {
         when (intent) {
             is SignUpIntent.EnterScreen -> {
-                reduce{copy(currentStep= SignUpStep.from(step))}
+                reduce { copy(currentStep = SignUpStep.from(step)) }
                 getPositionConfigsUseCase()
                     .onEach {
                         reduce { copy(positions = it) }
@@ -65,7 +66,9 @@ class SignUpViewModel @Inject constructor(
                     }
                     .launchIn(viewModelScope)
 
-                updateUrl()
+                viewModelScope.launch {
+                    updateUrl()
+                }
             }
 
             SignUpIntent.BackPressed,
@@ -80,6 +83,7 @@ class SignUpViewModel @Inject constructor(
                         postSideEffect(SignUpSideEffect.NavigateBack)
                         return
                     }
+
                     SignUpStep.Complete -> {
                         postSideEffect(SignUpSideEffect.NavigateHome)
                         return
@@ -134,7 +138,8 @@ class SignUpViewModel @Inject constructor(
             }
 
             is SignUpIntent.EmailChanged -> {
-                signUpInfo = signUpInfo.copy(email = intent.email, isEmailVerified = intent.verified)
+                signUpInfo =
+                    signUpInfo.copy(email = intent.email, isEmailVerified = intent.verified)
                 reduce { copy(primaryButtonEnable = intent.verified) }
             }
 
@@ -185,11 +190,13 @@ class SignUpViewModel @Inject constructor(
             }
 
             SignUpIntent.ClickPendingButton -> {
-                inquiryLink?.let { inquiryLink ->
-                    postSideEffect(SignUpSideEffect.OpenWebBrowser(link = inquiryLink))
-                } ?: run {
+                viewModelScope.launch {
                     updateUrl()
-                    postSideEffect(SignUpSideEffect.ShowUrlLoadFailToast)
+                    inquiryLink?.let { inquiryLink ->
+                        postSideEffect(SignUpSideEffect.OpenWebBrowser(link = inquiryLink))
+                    } ?: run {
+                        postSideEffect(SignUpSideEffect.ShowUrlLoadFailToast)
+                    }
                 }
             }
         }
@@ -214,7 +221,13 @@ class SignUpViewModel @Inject constructor(
             .onFailure {
                 when (it) {
                     is SignUpCodeException -> reduce { copy(signUpErrorInputTextDescription = it.message) }
-                    is UnprocessedSignUpException -> reduce { copy(currentStep = SignUpStep.Pending, showSignUpCodeBottomDialog = false)}
+                    is UnprocessedSignUpException -> reduce {
+                        copy(
+                            currentStep = SignUpStep.Pending,
+                            showSignUpCodeBottomDialog = false
+                        )
+                    }
+
                     else -> it.record()
                 }
             }
@@ -232,17 +245,15 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    private fun updateUrl() {
-        viewModelScope.launch {
-            val inquiryDeferred = async {
-                if (inquiryLink == null) {
-                    runCatching { operationsRepository.getUsageInquiryLink() }
-                } else {
-                    Result.success(inquiryLink)
-                }
+    private suspend fun updateUrl() = coroutineScope {
+        val inquiryDeferred = async {
+            if (inquiryLink == null) {
+                runCatching { operationsRepository.getUsageInquiryLink() }
+            } else {
+                Result.success(inquiryLink)
             }
-
-            inquiryLink = inquiryDeferred.await().getOrNull()
         }
+
+        inquiryLink = inquiryDeferred.await().getOrNull()
     }
 }
