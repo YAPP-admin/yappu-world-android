@@ -22,42 +22,45 @@ fun ScheduleStatusChip(
     scheduleProgressPhase: ScheduleProgressPhase,
     attendanceStatus: AttendanceStatus?,
 ) {
-    val (textResId, backgroundColor, textColor) = when {
-        attendanceStatus != null -> when (attendanceStatus) {
-            AttendanceStatus.ATTENDED -> Triple(
-                R.string.attendance_status_attended,
-                YappTheme.colorScheme.accentLightBlueWeak,
-                YappTheme.colorScheme.accentLightBlue
-            )
-            AttendanceStatus.LATE -> Triple(
-                R.string.attendance_status_late,
-                YappTheme.colorScheme.semanticFillAlternative,
-                YappTheme.colorScheme.coolNeutral50
-            )
-            AttendanceStatus.ABSENT -> Triple(
-                R.string.attendance_status_absent,
-                YappTheme.colorScheme.accentRedWeak,
-                YappTheme.colorScheme.accentRed
-            )
-            AttendanceStatus.EARLY_LEAVE -> Triple(
-                R.string.attendance_status_early_leave,
-                YappTheme.colorScheme.accentVioletWeak,
-                YappTheme.colorScheme.accentViolet
-            )
-            AttendanceStatus.EXCUSED -> Triple(
-                R.string.attendance_status_excused,
-                YappTheme.colorScheme.neutral95,
-                YappTheme.colorScheme.neutral40
-            )
-            else -> null
-        }
+    val attendanceStatusUiMap = mapOf(
+        AttendanceStatus.ATTENDED to Triple(
+            R.string.attendance_status_attended,
+            YappTheme.colorScheme.accentLightBlueWeak,
+            YappTheme.colorScheme.accentLightBlue
+        ),
+        AttendanceStatus.LATE to Triple(
+            R.string.attendance_status_late,
+            YappTheme.colorScheme.semanticFillAlternative,
+            YappTheme.colorScheme.coolNeutral50
+        ),
+        AttendanceStatus.ABSENT to Triple(
+            R.string.attendance_status_absent,
+            YappTheme.colorScheme.accentRedWeak,
+            YappTheme.colorScheme.accentRed
+        ),
+        AttendanceStatus.EARLY_LEAVE to Triple(
+            R.string.attendance_status_early_leave,
+            YappTheme.colorScheme.accentVioletWeak,
+            YappTheme.colorScheme.accentViolet
+        ),
+        AttendanceStatus.EXCUSED to Triple(
+            R.string.attendance_status_excused,
+            YappTheme.colorScheme.neutral95,
+            YappTheme.colorScheme.neutral40
+        )
+    )
+
+    val statusStyle = when {
+        attendanceStatus != null -> attendanceStatusUiMap[attendanceStatus]
         scheduleProgressPhase == ScheduleProgressPhase.PENDING -> Triple(
             R.string.attendance_status_scheduled,
             YappTheme.colorScheme.yellow95,
             YappTheme.colorScheme.secondaryNormal
         )
         else -> null
-    } ?: return
+    }
+
+    val (textResId, backgroundColor, textColor) = statusStyle ?: return
 
     Box(
         modifier = Modifier
