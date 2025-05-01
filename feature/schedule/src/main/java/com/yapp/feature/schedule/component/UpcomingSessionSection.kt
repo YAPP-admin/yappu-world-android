@@ -87,7 +87,7 @@ internal fun UpcomingSessionSection(
     showBackground = true
 )
 @Composable
-private fun PreviewTodaySessionSection() {
+private fun PreviewUpcomingSessionSection() {
     YappTheme {
         UpcomingSessionSection(
             id = "1234",
