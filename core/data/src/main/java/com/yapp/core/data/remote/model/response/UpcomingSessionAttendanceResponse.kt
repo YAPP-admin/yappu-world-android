@@ -4,7 +4,7 @@ import com.yapp.core.data.remote.model.response.ScheduleResponse.Companion.toAtt
 import com.yapp.model.UpcomingSessionInfo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlin.math.min
+import kotlin.math.max
 
 @Serializable
 data class UpcomingSessionAttendanceResponse(
@@ -43,7 +43,7 @@ data class UpcomingSessionAttendanceResponse(
         startTime = startTime,
         endTime = endTime,
         location = place,
-        remainingDays = min(0, relativeDays),
+        remainingDays = max(0, relativeDays),
         canCheckIn = canCheckIn,
         status = status.toAttendanceStatus()
     )
