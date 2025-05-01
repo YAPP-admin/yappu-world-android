@@ -236,7 +236,7 @@ class SignUpViewModel @Inject constructor(
         viewModelScope.launch {
             val inquiryDeferred = async {
                 if (inquiryLink == null) {
-                    runCatching { operationsRepository.getTermsOfServiceLink() }
+                    runCatching { operationsRepository.getUsageInquiryLink() }
                 } else {
                     Result.success(inquiryLink)
                 }
