@@ -33,10 +33,11 @@ data class SessionResponse(
 
 fun List<SessionResponse.Session>.toDateGroupedScheduleList(): List<DateGroupedSchedule> {
     return groupBy { it.date }.map { (date, sessions) ->
+        val firstSession = sessions.first()
         DateGroupedSchedule(
             date = date,
-            isToday = sessions.first().relativeDays == 0,
-            dayOfTheWeek = sessions.first().startDayOfWeek,
+            isToday = firstSession.relativeDays == 0,
+            dayOfTheWeek = firstSession.startDayOfWeek,
             schedules = sessions.map {
                 ScheduleInfo(
                     id = it.id,
