@@ -49,8 +49,10 @@ internal fun DateGroupedScheduleItem(
         } else {
             YappTheme.colorScheme.labelNeutral
         }
+        val dateWidth = if (showMonth) 72.dp else 58.dp
 
         Row(
+            modifier = Modifier.width(dateWidth),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -106,53 +108,79 @@ internal fun DateGroupedScheduleItem(
 @Composable
 private fun DateGroupedScheduleItemPreview() {
     YappTheme {
-        DateGroupedScheduleItem(
-            date = "5",
-            dayOfWeek = "일",
-            isToday = true,
-            schedules = listOf(
-                ScheduleInfo(
-                    id = "1",
-                    name = "세션 제목",
-                    scheduleType = ScheduleType.SESSION,
-                    attendanceStatus = null,
-                    place = "공덕 창업허브",
-                    time = "14:00",
-                    endTime = "18:00",
-                    sessionType = null,
-                    scheduleProgressPhase = ScheduleProgressPhase.ONGOING,
-                    date = "2023.10.01",
-                    endDate = "2023.10.01"
+        Column {
+            DateGroupedScheduleItem(
+                date = "2025-05-08",
+                dayOfWeek = "일",
+                isToday = true,
+                schedules = listOf(
+                    ScheduleInfo(
+                        id = "1",
+                        name = "세션 제목",
+                        scheduleType = ScheduleType.SESSION,
+                        attendanceStatus = null,
+                        place = "공덕 창업허브",
+                        time = "14:00",
+                        endTime = "18:00",
+                        sessionType = null,
+                        scheduleProgressPhase = ScheduleProgressPhase.ONGOING,
+                        date = "2023.10.01",
+                        endDate = "2023.10.01"
+                    ),
+                    ScheduleInfo(
+                        id = "2",
+                        name = "과제 제목",
+                        scheduleType = ScheduleType.TASK,
+                        attendanceStatus = AttendanceStatus.ATTENDED,
+                        place = null,
+                        time = "14:00",
+                        endTime = "18:00",
+                        sessionType = null,
+                        scheduleProgressPhase = ScheduleProgressPhase.TODAY,
+                        date = "2023.10.01",
+                        endDate = "2023.10.01"
+                    ),
+                    ScheduleInfo(
+                        id = "3",
+                        name = "세션 제목",
+                        scheduleType = ScheduleType.SESSION,
+                        attendanceStatus = AttendanceStatus.EARLY_LEAVE,
+                        place = "공덕 창업허브",
+                        time = "14:00",
+                        endTime = "18:00",
+                        sessionType = null,
+                        scheduleProgressPhase = ScheduleProgressPhase.ONGOING,
+                        date = "2023.10.01",
+                        endDate = "2023.10.01"
+                    ),
                 ),
-                ScheduleInfo(
-                    id = "2",
-                    name = "과제 제목",
-                    scheduleType = ScheduleType.TASK,
-                    attendanceStatus = AttendanceStatus.ATTENDED,
-                    place = null,
-                    time = "14:00",
-                    endTime = "18:00",
-                    sessionType = null,
-                    scheduleProgressPhase = ScheduleProgressPhase.TODAY,
-                    date = "2023.10.01",
-                    endDate = "2023.10.01"
+                showMonth = true,
+                onClick = {}
+            )
+
+            DateGroupedScheduleItem(
+                date = "2025-05-24",
+                dayOfWeek = "일",
+                isToday = false,
+                schedules = listOf(
+                    ScheduleInfo(
+                        id = "1",
+                        name = "세션 제목",
+                        scheduleType = ScheduleType.SESSION,
+                        attendanceStatus = null,
+                        place = "공덕 창업허브",
+                        time = "14:00",
+                        endTime = "18:00",
+                        sessionType = null,
+                        scheduleProgressPhase = ScheduleProgressPhase.ONGOING,
+                        date = "2023.10.01",
+                        endDate = "2023.10.01"
+                    ),
                 ),
-                ScheduleInfo(
-                    id = "3",
-                    name = "세션 제목",
-                    scheduleType = ScheduleType.SESSION,
-                    attendanceStatus = AttendanceStatus.EARLY_LEAVE,
-                    place = "공덕 창업허브",
-                    time = "14:00",
-                    endTime = "18:00",
-                    sessionType = null,
-                    scheduleProgressPhase = ScheduleProgressPhase.ONGOING,
-                    date = "2023.10.01",
-                    endDate = "2023.10.01"
-                ),
-            ),
-            showMonth = true,
-            onClick = {}
-        )
+                showMonth = true,
+                onClick = {}
+            )
+        }
     }
+
 }
