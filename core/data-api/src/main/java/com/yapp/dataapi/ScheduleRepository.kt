@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.Flow
 interface ScheduleRepository {
     fun getSessions(): Flow<List<Sessions>>
 
-    fun getDateGroupedSessions(): Flow<ScheduleList>
+    suspend fun getDateGroupedSessions(): ScheduleList
 
-    fun getUpcomingSessions(): Flow<UpcomingSessionInfo>
+    suspend fun getUpcomingSessions(): UpcomingSessionInfo
 
-    fun getSchedules(year: Int, month: Int): Flow<ScheduleList>
+    suspend fun getSchedules(year: Int, month: Int): ScheduleList
 }

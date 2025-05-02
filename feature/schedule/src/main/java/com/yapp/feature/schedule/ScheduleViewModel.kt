@@ -6,7 +6,6 @@ import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.ScheduleRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -63,28 +62,24 @@ class ScheduleViewModel @Inject constructor(
         reduce: (ScheduleState.() -> ScheduleState) -> Unit
     ) = viewModelScope.launch {
         reduce { copy(isLoading = true) }
-        scheduleRepository.getSchedules(year = year, month = month)
-            .collectLatest { schedules ->
-                reduce { copy(schedules = schedules, isLoading = false) }
-            }
+        val schedules = scheduleRepository.getSchedules(year, month)
+        reduce { copy(isLoading = false, schedules = schedules) }
     }
 
     private fun loadUpcomingSessionInfo(
         reduce: (ScheduleState.() -> ScheduleState) -> Unit
     ) = viewModelScope.launch {
-        scheduleRepository.getUpcomingSessions()
-            .collectLatest { upcomingSessionInfo ->
-                reduce { copy(upcomingSessionInfo = upcomingSessionInfo) }
-            }
+        reduce { copy(isLoading = true) }
+        val upcomingSessionInfo = scheduleRepository.getUpcomingSessions()
+        reduce { copy(isLoading = false, upcomingSessionInfo = upcomingSessionInfo) }
     }
 
     private fun loadSessions(
         reduce: (ScheduleState.() -> ScheduleState) -> Unit
     ) = viewModelScope.launch {
-        scheduleRepository.getDateGroupedSessions()
-            .collectLatest { sessions ->
-                reduce { copy(sessions = sessions) }
-            }
+        reduce { copy(isLoading = true) }
+        val sessions = scheduleRepository.getDateGroupedSessions()
+        reduce { copy(isLoading = false, sessions = sessions) }
     }
 
     private fun calculatePreviousMonth(year: Int, month: Int): Pair<Int, Int> {
