@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -26,7 +27,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
+import com.yapp.core.ui.component.ScheduleStatusChip
 import com.yapp.feature.home.HomeState
 import com.yapp.feature.home.R
 import com.yapp.core.designsystem.R as coreDesignR
@@ -35,7 +38,8 @@ import com.yapp.core.designsystem.R as coreDesignR
 internal fun HomeStickHeader(
     modifier: Modifier = Modifier,
     initialPage: Int = 0,
-    sessions: List<HomeState.Session>
+    sessions: List<HomeState.Session>,
+    onClickSessionItem: (String) -> Unit
 ) {
     val pagerState = rememberPagerState(
         initialPage = initialPage,
@@ -62,21 +66,24 @@ internal fun HomeStickHeader(
         HorizontalPager(
             modifier = Modifier.fillMaxWidth(),
             state = pagerState,
-            contentPadding = PaddingValues(24.dp),
-            pageSpacing = 8.dp
+            contentPadding = PaddingValues(20.dp),
+            pageSpacing = (-30).dp
         ) {
             val item = sessions[it]
 
             SessionItem(
+                id = item.id,
                 title = item.title,
                 date = item.date,
                 place = item.place,
                 startTime = item.startTime,
-                endTime = item.endTime
+                endTime = item.endTime,
+                startDayOfWeek = item.startDayOfWeek,
+                onClickSessionItem = onClickSessionItem
             )
         }
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
             horizontalArrangement = Arrangement.Center
         ) {
             repeat(sessions.size) { iteration ->
@@ -99,20 +106,25 @@ internal fun HomeStickHeader(
 @Composable
 private fun SessionItem(
     modifier: Modifier = Modifier,
+    id: String,
     title: String,
     date: String,
     place: String,
     startTime: String,
-    endTime: String
+    endTime: String,
+    startDayOfWeek: String,
+    onClickSessionItem: (String) -> Unit
 ) {
     Column(
         modifier = modifier
-            .fillMaxWidth()
+            .width(272.dp)
             .heightIn(min = 120.dp)
+            .yappClickable { onClickSessionItem(id) }
             .background(
                 color = YappTheme.colorScheme.staticWhite,
                 shape = RoundedCornerShape(10)
-            ).padding(12.dp)
+            ).padding(12.dp),
+        verticalArrangement = Arrangement.SpaceAround
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -121,7 +133,7 @@ private fun SessionItem(
             //todo 태그
             Text(title, style = YappTheme.typography.body1NormalMedium)
         }
-        Text(date, style = YappTheme.typography.label1NormalMedium)
+        Text("$date ($startDayOfWeek)", style = YappTheme.typography.caption1Bold)
         Spacer(modifier = Modifier.height(17.dp))
         Column {
             if (place.isNotEmpty()) {
@@ -130,7 +142,7 @@ private fun SessionItem(
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Icon(painter = painterResource(coreDesignR.drawable.icon_location), contentDescription = null)
-                    Text(place, style = YappTheme.typography.label2Medium)
+                    Text(place, style = YappTheme.typography.caption1Bold.copy(color = YappTheme.colorScheme.labelAlternative))
                 }
             }
 
@@ -140,7 +152,7 @@ private fun SessionItem(
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Icon(painter = painterResource(coreDesignR.drawable.icon_time), contentDescription = null)
-                    Text("$startTime - $endTime", style = YappTheme.typography.label2Medium)
+                    Text("$startTime - $endTime", style = YappTheme.typography.caption1Bold.copy(color = YappTheme.colorScheme.labelAlternative))
                 }
             }
         }
@@ -159,12 +171,15 @@ private fun HomeStickHeaderPreview() {
         modifier = Modifier.background(brush = Brush.horizontalGradient(colorStops = colorStops)),
         sessions = listOf(
             HomeState.Session(
+                id = "1",
                 title = "2차 데모데이",
-                date = "2025. 03. 15 (토)",
+                date = "2025. 03. 15",
                 place = "공덕 창업허브",
                 startTime = "오후 6시",
-                endTime = "오후 8시"
+                endTime = "오후 8시",
+                startDayOfWeek = "금"
             )
-        )
+        ),
+        onClickSessionItem = {}
     )
 }

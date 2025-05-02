@@ -1,18 +1,16 @@
 package com.yapp.feature.home
 
-import com.yapp.core.ui.component.UserRole
-import com.yapp.model.ActivityUnit
-import com.yapp.model.NoticeList
-
 data class HomeState(
     val sessions: List<Session> = emptyList()
 ) {
     data class Session(
+        val id: String,
         val title: String,
         val date: String,
         val place: String,
         val startTime: String,
-        val endTime: String
+        val endTime: String,
+        val startDayOfWeek: String
     )
 }
 
