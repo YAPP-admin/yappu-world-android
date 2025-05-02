@@ -3,20 +3,13 @@ package com.yapp.feature.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yapp.core.common.android.record
-import com.yapp.core.ui.component.UserRole
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
-import com.yapp.dataapi.PostsRepository
-import com.yapp.dataapi.SessionRepository
-import com.yapp.domain.GetUserProfileUseCase
-import com.yapp.model.NoticeType
 import com.yapp.model.exceptions.InvalidTokenException
 import com.yapp.model.exceptions.UserNotFoundForEmailException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
