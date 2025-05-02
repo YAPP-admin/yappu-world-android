@@ -79,7 +79,10 @@ fun HomeScreen(
                     modifier = Modifier
                         .background(brush = Brush.horizontalGradient(colorStops = colorStops))
                         .padding(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()),
-                    sessions = homeState.sessions
+                    sessions = homeState.sessions,
+                    onClickSessionItem = { noticeId ->
+                        onIntent(HomeIntent.ClickNoticeItem(noticeId))
+                    }
                 )
             }
         }

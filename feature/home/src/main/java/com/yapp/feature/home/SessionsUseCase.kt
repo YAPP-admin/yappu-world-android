@@ -10,11 +10,13 @@ internal class SessionsUseCase @Inject constructor(
     operator fun invoke() = scheduleRepository.getSessions().map { sessions ->
         sessions.map { session ->
             HomeState.Session(
+                id = session.id,
                 title = session.name,
                 date = session.date,
                 place = session.place.orEmpty(),
-                startTime = session.startTime.orEmpty(),
-                endTime = session.endTime.orEmpty()
+                startTime = session.time.orEmpty(),
+                endTime = session.endTime.orEmpty(),
+                startDayOfWeek = session.startDayOfWeek
             )
         }
     }

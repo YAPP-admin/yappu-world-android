@@ -7,7 +7,6 @@ import com.yapp.model.DateGroupedSchedule
 import com.yapp.model.ScheduleInfo
 import com.yapp.model.ScheduleType
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonNames
 
 @Serializable
 data class SessionResponse(
@@ -26,7 +25,6 @@ data class SessionResponse(
         val relativeDays: Int,
         val time: String?,
         val endTime: String?,
-        @JsonNames("time") val starTime: String?,
         val type: String,
         val progressPhase: String,
         val attendanceStatus: String?
