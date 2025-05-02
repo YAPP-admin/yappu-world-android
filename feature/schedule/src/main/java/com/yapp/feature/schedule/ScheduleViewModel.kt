@@ -5,8 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.ScheduleRepository
-import com.yapp.model.ScheduleList
-import com.yapp.model.UpcomingSessionInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,10 +13,6 @@ import javax.inject.Inject
 class ScheduleViewModel @Inject constructor(
     private val scheduleRepository: ScheduleRepository,
 ) : ViewModel() {
-
-    private val schedulesCache = mutableMapOf<Pair<Int, Int>, ScheduleList>()
-    private var sessionsCache: ScheduleList? = null
-    private var upcomingSessionCache: UpcomingSessionInfo? = null
 
     val store: MviIntentStore<ScheduleState, ScheduleIntent, ScheduleSideEffect> =
         mviIntentStore(
@@ -34,24 +28,24 @@ class ScheduleViewModel @Inject constructor(
     ) {
         when (intent) {
             ScheduleIntent.EnterScheduleScreen -> {
-                loadScheduleInfo(state.selectedYear, state.selectedMonth, reduce)
+                loadScheduleInfo(state, state.selectedYear, state.selectedMonth, reduce)
             }
 
             is ScheduleIntent.SelectTab -> {
                 if (state.selectedTab == intent.tab) return
                 reduce { copy(selectedTab = intent.tab) }
                 when (intent.tab) {
-                    ScheduleTab.ALL -> loadScheduleInfo(state.selectedYear, state.selectedMonth, reduce)
+                    ScheduleTab.ALL -> loadScheduleInfo(state, state.selectedYear, state.selectedMonth, reduce)
                     ScheduleTab.SESSION -> {
-                        loadUpcomingSessionInfo(reduce)
-                        loadSessions(reduce)
+                        loadUpcomingSessionInfo(state, reduce)
+                        loadSessions(state, reduce)
                     }
                 }
             }
 
             is ScheduleIntent.RefreshTab -> {
                 when (intent.tab) {
-                    ScheduleTab.ALL -> refreshScheduleInfo(state.selectedYear, state.selectedMonth, reduce)
+                    ScheduleTab.ALL -> refreshScheduleInfo(state, state.selectedYear, state.selectedMonth, reduce)
                     ScheduleTab.SESSION -> {
                         refreshUpcomingSessionInfo(reduce)
                         refreshSessions(reduce)
@@ -62,71 +56,77 @@ class ScheduleViewModel @Inject constructor(
             ScheduleIntent.ClickPreviousMonth -> {
                 val (newYear, newMonth) = calculatePreviousMonth(state.selectedYear, state.selectedMonth)
                 reduce { copy(selectedYear = newYear, selectedMonth = newMonth) }
-                loadScheduleInfo(newYear, newMonth, reduce)
+                loadScheduleInfo(state, newYear, newMonth, reduce)
             }
+
             ScheduleIntent.ClickNextMonth -> {
                 val (newYear, newMonth) = calculateNextMonth(state.selectedYear, state.selectedMonth)
                 reduce { copy(selectedYear = newYear, selectedMonth = newMonth) }
-                loadScheduleInfo(newYear, newMonth, reduce)
+                loadScheduleInfo(state, newYear, newMonth, reduce)
             }
         }
     }
 
     private fun loadScheduleInfo(
+        state: ScheduleState,
         year: Int,
         month: Int,
         reduce: (ScheduleState.() -> ScheduleState) -> Unit
     ) = viewModelScope.launch {
         val cacheKey = year to month
-        val cachedSchedules = schedulesCache[cacheKey]
-        if (cachedSchedules != null) {
-            reduce { copy(schedules = cachedSchedules) }
+        val cached = state.schedules[cacheKey]
+        if (cached != null) {
+            reduce { copy(schedules = schedules.toMutableMap().apply { put(cacheKey, cached) }) }
             return@launch
         }
 
         reduce { copy(isLoading = true) }
-        val schedules = scheduleRepository.getSchedules(year, month)
-        schedulesCache[cacheKey] = schedules
-        reduce { copy(isLoading = false, schedules = schedules) }
+        val result = scheduleRepository.getSchedules(year, month)
+        reduce {
+            copy(
+                isLoading = false,
+                schedules = schedules.toMutableMap().apply { put(cacheKey, result) }
+            )
+        }
     }
 
     private fun loadUpcomingSessionInfo(
+        state: ScheduleState,
         reduce: (ScheduleState.() -> ScheduleState) -> Unit
     ) = viewModelScope.launch {
-        upcomingSessionCache?.let {
-            reduce { copy(upcomingSessionInfo = it) }
-            return@launch
-        }
+        if (state.upcomingSessionInfo != null) return@launch
 
         reduce { copy(isLoading = true) }
-        val upcomingSessionInfo = scheduleRepository.getUpcomingSessions()
-        upcomingSessionCache = upcomingSessionInfo
-        reduce { copy(isLoading = false, upcomingSessionInfo = upcomingSessionInfo) }
+        val info = scheduleRepository.getUpcomingSessions()
+        reduce { copy(isLoading = false, upcomingSessionInfo = info) }
     }
 
     private fun loadSessions(
+        state: ScheduleState,
         reduce: (ScheduleState.() -> ScheduleState) -> Unit
     ) = viewModelScope.launch {
-        sessionsCache?.let {
-            reduce { copy(sessions = it) }
-            return@launch
-        }
+        if (state.sessions.dates.isNotEmpty()) return@launch
 
         reduce { copy(isLoading = true) }
-        val sessions = scheduleRepository.getDateGroupedSessions()
-        sessionsCache = sessions
-        reduce { copy(isLoading = false, sessions = sessions) }
+        val result = scheduleRepository.getDateGroupedSessions()
+        reduce { copy(isLoading = false, sessions = result) }
     }
 
     private fun refreshScheduleInfo(
+        state: ScheduleState,
         year: Int,
         month: Int,
         reduce: (ScheduleState.() -> ScheduleState) -> Unit
     ) = viewModelScope.launch {
         reduce { copy(isLoading = true) }
-        val schedules = scheduleRepository.getSchedules(year, month)
-        schedulesCache[year to month] = schedules
-        reduce { copy(isLoading = false, schedules = schedules) }
+        val schedules = state.schedules
+        val refreshSchedules = scheduleRepository.getSchedules(year, month)
+        reduce {
+            copy(
+                isLoading = false,
+                schedules = schedules.toMutableMap().apply { put(year to month, refreshSchedules) }
+            )
+        }
     }
 
     private fun refreshUpcomingSessionInfo(
@@ -134,8 +134,12 @@ class ScheduleViewModel @Inject constructor(
     ) = viewModelScope.launch {
         reduce { copy(isLoading = true) }
         val upcomingSessionInfo = scheduleRepository.getUpcomingSessions()
-        upcomingSessionCache = upcomingSessionInfo
-        reduce { copy(isLoading = false, upcomingSessionInfo = upcomingSessionInfo) }
+        reduce {
+            copy(
+                isLoading = false,
+                upcomingSessionInfo = upcomingSessionInfo
+            )
+        }
     }
 
     private fun refreshSessions(
@@ -143,8 +147,12 @@ class ScheduleViewModel @Inject constructor(
     ) = viewModelScope.launch {
         reduce { copy(isLoading = true) }
         val sessions = scheduleRepository.getDateGroupedSessions()
-        sessionsCache = sessions
-        reduce { copy(isLoading = false, sessions = sessions) }
+        reduce {
+            copy(
+                isLoading = false,
+                sessions = sessions
+            )
+        }
     }
 
     private fun calculatePreviousMonth(year: Int, month: Int): Pair<Int, Int> {
