@@ -63,10 +63,12 @@ internal fun SessionItem(
             }
         }
 
-        ScheduleStatusChip(
-            attendanceStatus = attendanceStatus,
-            scheduleProgressPhase = scheduleProgressPhase,
-        )
+        if (attendanceStatus != null || scheduleProgressPhase == ScheduleProgressPhase.PENDING) {
+            ScheduleStatusChip(
+                attendanceStatus = attendanceStatus,
+                scheduleProgressPhase = scheduleProgressPhase
+            )
+        }
     }
 }
 
