@@ -10,7 +10,6 @@ data class Sessions(
     val endDayOfWeek: String?,
     val relativeDays: Int,
     val time: String?,
-    val startTime: String?,
     val endTime: String?,
     val type: AttendType,
     val progressPhase: String,
