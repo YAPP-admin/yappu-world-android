@@ -17,6 +17,7 @@ data class ScheduleState(
 sealed interface ScheduleIntent {
     data object EnterScheduleScreen: ScheduleIntent
     data class SelectTab(val tab: ScheduleTab): ScheduleIntent
+    data class RefreshTab(val tab: ScheduleTab): ScheduleIntent
     data object ClickPreviousMonth: ScheduleIntent
     data object ClickNextMonth: ScheduleIntent
 }
