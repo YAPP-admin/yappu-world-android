@@ -26,7 +26,6 @@ class ScheduleViewModel @Inject constructor(
             onIntent = ::onIntent
         )
 
-
     private fun onIntent(
         intent: ScheduleIntent,
         state: ScheduleState,
@@ -37,6 +36,7 @@ class ScheduleViewModel @Inject constructor(
             ScheduleIntent.EnterScheduleScreen -> {
                 loadScheduleInfo(state.selectedYear, state.selectedMonth, reduce)
             }
+
             is ScheduleIntent.SelectTab -> {
                 if (state.selectedTab == intent.tab) return
                 reduce { copy(selectedTab = intent.tab) }
@@ -45,6 +45,16 @@ class ScheduleViewModel @Inject constructor(
                     ScheduleTab.SESSION -> {
                         loadUpcomingSessionInfo(reduce)
                         loadSessions(reduce)
+                    }
+                }
+            }
+
+            is ScheduleIntent.RefreshTab -> {
+                when (intent.tab) {
+                    ScheduleTab.ALL -> refreshScheduleInfo(state.selectedYear, state.selectedMonth, reduce)
+                    ScheduleTab.SESSION -> {
+                        refreshUpcomingSessionInfo(reduce)
+                        refreshSessions(reduce)
                     }
                 }
             }
@@ -102,6 +112,35 @@ class ScheduleViewModel @Inject constructor(
             return@launch
         }
 
+        reduce { copy(isLoading = true) }
+        val sessions = scheduleRepository.getDateGroupedSessions()
+        sessionsCache = sessions
+        reduce { copy(isLoading = false, sessions = sessions) }
+    }
+
+    private fun refreshScheduleInfo(
+        year: Int,
+        month: Int,
+        reduce: (ScheduleState.() -> ScheduleState) -> Unit
+    ) = viewModelScope.launch {
+        reduce { copy(isLoading = true) }
+        val schedules = scheduleRepository.getSchedules(year, month)
+        schedulesCache[year to month] = schedules
+        reduce { copy(isLoading = false, schedules = schedules) }
+    }
+
+    private fun refreshUpcomingSessionInfo(
+        reduce: (ScheduleState.() -> ScheduleState) -> Unit
+    ) = viewModelScope.launch {
+        reduce { copy(isLoading = true) }
+        val upcomingSessionInfo = scheduleRepository.getUpcomingSessions()
+        upcomingSessionCache = upcomingSessionInfo
+        reduce { copy(isLoading = false, upcomingSessionInfo = upcomingSessionInfo) }
+    }
+
+    private fun refreshSessions(
+        reduce: (ScheduleState.() -> ScheduleState) -> Unit
+    ) = viewModelScope.launch {
         reduce { copy(isLoading = true) }
         val sessions = scheduleRepository.getDateGroupedSessions()
         sessionsCache = sessions

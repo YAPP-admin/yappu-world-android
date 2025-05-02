@@ -14,8 +14,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -64,38 +67,48 @@ internal fun ScheduleRoute(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ScheduleScreen(
     scheduleState: ScheduleState,
     onIntent: (ScheduleIntent) -> Unit = {},
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(YappTheme.colorScheme.staticWhite)
+    val pullToRefreshState = rememberPullToRefreshState()
+
+    PullToRefreshBox(
+        isRefreshing = scheduleState.isLoading,
+        state = pullToRefreshState,
+        onRefresh = { onIntent(ScheduleIntent.RefreshTab(scheduleState.selectedTab)) },
     ) {
-        ScheduleHeader()
-        Spacer(modifier = Modifier.height(6.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(YappTheme.colorScheme.staticWhite)
+        ) {
+            ScheduleHeader()
+            Spacer(modifier = Modifier.height(6.dp))
 
-        ScheduleTabRow(
-            selectedTab = scheduleState.selectedTab,
-            tabList = ScheduleTab.entries,
-            onTabSelected = {
-                onIntent(ScheduleIntent.SelectTab(it))
+            ScheduleTabRow(
+                selectedTab = scheduleState.selectedTab,
+                tabList = ScheduleTab.entries,
+                onTabSelected = {
+                    onIntent(ScheduleIntent.SelectTab(it))
+                }
+            )
+
+            when (scheduleState.selectedTab) {
+                ScheduleTab.ALL -> ScheduleAllScreen(
+                    selectedYear = scheduleState.selectedYear,
+                    selectedMonth = scheduleState.selectedMonth,
+                    schedules = scheduleState.schedules,
+                    onIntent = onIntent
+                )
+
+                ScheduleTab.SESSION -> ScheduleSessionScreen(
+                    upcomingSessionInfo = scheduleState.upcomingSessionInfo,
+                    sessions = scheduleState.sessions
+                )
             }
-        )
-
-        when (scheduleState.selectedTab) {
-            ScheduleTab.ALL -> ScheduleAllScreen(
-                selectedYear = scheduleState.selectedYear,
-                selectedMonth = scheduleState.selectedMonth,
-                schedules = scheduleState.schedules,
-                onIntent = onIntent
-            )
-            ScheduleTab.SESSION -> ScheduleSessionScreen(
-                upcomingSessionInfo = scheduleState.upcomingSessionInfo,
-                sessions = scheduleState.sessions
-            )
         }
     }
 }
