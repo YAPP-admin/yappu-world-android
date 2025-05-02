@@ -97,12 +97,16 @@ internal fun ScheduleScreen(
             )
 
             when (scheduleState.selectedTab) {
-                ScheduleTab.ALL -> ScheduleAllScreen(
-                    selectedYear = scheduleState.selectedYear,
-                    selectedMonth = scheduleState.selectedMonth,
-                    schedules = scheduleState.schedules,
-                    onIntent = onIntent
-                )
+                ScheduleTab.ALL -> {
+                    ScheduleAllScreen(
+                        selectedYear = scheduleState.selectedYear,
+                        selectedMonth = scheduleState.selectedMonth,
+                        schedules = scheduleState.schedules[
+                            Pair(scheduleState.selectedYear, scheduleState.selectedMonth)
+                        ] ?: ScheduleList(dates = emptyList()),
+                        onIntent = onIntent
+                    )
+                }
 
                 ScheduleTab.SESSION -> ScheduleSessionScreen(
                     upcomingSessionInfo = scheduleState.upcomingSessionInfo,
