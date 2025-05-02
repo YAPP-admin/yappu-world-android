@@ -1,5 +1,6 @@
 package com.yapp.core.ui.component
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -60,7 +61,10 @@ fun ScheduleStatusChip(
         else -> null
     }
 
-    val (textResId, backgroundColor, textColor) = statusStyle ?: return
+    val (textResId, backgroundColor, textColor) = statusStyle ?: run {
+        Log.w("ScheduleStatusChip", "No valid status provided; Chip will not be shown.")
+        return
+    }
 
     Box(
         modifier = Modifier
