@@ -13,4 +13,10 @@ interface ScheduleRepository {
     suspend fun getUpcomingSessions(): UpcomingSessionInfo
 
     suspend fun getSchedules(year: Int, month: Int): ScheduleList
+
+    suspend fun refreshDateGroupedSessions(): ScheduleList
+
+    suspend fun refreshUpcomingSessions(): UpcomingSessionInfo
+
+    suspend fun refreshSchedules(year: Int, month: Int): ScheduleList
 }
