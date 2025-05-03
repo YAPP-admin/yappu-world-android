@@ -5,12 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.yapp.core.common.android.record
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
+import com.yapp.domain.SessionsUseCase
+import com.yapp.domain.runCatchingIgnoreCancelled
+import com.yapp.feature.home.convert.toState
 import com.yapp.model.exceptions.InvalidTokenException
 import com.yapp.model.exceptions.UserNotFoundForEmailException
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,20 +43,24 @@ internal class HomeViewModel @Inject constructor(
         reduce: (HomeState.() -> HomeState) -> Unit,
         postSideEffect: (HomeSideEffect) -> Unit
     ) {
-        sessionsUseCase.invoke()
-            .onEach { (sessions, upcomingSessionId) ->
+        viewModelScope.launch {
+            runCatchingIgnoreCancelled {
+                val result = sessionsUseCase.invoke()
+                val upcomingSessions = result.upcomingSessionInfo
+                val sessions = result.sessions.sessions
+
                 reduce {
                     copy(
-                        sessions = sessions,
-                        upcomingSessionId = upcomingSessionId.orEmpty()
+                        sessions = sessions.toState(),
+                        upcomingSessionId = result.sessions.upcomingSessionId.orEmpty()
                     )
                 }
-            }
-            .catch { error ->
-                when (error) {
+            }.onFailure { e ->
+                when (e) {
                     is UserNotFoundForEmailException, is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
-                    else -> error.record()
+                    else -> e.record()
                 }
-            }.launchIn(viewModelScope)
+            }
+        }
     }
 }

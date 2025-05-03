@@ -19,11 +19,11 @@ internal class ScheduleRepositoryImpl @Inject constructor(
     private var scheduleCache: MutableMap<Pair<Int, Int>, ScheduleList> = mutableMapOf()
     private var upcomingSessionCache: UpcomingSessionInfo? = null
 
-    override fun getSessions() = flow {
+    override suspend fun getSessions(): HomeSession {
         val sessions = scheduleApi.getSessions().sessions.toDateGroupedScheduleList()
-
         val upcomingSessionId = scheduleApi.getSessions().upcomingSessionId
-        emit(HomeSession(sessions, upcomingSessionId))
+
+        return HomeSession(sessions, upcomingSessionId)
     }
 
     override suspend fun getDateGroupedSessions(): ScheduleList {
