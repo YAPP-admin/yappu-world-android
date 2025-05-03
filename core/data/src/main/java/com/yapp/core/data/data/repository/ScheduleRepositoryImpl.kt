@@ -4,6 +4,7 @@ import com.yapp.core.data.remote.api.ScheduleApi
 import com.yapp.core.data.remote.model.response.SessionResponse
 import com.yapp.core.data.remote.model.response.toDateGroupedScheduleList
 import com.yapp.dataapi.ScheduleRepository
+import com.yapp.model.HomeSession
 import com.yapp.model.ScheduleList
 import com.yapp.model.UpcomingSessionInfo
 import kotlinx.coroutines.flow.flow
@@ -22,7 +23,7 @@ internal class ScheduleRepositoryImpl @Inject constructor(
         val sessions = scheduleApi.getSessions().sessions.toDateGroupedScheduleList()
 
         val upcomingSessionId = scheduleApi.getSessions().upcomingSessionId
-        emit(sessions to upcomingSessionId)
+        emit(HomeSession(sessions, upcomingSessionId))
     }
 
     override suspend fun getDateGroupedSessions(): ScheduleList {
