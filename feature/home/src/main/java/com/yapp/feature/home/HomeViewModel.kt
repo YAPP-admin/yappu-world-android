@@ -9,8 +9,8 @@ import com.yapp.model.exceptions.InvalidTokenException
 import com.yapp.model.exceptions.UserNotFoundForEmailException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,14 +41,9 @@ internal class HomeViewModel @Inject constructor(
     private fun loadHomeInfo(
         reduce: (HomeState.() -> HomeState) -> Unit,
         postSideEffect: (HomeSideEffect) -> Unit
-    ) = viewModelScope.launch {
+    ) {
         sessionsUseCase.invoke()
-            .catch { error ->
-                when (error) {
-                    is UserNotFoundForEmailException, is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
-                    else -> error.record()
-                }
-            }.collectLatest { (sessions, upcomingSessionId) ->
+            .onEach { (sessions, upcomingSessionId) ->
                 reduce {
                     copy(
                         sessions = sessions,
@@ -56,5 +51,11 @@ internal class HomeViewModel @Inject constructor(
                     )
                 }
             }
+            .catch { error ->
+                when (error) {
+                    is UserNotFoundForEmailException, is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
+                    else -> error.record()
+                }
+            }.launchIn(viewModelScope)
     }
 }
