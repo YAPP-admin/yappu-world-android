@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -29,9 +30,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.component.ScheduleStatusChip
+import com.yapp.core.ui.component.SessionChip
 import com.yapp.feature.home.HomeState
 import com.yapp.feature.home.R
+import com.yapp.model.ScheduleProgressPhase
 import com.yapp.core.designsystem.R as coreDesignR
 
 @Composable
@@ -39,8 +41,10 @@ internal fun HomeStickHeader(
     modifier: Modifier = Modifier,
     initialPage: Int = 0,
     sessions: List<HomeState.Session>,
+    upcomingSessionId: String,
     onClickSessionItem: (String) -> Unit
 ) {
+    val pageIndex = sessions.indexOfFirst { it.id == upcomingSessionId }
     val pagerState = rememberPagerState(
         initialPage = initialPage,
         pageCount = { sessions.size }
@@ -79,6 +83,7 @@ internal fun HomeStickHeader(
                 startTime = item.startTime,
                 endTime = item.endTime,
                 startDayOfWeek = item.startDayOfWeek,
+                progressPhase = item.progressPhase,
                 onClickSessionItem = onClickSessionItem
             )
         }
@@ -101,6 +106,12 @@ internal fun HomeStickHeader(
             }
         }
     }
+
+    LaunchedEffect(pageIndex) {
+        if (pageIndex > 0 && pagerState.currentPage != pageIndex) {
+            pagerState.animateScrollToPage(pageIndex)
+        }
+    }
 }
 
 @Composable
@@ -113,24 +124,32 @@ private fun SessionItem(
     startTime: String,
     endTime: String,
     startDayOfWeek: String,
+    progressPhase: ScheduleProgressPhase,
     onClickSessionItem: (String) -> Unit
 ) {
+    val (clickableModifier, backgroundColor) = if (progressPhase != ScheduleProgressPhase.DONE) {
+        Modifier.yappClickable { onClickSessionItem(id) } to YappTheme.colorScheme.backgroundNormalNormal
+    } else {
+        Modifier to YappTheme.colorScheme.backgroundNormalNormal.copy(alpha = 0.6f)
+    }
+
     Column(
         modifier = modifier
+            .background(
+                color = backgroundColor,
+                shape = RoundedCornerShape(10)
+            )
             .width(272.dp)
             .heightIn(min = 120.dp)
-            .yappClickable { onClickSessionItem(id) }
-            .background(
-                color = YappTheme.colorScheme.staticWhite,
-                shape = RoundedCornerShape(10)
-            ).padding(12.dp),
+            .then(clickableModifier)
+            .padding(12.dp),
         verticalArrangement = Arrangement.SpaceAround
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            //todo 태그
+            SessionChip(progressPhase = progressPhase)
             Text(title, style = YappTheme.typography.body1NormalMedium)
         }
         Text("$date ($startDayOfWeek)", style = YappTheme.typography.caption1Bold)
@@ -177,9 +196,11 @@ private fun HomeStickHeaderPreview() {
                 place = "공덕 창업허브",
                 startTime = "오후 6시",
                 endTime = "오후 8시",
-                startDayOfWeek = "금"
+                startDayOfWeek = "금",
+                progressPhase = ScheduleProgressPhase.TODAY
             )
         ),
-        onClickSessionItem = {}
+        onClickSessionItem = {},
+        upcomingSessionId = "123"
     )
 }
