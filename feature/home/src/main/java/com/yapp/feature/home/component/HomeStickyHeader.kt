@@ -1,8 +1,8 @@
 package com.yapp.feature.home.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -11,11 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -64,11 +62,18 @@ internal fun HomeStickHeader(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = stringResource(R.string.home_generation_title),
-                style = YappTheme.typography.headline1Bold,
-                color = YappTheme.colorScheme.staticWhite
-            )
+            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                Image(
+                    painter = painterResource(coreDesignR.drawable.home_notice),
+                    contentDescription = null
+                )
+                Text(
+                    text = stringResource(R.string.home_generation_title),
+                    style = YappTheme.typography.headline1Bold,
+                    color = YappTheme.colorScheme.staticWhite
+                )
+            }
+
             Text(
                 text = stringResource(R.string.home_session_all_title),
                 style = YappTheme.typography.label1NormalBold,
