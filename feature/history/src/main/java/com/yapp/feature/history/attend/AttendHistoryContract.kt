@@ -1,6 +1,6 @@
 package com.yapp.feature.history.attend
 
-import com.yapp.model.Sessions
+import com.yapp.model.ScheduleInfo
 
 data class AttendHistoryState(
     val totalSessionCount: Int = 0,
@@ -11,7 +11,7 @@ data class AttendHistoryState(
     val lateCount: Int = 0,
     val absenceCount: Int = 0,
     val latePassCount: Int = 0,
-    val sessions: List<Sessions> = emptyList()
+    val sessions: List<ScheduleInfo> = emptyList()
 ) {
     val alertMessage: String
         get() {

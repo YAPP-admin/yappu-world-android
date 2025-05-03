@@ -33,8 +33,8 @@ enum class SessionType {
     OFFLINE, ONLINE, TEAM;
 }
 
-enum class ScheduleProgressPhase {
-    DONE, TODAY, ONGOING, PENDING;
+enum class ScheduleProgressPhase(val title: String) {
+    DONE("완료"), TODAY("당일"), ONGOING("예정"), PENDING("");
 }
 
 enum class AttendanceStatus(

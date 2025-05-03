@@ -7,17 +7,20 @@ import javax.inject.Inject
 internal class SessionsUseCase @Inject constructor(
     private val scheduleRepository: ScheduleRepository
 ){
-    operator fun invoke() = scheduleRepository.getSessions().map { sessions ->
+    operator fun invoke() = scheduleRepository.getSessions().map { (sessions, upcomingSessionId) ->
         sessions.map { session ->
-            HomeState.Session(
-                id = session.id,
-                title = session.name,
-                date = session.date,
-                place = session.place.orEmpty(),
-                startTime = session.time.orEmpty(),
-                endTime = session.endTime.orEmpty(),
-                startDayOfWeek = session.startDayOfWeek
-            )
-        }
+            session.schedules.map { schdule ->
+                HomeState.Session(
+                    id = schdule.id,
+                    title = schdule.name,
+                    date = schdule.date,
+                    place = schdule.place.orEmpty(),
+                    startTime = schdule.time.orEmpty(),
+                    endTime = schdule.endTime.orEmpty(),
+                    startDayOfWeek = session.dayOfTheWeek,
+                    progressPhase = schdule.scheduleProgressPhase
+                )
+            }
+        }.flatten() to upcomingSessionId
     }
 }
