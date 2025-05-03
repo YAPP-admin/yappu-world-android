@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
-    private val sessionsUseCase: SessionsUseCase,
+    private val sessionsUseCase: SessionsUseCase
 ) : ViewModel() {
 
     val store: MviIntentStore<HomeState, HomeIntent, HomeSideEffect> =
@@ -48,10 +48,11 @@ internal class HomeViewModel @Inject constructor(
                     is UserNotFoundForEmailException, is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
                     else -> error.record()
                 }
-            }.collectLatest { sessions ->
+            }.collectLatest { (sessions, upcomingSessionId) ->
                 reduce {
                     copy(
-                        sessions = sessions
+                        sessions = sessions,
+                        upcomingSessionId = upcomingSessionId.orEmpty()
                     )
                 }
             }
