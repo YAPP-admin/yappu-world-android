@@ -34,7 +34,7 @@ enum class SessionType {
 }
 
 enum class ScheduleProgressPhase(val title: String) {
-    DONE("완료"), TODAY("당일"), ONGOING("예정"), PENDING("");
+    DONE("완료"), TODAY("당일"), ONGOING("진행중"), PENDING("예정");
 }
 
 enum class AttendanceStatus(
