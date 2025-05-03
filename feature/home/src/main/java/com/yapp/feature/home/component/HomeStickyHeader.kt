@@ -25,6 +25,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.SessionChip
+import com.yapp.core.ui.util.formatTimeRange
 import com.yapp.feature.home.HomeState
 import com.yapp.feature.home.R
 import com.yapp.model.ScheduleProgressPhase
@@ -125,6 +127,8 @@ private fun SessionItem(
     progressPhase: ScheduleProgressPhase,
     onClickSessionItem: (String) -> Unit
 ) {
+    val context = LocalContext.current
+
     val (clickableModifier, backgroundColor) = if (progressPhase != ScheduleProgressPhase.DONE) {
         Modifier.yappClickable { onClickSessionItem(id) } to YappTheme.colorScheme.backgroundNormalNormal
     } else {
@@ -163,13 +167,19 @@ private fun SessionItem(
                 }
             }
 
-            if (startTime.isNotEmpty() && endTime.isNotEmpty()) {
+            val timeRange = formatTimeRange(
+                context = context,
+                startTime = startTime,
+                endTime = endTime
+            )
+
+            if (timeRange.orEmpty().isNotEmpty()) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Icon(painter = painterResource(coreDesignR.drawable.icon_time), contentDescription = null)
-                    Text("$startTime - $endTime", style = YappTheme.typography.caption1Bold.copy(color = YappTheme.colorScheme.labelAlternative))
+                    Text(timeRange.orEmpty(), style = YappTheme.typography.caption1Bold.copy(color = YappTheme.colorScheme.labelAlternative))
                 }
             }
         }
