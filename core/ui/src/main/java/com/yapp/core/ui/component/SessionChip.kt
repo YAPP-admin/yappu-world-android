@@ -17,13 +17,12 @@ fun SessionChip(
         ScheduleProgressPhase.TODAY -> {
             ChipColorType.Main
         }
-        ScheduleProgressPhase.DONE -> {
+        ScheduleProgressPhase.DONE, ScheduleProgressPhase.PENDING -> {
             ChipColorType.Gray
         }
         ScheduleProgressPhase.ONGOING -> {
             ChipColorType.Sub
         }
-        else -> return
     }
 
     YappChipSmall(
