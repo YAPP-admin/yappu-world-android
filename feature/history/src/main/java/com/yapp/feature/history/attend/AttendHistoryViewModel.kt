@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,23 +41,25 @@ internal class AttendHistoryViewModel @Inject constructor(
     private fun collectAttendance(
         reduce: (AttendHistoryState.() -> AttendHistoryState) -> Unit
     ) {
-        attendHistoryUseCase()
-            .catch { error ->
-                error.record()
-            }.onEach { (attendace, sessions) ->
-                reduce {
-                    copy(
-                        totalSessionCount = attendace.totalSessionCount,
-                        remainingSessionCount = attendace.remainingSessionCount,
-                        sessionProgressRate = attendace.sessionProgressRate,
-                        attendanceCount = attendace.attendanceCount,
-                        attendancePoint = attendace.attendancePoint,
-                        absenceCount = attendace.absenceCount,
-                        lateCount = attendace.lateCount,
-                        latePassCount = attendace.latePassCount,
-                        sessions = sessions
-                    )
+        viewModelScope.launch {
+            attendHistoryUseCase()
+                .catch { error ->
+                    error.record()
+                }.collect { (attendace, sessions) ->
+                    reduce {
+                        copy(
+                            totalSessionCount = attendace.totalSessionCount,
+                            remainingSessionCount = attendace.remainingSessionCount,
+                            sessionProgressRate = attendace.sessionProgressRate,
+                            attendanceCount = attendace.attendanceCount,
+                            attendancePoint = attendace.attendancePoint,
+                            absenceCount = attendace.absenceCount,
+                            lateCount = attendace.lateCount,
+                            latePassCount = attendace.latePassCount,
+                            sessions = sessions
+                        )
+                    }
                 }
-            }.launchIn(viewModelScope)
+        }
     }
 }
