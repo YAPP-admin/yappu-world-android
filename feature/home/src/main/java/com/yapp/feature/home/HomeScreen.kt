@@ -5,26 +5,28 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalWindowInfo
-import androidx.compose.ui.platform.WindowInfo
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
+import com.yapp.feature.home.component.HomeAttendanceContents
+import com.yapp.feature.home.component.HomeAttendanceNotice
 import com.yapp.feature.home.component.HomeStickHeader
+import java.time.LocalDate
 
 @Composable
 internal fun HomeRoute(
@@ -71,7 +73,7 @@ fun HomeScreen(
     )
 
     YappBackground(
-        color = YappTheme.colorScheme.backgroundNormalAlternative
+        color = YappTheme.colorScheme.staticWhite
     ) {
         LazyColumn(userScrollEnabled = false) {
             stickyHeader {
@@ -84,6 +86,16 @@ fun HomeScreen(
                     onClickSessionItem = { noticeId ->
                         onIntent(HomeIntent.ClickNoticeItem(noticeId))
                     }
+                )
+            }
+
+            item { HomeAttendanceNotice(title = homeState.attendanceTitle) }
+
+            item {
+                HomeAttendanceContents(
+                    todayOrUpcomingSession = homeState.todayOrUpcomingSession,
+                    attendState = homeState.attendState,
+                    buttonTitle = homeState.buttonTitle
                 )
             }
         }
