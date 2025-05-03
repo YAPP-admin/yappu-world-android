@@ -1,12 +1,12 @@
 package com.yapp.dataapi
 
-import com.yapp.model.DateGroupedSchedule
+import com.yapp.model.HomeSession
 import com.yapp.model.ScheduleList
 import com.yapp.model.UpcomingSessionInfo
 import kotlinx.coroutines.flow.Flow
 
 interface ScheduleRepository {
-    fun getSessions(): Flow<Pair<List<DateGroupedSchedule>, String?>>
+    fun getSessions(): Flow<HomeSession>
 
     suspend fun getDateGroupedSessions(): ScheduleList
 
