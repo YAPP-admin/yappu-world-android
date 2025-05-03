@@ -21,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -34,6 +35,7 @@ import com.yapp.core.ui.component.SessionChip
 import com.yapp.feature.home.HomeState
 import com.yapp.feature.home.R
 import com.yapp.model.ScheduleProgressPhase
+import kotlinx.coroutines.launch
 import com.yapp.core.designsystem.R as coreDesignR
 
 @Composable
@@ -49,8 +51,12 @@ internal fun HomeStickHeader(
         initialPage = initialPage,
         pageCount = { sessions.size }
     )
+    val scope = rememberCoroutineScope()
 
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -87,24 +93,16 @@ internal fun HomeStickHeader(
                 onClickSessionItem = onClickSessionItem
             )
         }
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            repeat(sessions.size) { iteration ->
-                val color = if (pagerState.currentPage == iteration) {
-                    YappTheme.colorScheme.interactionDisable
-                } else {
-                    YappTheme.colorScheme.interactionInactive
+
+        Indicators(
+            itemCount = sessions.size,
+            onPageSelect = { index ->
+                scope.launch {
+                    pagerState.scrollToPage(index)
                 }
-                Box(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .background(color = color, shape = CircleShape)
-                        .size(8.dp)
-                )
-            }
-        }
+            },
+            currentPage = pagerState.currentPage
+        )
     }
 
     LaunchedEffect(pageIndex) {
