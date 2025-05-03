@@ -13,6 +13,6 @@ internal class AttendHistoryUseCase @Inject constructor(
         attendanceRepository.getAttendanceStatistics(),
         scheduleRepository.getSessions()
     ) { attendStatistics, sessions ->
-        attendStatistics to sessions
+        attendStatistics to sessions.first.map { it.schedules }.flatten()
     }
 }

@@ -21,6 +21,7 @@ import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.feature.history.R
 import com.yapp.feature.history.attend.components.AttendanceStatusSection
 import com.yapp.feature.history.attend.components.StatusItem
+import com.yapp.model.ScheduleInfo
 import com.yapp.model.Sessions
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -74,7 +75,7 @@ private fun AttendHistoryScreen(
     late: Int,
     absence: Int,
     latePass: Int,
-    sessions: List<Sessions>,
+    sessions: List<ScheduleInfo>,
     onClickBackButton: () -> Unit
 ) {
     YappTheme {
