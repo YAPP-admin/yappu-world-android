@@ -1,7 +1,10 @@
 package com.yapp.feature.home
 
+import com.yapp.model.ScheduleProgressPhase
+
 data class HomeState(
-    val sessions: List<Session> = emptyList()
+    val sessions: List<Session> = emptyList(),
+    val upcomingSessionId: String = ""
 ) {
     data class Session(
         val id: String,
@@ -10,7 +13,8 @@ data class HomeState(
         val place: String,
         val startTime: String,
         val endTime: String,
-        val startDayOfWeek: String
+        val startDayOfWeek: String,
+        val progressPhase: ScheduleProgressPhase
     )
 }
 
