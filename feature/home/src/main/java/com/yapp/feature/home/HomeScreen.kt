@@ -5,18 +5,15 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -26,7 +23,7 @@ import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.home.component.HomeAttendanceContents
 import com.yapp.feature.home.component.HomeAttendanceNotice
 import com.yapp.feature.home.component.HomeStickHeader
-import java.time.LocalDate
+import com.yapp.feature.home.dialog.AttendanceDialog
 
 @Composable
 internal fun HomeRoute(
@@ -95,9 +92,19 @@ fun HomeScreen(
                 HomeAttendanceContents(
                     todayOrUpcomingSession = homeState.todayOrUpcomingSession,
                     attendState = homeState.attendState,
-                    buttonTitle = homeState.buttonTitle
+                    buttonTitle = homeState.buttonTitle,
+                    onClickAttend = { onIntent(HomeIntent.ClickRequestAttendCode) }
                 )
             }
+        }
+
+        if (homeState.showAttendCodeBottomSheet) {
+            AttendanceDialog(
+                onDismissRequest = {},
+                clickAttendanceButton = { code ->
+                    onIntent(HomeIntent.ClickRequestAttendance(sessionId = homeState.todayOrUpcomingSession?.id.orEmpty(), code = code))
+                }
+            )
         }
     }
 }
