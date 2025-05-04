@@ -5,13 +5,13 @@ import com.yapp.model.NoticeList
 import kotlinx.coroutines.flow.Flow
 
 interface PostsRepository {
-    suspend fun getNoticeList(
+    fun getNoticeList(
         lastNoticeId: String?,
-        limit : Int,
-        noticeType : String
+        limit: Int,
+        noticeType: String
     ): Flow<NoticeList>
 
-    suspend fun getNoticeItem(
+    fun getNoticeItem(
         noticeId: String
     ): Flow<NoticeInfo>
 }
