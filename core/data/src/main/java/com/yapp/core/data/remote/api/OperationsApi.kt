@@ -22,6 +22,6 @@ internal interface OperationsApi {
     @GET("v1/operations/force-update")
     suspend fun isForceUpdateRequired(
         @Query("version") version: String,
-        @Query("platform") platform: String = "Android"
+        @Query("platform") platform: String = "ANDROID"
     ): ForceUpdateResponse
 }
