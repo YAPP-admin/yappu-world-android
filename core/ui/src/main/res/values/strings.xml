@@ -6,7 +6,6 @@
     <string name="attendance_status_absent">결석</string>
     <string name="attendance_status_early_leave">조퇴</string>
     <string name="attendance_status_excused">공결</string>
-    <string name="toast_message_error_loading_url">관련 URL을 불러오지 못했어요.</string>
 
     <string name="time_format_day">%1$d일</string>
     <string name="time_format_month_day">%1$02d.%2$02d</string>
@@ -14,4 +13,5 @@
     <string name="time_format_base">a h시</string>
     <string name="time_format_half_hour_with_base">%1$s 반</string>
     <string name="time_format_hour_minute_with_base">%1$s %2$d분</string>
+    <string name="toast_message_error_loading_url">관련 URL을 불러오지 못했어요.</string>
 </resources>
