@@ -11,6 +11,6 @@ fun Throwable.record() {
 private fun recordException(
     e: Throwable,
 ) {
-    Timber.e(e)
+    Timber.w(e)
     Firebase.crashlytics.recordException(e)
 }
