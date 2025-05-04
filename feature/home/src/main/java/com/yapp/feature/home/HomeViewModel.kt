@@ -40,12 +40,12 @@ internal class HomeViewModel @Inject constructor(
             HomeIntent.EnterHomeScreen -> { loadHomeInfo( reduce,postSideEffect)  }
             HomeIntent.ClickRequestAttendCode -> {
                 reduce {
-                    copy(showAttendCodeBottomSheet = state.showAttendCodeBottomSheet.not())
+                    copy(showAttendCodeBottomSheet = true)
                 }
             }
             HomeIntent.ClickDismissDialog -> {
                 reduce {
-                    copy(showAttendCodeBottomSheet = state.showAttendCodeBottomSheet.not())
+                    copy(showAttendCodeBottomSheet = false)
                 }
             }
             is HomeIntent.ClickRequestAttendance -> {
@@ -101,7 +101,7 @@ internal class HomeViewModel @Inject constructor(
                 reduce {
                     copy(
                         sessions = copySessions,
-                        showAttendCodeBottomSheet = state.showAttendCodeBottomSheet.not()
+                        showAttendCodeBottomSheet = false
                     )
                 }
             }.onFailure { it.record() }

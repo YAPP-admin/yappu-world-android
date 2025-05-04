@@ -100,10 +100,12 @@ fun HomeScreen(
 
         if (homeState.showAttendCodeBottomSheet) {
             AttendanceDialog(
-                onDismissRequest = {},
+                onDismissRequest = {
+                    onIntent(HomeIntent.ClickDismissDialog)
+                },
                 clickAttendanceButton = { code ->
                     onIntent(HomeIntent.ClickRequestAttendance(sessionId = homeState.todayOrUpcomingSession?.id.orEmpty(), code = code))
-                }
+                },
             )
         }
     }
