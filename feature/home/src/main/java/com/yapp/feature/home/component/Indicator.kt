@@ -42,8 +42,8 @@ internal fun Indicators(
     dotSize: Dp = 8.dp,
     selectedDotSize: Dp = 8.dp,
     dotSpacing: Dp = 8.dp,
-    activeColor: Color = YappTheme.colorScheme.staticWhite,
-    inactiveColor: Color = YappTheme.colorScheme.staticWhite.copy(alpha = 0.16f)
+    activeColor: Color = YappTheme.colorScheme.labelNormal,
+    inactiveColor: Color = YappTheme.colorScheme.labelNormal.copy(alpha = 0.16f)
 ) {
     val lazyListState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
