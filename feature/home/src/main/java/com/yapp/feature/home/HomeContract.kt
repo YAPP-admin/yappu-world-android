@@ -7,7 +7,8 @@ import java.time.format.DateTimeFormatter
 
 data class HomeState(
     val sessions: List<Session> = emptyList(),
-    val upcomingSessionId: String = ""
+    val upcomingSessionId: String = "",
+    val showAttendCodeBottomSheet: Boolean = false
 ) {
     val attendanceTitle: String
         get() {
@@ -100,6 +101,9 @@ data class HomeState(
 sealed interface HomeIntent {
     data object ClickMoreButton : HomeIntent
     data object ClickSettingButton : HomeIntent
+    data object ClickRequestAttendCode : HomeIntent
+    data object ClickDismissDialog : HomeIntent
+    data class ClickRequestAttendance(val code: String, val sessionId: String) : HomeIntent
     data object EnterHomeScreen : HomeIntent
     data class ClickNoticeItem(val noticeId: String) : HomeIntent
 }

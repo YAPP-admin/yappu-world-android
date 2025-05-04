@@ -36,7 +36,8 @@ internal fun HomeAttendanceContents(
     modifier: Modifier = Modifier,
     attendState: HomeState.AttendState,
     todayOrUpcomingSession: HomeState.Session?,
-    buttonTitle: String
+    buttonTitle: String,
+    onClickAttend: () -> Unit
 ) {
     val today = remember { LocalDate.now() }
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -66,7 +67,8 @@ internal fun HomeAttendanceContents(
                 TodaySessionCard(
                     session = todayOrUpcomingSession,
                     attendState = attendState,
-                    buttonTitle = buttonTitle
+                    buttonTitle = buttonTitle,
+                    onClickAttend = onClickAttend
                 )
             } else {
                 UpcomingSessionCard(
@@ -117,7 +119,7 @@ fun TodaySessionCard(
     buttonTitle: String,
     session: HomeState.Session,
     attendState: HomeState.AttendState,
-    onClickAttend: () -> Unit = {}
+    onClickAttend: () -> Unit
 ) {
     val parsedTime = runCatching {
         LocalTime.parse(session.startTime, DateTimeFormatter.ofPattern("HH:mm"))
@@ -162,7 +164,7 @@ fun TodaySessionCard(
                 YappSolidPrimaryButtonLarge(
                     text = buttonTitle,
                     enable = true,
-                    onClick = {}
+                    onClick = { onClickAttend() }
                 )
             }
 

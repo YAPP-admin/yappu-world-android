@@ -41,7 +41,10 @@ import com.yapp.core.ui.component.YappBackground
 import com.yapp.feature.home.R
 
 @Composable
-internal fun AttendanceDialog(onDismissRequest: () -> Unit) {
+internal fun AttendanceDialog(
+    onDismissRequest: () -> Unit,
+    clickAttendanceButton: (String) -> Unit
+) {
     val codeLength = 4
     val values = remember { mutableStateListOf("", "", "", "") }
     val focusRequesters = remember { List(codeLength) { FocusRequester() } }
@@ -76,7 +79,7 @@ internal fun AttendanceDialog(onDismissRequest: () -> Unit) {
                 )
                 YappSolidPrimaryButtonLarge(
                     enable = values.all { it.isNotEmpty() && it.all { it.isDigit() } },
-                    onClick = {},
+                    onClick = { clickAttendanceButton(values.joinToString(separator = "")) },
                     text = stringResource(R.string.attendance_dialog_confirm_button)
                 )
                 YappSolidPrimaryButtonSmall(
@@ -154,8 +157,9 @@ private fun PinCodeInput(
 @Composable
 private fun AttendanceDialogPreview() {
     YappBackground {
-        AttendanceDialog {
-
-        }
+        AttendanceDialog(
+            onDismissRequest = {},
+            clickAttendanceButton = {}
+        )
     }
 }
