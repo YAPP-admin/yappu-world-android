@@ -112,6 +112,8 @@ captures/
 
 # Google Services (e.g. APIs or Firebase)
 app/google-services.json
+app/src/debug/google-services.json
+app/src/qa/google-services.json
 
 # Android Patch
 gen-external-apklibs
