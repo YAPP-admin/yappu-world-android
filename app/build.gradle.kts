@@ -29,14 +29,21 @@ android {
         targetSdk = 35
     }
     buildTypes {
-        getByName("release") {
-            signingConfig = signingConfigs.getByName("release")
+        getByName("debug") {
+            applicationIdSuffix = ".dev"
+            isDebuggable = true
         }
 
         create("qa") {
             initWith(getByName("release"))
+            applicationIdSuffix = ".qa"
             signingConfig = signingConfigs.getByName("release")
             matchingFallbacks += listOf("release")
+            isDebuggable = true
+        }
+
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 }
