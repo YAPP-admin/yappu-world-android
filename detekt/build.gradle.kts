@@ -11,7 +11,7 @@ detekt {
     buildUponDefaultConfig = true
     allRules = false
     ignoreFailures = true
-    config.setFrom(file("$rootDir/bbros-detekt/src/main/resources/config/detekt-config.yml"))
+    config.setFrom(file("$rootDir/detekt/src/main/resources/config/detekt-config.yml"))
 }
 
 tasks.withType<Detekt> {
