@@ -34,7 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.component.button.solid.YappSolidPrimaryButtonLarge
-import com.yapp.core.designsystem.component.button.solid.YappSolidPrimaryButtonSmall
+import com.yapp.core.designsystem.component.button.text.YappTextPrimaryButtonSmall
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.BottomDialog
 import com.yapp.core.ui.component.YappBackground
@@ -71,18 +71,27 @@ internal fun AttendanceDialog(
                     style = YappTheme.typography.label1ReadingRegular
                 )
                 Spacer(Modifier.height(24.dp))
+
                 PinCodeInput(
                     values = values,
                     onValueChange = { index, value -> values[index] = value },
                     focusRequesters = focusRequesters,
                     isAllValuesEntered = isAllValuesEntered
                 )
+
+                Spacer(Modifier.height(24.dp))
+
                 YappSolidPrimaryButtonLarge(
+                    modifier = Modifier.fillMaxWidth(),
                     enable = values.all { it.isNotEmpty() && it.all { it.isDigit() } },
                     onClick = { clickAttendanceButton(values.joinToString(separator = "")) },
                     text = stringResource(R.string.attendance_dialog_confirm_button)
                 )
-                YappSolidPrimaryButtonSmall(
+
+                Spacer(Modifier.height(8.dp))
+
+                YappTextPrimaryButtonSmall(
+                    modifier = Modifier.fillMaxWidth(),
                     enable = true,
                     text = stringResource(R.string.attendance_dialog_cancel_button),
                     onClick = { onDismissRequest() }
