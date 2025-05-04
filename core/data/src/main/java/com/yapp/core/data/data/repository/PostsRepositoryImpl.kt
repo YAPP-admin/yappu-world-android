@@ -10,7 +10,7 @@ import javax.inject.Inject
 internal class PostsRepositoryImpl @Inject constructor(
     private val postsApi: PostsApi,
 ) : PostsRepository {
-    override suspend fun getNoticeList(
+    override fun getNoticeList(
         lastNoticeId: String?,
         limit: Int,
         noticeType: String,
@@ -23,7 +23,7 @@ internal class PostsRepositoryImpl @Inject constructor(
         emit(response.toNoticeListModel())
     }
 
-    override suspend fun getNoticeItem(noticeId: String): Flow<NoticeInfo> = flow {
+    override fun getNoticeItem(noticeId: String): Flow<NoticeInfo> = flow {
         val response = postsApi.getNoticeItem(noticeId)
         emit(response.toNoticeModel())
     }
