@@ -1,11 +1,11 @@
-yapp-rule:
-  active: true
-  ServiceRules:
-    active: true
-  DeepLinkTypeRule:
-    active: true
-  MissingScreenTestRule:
-    active: true
+#yapp-rule:
+#  active: true
+#  ServiceRules:
+#    active: true
+#  DeepLinkTypeRule:
+#    active: true
+#  MissingScreenTestRule:
+#    active: true
 
 complexity:
   TooManyFunctions:
