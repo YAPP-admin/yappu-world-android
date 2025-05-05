@@ -135,6 +135,8 @@ internal fun HomeHeader(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        Spacer(modifier = Modifier.height(16.dp))
+
         Indicators(
             itemCount = sessions.size,
             onPageSelect = { index ->
