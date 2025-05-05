@@ -35,9 +35,8 @@ internal class HomeViewModel @Inject constructor(
         postSideEffect: (HomeSideEffect) -> Unit,
     ) {
         when (intent) {
-            HomeIntent.ClickMoreButton -> postSideEffect(HomeSideEffect.NavigateToNotice)
-            HomeIntent.ClickSettingButton -> postSideEffect(HomeSideEffect.NavigateToSetting)
             HomeIntent.EnterHomeScreen -> { loadHomeInfo( reduce,postSideEffect)  }
+            HomeIntent.ClickShowAllSession -> postSideEffect(HomeSideEffect.NavigateToSchedule)
             HomeIntent.ClickRequestAttendCode -> {
                 reduce {
                     copy(showAttendCodeBottomSheet = true)
@@ -51,7 +50,6 @@ internal class HomeViewModel @Inject constructor(
             is HomeIntent.ClickRequestAttendance -> {
                 requestAttendance(intent.sessionId, intent.code, state, reduce)
             }
-            is HomeIntent.ClickNoticeItem -> postSideEffect(HomeSideEffect.NavigateToNoticeDetail(intent.noticeId))
         }
     }
 

@@ -23,19 +23,13 @@ fun NavController.navigateToSetting(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.homeNavGraph(
-    navigateNotice: () -> Unit,
-    navigateSetting: () -> Unit,
     navigateLogin : () -> Unit,
-    navigateToNoticeDetail: (String) -> Unit
+    navigateSchedule: () -> Unit,
 ) {
     composable<HomeRoute> {
         HomeRoute(
-            navigateToNotice = navigateNotice,
-            navigateToSetting = navigateSetting,
             navigateToLogin = navigateLogin,
-            navigateToNoticeDetail = { noticeId ->
-                navigateToNoticeDetail(noticeId)
-            }
+            navigateToSchedule = navigateSchedule,
         )
     }
 }

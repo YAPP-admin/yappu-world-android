@@ -50,16 +50,14 @@ fun YappNavHost(
             }
         )
         homeNavGraph(
-            navigateNotice = { navigator.navigateNoticeScreen() },
-            navigateSetting = { navigator.navigateSettingScreen() },
             navigateLogin = {
                 navigator.navigateLoginScreen(
                     navOptions = clearBackStackNavOptions
                 )
             },
-            navigateToNoticeDetail = { noticeId ->
-                navigator.navigateToNoticeDetail(noticeId)
-            }
+            navigateSchedule = {
+                navigator.navigateToTopLevelDestination(TopLevelDestination.SCHEDULE)
+            },
         )
         settingNavGraph(
             navigateLogin = {
