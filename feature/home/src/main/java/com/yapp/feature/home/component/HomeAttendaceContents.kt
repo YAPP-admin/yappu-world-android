@@ -44,19 +44,21 @@ internal fun HomeAttendanceContents(
 
     Box(
         modifier = modifier
+            .fillMaxWidth()
             .padding(horizontal = 20.dp)
             .dashedBorder(
                 color = Color(0xFFFED9CB),
                 dashLength = 3.dp,
                 cornerRadius = 10.dp
-            ).padding(20.dp)
+            )
+            .padding(20.dp)
     ) {
         if (todayOrUpcomingSession == null) {
             Text(
                 text = "모든 세션이 종료되었어요.\n기수 활동에 참여해 주셔서 감사합니다 :)",
                 textAlign = TextAlign.Center,
                 style = YappTheme.typography.caption1Medium,
-                color = YappTheme.colorScheme.interactionInactive,
+                color = YappTheme.colorScheme.labelNormal,
             )
         } else {
             val sessionDate = runCatching {
@@ -95,20 +97,23 @@ private fun UpcomingSessionCard(
         Text(
             text = "오늘은 ${today.format(dateFormatter)}이에요.",
             style = YappTheme.typography.label2Medium,
-            color = Color.Black
+            color = YappTheme.colorScheme.labelNormal
         )
 
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFFF4F4F4), shape = RoundedCornerShape(12.dp))
+                .background(
+                    color = YappTheme.colorScheme.interactionDisable,
+                    shape = RoundedCornerShape(12.dp)
+                )
                 .padding(vertical = 12.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "${upcomingDate.format(dateFormatter)} 세션예정",
                 style = YappTheme.typography.body2NormalBold,
-                color = Color.Gray
+                color = YappTheme.colorScheme.labelAssistive
             )
         }
     }
