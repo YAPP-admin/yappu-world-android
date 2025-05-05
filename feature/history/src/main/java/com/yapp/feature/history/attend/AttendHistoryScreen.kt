@@ -10,7 +10,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -18,25 +17,31 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.component.header.YappHeaderActionbar
 import com.yapp.core.designsystem.theme.YappTheme
+import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.history.R
-import com.yapp.feature.history.attend.components.AttendanceStatusSection
-import com.yapp.feature.history.attend.components.StatusItem
-import com.yapp.model.ScheduleInfo
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import com.yapp.feature.history.attend.component.AttendanceStatusSection
+import com.yapp.feature.history.attend.component.SessionAttendanceHistory
+import com.yapp.feature.history.attend.component.StatusItem
+import com.yapp.model.AttendanceHistoryList
+import com.yapp.core.designsystem.R as coreDesignR
 import com.yapp.feature.history.attend.AttendHistoryIntent as Intent
 import com.yapp.feature.history.attend.AttendHistorySideEffect as SideEffect
-import com.yapp.core.designsystem.R as coreDesignR
 
 @Composable
 internal fun AttendHistoryRoute(
     viewModel: AttendHistoryViewModel = hiltViewModel(),
     navigateToBack: () -> Unit
 ) {
-    val scope = rememberCoroutineScope()
-    val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
-
     LaunchedEffect(Unit) { viewModel.store.onIntent(Intent.OnEntryScreen) }
+
+    val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
+    viewModel.store.sideEffects.collectWithLifecycle { effect ->
+        when(effect) {
+            SideEffect.NavigateToBack -> {
+                navigateToBack()
+            }
+        }
+    }
 
     AttendHistoryScreen(
         attendancePoint = uiState.attendancePoint,
@@ -47,21 +52,11 @@ internal fun AttendHistoryRoute(
         late =  uiState.lateCount,
         absence = uiState.absenceCount,
         latePass = uiState.latePassCount,
-        sessions = uiState.sessions,
+        attendanceHistoryList = uiState.attendanceHistoryList,
         onClickBackButton = {
             viewModel.store.onIntent(Intent.OnClickBackButton)
         }
     )
-
-    LaunchedEffect(viewModel.store.sideEffects) {
-        viewModel.store.sideEffects.onEach { effect ->
-            when(effect) {
-                SideEffect.NavigateToBack -> {
-                    navigateToBack()
-                }
-            }
-        }.launchIn(scope)
-    }
 }
 
 @Composable
@@ -74,7 +69,7 @@ private fun AttendHistoryScreen(
     late: Int,
     absence: Int,
     latePass: Int,
-    sessions: List<ScheduleInfo>,
+    attendanceHistoryList: AttendanceHistoryList,
     onClickBackButton: () -> Unit
 ) {
     YappTheme {
@@ -84,8 +79,10 @@ private fun AttendHistoryScreen(
                 leftIcon = coreDesignR.drawable.icon_chevron_left,
                 onClickLeftIcon = onClickBackButton
             )
+
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 Spacer(modifier = Modifier.height(20.dp))
+
                 AttendanceStatusSection(
                     modifier = Modifier.padding(horizontal = 20.dp),
                     title = stringResource(R.string.attendance_my_status),
@@ -98,9 +95,11 @@ private fun AttendHistoryScreen(
                         StatusItem(modifier = Modifier.weight(1f), title = stringResource(R.string.latePass_item), count = latePass)
                     }
                 )
+
                 Spacer(modifier = Modifier.height(20.dp))
                 HorizontalDivider(thickness = 12.dp, color = YappTheme.colorScheme.lineNormalAlternative)
                 Spacer(modifier = Modifier.height(24.dp))
+
                 AttendanceStatusSection(
                     modifier = Modifier.padding(horizontal = 20.dp),
                     title = stringResource(R.string.session_title),
@@ -119,6 +118,12 @@ private fun AttendHistoryScreen(
                         )
                     }
                 )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                SessionAttendanceHistory(attendanceHistoryList = attendanceHistoryList)
+
+                Spacer(modifier = Modifier.height(24.dp))
             }
         }
     }

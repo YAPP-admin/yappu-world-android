@@ -12,5 +12,7 @@
     <string name="total_remain_session_count_title">남은 세션</string>
     <string name="total_remain_session_progress_rate_title">진행률</string>
 
+    <string name="session_attendance_title">세션 출석 내역</string>
+
     <string name="previous_title">이전 활동 내역</string>
 </resources>

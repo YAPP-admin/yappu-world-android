@@ -5,16 +5,15 @@ import androidx.lifecycle.viewModelScope
 import com.yapp.core.common.android.record
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
+import com.yapp.dataapi.AttendanceRepository
+import com.yapp.domain.runCatchingIgnoreCancelled
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 internal class AttendHistoryViewModel @Inject constructor(
-    private val attendHistoryUseCase: AttendHistoryUseCase
+    private val attendanceRepository: AttendanceRepository,
 ): ViewModel() {
 
     val store: MviIntentStore<AttendHistoryState, AttendHistoryIntent, AttendHistorySideEffect> = mviIntentStore(
@@ -30,7 +29,8 @@ internal class AttendHistoryViewModel @Inject constructor(
     ) {
         when(intent) {
             AttendHistoryIntent.OnEntryScreen -> {
-                collectAttendance(reduce = reduce)
+                loadAttendanceStatistics(reduce = reduce)
+                loadAttendanceHistory(reduce = reduce)
             }
             AttendHistoryIntent.OnClickBackButton -> {
                 sideEffect(AttendHistorySideEffect.NavigateToBack)
@@ -38,28 +38,46 @@ internal class AttendHistoryViewModel @Inject constructor(
         }
     }
 
-    private fun collectAttendance(
+    private fun loadAttendanceStatistics(
         reduce: (AttendHistoryState.() -> AttendHistoryState) -> Unit
     ) {
         viewModelScope.launch {
-            attendHistoryUseCase()
-                .catch { error ->
-                    error.record()
-                }.collect { (attendace, sessions) ->
-                    reduce {
-                        copy(
-                            totalSessionCount = attendace.totalSessionCount,
-                            remainingSessionCount = attendace.remainingSessionCount,
-                            sessionProgressRate = attendace.sessionProgressRate,
-                            attendanceCount = attendace.attendanceCount,
-                            attendancePoint = attendace.attendancePoint,
-                            absenceCount = attendace.absenceCount,
-                            lateCount = attendace.lateCount,
-                            latePassCount = attendace.latePassCount,
-                            sessions = sessions
-                        )
-                    }
+            runCatchingIgnoreCancelled { 
+                attendanceRepository.getAttendanceStatistics()
+            }.onSuccess {
+                reduce {
+                    copy(
+                        totalSessionCount = it.totalSessionCount,
+                        remainingSessionCount = it.remainingSessionCount,
+                        sessionProgressRate = it.sessionProgressRate,
+                        attendanceCount = it.attendanceCount,
+                        attendancePoint = it.attendancePoint,
+                        absenceCount = it.absenceCount,
+                        lateCount = it.lateCount,
+                        latePassCount = it.latePassCount,
+                    )
                 }
+            }.onFailure { error ->
+                error.record()
+            }
+        }
+    }
+    
+    private fun loadAttendanceHistory(
+        reduce: (AttendHistoryState.() -> AttendHistoryState) -> Unit
+    ) {
+        viewModelScope.launch {
+            runCatchingIgnoreCancelled { 
+                attendanceRepository.getAttendanceHistory()
+            }.onSuccess { attendanceHistory ->
+                reduce {
+                    copy(
+                        attendanceHistoryList = attendanceHistory
+                    )
+                }
+            }.onFailure { error ->
+                error.record()
+            }
         }
     }
 }
