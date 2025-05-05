@@ -1,4 +1,4 @@
-package com.yapp.feature.history.attend.components
+package com.yapp.feature.history.attend.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

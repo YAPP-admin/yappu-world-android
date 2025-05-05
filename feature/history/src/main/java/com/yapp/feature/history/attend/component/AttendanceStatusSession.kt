@@ -1,4 +1,4 @@
-package com.yapp.feature.history.attend.components
+package com.yapp.feature.history.attend.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
