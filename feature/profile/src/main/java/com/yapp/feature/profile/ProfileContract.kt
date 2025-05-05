@@ -31,6 +31,7 @@ sealed interface ProfileSideEffect {
     data object NavigateToAttendHistory : ProfileSideEffect
     data object NavigateToPreviousHistory : ProfileSideEffect
     data object NavigateToLogin : ProfileSideEffect
-    data object NavigateToUsage : ProfileSideEffect
     data class HandleException(val exception: Throwable) : ProfileSideEffect
+    data object ShowUrlLoadFailToast: ProfileSideEffect
+    data class OpenWebBrowser(val link: String) : ProfileSideEffect
 }

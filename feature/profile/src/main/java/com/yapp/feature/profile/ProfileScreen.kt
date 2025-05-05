@@ -1,5 +1,6 @@
 package com.yapp.feature.profile
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,7 +25,7 @@ import com.yapp.core.designsystem.component.button.outlined.YappOutlinedSecondar
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
-import com.yapp.feature.profile.ProfileSideEffect
+import com.yapp.core.ui.extension.safeOpenUri
 import com.yapp.feature.profile.component.ProfileInformationSection
 import com.yapp.feature.profile.component.ProfileSectionItem
 import com.yapp.feature.profile.component.ProfileTopBarSection
@@ -38,6 +41,8 @@ internal fun ProfileRoute(
     handleException: (Throwable) -> Unit,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val uriHandler = LocalUriHandler.current
 
     LaunchedEffect(Unit) {
         viewModel.store.onIntent(ProfileIntent.EntryScreen)
@@ -57,11 +62,18 @@ internal fun ProfileRoute(
             SideEffect.NavigateToLogin -> {
                 onNavigateToLogin()
             }
-            SideEffect.NavigateToUsage -> {
-                // TODO
+            is SideEffect.OpenWebBrowser -> {
+                uriHandler.safeOpenUri(effect.link)
+            }
+            SideEffect.ShowUrlLoadFailToast -> {
+                Toast.makeText(
+                    context,
+                    context.getString(com.yapp.core.ui.R.string.toast_message_error_loading_url),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
-            is ProfileSideEffect.HandleException -> {
+            is SideEffect.HandleException -> {
                 handleException(effect.exception)
             }
         }
