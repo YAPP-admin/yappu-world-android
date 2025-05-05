@@ -16,6 +16,8 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -48,7 +50,11 @@ internal fun AttendanceDialog(
     val codeLength = 4
     val values = remember { mutableStateListOf("", "", "", "") }
     val focusRequesters = remember { List(codeLength) { FocusRequester() } }
-    val isAllValuesEntered = remember(values) { values.all { it.isNotEmpty() } }
+    val isAllValuesEntered by remember(values) {
+        derivedStateOf {
+            values.all { it.isNotEmpty() }
+        }
+    }
 
     BottomDialog(
         onDismissRequest = onDismissRequest,
