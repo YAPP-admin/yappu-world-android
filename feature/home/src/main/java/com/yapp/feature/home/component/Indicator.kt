@@ -3,7 +3,6 @@ package com.yapp.feature.home.component
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
@@ -42,8 +41,8 @@ internal fun Indicators(
     dotSize: Dp = 8.dp,
     selectedDotSize: Dp = 8.dp,
     dotSpacing: Dp = 8.dp,
-    activeColor: Color = YappTheme.colorScheme.labelNormal,
-    inactiveColor: Color = YappTheme.colorScheme.labelNormal.copy(alpha = 0.16f)
+    activeColor: Color = YappTheme.colorScheme.staticWhite,
+    inactiveColor: Color = YappTheme.colorScheme.staticWhite.copy(alpha = 0.16f)
 ) {
     val lazyListState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -95,7 +94,6 @@ internal fun Indicators(
                         }
                     )
                 }
-                .padding(8.dp)
                 .widthIn(max = (visibleDotCount * (dotSize + dotSpacing)).coerceAtLeast(60.dp)),
             horizontalArrangement = Arrangement.spacedBy(dotSpacing),
             verticalAlignment = Alignment.CenterVertically
