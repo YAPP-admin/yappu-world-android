@@ -103,17 +103,6 @@ class SettingViewModel @Inject constructor(
                     }
                 }
             }
-
-            SettingIntent.ClickInquiryItem -> {
-                viewModelScope.launch {
-                    updateUrl()
-                    inquiryLink?.let {
-                        postSideEffect(SettingSideEffect.OpenWebBrowser(it))
-                    } ?: run {
-                        postSideEffect(SettingSideEffect.ShowUrlLoadFailToast)
-                    }
-                }
-            }
         }
     }
 

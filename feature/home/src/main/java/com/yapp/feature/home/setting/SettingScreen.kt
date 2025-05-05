@@ -1,5 +1,7 @@
 package com.yapp.feature.home.setting
 
+import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.component.control.switches.YappSwitchMedium
@@ -162,7 +165,7 @@ fun SettingScreen(
                         ),
                     text = stringResource(id = R.string.setting_screen_item_app_version),
                     onClick = {
-                        onIntent(SettingIntent.ClickInquiryItem)
+//                        onIntent(SettingIntent.ClickAppVersion)
                     },
                     slot = {
                         Text(
