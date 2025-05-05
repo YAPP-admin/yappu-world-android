@@ -55,6 +55,7 @@ internal fun HomeAttendanceContents(
     ) {
         if (todayOrUpcomingSession == null) {
             Text(
+                modifier = Modifier.fillMaxWidth(),
                 text = "모든 세션이 종료되었어요.\n기수 활동에 참여해 주셔서 감사합니다 :)",
                 textAlign = TextAlign.Center,
                 style = YappTheme.typography.caption1Medium,
