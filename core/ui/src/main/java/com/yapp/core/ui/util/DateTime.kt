@@ -3,6 +3,7 @@ package com.yapp.core.ui.util
 import android.content.Context
 import com.yapp.core.ui.R
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -52,4 +53,14 @@ fun isPastDate(dateString: String, pattern: String = "yyyy-MM-dd"): Boolean {
     } catch (e: Exception) {
         false
     }
+}
+
+fun formatDateTime(context: Context, input: String): String {
+    val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
+    val dateTime = LocalDateTime.parse(input, inputFormatter)
+
+    val outputPattern = context.getString(R.string.date_time_format)
+
+    val outputFormatter = DateTimeFormatter.ofPattern(outputPattern, Locale.KOREAN)
+    return dateTime.format(outputFormatter)
 }
