@@ -11,7 +11,6 @@ sealed interface SettingIntent {
     data object ClickBackButton : SettingIntent
     data object ClickPrivacyPolicyItem : SettingIntent
     data object ClickTermsItem : SettingIntent
-    data object ClickInquiryItem : SettingIntent
 }
 
 sealed interface SettingSideEffect {
