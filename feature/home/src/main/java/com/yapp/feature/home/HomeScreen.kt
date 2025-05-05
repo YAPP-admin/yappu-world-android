@@ -1,13 +1,8 @@
 package com.yapp.feature.home
 
 import android.widget.Toast
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -22,7 +17,7 @@ import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.home.component.HomeAttendanceContents
 import com.yapp.feature.home.component.HomeAttendanceNotice
-import com.yapp.feature.home.component.HomeStickHeader
+import com.yapp.feature.home.component.HomeHeader
 import com.yapp.feature.home.dialog.AttendanceDialog
 
 @Composable
@@ -58,13 +53,12 @@ internal fun HomeRoute(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
     homeState: HomeState,
     onIntent: (HomeIntent) -> Unit = {},
 ) {
-    val colorStops = arrayOf(
+    val colorSteps = arrayOf(
         0.2f to YappTheme.colorScheme.primaryNormal,
         1f to YappTheme.colorScheme.secondaryNormal
     )
@@ -72,42 +66,40 @@ fun HomeScreen(
     YappBackground(
         color = YappTheme.colorScheme.staticWhite
     ) {
-        LazyColumn(userScrollEnabled = false) {
-            stickyHeader {
-                HomeStickHeader(
-                    modifier = Modifier
-                        .background(brush = Brush.horizontalGradient(colorStops = colorStops))
-                        .padding(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()),
-                    sessions = homeState.sessions,
-                    upcomingSessionId = homeState.upcomingSessionId,
-                    onClickSessionItem = { noticeId ->
-                        onIntent(HomeIntent.ClickNoticeItem(noticeId))
-                    }
-                )
-            }
+        Column {
+            HomeHeader(
+                modifier = Modifier
+                    .background(brush = Brush.horizontalGradient(colorStops = colorSteps)),
+                sessions = homeState.sessions,
+                upcomingSessionId = homeState.upcomingSessionId,
+                onClickSessionItem = { }
+            )
 
-            item { HomeAttendanceNotice(title = homeState.attendanceTitle) }
+            HomeAttendanceNotice(title = homeState.attendanceTitle)
 
-            item {
-                HomeAttendanceContents(
-                    todayOrUpcomingSession = homeState.todayOrUpcomingSession,
-                    attendState = homeState.attendState,
-                    buttonTitle = homeState.buttonTitle,
-                    onClickAttend = { onIntent(HomeIntent.ClickRequestAttendCode) }
-                )
-            }
-        }
-
-        if (homeState.showAttendCodeBottomSheet) {
-            AttendanceDialog(
-                onDismissRequest = {
-                    onIntent(HomeIntent.ClickDismissDialog)
-                },
-                clickAttendanceButton = { code ->
-                    onIntent(HomeIntent.ClickRequestAttendance(sessionId = homeState.todayOrUpcomingSession?.id.orEmpty(), code = code))
-                },
+            HomeAttendanceContents(
+                todayOrUpcomingSession = homeState.todayOrUpcomingSession,
+                attendState = homeState.attendState,
+                buttonTitle = homeState.buttonTitle,
+                onClickAttend = { onIntent(HomeIntent.ClickRequestAttendCode) }
             )
         }
+    }
+
+    if (homeState.showAttendCodeBottomSheet) {
+        AttendanceDialog(
+            onDismissRequest = {
+                onIntent(HomeIntent.ClickDismissDialog)
+            },
+            clickAttendanceButton = { code ->
+                onIntent(
+                    HomeIntent.ClickRequestAttendance(
+                        sessionId = homeState.todayOrUpcomingSession?.id.orEmpty(),
+                        code = code
+                    )
+                )
+            },
+        )
     }
 }
 
