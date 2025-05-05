@@ -36,6 +36,7 @@ import com.yapp.core.designsystem.component.chip.ChipColorType
 import com.yapp.core.designsystem.component.chip.YappChipSmall
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
+import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.schedule.component.DateGroupedScheduleItem
 import com.yapp.feature.schedule.component.ScheduleTabRow
@@ -75,43 +76,46 @@ internal fun ScheduleScreen(
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
 
-    PullToRefreshBox(
-        isRefreshing = scheduleState.isLoading,
-        state = pullToRefreshState,
-        onRefresh = { onIntent(ScheduleIntent.RefreshTab(scheduleState.selectedTab)) },
+    YappBackground(
+        color = YappTheme.colorScheme.staticWhite,
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(YappTheme.colorScheme.staticWhite)
+        PullToRefreshBox(
+            isRefreshing = scheduleState.isLoading,
+            state = pullToRefreshState,
+            onRefresh = { onIntent(ScheduleIntent.RefreshTab(scheduleState.selectedTab)) },
         ) {
-            ScheduleHeader()
-            Spacer(modifier = Modifier.height(6.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                ScheduleHeader()
+                Spacer(modifier = Modifier.height(6.dp))
 
-            ScheduleTabRow(
-                selectedTab = scheduleState.selectedTab,
-                tabList = ScheduleTab.entries,
-                onTabSelected = {
-                    onIntent(ScheduleIntent.SelectTab(it))
-                }
-            )
+                ScheduleTabRow(
+                    selectedTab = scheduleState.selectedTab,
+                    tabList = ScheduleTab.entries,
+                    onTabSelected = {
+                        onIntent(ScheduleIntent.SelectTab(it))
+                    }
+                )
 
-            when (scheduleState.selectedTab) {
-                ScheduleTab.ALL -> {
-                    ScheduleAllScreen(
-                        selectedYear = scheduleState.selectedYear,
-                        selectedMonth = scheduleState.selectedMonth,
-                        schedules = scheduleState.schedules[
-                            Pair(scheduleState.selectedYear, scheduleState.selectedMonth)
-                        ] ?: ScheduleList(dates = emptyList()),
-                        onIntent = onIntent
+                when (scheduleState.selectedTab) {
+                    ScheduleTab.ALL -> {
+                        ScheduleAllScreen(
+                            selectedYear = scheduleState.selectedYear,
+                            selectedMonth = scheduleState.selectedMonth,
+                            schedules = scheduleState.schedules[
+                                Pair(scheduleState.selectedYear, scheduleState.selectedMonth)
+                            ] ?: ScheduleList(dates = emptyList()),
+                            onIntent = onIntent
+                        )
+                    }
+
+                    ScheduleTab.SESSION -> ScheduleSessionScreen(
+                        upcomingSessionInfo = scheduleState.upcomingSessionInfo,
+                        sessions = scheduleState.sessions
                     )
                 }
-
-                ScheduleTab.SESSION -> ScheduleSessionScreen(
-                    upcomingSessionInfo = scheduleState.upcomingSessionInfo,
-                    sessions = scheduleState.sessions
-                )
             }
         }
     }

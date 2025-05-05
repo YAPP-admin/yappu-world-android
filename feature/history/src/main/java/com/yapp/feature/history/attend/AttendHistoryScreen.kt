@@ -18,6 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.component.header.YappHeaderActionbar
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.extension.collectWithLifecycle
+import com.yapp.core.ui.component.YappBackground
 import com.yapp.feature.history.R
 import com.yapp.feature.history.attend.component.AttendanceStatusSection
 import com.yapp.feature.history.attend.component.SessionAttendanceHistory
@@ -73,57 +74,59 @@ private fun AttendHistoryScreen(
     onClickBackButton: () -> Unit
 ) {
     YappTheme {
-        Column {
-            YappHeaderActionbar(
-                title = stringResource(R.string.attendance_title),
-                leftIcon = coreDesignR.drawable.icon_chevron_left,
-                onClickLeftIcon = onClickBackButton
-            )
-
-            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                Spacer(modifier = Modifier.height(20.dp))
-
-                AttendanceStatusSection(
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    title = stringResource(R.string.attendance_my_status),
-                    subTitle = stringResource(R.string.attendance_total_score),
-                    totalRate = "${attendancePoint}점",
-                    slot = {
-                        StatusItem(modifier = Modifier.weight(1f), title = stringResource(R.string.attendance_item), count = attendance)
-                        StatusItem(modifier = Modifier.weight(1f), title = stringResource(R.string.late_item), count = late)
-                        StatusItem(modifier = Modifier.weight(1f), title = stringResource(R.string.absence_item), count = absence)
-                        StatusItem(modifier = Modifier.weight(1f), title = stringResource(R.string.latePass_item), count = latePass)
-                    }
+        YappBackground {
+            Column {
+                YappHeaderActionbar(
+                    title = stringResource(R.string.attendance_title),
+                    leftIcon = coreDesignR.drawable.icon_chevron_left,
+                    onClickLeftIcon = onClickBackButton
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
-                HorizontalDivider(thickness = 12.dp, color = YappTheme.colorScheme.lineNormalAlternative)
-                Spacer(modifier = Modifier.height(24.dp))
+                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                    Spacer(modifier = Modifier.height(20.dp))
 
-                AttendanceStatusSection(
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    title = stringResource(R.string.session_title),
-                    subTitle = stringResource(R.string.total_remain_session_progress_rate_title),
-                    totalRate = "${sessionProgressRate}%",
-                    slot = {
-                        StatusItem(
-                            modifier = Modifier.weight(1f),
-                            title = stringResource(R.string.total_session_count_title),
-                            count = totalSessionCount
-                        )
-                        StatusItem(
-                            modifier = Modifier.weight(1f),
-                            title = stringResource(R.string.total_remain_session_count_title),
-                            count = totalRemainSessionCount
-                        )
-                    }
-                )
+                    AttendanceStatusSection(
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                        title = stringResource(R.string.attendance_my_status),
+                        subTitle = stringResource(R.string.attendance_total_score),
+                        totalRate = "${attendancePoint}점",
+                        slot = {
+                            StatusItem(modifier = Modifier.weight(1f), title = stringResource(R.string.attendance_item), count = attendance)
+                            StatusItem(modifier = Modifier.weight(1f), title = stringResource(R.string.late_item), count = late)
+                            StatusItem(modifier = Modifier.weight(1f), title = stringResource(R.string.absence_item), count = absence)
+                            StatusItem(modifier = Modifier.weight(1f), title = stringResource(R.string.latePass_item), count = latePass)
+                        }
+                    )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
+                    HorizontalDivider(thickness = 12.dp, color = YappTheme.colorScheme.lineNormalAlternative)
+                    Spacer(modifier = Modifier.height(24.dp))
 
-                SessionAttendanceHistory(attendanceHistoryList = attendanceHistoryList)
+                    AttendanceStatusSection(
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                        title = stringResource(R.string.session_title),
+                        subTitle = stringResource(R.string.total_remain_session_progress_rate_title),
+                        totalRate = "${sessionProgressRate}%",
+                        slot = {
+                            StatusItem(
+                                modifier = Modifier.weight(1f),
+                                title = stringResource(R.string.total_session_count_title),
+                                count = totalSessionCount
+                            )
+                            StatusItem(
+                                modifier = Modifier.weight(1f),
+                                title = stringResource(R.string.total_remain_session_count_title),
+                                count = totalRemainSessionCount
+                            )
+                        }
+                    )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    SessionAttendanceHistory(attendanceHistoryList = attendanceHistoryList)
+
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
             }
         }
     }
