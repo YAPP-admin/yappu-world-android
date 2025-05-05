@@ -3,6 +3,11 @@ package com.yapp.feature.home
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -10,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.theme.YappTheme
@@ -57,12 +63,15 @@ fun HomeScreen(
     )
 
     YappBackground(
-        color = YappTheme.colorScheme.staticWhite
+        color = YappTheme.colorScheme.staticWhite,
+        contentWindowInsets = WindowInsets.navigationBars,
     ) {
         Column {
             HomeHeader(
                 modifier = Modifier
-                    .background(brush = Brush.horizontalGradient(colorStops = colorSteps)),
+                    .background(brush = Brush.horizontalGradient(colorStops = colorSteps))
+                    .padding(WindowInsets.statusBars.asPaddingValues())
+                    .padding(top = 18.dp),
                 sessions = homeState.sessions,
                 upcomingSessionId = homeState.upcomingSessionId,
                 onClickShowAll = { onIntent(HomeIntent.ClickShowAllSession) },
