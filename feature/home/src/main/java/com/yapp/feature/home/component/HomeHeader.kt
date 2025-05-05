@@ -45,7 +45,7 @@ import kotlinx.coroutines.launch
 import com.yapp.core.designsystem.R as coreDesignR
 
 @Composable
-internal fun HomeStickHeader(
+internal fun HomeHeader(
     modifier: Modifier = Modifier,
     sessions: List<HomeState.Session>,
     upcomingSessionId: String,
@@ -128,6 +128,8 @@ internal fun HomeStickHeader(
             }
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
         Indicators(
             itemCount = sessions.size,
             onPageSelect = { index ->
@@ -137,6 +139,8 @@ internal fun HomeStickHeader(
             },
             currentPage = selectedIndex
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
     }
 
     LaunchedEffect(pageIndex) {
@@ -226,7 +230,7 @@ private fun HomeStickHeaderPreview() {
         1f to YappTheme.colorScheme.secondaryNormal
     )
 
-    HomeStickHeader(
+    HomeHeader(
         modifier = Modifier.background(brush = Brush.horizontalGradient(colorStops = colorStops)),
         sessions = listOf(
             HomeState.Session(
