@@ -62,7 +62,6 @@ internal class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             runCatchingIgnoreCancelled {
                 val result = sessionsUseCase.invoke()
-                val upcomingSessions = result.upcomingSessionInfo
                 val sessions = result.sessions.sessions
 
                 reduce {
