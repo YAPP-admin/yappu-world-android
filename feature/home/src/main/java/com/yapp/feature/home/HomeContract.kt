@@ -99,19 +99,15 @@ data class HomeState(
 }
 
 sealed interface HomeIntent {
-    data object ClickMoreButton : HomeIntent
-    data object ClickSettingButton : HomeIntent
     data object ClickRequestAttendCode : HomeIntent
     data object ClickDismissDialog : HomeIntent
     data class ClickRequestAttendance(val code: String, val sessionId: String) : HomeIntent
     data object EnterHomeScreen : HomeIntent
-    data class ClickNoticeItem(val noticeId: String) : HomeIntent
+    data object ClickShowAllSession : HomeIntent
 }
 
 sealed interface HomeSideEffect {
-    data object NavigateToNotice : HomeSideEffect
-    data class NavigateToNoticeDetail(val noticeId: String) : HomeSideEffect
-    data object NavigateToSetting : HomeSideEffect
+    data object NavigateToSchedule : HomeSideEffect
     data object NavigateToLogin : HomeSideEffect
     data class ShowToast(val message: String) : HomeSideEffect
 }

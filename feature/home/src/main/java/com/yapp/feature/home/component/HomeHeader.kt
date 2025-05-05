@@ -49,7 +49,7 @@ internal fun HomeHeader(
     modifier: Modifier = Modifier,
     sessions: List<HomeState.Session>,
     upcomingSessionId: String,
-    onClickSessionItem: (String) -> Unit
+    onClickShowAll: () -> Unit,
 ) {
     val pageIndex = sessions.indexOfFirst { it.id == upcomingSessionId }
     val scope = rememberCoroutineScope()
@@ -78,7 +78,9 @@ internal fun HomeHeader(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -98,13 +100,16 @@ internal fun HomeHeader(
             }
 
             Text(
+                modifier = Modifier.yappClickable(onClick = onClickShowAll),
                 text = stringResource(R.string.home_session_all_title),
                 style = YappTheme.typography.label1NormalBold,
                 color = YappTheme.colorScheme.staticWhite
             )
         }
         LazyRow(
-            modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp),
             state = lazyListState,
             flingBehavior = flingBehavior,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -123,7 +128,7 @@ internal fun HomeHeader(
                     endTime = it.endTime,
                     startDayOfWeek = it.startDayOfWeek,
                     progressPhase = it.progressPhase,
-                    onClickSessionItem = onClickSessionItem
+                    onClickSessionItem = {  }
                 )
             }
         }
@@ -244,7 +249,7 @@ private fun HomeStickHeaderPreview() {
                 progressPhase = ScheduleProgressPhase.TODAY
             )
         ),
-        onClickSessionItem = {},
+        onClickShowAll = { },
         upcomingSessionId = "123"
     )
 }

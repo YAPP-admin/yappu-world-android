@@ -22,10 +22,8 @@ import com.yapp.feature.home.dialog.AttendanceDialog
 
 @Composable
 internal fun HomeRoute(
-    navigateToNotice: () -> Unit,
-    navigateToSetting: () -> Unit,
     navigateToLogin: () -> Unit,
-    navigateToNoticeDetail: (String) -> Unit,
+    navigateToSchedule: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
@@ -36,14 +34,9 @@ internal fun HomeRoute(
     val context = LocalContext.current
     viewModel.store.sideEffects.collectWithLifecycle { effect ->
         when (effect) {
-            HomeSideEffect.NavigateToNotice -> navigateToNotice()
-            HomeSideEffect.NavigateToSetting -> navigateToSetting()
-            is HomeSideEffect.ShowToast -> {
-                Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
-            }
-
+            HomeSideEffect.NavigateToSchedule -> navigateToSchedule()
+            is HomeSideEffect.ShowToast -> Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
             HomeSideEffect.NavigateToLogin -> navigateToLogin()
-            is HomeSideEffect.NavigateToNoticeDetail -> navigateToNoticeDetail(effect.noticeId)
         }
     }
 
@@ -72,7 +65,7 @@ fun HomeScreen(
                     .background(brush = Brush.horizontalGradient(colorStops = colorSteps)),
                 sessions = homeState.sessions,
                 upcomingSessionId = homeState.upcomingSessionId,
-                onClickSessionItem = { }
+                onClickShowAll = { onIntent(HomeIntent.ClickShowAllSession) },
             )
 
             HomeAttendanceNotice(title = homeState.attendanceTitle)
@@ -109,9 +102,7 @@ private fun HomeScreenPreview() {
     YappTheme {
         HomeRoute(
             navigateToLogin = {},
-            navigateToNotice = {},
-            navigateToSetting = {},
-            navigateToNoticeDetail = {}
+            navigateToSchedule = {}
         )
     }
 }
