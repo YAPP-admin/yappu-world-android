@@ -11,10 +11,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -56,55 +59,62 @@ internal fun AttendanceDialog(
         }
     }
 
-    BottomDialog(
-        onDismissRequest = onDismissRequest,
-        content = {
-            Column(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .background(
-                        color = YappTheme.colorScheme.staticWhite,
-                        shape = RoundedCornerShape(20.dp)
-                    )
-            ) {
-                Text(
-                    text = stringResource(R.string.attendance_dialog_title),
-                    style = YappTheme.typography.headline1Bold
-                )
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    text = stringResource(R.string.attendance_dialog_message),
-                    style = YappTheme.typography.label1ReadingRegular
-                )
-                Spacer(Modifier.height(24.dp))
-
-                PinCodeInput(
-                    values = values,
-                    onValueChange = { index, value -> values[index] = value },
-                    focusRequesters = focusRequesters,
-                    isAllValuesEntered = isAllValuesEntered
-                )
-
-                Spacer(Modifier.height(24.dp))
-
-                YappSolidPrimaryButtonLarge(
-                    modifier = Modifier.fillMaxWidth(),
-                    enable = values.all { it.isNotEmpty() && it.all { it.isDigit() } },
-                    onClick = { clickAttendanceButton(values.joinToString(separator = "")) },
-                    text = stringResource(R.string.attendance_dialog_confirm_button)
-                )
-
-                Spacer(Modifier.height(8.dp))
-
-                YappTextPrimaryButtonSmall(
-                    modifier = Modifier.fillMaxWidth(),
-                    enable = true,
-                    text = stringResource(R.string.attendance_dialog_cancel_button),
-                    onClick = { onDismissRequest() }
-                )
-            }
-        }
+    val yappTextSelectionColors = TextSelectionColors(
+        handleColor = YappTheme.colorScheme.primaryNormal, // 물방울 모양 핸들의 색상
+        backgroundColor = YappTheme.colorScheme.primaryNormal // 선택된 텍스트의 배경색
     )
+
+    CompositionLocalProvider(LocalTextSelectionColors provides yappTextSelectionColors) {
+        BottomDialog(
+            onDismissRequest = onDismissRequest,
+            content = {
+                Column(
+                    modifier = Modifier
+                        .padding(20.dp)
+                        .background(
+                            color = YappTheme.colorScheme.staticWhite,
+                            shape = RoundedCornerShape(20.dp)
+                        )
+                ) {
+                    Text(
+                        text = stringResource(R.string.attendance_dialog_title),
+                        style = YappTheme.typography.headline1Bold
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        text = stringResource(R.string.attendance_dialog_message),
+                        style = YappTheme.typography.label1ReadingRegular
+                    )
+                    Spacer(Modifier.height(24.dp))
+
+                    PinCodeInput(
+                        values = values,
+                        onValueChange = { index, value -> values[index] = value },
+                        focusRequesters = focusRequesters,
+                        isAllValuesEntered = isAllValuesEntered
+                    )
+
+                    Spacer(Modifier.height(24.dp))
+
+                    YappSolidPrimaryButtonLarge(
+                        modifier = Modifier.fillMaxWidth(),
+                        enable = values.all { it.isNotEmpty() && it.all { it.isDigit() } },
+                        onClick = { clickAttendanceButton(values.joinToString(separator = "")) },
+                        text = stringResource(R.string.attendance_dialog_confirm_button)
+                    )
+
+                    Spacer(Modifier.height(8.dp))
+
+                    YappTextPrimaryButtonSmall(
+                        modifier = Modifier.fillMaxWidth(),
+                        enable = true,
+                        text = stringResource(R.string.attendance_dialog_cancel_button),
+                        onClick = { onDismissRequest() }
+                    )
+                }
+            }
+        )
+    }
 }
 
 @Composable
@@ -157,11 +167,12 @@ private fun PinCodeInput(
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = YappTheme.colorScheme.primaryNormal,
-                    unfocusedBorderColor = YappTheme.colorScheme.labelNormal
+                    unfocusedBorderColor = YappTheme.colorScheme.labelNormal,
+                    cursorColor = YappTheme.colorScheme.primaryNormal,
                 ),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number
-                )
+                ),
             )
         }
     }
