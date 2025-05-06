@@ -22,6 +22,7 @@ import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.history.R
+import com.yapp.feature.history.previous.PreviousHistorySideEffect
 import com.yapp.feature.history.previous.PreviousHistoryIntent as Intent
 import com.yapp.feature.history.previous.PreviousHistorySideEffect as SideEffect
 import com.yapp.feature.history.previous.PreviousHistoryState.History
@@ -29,7 +30,9 @@ import com.yapp.feature.history.previous.PreviousHistoryState.History
 @Composable
 internal fun PreviousHistoryRoute(
     viewModel: PreviousHistoryViewModel = hiltViewModel(),
-    navigateToBack: () -> Unit
+    navigateToBack: () -> Unit,
+    navigateToLogin: () -> Unit,
+    handleException: (Throwable) -> Unit,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
 
@@ -42,6 +45,9 @@ internal fun PreviousHistoryRoute(
             SideEffect.Finish -> {
                 navigateToBack()
             }
+
+            is PreviousHistorySideEffect.HandleException -> handleException(effect.exception)
+            PreviousHistorySideEffect.NavigateLogin -> navigateToLogin()
         }
     }
 

@@ -45,12 +45,16 @@ fun NoticeRoute(
     viewModel: NoticeViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
     navigateToNoticeDetail: (String) -> Unit,
+    handleException: (Throwable) -> Unit,
+    navigateToLogin: () -> Unit,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
     viewModel.store.sideEffects.collectWithLifecycle { sideEffect ->
         when (sideEffect) {
             is NoticeSideEffect.NavigateToNoticeDetail -> { navigateToNoticeDetail(sideEffect.noticeId)}
             NoticeSideEffect.NavigateToBack -> navigateBack()
+            is NoticeSideEffect.HandleException -> handleException(sideEffect.exception)
+            NoticeSideEffect.NavigateToLogin -> navigateToLogin()
         }
     }
 

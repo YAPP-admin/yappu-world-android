@@ -88,7 +88,6 @@ internal class HomeViewModel @Inject constructor(
                 }
             }.onFailure { e ->
                 when (e) {
-                    is UserNotFoundForEmailException,
                     is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
                     else -> e.record()
                 }
@@ -113,7 +112,6 @@ internal class HomeViewModel @Inject constructor(
                 }
             }.onFailure { e ->
                 when (e) {
-                    is UserNotFoundForEmailException,
                     is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
                     else -> e.record()
                 }

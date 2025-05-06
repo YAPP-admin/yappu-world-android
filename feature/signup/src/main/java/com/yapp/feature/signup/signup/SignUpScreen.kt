@@ -53,6 +53,7 @@ fun SignUpRoute(
     viewModel: SignUpViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
     navigateHome: () -> Unit,
+    handleException: (Throwable) -> Unit,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
@@ -72,6 +73,8 @@ fun SignUpRoute(
                     Toast.LENGTH_SHORT
                 ).show()
             }
+
+            is SignUpSideEffect.HandleException -> handleException(it.exception)
         }
     }
 
@@ -136,7 +139,8 @@ fun SignUpScreen(
                                     verified
                                 )
                             )
-                        }
+                        },
+                        handleException = { onIntent(SignUpIntent.HandleException(it)) },
                     )
 
                     SignUpStep.Password -> PasswordPage(

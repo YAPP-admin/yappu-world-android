@@ -6,6 +6,7 @@ import com.yapp.core.common.android.record
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.UserRepository
+import com.yapp.model.exceptions.InvalidTokenException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
@@ -46,7 +47,16 @@ internal class PreviousHistoryViewModel @Inject constructor(
                         }
                     )
                 }.catch {
-                    it.record()
+                    when (it) {
+                        is InvalidTokenException -> {
+                            sideEffect(PreviousHistorySideEffect.NavigateLogin)
+                        }
+
+                        else -> {
+                            sideEffect(PreviousHistorySideEffect.HandleException(it))
+                            it.record()
+                        }
+                    }
                 }.onEach { result ->
                     reduce {
                         copy(items = result.items)

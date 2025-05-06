@@ -18,14 +18,16 @@ fun NavGraphBuilder.profileNavGraph(
     onNavigateToSetting: () -> Unit,
     onNavigateToAttendHistory: () -> Unit,
     onNavigateToPreviousHistory: () -> Unit,
-    onNavigateToLogin: () -> Unit
+    onNavigateToLogin: () -> Unit,
+    handleException: (Throwable) -> Unit,
 ) {
     composable<ProfileRoute> {
         ProfileRoute(
             onNavigateToSettings = onNavigateToSetting,
             onNavigateToAttendHistory = onNavigateToAttendHistory,
             onNavigateToLogin = onNavigateToLogin,
-            onNavigateToPreviousHistory = onNavigateToPreviousHistory
+            onNavigateToPreviousHistory = onNavigateToPreviousHistory,
+            handleException = handleException,
         )
     }
 }

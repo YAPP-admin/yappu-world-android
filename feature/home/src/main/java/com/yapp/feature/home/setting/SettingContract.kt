@@ -19,4 +19,5 @@ sealed interface SettingSideEffect {
     data class OpenWebBrowser(val link: String) : SettingSideEffect
     data object ShowUrlLoadFailToast : SettingSideEffect
     data object NavigateToLogin : SettingSideEffect
+    data class HandleException(val exception: Throwable) : SettingSideEffect
 }

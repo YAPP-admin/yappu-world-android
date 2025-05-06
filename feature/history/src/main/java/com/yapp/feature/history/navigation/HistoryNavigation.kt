@@ -30,9 +30,15 @@ fun NavGraphBuilder.attendanceHistoryNavGraph(
 }
 
 fun NavGraphBuilder.previousHistoryNavGraph(
-    navigateToBack: () -> Unit
+    navigateToBack: () -> Unit,
+    navigateToLogin: () -> Unit,
+    handleException: (Throwable) -> Unit,
 ) {
     composable<PreviousHistory> {
-        PreviousHistoryRoute(navigateToBack = navigateToBack)
+        PreviousHistoryRoute(
+            navigateToBack = navigateToBack,
+            navigateToLogin = navigateToLogin,
+            handleException = handleException,
+        )
     }
 }

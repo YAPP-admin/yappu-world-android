@@ -17,11 +17,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.yapp.core.designsystem.component.alert.YappAlertDialog
+import com.yapp.core.designsystem.component.alert.YappAlertShortDialog
 import com.yapp.core.designsystem.component.button.outlined.YappOutlinedSecondaryButtonLarge
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
+import com.yapp.feature.profile.ProfileSideEffect
 import com.yapp.feature.profile.component.ProfileInformationSection
 import com.yapp.feature.profile.component.ProfileSectionItem
 import com.yapp.feature.profile.component.ProfileTopBarSection
@@ -33,7 +34,8 @@ internal fun ProfileRoute(
     onNavigateToSettings: () -> Unit,
     onNavigateToAttendHistory: () -> Unit,
     onNavigateToPreviousHistory: () -> Unit,
-    onNavigateToLogin: () -> Unit
+    onNavigateToLogin: () -> Unit,
+    handleException: (Throwable) -> Unit,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
 
@@ -58,11 +60,15 @@ internal fun ProfileRoute(
             SideEffect.NavigateToUsage -> {
                 // TODO
             }
+
+            is ProfileSideEffect.HandleException -> {
+                handleException(effect.exception)
+            }
         }
     }
 
     if (uiState.showLogoutDialog) {
-        YappAlertDialog(
+        YappAlertShortDialog(
             title = stringResource(R.string.profile_logout_title),
             actionButtonText = stringResource(R.string.profile_logout_action_button),
             recommendActionButtonText = stringResource(R.string.profile_logout_recommend_button),
@@ -73,7 +79,7 @@ internal fun ProfileRoute(
     }
 
     if (uiState.showWithDrawDialog) {
-        YappAlertDialog(
+        YappAlertShortDialog(
             title = stringResource(R.string.profile_withdraw_dialog_title),
             body = stringResource(R.string.profile_withdraw_dialog_message),
             actionButtonText = stringResource(R.string.profile_logout_action_button),

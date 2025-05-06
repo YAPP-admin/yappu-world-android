@@ -47,6 +47,8 @@ import com.yapp.model.UpcomingSessionInfo
 @Composable
 internal fun ScheduleRoute(
     viewModel: ScheduleViewModel = hiltViewModel(),
+    handleException: (Throwable) -> Unit,
+    navigateToLogin: () -> Unit,
 ) {
     LaunchedEffect(Unit) {
         viewModel.store.onIntent(ScheduleIntent.EnterScheduleScreen)
@@ -56,9 +58,8 @@ internal fun ScheduleRoute(
     val context = LocalContext.current
     viewModel.store.sideEffects.collectWithLifecycle { effect ->
         when (effect) {
-            is ScheduleSideEffect.ShowToast -> {
-                Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
-            }
+            is ScheduleSideEffect.HandleException -> handleException(effect.exception)
+            ScheduleSideEffect.NavigateToLogin -> navigateToLogin()
         }
     }
 
@@ -313,6 +314,6 @@ private fun MonthHeader(
 @Composable
 private fun ScheduleScreenPreview() {
     YappTheme {
-        ScheduleRoute()
+        ScheduleScreen(scheduleState = ScheduleState())
     }
 }

@@ -42,12 +42,16 @@ import dev.jeziellago.compose.markdowntext.MarkdownText
 fun NoticeDetailRoute(
     viewModel: NoticeDetailViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
+    navigateLogin: () -> Unit,
+    handleException: (Throwable) -> Unit,
     noticeId: String,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
     viewModel.store.sideEffects.collectWithLifecycle { sideEffect ->
         when (sideEffect) {
             NoticeDetailSideEffect.NavigateToBack -> navigateBack()
+            is NoticeDetailSideEffect.HandleException -> handleException(sideEffect.exception)
+            NoticeDetailSideEffect.NavigateToLogin -> navigateLogin()
         }
     }
 
@@ -161,9 +165,8 @@ fun NoticeDetailScreen(
 @Composable
 private fun NoticeDetailScreenPreview() {
     YappTheme {
-        NoticeDetailRoute(
-            navigateBack = {},
-            noticeId = ""
+        NoticeDetailScreen(
+            uiState = NoticeDetailState(),
         )
     }
 }

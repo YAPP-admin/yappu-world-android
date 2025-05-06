@@ -7,6 +7,7 @@ import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.ScheduleRepository
 import com.yapp.domain.runCatchingIgnoreCancelled
+import com.yapp.model.exceptions.InvalidTokenException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,27 +31,27 @@ class ScheduleViewModel @Inject constructor(
     ) {
         when (intent) {
             ScheduleIntent.EnterScheduleScreen -> {
-                loadScheduleInfo(state.selectedYear, state.selectedMonth, reduce)
+                loadScheduleInfo(state.selectedYear, state.selectedMonth, reduce, postSideEffect)
             }
 
             is ScheduleIntent.SelectTab -> {
                 if (state.selectedTab == intent.tab) return
                 reduce { copy(selectedTab = intent.tab) }
                 when (intent.tab) {
-                    ScheduleTab.ALL -> loadScheduleInfo(state.selectedYear, state.selectedMonth, reduce)
+                    ScheduleTab.ALL -> loadScheduleInfo(state.selectedYear, state.selectedMonth, reduce, postSideEffect)
                     ScheduleTab.SESSION -> {
-                        loadUpcomingSessionInfo(reduce)
-                        loadSessions(reduce)
+                        loadUpcomingSessionInfo(reduce, postSideEffect)
+                        loadSessions(reduce, postSideEffect)
                     }
                 }
             }
 
             is ScheduleIntent.RefreshTab -> {
                 when (intent.tab) {
-                    ScheduleTab.ALL -> refreshScheduleInfo(state.selectedYear, state.selectedMonth, reduce)
+                    ScheduleTab.ALL -> refreshScheduleInfo(state.selectedYear, state.selectedMonth, reduce, postSideEffect)
                     ScheduleTab.SESSION -> {
-                        refreshUpcomingSessionInfo(reduce)
-                        refreshSessions(reduce)
+                        refreshUpcomingSessionInfo(reduce, postSideEffect)
+                        refreshSessions(reduce, postSideEffect)
                     }
                 }
             }
@@ -58,13 +59,13 @@ class ScheduleViewModel @Inject constructor(
             ScheduleIntent.ClickPreviousMonth -> {
                 val (newYear, newMonth) = calculatePreviousMonth(state.selectedYear, state.selectedMonth)
                 reduce { copy(selectedYear = newYear, selectedMonth = newMonth) }
-                loadScheduleInfo(newYear, newMonth, reduce)
+                loadScheduleInfo(newYear, newMonth, reduce, postSideEffect)
             }
 
             ScheduleIntent.ClickNextMonth -> {
                 val (newYear, newMonth) = calculateNextMonth(state.selectedYear, state.selectedMonth)
                 reduce { copy(selectedYear = newYear, selectedMonth = newMonth) }
-                loadScheduleInfo(newYear, newMonth, reduce)
+                loadScheduleInfo(newYear, newMonth, reduce, postSideEffect)
             }
         }
     }
@@ -72,24 +73,34 @@ class ScheduleViewModel @Inject constructor(
     private fun loadScheduleInfo(
         year: Int,
         month: Int,
-        reduce: (ScheduleState.() -> ScheduleState) -> Unit
+        reduce: (ScheduleState.() -> ScheduleState) -> Unit,
+        postSideEffect: (ScheduleSideEffect) -> Unit,
     ) = viewModelScope.launch {
         runCatchingIgnoreCancelled {
             reduce { copy(isLoading = true) }
             val result = scheduleRepository.getSchedules(year, month)
             reduce {
                 copy(
-                    isLoading = false,
                     schedules = schedules.toMutableMap().apply { put(year to month, result) }
                 )
             }
         }.onFailure { e ->
-            e.record()
+            when (e) {
+                is InvalidTokenException -> {
+                    postSideEffect(ScheduleSideEffect.NavigateToLogin)
+                }
+                else -> {
+                    postSideEffect(ScheduleSideEffect.HandleException(e))
+                    e.record()
+                }
+            }
         }
+        reduce { copy(isLoading = false) }
     }
 
     private fun loadUpcomingSessionInfo(
-        reduce: (ScheduleState.() -> ScheduleState) -> Unit
+        reduce: (ScheduleState.() -> ScheduleState) -> Unit,
+        postSideEffect: (ScheduleSideEffect) -> Unit,
     ) = viewModelScope.launch {
         reduce { copy(isLoading = true) }
         runCatchingIgnoreCancelled {
@@ -103,7 +114,8 @@ class ScheduleViewModel @Inject constructor(
     }
 
     private fun loadSessions(
-        reduce: (ScheduleState.() -> ScheduleState) -> Unit
+        reduce: (ScheduleState.() -> ScheduleState) -> Unit,
+        postSideEffect: (ScheduleSideEffect) -> Unit,
     ) = viewModelScope.launch {
         reduce { copy(isLoading = true) }
         runCatchingIgnoreCancelled {
@@ -119,7 +131,8 @@ class ScheduleViewModel @Inject constructor(
     private fun refreshScheduleInfo(
         year: Int,
         month: Int,
-        reduce: (ScheduleState.() -> ScheduleState) -> Unit
+        reduce: (ScheduleState.() -> ScheduleState) -> Unit,
+        postSideEffect: (ScheduleSideEffect) -> Unit,
     ) = viewModelScope.launch {
         reduce { copy(isLoading = true) }
         runCatchingIgnoreCancelled {
@@ -138,7 +151,8 @@ class ScheduleViewModel @Inject constructor(
     }
 
     private fun refreshUpcomingSessionInfo(
-        reduce: (ScheduleState.() -> ScheduleState) -> Unit
+        reduce: (ScheduleState.() -> ScheduleState) -> Unit,
+        postSideEffect: (ScheduleSideEffect) -> Unit,
     ) = viewModelScope.launch {
         reduce { copy(isLoading = true) }
         runCatchingIgnoreCancelled {
@@ -157,7 +171,8 @@ class ScheduleViewModel @Inject constructor(
     }
 
     private fun refreshSessions(
-        reduce: (ScheduleState.() -> ScheduleState) -> Unit
+        reduce: (ScheduleState.() -> ScheduleState) -> Unit,
+        postSideEffect: (ScheduleSideEffect) -> Unit,
     ) = viewModelScope.launch {
         reduce { copy(isLoading = true) }
         runCatchingIgnoreCancelled {
