@@ -1,14 +1,13 @@
 package com.yapp.feature.home.component
 
+import android.content.Context
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,14 +16,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.component.button.solid.SolidButtonDefaults
 import com.yapp.core.designsystem.component.button.solid.YappSolidPrimaryButtonLarge
+import com.yapp.core.designsystem.component.chip.ChipColorType
+import com.yapp.core.designsystem.component.chip.YappChipSmall
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.extension.dashedBorder
-import com.yapp.model.AttendanceStatus
+import com.yapp.feature.home.R
 import com.yapp.model.UpcomingSessionInfo
 import java.time.LocalDate
 import java.time.LocalTime
@@ -54,7 +57,7 @@ internal fun HomeAttendanceContents(
         if (upcomingSession == null) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "모든 세션이 종료되었어요.\n기수 활동에 참여해 주셔서 감사합니다 :)",
+                text = stringResource(id = R.string.session_ended_message),
                 textAlign = TextAlign.Center,
                 style = YappTheme.typography.caption1Medium,
                 color = YappTheme.colorScheme.labelNormal,
@@ -88,32 +91,25 @@ private fun UpcomingSessionCard(
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = "오늘은 ${today.format(outputFormat)}이에요.",
+            text = stringResource(R.string.session_today_text, today.format(outputFormat)),
             style = YappTheme.typography.label2Medium,
             color = YappTheme.colorScheme.labelNormal
         )
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    color = YappTheme.colorScheme.interactionDisable,
-                    shape = RoundedCornerShape(12.dp)
-                )
-                .padding(vertical = 12.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = parsedDate?.format(outputFormat)?.plus(" 세션 예정") ?: "날짜 정보를 불러올 수 없어요.",
-                style = YappTheme.typography.body2NormalBold,
-                color = YappTheme.colorScheme.labelAssistive
-            )
-        }
+        YappSolidPrimaryButtonLarge(
+            modifier = Modifier.fillMaxWidth(),
+            text = parsedDate?.let {
+                stringResource(R.string.session_scheduled).let { scheduled ->
+                    "${it.format(outputFormat)} $scheduled"
+                }
+            } ?: stringResource(R.string.session_date_error),
+            enable = false,
+            onClick = {}
+        )
     }
 }
 
@@ -123,13 +119,19 @@ fun TodaySessionCard(
     session: UpcomingSessionInfo,
     onClickAttend: () -> Unit
 ) {
-    val parsedTime = runCatching {
-        LocalTime.parse(session.startTime, DateTimeFormatter.ofPattern("HH:mm:ss"))
-    }.getOrNull()
+    val context = LocalContext.current
 
-    val displayTime = parsedTime?.format(DateTimeFormatter.ofPattern("a h시 mm분", Locale.KOREAN))
-        ?.replace("AM", "오전")
-        ?.replace("PM", "오후") ?: "시간 미정"
+    val isAttended = session.status != null
+
+    val displayTime = remember(session, isAttended) {
+        val timeStr = if (isAttended) session.endTime else session.startTime
+        runCatching {
+            LocalTime.parse(timeStr, DateTimeFormatter.ofPattern("HH:mm:ss"))
+                .format(DateTimeFormatter.ofPattern("a h시 mm분", Locale.KOREAN))
+                .replace("AM", "오전")
+                .replace("PM", "오후")
+        }.getOrNull()
+    } ?: stringResource(R.string.session_date_error)
 
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
@@ -153,19 +155,38 @@ fun TodaySessionCard(
                 )
 
                 Text(
-                    text = "$displayTime 오픈",
+                    text = if (isAttended)
+                        stringResource(R.string.session_time_end, displayTime)
+                    else
+                        stringResource(R.string.session_time_open, displayTime),
                     style = YappTheme.typography.label1NormalMedium,
                     color = YappTheme.colorScheme.primaryNormal
                 )
             }
 
-
+            if (isAttended) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    YappChipSmall(
+                        text = stringResource(id = R.string.session_in_progress),
+                        colorType = ChipColorType.Gray,
+                        isFill = true
+                    )
+                    Text(
+                        text = formatStartTime(context, session.startTime),
+                        style = YappTheme.typography.label1NormalMedium,
+                        color = YappTheme.colorScheme.labelAssistive
+                    )
+                }
+            }
         }
 
-        if (session.status == AttendanceStatus.ATTENDED) {
+        if (isAttended) {
             YappSolidPrimaryButtonLarge(
                 modifier = Modifier.fillMaxWidth(),
-                text = "출석완료!",
+                text = stringResource(R.string.session_attendance_done),
                 enable = false,
                 colors = SolidButtonDefaults.colorsPrimary.copy(
                     disableBackgroundColor = YappTheme.colorScheme.orange99,
@@ -177,11 +198,27 @@ fun TodaySessionCard(
             if (session.canCheckIn) {
                 YappSolidPrimaryButtonLarge(
                     modifier = Modifier.fillMaxWidth(),
-                    text = "출석하기",
+                    text = stringResource(R.string.session_attendance),
                     enable = true,
                     onClick = onClickAttend
                 )
+            } else {
+                YappSolidPrimaryButtonLarge(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(R.string.session_attendance_not_yet_message),
+                    enable = false,
+                    onClick = {}
+                )
             }
         }
+    }
+}
+
+private fun formatStartTime(context: Context, startTime: String?): String {
+    return runCatching {
+        val time = LocalTime.parse(startTime, DateTimeFormatter.ofPattern("HH:mm:ss"))
+        time.format(DateTimeFormatter.ofPattern("HH:mm")) + "~"
+    }.getOrElse {
+        context.getString(R.string.session_time_missing)
     }
 }
