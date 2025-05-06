@@ -11,10 +11,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -51,68 +54,75 @@ internal fun AttendanceDialog(
     val codeLength = 4
     val focusRequesters = remember { List(codeLength) { FocusRequester() } }
 
-    BottomDialog(
-        onDismissRequest = onDismissRequest,
-        content = {
-            Column(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .background(
-                        color = YappTheme.colorScheme.staticWhite,
-                        shape = RoundedCornerShape(20.dp)
+    val yappTextSelectionColors = TextSelectionColors(
+        handleColor = YappTheme.colorScheme.primaryNormal, // 물방울 모양 핸들의 색상
+        backgroundColor = YappTheme.colorScheme.primaryNormal // 선택된 텍스트의 배경색
+    )
+
+    CompositionLocalProvider(LocalTextSelectionColors provides yappTextSelectionColors) {
+        BottomDialog(
+            onDismissRequest = onDismissRequest,
+            content = {
+                Column(
+                    modifier = Modifier
+                        .padding(20.dp)
+                        .background(
+                            color = YappTheme.colorScheme.staticWhite,
+                            shape = RoundedCornerShape(20.dp)
+                        )
+                ) {
+                    Text(
+                        text = stringResource(R.string.attendance_dialog_title),
+                        style = YappTheme.typography.headline1Bold
                     )
-            ) {
-                Text(
-                    text = stringResource(R.string.attendance_dialog_title),
-                    style = YappTheme.typography.headline1Bold
-                )
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    text = stringResource(R.string.attendance_dialog_message),
-                    style = YappTheme.typography.label1ReadingRegular
-                )
-                Spacer(Modifier.height(24.dp))
-
-                PinCodeInput(
-                    values = code,
-                    onValueChange = { index, new ->
-                        onCodeChange(code.toMutableList().apply { this[index] = new })
-                    },
-                    focusRequesters = focusRequesters,
-                    isAllValuesEntered = code.all { it.isNotEmpty() },
-                    isError = isCodeInputTextError
-                )
-
-                if (isCodeInputTextError) {
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        text = stringResource(id = R.string.attendance_dialog_code_not_correct),
-                        style = YappTheme.typography.label2Regular,
-                        color = YappTheme.colorScheme.statusNegative
+                        text = stringResource(R.string.attendance_dialog_message),
+                        style = YappTheme.typography.label1ReadingRegular
+                    )
+                    Spacer(Modifier.height(24.dp))
+
+                    PinCodeInput(
+                        values = code,
+                        onValueChange = { index, new ->
+                            onCodeChange(code.toMutableList().apply { this[index] = new })
+                        },
+                        focusRequesters = focusRequesters,
+                        isAllValuesEntered = code.all { it.isNotEmpty() },
+                        isError = isCodeInputTextError
+                    )
+
+                    if (isCodeInputTextError) {
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            text = stringResource(id = R.string.attendance_dialog_code_not_correct),
+                            style = YappTheme.typography.label2Regular,
+                            color = YappTheme.colorScheme.statusNegative
+                        )
+                    }
+
+                    Spacer(Modifier.height(24.dp))
+
+                    YappSolidPrimaryButtonLarge(
+                        modifier = Modifier.fillMaxWidth(),
+                        enable = inputCompleteButtonEnabled,
+                        onClick = clickAttendanceButton,
+                        text = stringResource(R.string.attendance_dialog_confirm_button)
+                    )
+
+                    Spacer(Modifier.height(8.dp))
+
+                    YappTextPrimaryButtonSmall(
+                        modifier = Modifier.fillMaxWidth(),
+                        enable = true,
+                        text = stringResource(R.string.attendance_dialog_cancel_button),
+                        onClick = onDismissRequest
                     )
                 }
-
-                Spacer(Modifier.height(24.dp))
-
-                YappSolidPrimaryButtonLarge(
-                    modifier = Modifier.fillMaxWidth(),
-                    enable = inputCompleteButtonEnabled,
-                    onClick = clickAttendanceButton,
-                    text = stringResource(R.string.attendance_dialog_confirm_button)
-                )
-
-                Spacer(Modifier.height(8.dp))
-
-                YappTextPrimaryButtonSmall(
-                    modifier = Modifier.fillMaxWidth(),
-                    enable = true,
-                    text = stringResource(R.string.attendance_dialog_cancel_button),
-                    onClick = onDismissRequest
-                )
             }
-        }
-    )
+        )
+    }
 }
 
 @Composable
@@ -178,7 +188,8 @@ private fun PinCodeInput(
                         YappTheme.colorScheme.statusNegative
                     } else {
                         YappTheme.colorScheme.labelNormal
-                    }
+                    },
+                    cursorColor = YappTheme.colorScheme.primaryNormal,
                 ),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number
