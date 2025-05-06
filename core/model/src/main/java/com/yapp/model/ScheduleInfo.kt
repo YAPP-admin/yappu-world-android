@@ -2,7 +2,9 @@ package com.yapp.model
 
 data class ScheduleList(
     val dates: List<DateGroupedSchedule>
-)
+) {
+    val isEmpty = dates.all { it.schedules.isEmpty() }
+}
 
 data class DateGroupedSchedule(
     val date: String,

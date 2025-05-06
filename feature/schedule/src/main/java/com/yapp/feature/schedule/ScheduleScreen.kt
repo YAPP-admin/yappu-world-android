@@ -1,6 +1,6 @@
 package com.yapp.feature.schedule
 
-import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,7 +25,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -43,6 +42,7 @@ import com.yapp.feature.schedule.component.DateGroupedScheduleItem
 import com.yapp.feature.schedule.component.ScheduleTabRow
 import com.yapp.feature.schedule.component.UpcomingSessionSection
 import com.yapp.model.ScheduleList
+import com.yapp.core.ui.R as coreR
 import com.yapp.model.UpcomingSessionInfo
 
 @Composable
@@ -56,7 +56,6 @@ internal fun ScheduleRoute(
     }
 
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
-    val context = LocalContext.current
     viewModel.store.sideEffects.collectWithLifecycle { effect ->
         when (effect) {
             is ScheduleSideEffect.HandleException -> handleException(effect.exception)
@@ -116,7 +115,7 @@ internal fun ScheduleScreen(
                             selectedMonth = scheduleState.selectedMonth,
                             schedules = scheduleState.schedules[
                                 Pair(scheduleState.selectedYear, scheduleState.selectedMonth)
-                            ] ?: ScheduleList(dates = emptyList()),
+                            ],
                             onIntent = onIntent
                         )
                     }
@@ -135,7 +134,7 @@ internal fun ScheduleScreen(
 private fun ScheduleAllScreen(
     selectedYear: Int,
     selectedMonth: Int,
-    schedules: ScheduleList,
+    schedules: ScheduleList?,
     onIntent: (ScheduleIntent) -> Unit
 ) {
     LazyColumn(
@@ -153,16 +152,42 @@ private fun ScheduleAllScreen(
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        items(
-            items = schedules.dates,
-            key = { it.date },
-        ) {
-            DateGroupedScheduleItem(
-                date = it.date,
-                dayOfWeek = it.dayOfTheWeek,
-                isToday = it.isToday,
-                schedules = it.schedules,
-            ) { }
+        if (schedules?.isEmpty == true) {
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillParentMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = coreR.drawable.illust_yappu_sleeping),
+                        contentDescription = null,
+                    )
+                    Spacer(Modifier.height(32.dp))
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "등록된 일정이 없습니다.",
+                        color = YappTheme.colorScheme.labelAlternative,
+                        style = YappTheme.typography.label1NormalRegular,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+
+        if (schedules != null) {
+            items(
+                items = schedules.dates,
+                key = { it.date },
+            ) {
+                DateGroupedScheduleItem(
+                    date = it.date,
+                    dayOfWeek = it.dayOfTheWeek,
+                    isToday = it.isToday,
+                    schedules = it.schedules,
+                ) { }
+            }
         }
     }
 }
@@ -192,7 +217,10 @@ private fun ScheduleSessionScreen(
                     if (upcomingSessionInfo != null) {
                         YappChipSmall(
                             text = if (upcomingSessionInfo.remainingDays > 0) {
-                                stringResource(id = R.string.d_day_remaining, upcomingSessionInfo.remainingDays)
+                                stringResource(
+                                    id = R.string.d_day_remaining,
+                                    upcomingSessionInfo.remainingDays
+                                )
                             } else {
                                 stringResource(id = R.string.d_day)
                             },
