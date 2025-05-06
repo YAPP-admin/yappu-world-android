@@ -10,13 +10,11 @@ import com.yapp.dataapi.OperationsRepository
 import com.yapp.domain.DeleteAccountUseCase
 import com.yapp.domain.GetUserProfileUseCase
 import com.yapp.domain.LogoutUseCase
+import com.yapp.domain.runCatchingIgnoreCancelled
 import com.yapp.model.exceptions.InvalidTokenException
-import com.yapp.model.exceptions.UserNotFoundForEmailException
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,8 +25,6 @@ internal class ProfileViewModel @Inject constructor(
     private val userDeleteAccountUseCase: DeleteAccountUseCase,
     private val operationsRepository: OperationsRepository
 ) : ViewModel() {
-
-    private var inquiryLink: String? = null
 
     val store: MviIntentStore<ProfileState, ProfileIntent, ProfileSideEffect> =
         mviIntentStore(
@@ -58,12 +54,7 @@ internal class ProfileViewModel @Inject constructor(
 
             ProfileIntent.ClickUsage -> {
                 viewModelScope.launch {
-                    updateUrl()
-                    inquiryLink?.let {
-                        sideEffect(ProfileSideEffect.OpenWebBrowser(it))
-                    } ?: run {
-                        sideEffect(ProfileSideEffect.ShowUrlLoadFailToast)
-                    }
+                    updateUrl(sideEffect)
                 }
             }
 
@@ -149,17 +140,9 @@ internal class ProfileViewModel @Inject constructor(
         }
     }
 
-    private fun updateUrl() {
-        viewModelScope.launch {
-            val inquiryDeferred = async {
-                if (inquiryLink == null) {
-                    runCatching { operationsRepository.getUsageInquiryLink() }
-                } else {
-                    Result.success(inquiryLink)
-                }
-            }
-
-            inquiryLink = inquiryDeferred.await().getOrNull()
-        }
+    private suspend fun updateUrl(sideEffect: (ProfileSideEffect) -> Unit) {
+        runCatchingIgnoreCancelled { operationsRepository.getUsageInquiryLink() }
+            .onSuccess { sideEffect(ProfileSideEffect.OpenWebBrowser(it)) }
+            .onFailure { sideEffect(ProfileSideEffect.ShowUrlLoadFailToast) }
     }
 }
