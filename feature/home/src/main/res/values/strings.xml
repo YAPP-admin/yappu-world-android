@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 설정 및 공지사항 이전 필요 -->
     <string name="setting_screen_title">설정</string>
     <string name="setting_screen_back_icon_content_description">뒤로 가기</string>
     <string name="setting_screen_item_notification">알림</string>
@@ -17,8 +18,26 @@
     <string name="delete_account_dialog_recommend_action_button">탈퇴하기</string>
     <string name="home_notice_more_button">더보기</string>
     <string name="home_notice_title">공지사항</string>
+
+    <!-- 홈 -->
     <string name="home_generation_title">이번 기수 세션</string>
     <string name="home_session_all_title">전체보기</string>
+
+    <string name="home_attendance_no_upcoming">다가오는 세션이 없어요.</string>
+    <string name="home_attendance_today">세션 당일이예요! 활기찬 하루 되세요 :)</string>
+    <string name="home_attendance_prepare">다가오는 세션을 준비해볼까요?</string>
+
+    <string name="session_ended_message">모든 세션이 종료되었어요.\n기수 활동에 참여해 주셔서 감사합니다 :)</string>
+    <string name="session_today_text">오늘은 %1$s이에요.</string>
+    <string name="session_scheduled">세션 예정</string>
+    <string name="session_time_open">%1$s 오픈</string>
+    <string name="session_time_end">%1$s 종료</string>
+    <string name="session_time_missing">장소 미정</string>
+    <string name="session_attendance_done">출석완료!</string>
+    <string name="session_attendance">출석하기</string>
+    <string name="session_date_error">날짜 정보를 불러올 수 없어요.</string>
+    <string name="session_in_progress">진행중</string>
+    <string name="session_attendance_not_yet_message">20분 전부터 출석이 가능해요</string>
 
     <!--  AttendanceDialog  -->
     <string name="attendance_dialog_title">오늘의 출석을 인증해주세요!</string>
