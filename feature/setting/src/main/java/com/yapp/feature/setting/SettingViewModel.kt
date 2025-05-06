@@ -1,4 +1,4 @@
-package com.yapp.feature.home.setting
+package com.yapp.feature.setting
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

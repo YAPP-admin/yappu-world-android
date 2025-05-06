@@ -10,12 +10,12 @@ import com.yapp.app.official.ui.clearBackStackNavOptions
 import com.yapp.feature.history.navigation.attendanceHistoryNavGraph
 import com.yapp.feature.history.navigation.previousHistoryNavGraph
 import com.yapp.feature.home.navigation.homeNavGraph
-import com.yapp.feature.home.navigation.settingNavGraph
 import com.yapp.feature.login.navigation.loginNavGraph
 import com.yapp.feature.notice.navigation.noticeDetailNavGraph
 import com.yapp.feature.notice.navigation.noticeNavGraph
 import com.yapp.feature.profile.navigation.profileNavGraph
 import com.yapp.feature.schedule.navigation.scheduleNavGraph
+import com.yapp.feature.setting.navigation.settingNavGraph
 import com.yapp.feature.signup.navigation.signupNavGraph
 import com.yapp.feature.signup.signup.SignUpStep
 

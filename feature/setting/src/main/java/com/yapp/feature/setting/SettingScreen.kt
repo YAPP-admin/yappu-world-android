@@ -1,7 +1,5 @@
-package com.yapp.feature.home.setting
+package com.yapp.feature.setting
 
-import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,7 +17,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.component.control.switches.YappSwitchMedium
@@ -29,10 +26,9 @@ import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.borderBottom
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.core.ui.extension.safeOpenUri
-import com.yapp.feature.home.R
+import com.yapp.feature.setting.component.SettingItemLarge
+import com.yapp.feature.setting.component.SettingItemMedium
 import com.yapp.core.ui.R as coreR
-import com.yapp.feature.home.setting.component.SettingItemLarge
-import com.yapp.feature.home.setting.component.SettingItemMedium
 
 @Composable
 fun SettingRoute(
