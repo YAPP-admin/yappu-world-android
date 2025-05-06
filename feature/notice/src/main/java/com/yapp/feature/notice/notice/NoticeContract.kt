@@ -17,7 +17,6 @@ data class NoticeState(
 
 sealed interface NoticeIntent {
     data object EnterNoticeScreen : NoticeIntent
-    data object ClickBackButton : NoticeIntent
     data class ClickNoticeType(val noticeType: NoticeType) : NoticeIntent
     data class ClickNoticeItem(val noticeId: String) : NoticeIntent
     data object LoadMoreNoticeItem : NoticeIntent
@@ -25,7 +24,6 @@ sealed interface NoticeIntent {
 
 sealed interface NoticeSideEffect {
     data class NavigateToNoticeDetail(val noticeId: String) : NoticeSideEffect
-    data object NavigateToBack : NoticeSideEffect
     data object NavigateToLogin : NoticeSideEffect
     data class HandleException(val exception: Throwable) : NoticeSideEffect
 }
