@@ -8,6 +8,7 @@ import com.yapp.dataapi.OperationsRepository
 import com.yapp.domain.LoginUseCase
 import com.yapp.model.Regex
 import com.yapp.model.exceptions.InvalidRequestArgument
+import com.yapp.model.exceptions.LoginException
 import com.yapp.model.exceptions.RecentSignUpRejectedException
 import com.yapp.model.exceptions.SignUpPendingException
 import com.yapp.model.exceptions.UserNotFoundForEmailException
@@ -145,7 +146,7 @@ class LoginViewModel @Inject constructor(
                                 )
                             }
                         }
-                        is UserNotFoundForEmailException -> {
+                        is UserNotFoundForEmailException, is LoginException -> {
                             reduce {
                                 copy(
                                     emailErrorDescription = errorMessage,
