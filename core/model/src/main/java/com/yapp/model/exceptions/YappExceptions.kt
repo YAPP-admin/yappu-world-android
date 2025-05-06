@@ -21,6 +21,9 @@ enum class YappServerError(val exception: YappException) {
     TKN_0001(InvalidTokenException()),
     TKN_0002(InvalidTokenException()),
 
+    //세션
+    SCH_1005(NoScheduledSessionException()),
+
     //출석 체크
     ATD_1001(CodeNotCorrectException()),
 }
@@ -37,6 +40,7 @@ class LoginBlockedException : YappException("로그인이 불가능한 회원 �
 class LoginException : YappException("로그인에 실패했습니다. 계정 정보를 다시 확인하세요.")
 class InvalidTokenException : YappException("비정상 토큰입니다")
 class CodeNotCorrectException : YappException("출석 코드가 일치하지 않습니다.")
+class NoScheduledSessionException : YappException("예정된 세션이 존재하지 않습니다.")
 
 open class YappException(message: String = "") : Exception(message) {
     private var _message: String = message
