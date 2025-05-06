@@ -1,5 +1,6 @@
 package com.yapp.core.data.remote.retrofit
 
+import com.yapp.model.exceptions.NotDefinedException
 import com.yapp.model.exceptions.YappServerError
 import kotlinx.serialization.json.Json
 import okhttp3.Request
@@ -62,10 +63,10 @@ private class OptionalApiResultCall<R: Any>(
             json.decodeFromString<YappErrorResponse>(errorBody!!)
         }.onSuccess { errorBody ->
             val exception = YappServerError
-                .valueOf(errorBody.errorCode)
+                .safeValueOf(errorBody.errorCode)
                 .exception
                 .apply {
-                    setMessage(errorBody.message)
+                    if (this !is NotDefinedException) setMessage(errorBody.message)
                 }
             callback.onFailure(this@OptionalApiResultCall, exception)
         }.onFailure {
