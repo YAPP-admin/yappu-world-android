@@ -1,4 +1,4 @@
-package com.yapp.feature.home.setting.component
+package com.yapp.feature.setting.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,9 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.yapp.core.designsystem.R
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.feature.home.R
 
 @Composable
 fun SettingItemLarge(
@@ -93,7 +93,7 @@ private fun SettingItemLargePreview() {
                 text = "Version",
                 slot = {
                     Icon(
-                        painter = painterResource(id = com.yapp.core.designsystem.R.drawable.icon_chevron_right),
+                        painter = painterResource(id = R.drawable.icon_chevron_right),
                         contentDescription = null,
                         tint = YappTheme.colorScheme.labelAssistive,
                     )
@@ -115,7 +115,7 @@ private fun SettingItemMediumPreview() {
                 onClick = { /* do something */ },
                 slot = {
                     Icon(
-                        painter = painterResource(id = com.yapp.core.designsystem.R.drawable.icon_chevron_right),
+                        painter = painterResource(id = R.drawable.icon_chevron_right),
                         contentDescription = null,
                         tint = YappTheme.colorScheme.labelAssistive,
                     )
