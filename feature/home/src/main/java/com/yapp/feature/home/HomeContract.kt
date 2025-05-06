@@ -9,15 +9,25 @@ data class HomeState(
         upcomingSessionId = null
     ),
     val upcomingSession: UpcomingSessionInfo? = null,
-    val showAttendCodeBottomSheet: Boolean = false
-)
+    val showAttendCodeBottomSheet: Boolean = false,
+    val attendanceCodeDigits: List<String> = List(4) { "" },
+    val showAttendanceCodeError: Boolean = false,
+) {
+    val attendanceCode: String
+        get() = attendanceCodeDigits.joinToString(separator = "")
+    val inputCompleteButtonEnabled: Boolean
+        get() = attendanceCodeDigits.all { it.isNotBlank() } && !showAttendanceCodeError
+}
 
 sealed interface HomeIntent {
     data object ClickRequestAttendCode : HomeIntent
     data object ClickDismissDialog : HomeIntent
-    data class ClickRequestAttendance(val code: String, val sessionId: String) : HomeIntent
     data object EnterHomeScreen : HomeIntent
     data object ClickShowAllSession : HomeIntent
+
+    data class ChangeAttendanceCodeDigits(val code: List<String>) : HomeIntent
+    data object ClickRequestAttendance : HomeIntent
+
 }
 
 sealed interface HomeSideEffect {

@@ -47,14 +47,14 @@ internal fun HomeRoute(
     }
 
     HomeScreen(
-        homeState = uiState,
+        uiState = uiState,
         onIntent = { viewModel.store.onIntent(it) }
     )
 }
 
 @Composable
 fun HomeScreen(
-    homeState: HomeState,
+    uiState: HomeState,
     onIntent: (HomeIntent) -> Unit = {},
 ) {
     val colorSteps = arrayOf(
@@ -72,35 +72,40 @@ fun HomeScreen(
                     .background(brush = Brush.horizontalGradient(colorStops = colorSteps))
                     .padding(WindowInsets.statusBars.asPaddingValues())
                     .padding(top = 18.dp),
-                sessions = homeState.sessionList.sessions,
-                upcomingSessionId = homeState.sessionList.upcomingSessionId,
+                sessions = uiState.sessionList.sessions,
+                upcomingSessionId = uiState.sessionList.upcomingSessionId,
                 onClickShowAll = { onIntent(HomeIntent.ClickShowAllSession) },
             )
 
             HomeAttendanceNotice(
-                upcomingSession = homeState.upcomingSession
+                upcomingSession = uiState.upcomingSession
             )
 
             HomeAttendanceContents(
-                upcomingSession = homeState.upcomingSession,
+                upcomingSession = uiState.upcomingSession,
                 onClickAttend = { onIntent(HomeIntent.ClickRequestAttendCode) }
             )
         }
     }
 
-    if (homeState.showAttendCodeBottomSheet) {
+    if (uiState.showAttendCodeBottomSheet) {
         AttendanceDialog(
+            code = uiState.attendanceCodeDigits,
+            inputCompleteButtonEnabled = uiState.inputCompleteButtonEnabled,
+            isCodeInputTextError = uiState.showAttendanceCodeError,
             onDismissRequest = {
                 onIntent(HomeIntent.ClickDismissDialog)
             },
-            clickAttendanceButton = { code ->
+            onCodeChange = { code ->
                 onIntent(
-                    HomeIntent.ClickRequestAttendance(
-                        sessionId = homeState.upcomingSession?.sessionId.orEmpty(),
-                        code = code
-                    )
+                    HomeIntent.ChangeAttendanceCodeDigits(code)
                 )
             },
+            clickAttendanceButton = {
+                onIntent(
+                    HomeIntent.ClickRequestAttendance
+                )
+            }
         )
     }
 }

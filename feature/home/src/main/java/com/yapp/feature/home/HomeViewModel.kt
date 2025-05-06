@@ -45,11 +45,22 @@ internal class HomeViewModel @Inject constructor(
             }
             HomeIntent.ClickDismissDialog -> {
                 reduce {
-                    copy(showAttendCodeBottomSheet = false)
+                    copy(
+                        showAttendCodeBottomSheet = false,
+                        attendanceCodeDigits = List(4) { "" },
+                    )
+                }
+            }
+            is HomeIntent.ChangeAttendanceCodeDigits -> {
+                reduce {
+                    copy(
+                        attendanceCodeDigits = intent.code,
+                        showAttendanceCodeError = false
+                    )
                 }
             }
             is HomeIntent.ClickRequestAttendance -> {
-                requestAttendance(intent.sessionId, intent.code, state, reduce)
+                requestAttendance(state.upcomingSession?.sessionId, state.attendanceCode, state, reduce)
             }
         }
     }
@@ -78,11 +89,13 @@ internal class HomeViewModel @Inject constructor(
     }
 
     private fun requestAttendance(
-        sessionId: String,
+        sessionId: String?,
         code: String,
         state: HomeState,
         reduce: (HomeState.() -> HomeState) -> Unit
     ) {
+        if (sessionId == null) return
+
         viewModelScope.launch {
             runCatchingIgnoreCancelled {
                 attendanceRepository.postAttendance(AttendanceInfo(sessionId, code))
@@ -105,10 +118,14 @@ internal class HomeViewModel @Inject constructor(
                             canCheckIn = false,
                             status = AttendanceStatus.ATTENDED
                         ),
-                        showAttendCodeBottomSheet = false
+                        showAttendCodeBottomSheet = false,
+                        showAttendanceCodeError = false
                     )
                 }
-            }.onFailure { it.record() }
+            }.onFailure {
+                reduce { copy(showAttendanceCodeError = true) }
+                it.record()
+            }
         }
     }
 }
