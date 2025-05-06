@@ -53,6 +53,7 @@ internal class HomeViewModel @Inject constructor(
                 reduce {
                     copy(
                         showAttendCodeBottomSheet = false,
+                        showAttendanceCodeError = false,
                         attendanceCodeDigits = List(4) { "" },
                     )
                 }
