@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.component.gradient.GradientBottom
-import com.yapp.core.designsystem.component.header.YappHeaderActionbarExpanded
 import com.yapp.core.designsystem.component.header.YappHeaderTitle
 import com.yapp.core.designsystem.extension.OnBottomReached
 import com.yapp.core.designsystem.theme.YappTheme
@@ -40,6 +39,7 @@ import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.borderBottom
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.notice.R
+import com.yapp.core.ui.R as coreR
 import com.yapp.feature.notice.notice.component.NoticeCategoryButton
 import com.yapp.model.NoticeType
 
@@ -122,7 +122,7 @@ fun NoticeScreen(
                         verticalArrangement = Arrangement.Center
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.illust_emtpy_notices),
+                            painter = painterResource(id = coreR.drawable.illust_yappu_sleeping),
                             contentDescription = null,
                         )
                         Spacer(Modifier.height(32.dp))
