@@ -56,11 +56,16 @@ fun isPastDate(dateString: String, pattern: String = "yyyy-MM-dd"): Boolean {
 }
 
 fun formatDateTime(context: Context, input: String): String {
-    val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
-    val dateTime = LocalDateTime.parse(input, inputFormatter)
+    val inputFormatter = DateTimeFormatter.ISO_DATE_TIME
+
+    val dateTime = try {
+        LocalDateTime.parse(input, inputFormatter)
+    } catch (e: Exception) {
+        return input
+    }
 
     val outputPattern = context.getString(R.string.date_time_format)
-
     val outputFormatter = DateTimeFormatter.ofPattern(outputPattern, Locale.KOREAN)
+
     return dateTime.format(outputFormatter)
 }

@@ -48,7 +48,7 @@ fun AttendanceHistoryItem(
 fun AttendanceHistoryItemPreview() {
     YappTheme {
         AttendanceHistoryItem(
-            date = "2023-10-01T12:00:00",
+            date = "2025-05-06T17:39:51.553534",
             attendanceStatus = AttendanceStatus.ATTENDED
         )
     }
