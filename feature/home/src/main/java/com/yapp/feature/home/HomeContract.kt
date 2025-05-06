@@ -37,4 +37,5 @@ sealed interface HomeSideEffect {
     data object NavigateToSchedule : HomeSideEffect
     data object NavigateToLogin : HomeSideEffect
     data class ShowToast(val message: String) : HomeSideEffect
+    data class HandleException(val exception: Throwable) : HomeSideEffect
 }

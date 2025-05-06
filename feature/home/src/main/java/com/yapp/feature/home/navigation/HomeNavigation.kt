@@ -25,11 +25,13 @@ fun NavController.navigateToSetting(navOptions: NavOptions? = null) {
 fun NavGraphBuilder.homeNavGraph(
     navigateLogin : () -> Unit,
     navigateSchedule: () -> Unit,
+    handleException: (Throwable) -> Unit,
 ) {
     composable<HomeRoute> {
         HomeRoute(
             navigateToLogin = navigateLogin,
             navigateToSchedule = navigateSchedule,
+            handleException = handleException,
         )
     }
 }

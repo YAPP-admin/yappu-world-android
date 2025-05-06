@@ -38,6 +38,7 @@ import com.yapp.feature.home.dialog.AttendanceDialog
 internal fun HomeRoute(
     navigateToLogin: () -> Unit,
     navigateToSchedule: () -> Unit,
+    handleException: (Throwable) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
@@ -51,6 +52,7 @@ internal fun HomeRoute(
             HomeSideEffect.NavigateToSchedule -> navigateToSchedule()
             is HomeSideEffect.ShowToast -> Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
             HomeSideEffect.NavigateToLogin -> navigateToLogin()
+            is HomeSideEffect.HandleException -> handleException(effect.exception)
         }
     }
 
@@ -145,9 +147,8 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenPreview() {
     YappTheme {
-        HomeRoute(
-            navigateToLogin = {},
-            navigateToSchedule = {}
+        HomeScreen(
+            homeState = HomeState()
         )
     }
 }

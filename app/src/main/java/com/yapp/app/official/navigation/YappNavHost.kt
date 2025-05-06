@@ -61,6 +61,7 @@ fun YappNavHost(
             navigateSchedule = {
                 navigator.navigateToTopLevelDestination(TopLevelDestination.SCHEDULE)
             },
+            handleException = handleException,
         )
         settingNavGraph(
             navigateLogin = {
