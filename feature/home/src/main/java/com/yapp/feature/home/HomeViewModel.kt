@@ -101,6 +101,10 @@ internal class HomeViewModel @Inject constructor(
                 reduce {
                     copy(
                         sessionList = updatedSessions,
+                        upcomingSession = state.upcomingSession?.copy(
+                            canCheckIn = false,
+                            status = AttendanceStatus.ATTENDED
+                        ),
                         showAttendCodeBottomSheet = false
                     )
                 }
