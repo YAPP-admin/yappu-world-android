@@ -12,6 +12,7 @@ import com.yapp.domain.runCatchingIgnoreCancelled
 import com.yapp.model.AttendanceInfo
 import com.yapp.model.AttendanceStatus
 import com.yapp.model.HomeSessionList
+import com.yapp.model.exceptions.CodeNotCorrectException
 import com.yapp.model.exceptions.InvalidTokenException
 import com.yapp.model.exceptions.UserNotFoundForEmailException
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -86,7 +87,8 @@ internal class HomeViewModel @Inject constructor(
                     state.upcomingSession?.sessionId,
                     state.attendanceCode,
                     state,
-                    reduce
+                    reduce,
+                    postSideEffect,
                 )
             }
         }
@@ -142,7 +144,8 @@ internal class HomeViewModel @Inject constructor(
         sessionId: String?,
         code: String,
         state: HomeState,
-        reduce: (HomeState.() -> HomeState) -> Unit
+        reduce: (HomeState.() -> HomeState) -> Unit,
+        postSideEffect: (HomeSideEffect) -> Unit
     ) {
         if (sessionId == null) return
 
@@ -173,8 +176,16 @@ internal class HomeViewModel @Inject constructor(
                     )
                 }
             }.onFailure {
-                reduce { copy(showAttendanceCodeError = true) }
-                it.record()
+                when (it) {
+                    is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
+                    is CodeNotCorrectException -> {
+                        reduce { copy(showAttendanceCodeError = true) }
+                    }
+                    else -> {
+                        postSideEffect(HomeSideEffect.HandleException(it))
+                        it.record()
+                    }
+                }
             }
         }
     }
