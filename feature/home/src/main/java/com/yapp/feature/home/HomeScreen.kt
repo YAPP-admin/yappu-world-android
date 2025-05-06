@@ -29,7 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
-import com.yapp.feature.home.component.HomeAttendanceContents
+import com.yapp.feature.home.component.HomeAttendanceContent
 import com.yapp.feature.home.component.HomeAttendanceNotice
 import com.yapp.feature.home.component.HomeHeader
 import com.yapp.feature.home.dialog.AttendanceDialog
@@ -111,7 +111,7 @@ fun HomeScreen(
                     upcomingSession = homeState.upcomingSession
                 )
 
-                HomeAttendanceContents(
+                HomeAttendanceContent(
                     upcomingSession = homeState.upcomingSession,
                     onClickAttend = { onIntent(HomeIntent.ClickRequestAttendCode) }
                 )
