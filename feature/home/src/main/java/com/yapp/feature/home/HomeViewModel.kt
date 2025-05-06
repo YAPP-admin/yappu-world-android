@@ -6,7 +6,7 @@ import com.yapp.core.common.android.record
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.AttendanceRepository
-import com.yapp.domain.SessionsUseCase
+import com.yapp.dataapi.ScheduleRepository
 import com.yapp.domain.runCatchingIgnoreCancelled
 import com.yapp.model.AttendanceInfo
 import com.yapp.model.AttendanceStatus
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
-    private val sessionsUseCase: SessionsUseCase,
+    private val scheduleRepository: ScheduleRepository,
     private val attendanceRepository: AttendanceRepository
 ) : ViewModel() {
 
@@ -36,7 +36,11 @@ internal class HomeViewModel @Inject constructor(
         postSideEffect: (HomeSideEffect) -> Unit,
     ) {
         when (intent) {
-            HomeIntent.EnterHomeScreen -> { loadHomeInfo( reduce,postSideEffect)  }
+            HomeIntent.EnterHomeScreen -> {
+                loadSessionInfo( reduce,postSideEffect)
+                loadUpcomingSessionInfo(reduce, postSideEffect)
+            }
+            HomeIntent.RefreshUpcomingSession -> loadUpcomingSessionInfo(reduce, postSideEffect)
             HomeIntent.ClickShowAllSession -> postSideEffect(HomeSideEffect.NavigateToSchedule)
             HomeIntent.ClickRequestAttendCode -> {
                 reduce {
@@ -65,26 +69,53 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun loadHomeInfo(
+    private fun loadSessionInfo(
         reduce: (HomeState.() -> HomeState) -> Unit,
         postSideEffect: (HomeSideEffect) -> Unit
     ) {
         viewModelScope.launch {
+            reduce { copy(isLoading = true) }
             runCatchingIgnoreCancelled {
-                sessionsUseCase.invoke()
+                scheduleRepository.getSessions()
             }.onSuccess { homeSessions ->
                 reduce {
                     copy(
-                        sessionList = homeSessions.sessions,
-                        upcomingSession = homeSessions.upcomingSessionInfo,
+                        sessionList = homeSessions
                     )
                 }
             }.onFailure { e ->
                 when (e) {
-                    is UserNotFoundForEmailException, is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
+                    is UserNotFoundForEmailException,
+                    is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
                     else -> e.record()
                 }
             }
+            reduce { copy(isLoading = false) }
+        }
+    }
+
+    private fun loadUpcomingSessionInfo(
+        reduce: (HomeState.() -> HomeState) -> Unit,
+        postSideEffect: (HomeSideEffect) -> Unit
+    ) {
+        viewModelScope.launch {
+            reduce { copy(isLoading = true) }
+            runCatchingIgnoreCancelled {
+                scheduleRepository.getUpcomingSessions()
+            }.onSuccess { upcomingSessionInfo ->
+                reduce {
+                    copy(
+                        upcomingSession = upcomingSessionInfo
+                    )
+                }
+            }.onFailure { e ->
+                when (e) {
+                    is UserNotFoundForEmailException,
+                    is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
+                    else -> e.record()
+                }
+            }
+            reduce { copy(isLoading = false) }
         }
     }
 
