@@ -33,7 +33,6 @@ class NoticeViewModel @Inject constructor(
         postSideEffect: (NoticeSideEffect) -> Unit,
     ) {
         when (intent) {
-            NoticeIntent.ClickBackButton -> postSideEffect(NoticeSideEffect.NavigateToBack)
             NoticeIntent.EnterNoticeScreen -> loadNotices(state, reduce)
             is NoticeIntent.ClickNoticeItem -> postSideEffect(
                 NoticeSideEffect.NavigateToNoticeDetail(intent.noticeId)

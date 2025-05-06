@@ -84,7 +84,6 @@ fun YappNavHost(
             navigateToNoticeDetail = { noticeId ->
                 navigator.navigateToNoticeDetail(noticeId)
             },
-            navigateBack = { navigator.popBackStack() },
             navigateToLogin = {
                 navigator.navigateLoginScreen(
                     navOptions = clearBackStackNavOptions

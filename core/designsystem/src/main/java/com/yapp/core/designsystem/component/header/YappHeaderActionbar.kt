@@ -135,7 +135,6 @@ fun YappHeaderActionbarExpanded(
     onClickLeftIcon: (() -> Unit)? = null,
     title: String,
 ) {
-
     YappHeaderActionbarExpanded(
         modifier = modifier,
         title = title,
@@ -153,6 +152,28 @@ fun YappHeaderActionbarExpanded(
             }
         }
     )
+}
+
+@Composable
+fun YappHeaderTitle(
+    modifier: Modifier = Modifier,
+    rightAction: @Composable (RowScope.() -> Unit)? = null,
+    title: String,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp, horizontal = 20.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Text(
+            text = title,
+            style = YappTheme.typography.title3Bold,
+            color = YappTheme.colorScheme.labelNormal,
+        )
+
+        rightAction?.invoke(this)
+    }
 }
 
 @Preview(backgroundColor = 0xFFFFFFFF, showBackground = true)
@@ -182,6 +203,16 @@ private fun HeaderActionbarExpandedPreview() {
                     contentDescription = null
                 )
             },
+            title = "Title"
+        )
+    }
+}
+
+@Preview(backgroundColor = 0xFFFFFFFF, showBackground = true)
+@Composable
+private fun HeaderTitlePreview() {
+    YappTheme {
+        YappHeaderTitle(
             title = "Title"
         )
     }

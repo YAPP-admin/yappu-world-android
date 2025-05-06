@@ -28,7 +28,6 @@ fun NavController.navigateToNoticeDetail(noticeId: String, navOptions: NavOption
 
 fun NavGraphBuilder.noticeNavGraph(
     navigateToNoticeDetail: (String) -> Unit,
-    navigateBack: () -> Unit,
     handleException: (Throwable) -> Unit,
     navigateToLogin: () -> Unit,
 ) {
@@ -37,7 +36,6 @@ fun NavGraphBuilder.noticeNavGraph(
             navigateToNoticeDetail = { noticeId ->
                 navigateToNoticeDetail(noticeId)
             },
-            navigateBack = navigateBack,
             handleException = handleException,
             navigateToLogin = navigateToLogin,
         )
