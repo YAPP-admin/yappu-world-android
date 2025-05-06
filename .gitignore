@@ -173,3 +173,5 @@ fabric.properties
 yapp_attendance_keystore
 .github/api-play-store-key.json
 fastlane/.env
+
+output-metadata.json
