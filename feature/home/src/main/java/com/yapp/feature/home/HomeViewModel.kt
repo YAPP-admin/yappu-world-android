@@ -8,8 +8,9 @@ import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.AttendanceRepository
 import com.yapp.domain.SessionsUseCase
 import com.yapp.domain.runCatchingIgnoreCancelled
-import com.yapp.feature.home.convert.toState
 import com.yapp.model.AttendanceInfo
+import com.yapp.model.AttendanceStatus
+import com.yapp.model.HomeSessionList
 import com.yapp.model.exceptions.InvalidTokenException
 import com.yapp.model.exceptions.UserNotFoundForEmailException
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -59,13 +60,12 @@ internal class HomeViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             runCatchingIgnoreCancelled {
-                val result = sessionsUseCase.invoke()
-                val sessions = result.sessions.sessions
-
+                sessionsUseCase.invoke()
+            }.onSuccess { homeSessions ->
                 reduce {
                     copy(
-                        sessions = sessions.toState(),
-                        upcomingSessionId = result.sessions.upcomingSessionId.orEmpty()
+                        sessionList = homeSessions.sessions,
+                        upcomingSession = homeSessions.upcomingSessionInfo,
                     )
                 }
             }.onFailure { e ->
@@ -87,17 +87,20 @@ internal class HomeViewModel @Inject constructor(
             runCatchingIgnoreCancelled {
                 attendanceRepository.postAttendance(AttendanceInfo(sessionId, code))
             }.onSuccess {
-                val copySessions = state.sessions.map { session ->
-                    if (session.id == sessionId) {
-                        session.copy(isAttended = true)
-                    } else {
-                        session
-                    }
-                }
+                val updatedSessions = HomeSessionList(
+                    sessions = state.sessionList.sessions.map { session ->
+                        if (session.id == sessionId) {
+                            session.copy(attendanceStatus = AttendanceStatus.ATTENDED)
+                        } else {
+                            session
+                        }
+                    },
+                    upcomingSessionId = state.sessionList.upcomingSessionId
+                )
 
                 reduce {
                     copy(
-                        sessions = copySessions,
+                        sessionList = updatedSessions,
                         showAttendCodeBottomSheet = false
                     )
                 }

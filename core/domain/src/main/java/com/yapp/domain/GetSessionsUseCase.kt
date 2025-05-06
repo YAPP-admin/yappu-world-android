@@ -1,7 +1,7 @@
 package com.yapp.domain
 
 import com.yapp.dataapi.ScheduleRepository
-import com.yapp.model.HomeSession
+import com.yapp.model.HomeSessionList
 import com.yapp.model.UpcomingSessionInfo
 import javax.inject.Inject
 
@@ -10,14 +10,16 @@ class SessionsUseCase @Inject constructor(
 ){
     data class HomeSessions(
         val upcomingSessionInfo: UpcomingSessionInfo,
-        val sessions: HomeSession
+        val sessions: HomeSessionList
     )
 
     suspend operator fun invoke(): HomeSessions {
         val upcomingSession = scheduleRepository.getUpcomingSessions()
         val sessions = scheduleRepository.getSessions()
 
-
-        return HomeSessions(upcomingSessionInfo = upcomingSession, sessions = sessions)
+        return HomeSessions(
+            upcomingSessionInfo = upcomingSession,
+            sessions = HomeSessionList(sessions.sessions, sessions.upcomingSessionId)
+        )
     }
 }

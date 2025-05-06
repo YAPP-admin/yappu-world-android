@@ -3,11 +3,11 @@ package com.yapp.core.data.data.repository
 import com.yapp.core.data.remote.api.ScheduleApi
 import com.yapp.core.data.remote.model.response.SessionResponse
 import com.yapp.core.data.remote.model.response.toDateGroupedScheduleList
+import com.yapp.core.data.remote.model.response.toHomeSessionListModel
 import com.yapp.dataapi.ScheduleRepository
-import com.yapp.model.HomeSession
+import com.yapp.model.HomeSessionList
 import com.yapp.model.ScheduleList
 import com.yapp.model.UpcomingSessionInfo
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 internal class ScheduleRepositoryImpl @Inject constructor(
@@ -19,11 +19,8 @@ internal class ScheduleRepositoryImpl @Inject constructor(
     private var scheduleCache: MutableMap<Pair<Int, Int>, ScheduleList> = mutableMapOf()
     private var upcomingSessionCache: UpcomingSessionInfo? = null
 
-    override suspend fun getSessions(): HomeSession {
-        val sessions = scheduleApi.getSessions().sessions.toDateGroupedScheduleList()
-        val upcomingSessionId = scheduleApi.getSessions().upcomingSessionId
-
-        return HomeSession(sessions, upcomingSessionId)
+    override suspend fun getSessions(): HomeSessionList {
+        return scheduleApi.getSessions().toHomeSessionListModel()
     }
 
     override suspend fun getDateGroupedSessions(): ScheduleList {
