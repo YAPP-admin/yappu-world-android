@@ -72,17 +72,17 @@ fun HomeScreen(
                     .background(brush = Brush.horizontalGradient(colorStops = colorSteps))
                     .padding(WindowInsets.statusBars.asPaddingValues())
                     .padding(top = 18.dp),
-                sessions = homeState.sessions,
-                upcomingSessionId = homeState.upcomingSessionId,
+                sessions = homeState.sessionList.sessions,
+                upcomingSessionId = homeState.sessionList.upcomingSessionId,
                 onClickShowAll = { onIntent(HomeIntent.ClickShowAllSession) },
             )
 
-            HomeAttendanceNotice(title = homeState.attendanceTitle)
+            HomeAttendanceNotice(
+                upcomingSession = homeState.upcomingSession
+            )
 
             HomeAttendanceContents(
-                todayOrUpcomingSession = homeState.todayOrUpcomingSession,
-                attendState = homeState.attendState,
-                buttonTitle = homeState.buttonTitle,
+                upcomingSession = homeState.upcomingSession,
                 onClickAttend = { onIntent(HomeIntent.ClickRequestAttendCode) }
             )
         }
@@ -96,7 +96,7 @@ fun HomeScreen(
             clickAttendanceButton = { code ->
                 onIntent(
                     HomeIntent.ClickRequestAttendance(
-                        sessionId = homeState.todayOrUpcomingSession?.id.orEmpty(),
+                        sessionId = homeState.upcomingSession?.sessionId.orEmpty(),
                         code = code
                     )
                 )
