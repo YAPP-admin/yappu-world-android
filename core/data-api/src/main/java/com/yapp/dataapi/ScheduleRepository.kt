@@ -1,11 +1,11 @@
 package com.yapp.dataapi
 
-import com.yapp.model.HomeSession
+import com.yapp.model.HomeSessionList
 import com.yapp.model.ScheduleList
 import com.yapp.model.UpcomingSessionInfo
 
 interface ScheduleRepository {
-    suspend fun getSessions(): HomeSession
+    suspend fun getSessions(): HomeSessionList
 
     suspend fun getDateGroupedSessions(): ScheduleList
 

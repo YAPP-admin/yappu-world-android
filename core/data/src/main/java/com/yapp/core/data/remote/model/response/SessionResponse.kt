@@ -4,6 +4,8 @@ import com.yapp.core.data.remote.model.response.ScheduleResponse.Companion.toAtt
 import com.yapp.core.data.remote.model.response.ScheduleResponse.Companion.toScheduleProgressPhase
 import com.yapp.core.data.remote.model.response.ScheduleResponse.Companion.toSessionType
 import com.yapp.model.DateGroupedSchedule
+import com.yapp.model.HomeSession
+import com.yapp.model.HomeSessionList
 import com.yapp.model.ScheduleInfo
 import com.yapp.model.ScheduleType
 import kotlinx.serialization.Serializable
@@ -55,4 +57,24 @@ fun List<SessionResponse.Session>.toDateGroupedScheduleList(): List<DateGroupedS
             }
         )
     }
+}
+
+fun SessionResponse.toHomeSessionListModel() = HomeSessionList(
+    sessions = sessions.map { it.toHomeSessionModel() },
+    upcomingSessionId = upcomingSessionId
+)
+
+fun SessionResponse.Session.toHomeSessionModel(): HomeSession {
+    return HomeSession(
+        id = id,
+        name = name,
+        place = place.orEmpty(),
+        date = date,
+        dayOfWeek = startDayOfWeek,
+        relativeDays = relativeDays,
+        startTime = time,
+        endTime = endTime.orEmpty(),
+        progressPhase = progressPhase.toScheduleProgressPhase(),
+        attendanceStatus = attendanceStatus?.toAttendanceStatus()
+    )
 }
