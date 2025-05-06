@@ -154,7 +154,7 @@ private fun PinCodeInput(
                     .size(60.dp)
                     .focusRequester(focusRequesters[index])
                     .onKeyEvent {
-                        if (it.key == Key.Backspace && it.type == KeyEventType.KeyDown && values[index].isEmpty()) {
+                        if (it.key == Key.Backspace && it.type == KeyEventType.KeyUp && values[index].isEmpty()) {
                             if (index > 0) {
                                 onValueChange(index - 1, "")
                                 focusRequesters[index - 1].requestFocus()
