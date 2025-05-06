@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.component.control.switches.YappSwitchMedium
-import com.yapp.core.designsystem.component.header.YappHeaderActionbarExpanded
+import com.yapp.core.designsystem.component.header.YappHeaderActionbar
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.borderBottom
@@ -80,7 +80,7 @@ fun SettingScreen(
 ) {
     YappBackground {
         Column {
-            YappHeaderActionbarExpanded(
+            YappHeaderActionbar(
                 title = stringResource(id = R.string.setting_screen_title),
                 leftIcon = com.yapp.core.designsystem.R.drawable.icon_chevron_left,
                 contentDescription = stringResource(id = R.string.setting_screen_back_icon_content_description),
@@ -114,8 +114,8 @@ fun SettingScreen(
 
                 Text(
                     text = stringResource(id = R.string.setting_screen_item_terms),
-                    color = YappTheme.colorScheme.labelNeutral,
-                    style = YappTheme.typography.headline1Bold
+                    style = YappTheme.typography.body1NormalBold,
+                    color = YappTheme.colorScheme.labelNormal
                 )
 
                 SettingItemMedium(
@@ -155,10 +155,6 @@ fun SettingScreen(
                 )
 
                 SettingItemLarge(
-                    modifier = Modifier
-                        .borderBottom(
-                            color = YappTheme.colorScheme.lineNormalAlternative,
-                        ),
                     text = stringResource(id = R.string.setting_screen_item_app_version),
                     onClick = {
 //                        onIntent(SettingIntent.ClickAppVersion)

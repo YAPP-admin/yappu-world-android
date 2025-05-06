@@ -39,8 +39,8 @@ fun SettingItemLarge(
     ) {
         Text(
             text = text,
-            color = YappTheme.colorScheme.labelNeutral,
-            style = YappTheme.typography.headline1Bold
+            style = YappTheme.typography.body1NormalBold,
+            color = YappTheme.colorScheme.labelNormal
         )
 
         slot?.invoke()
@@ -67,8 +67,8 @@ fun SettingItemMedium(
     ) {
         Text(
             text = text,
-            color = YappTheme.colorScheme.labelNeutral,
-            style = YappTheme.typography.body1NormalMedium
+            style = YappTheme.typography.label1NormalBold,
+            color = YappTheme.colorScheme.labelNormal
         )
 
         slot?.invoke()
