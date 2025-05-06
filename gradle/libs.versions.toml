@@ -14,8 +14,8 @@ activityCompose = "1.9.3"
 compose-stable-marker = "1.0.3"
 
 composeBom = "2024.12.01"
-firebaseBom = "32.1.1"
-firebaseCrashlytics = "2.9.9"
+firebaseBom = "33.13.0"
+firebaseCrashlytics = "3.0.3"
 coroutinesPlayServices = "1.7.3"
 
 junit = "4.13.2"
