@@ -80,7 +80,9 @@ fun HomeScreen(
         PullToRefreshBox(
             isRefreshing = homeState.isLoading,
             state = pullToRefreshState,
-            onRefresh = { onIntent(HomeIntent.RefreshUpcomingSession) },
+            onRefresh = {
+                onIntent(HomeIntent.RefreshUpcomingSession)
+            },
             indicator = {
                 Indicator(
                     modifier = Modifier.align(Alignment.TopCenter),

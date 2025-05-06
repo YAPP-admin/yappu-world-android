@@ -37,10 +37,12 @@ internal class HomeViewModel @Inject constructor(
     ) {
         when (intent) {
             HomeIntent.EnterHomeScreen -> {
-                loadSessionInfo( reduce,postSideEffect)
+                loadSessionInfo(reduce, postSideEffect)
                 loadUpcomingSessionInfo(reduce, postSideEffect)
             }
-            HomeIntent.RefreshUpcomingSession -> loadUpcomingSessionInfo(reduce, postSideEffect)
+            HomeIntent.RefreshUpcomingSession -> {
+                loadUpcomingSessionInfo(reduce, postSideEffect)
+            }
             HomeIntent.ClickShowAllSession -> postSideEffect(HomeSideEffect.NavigateToSchedule)
             HomeIntent.ClickRequestAttendCode -> {
                 reduce {
@@ -101,7 +103,7 @@ internal class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             reduce { copy(isLoading = true) }
             runCatchingIgnoreCancelled {
-                scheduleRepository.getUpcomingSessions()
+                scheduleRepository.refreshUpcomingSessions()
             }.onSuccess { upcomingSessionInfo ->
                 reduce {
                     copy(
