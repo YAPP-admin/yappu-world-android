@@ -108,9 +108,10 @@ class ScheduleViewModel @Inject constructor(
         }.onSuccess {
             reduce { copy(isLoading = false, upcomingSessionInfo = it) }
         }.onFailure { e ->
-            reduce { copy(isLoading = false) }
+            postSideEffect(ScheduleSideEffect.HandleException(e))
             e.record()
         }
+        reduce { copy(isLoading = false) }
     }
 
     private fun loadSessions(
@@ -123,9 +124,10 @@ class ScheduleViewModel @Inject constructor(
         }.onSuccess {
             reduce { copy(isLoading = false, sessions = it) }
         }.onFailure { e ->
-            reduce { copy(isLoading = false) }
+            postSideEffect(ScheduleSideEffect.HandleException(e))
             e.record()
         }
+        reduce { copy(isLoading = false) }
     }
 
     private fun refreshScheduleInfo(
@@ -140,14 +142,14 @@ class ScheduleViewModel @Inject constructor(
         }.onSuccess {
             reduce {
                 copy(
-                    isLoading = false,
                     schedules = schedules.toMutableMap().apply { put(year to month, it) }
                 )
             }
         }.onFailure { e ->
-            reduce { copy(isLoading = false) }
+            postSideEffect(ScheduleSideEffect.HandleException(e))
             e.record()
         }
+        reduce { copy(isLoading = false) }
     }
 
     private fun refreshUpcomingSessionInfo(
@@ -160,14 +162,14 @@ class ScheduleViewModel @Inject constructor(
         }.onSuccess {
             reduce {
                 copy(
-                    isLoading = false,
                     upcomingSessionInfo = it
                 )
             }
         }.onFailure { e ->
-            reduce { copy(isLoading = false) }
+            postSideEffect(ScheduleSideEffect.HandleException(e))
             e.record()
         }
+        reduce { copy(isLoading = false) }
     }
 
     private fun refreshSessions(
@@ -180,14 +182,14 @@ class ScheduleViewModel @Inject constructor(
         }.onSuccess {
             reduce {
                 copy(
-                    isLoading = false,
                     sessions = it
                 )
             }
         }.onFailure { e ->
-            reduce { copy(isLoading = false) }
+            postSideEffect(ScheduleSideEffect.HandleException(e))
             e.record()
         }
+        reduce { copy(isLoading = false) }
     }
 
     private fun calculatePreviousMonth(year: Int, month: Int): Pair<Int, Int> {
