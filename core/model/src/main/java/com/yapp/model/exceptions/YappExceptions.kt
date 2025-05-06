@@ -26,7 +26,6 @@ enum class YappServerError(val exception: YappException) {
 
     //출석 체크
     ATD_1001(CodeNotCorrectException()),
-    TKN_0002(InvalidTokenException()),
 
     NOT_DEFINED(NotDefinedException());
 
