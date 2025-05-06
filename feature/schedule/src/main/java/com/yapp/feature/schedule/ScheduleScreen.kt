@@ -288,6 +288,7 @@ private fun MonthHeader(
                 .size(24.dp)
                 .yappClickable(
                     rippleBounded = false,
+                    singleClick = false,
                     rippleRadius = 24.dp
                 ) {
                     onPreviousMonthClick()
@@ -310,6 +311,7 @@ private fun MonthHeader(
         Icon(
             modifier = Modifier.yappClickable(
                 rippleBounded = false,
+                singleClick = false,
                 rippleRadius = 24.dp
             ) {
                 onNextMonthClick()
