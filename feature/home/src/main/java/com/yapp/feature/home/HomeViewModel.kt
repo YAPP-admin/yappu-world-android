@@ -2,6 +2,7 @@ package com.yapp.feature.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yapp.core.common.android.record
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
@@ -14,6 +15,7 @@ import com.yapp.model.HomeSessionList
 import com.yapp.model.exceptions.InvalidTokenException
 import com.yapp.model.exceptions.UserNotFoundForEmailException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,6 +24,7 @@ internal class HomeViewModel @Inject constructor(
     private val scheduleRepository: ScheduleRepository,
     private val attendanceRepository: AttendanceRepository
 ) : ViewModel() {
+    private var isInitialized = false
 
     val store: MviIntentStore<HomeState, HomeIntent, HomeSideEffect> =
         mviIntentStore(
@@ -37,18 +40,28 @@ internal class HomeViewModel @Inject constructor(
     ) {
         when (intent) {
             HomeIntent.EnterHomeScreen -> {
-                loadSessionInfo(reduce, postSideEffect)
-                loadUpcomingSessionInfo(reduce, postSideEffect)
+                if (isInitialized) return
+
+                viewModelScope.launch {
+                    joinAll(
+                        loadSessionInfo(reduce, postSideEffect),
+                        loadUpcomingSessionInfo(reduce, postSideEffect)
+                    )
+                    isInitialized = true
+                }
             }
+
             HomeIntent.RefreshUpcomingSession -> {
                 loadUpcomingSessionInfo(reduce, postSideEffect)
             }
+
             HomeIntent.ClickShowAllSession -> postSideEffect(HomeSideEffect.NavigateToSchedule)
             HomeIntent.ClickRequestAttendCode -> {
                 reduce {
                     copy(showAttendCodeBottomSheet = true)
                 }
             }
+
             HomeIntent.ClickDismissDialog -> {
                 reduce {
                     copy(
@@ -58,6 +71,7 @@ internal class HomeViewModel @Inject constructor(
                     )
                 }
             }
+
             is HomeIntent.ChangeAttendanceCodeDigits -> {
                 reduce {
                     copy(
@@ -66,8 +80,14 @@ internal class HomeViewModel @Inject constructor(
                     )
                 }
             }
+
             is HomeIntent.ClickRequestAttendance -> {
-                requestAttendance(state.upcomingSession?.sessionId, state.attendanceCode, state, reduce)
+                requestAttendance(
+                    state.upcomingSession?.sessionId,
+                    state.attendanceCode,
+                    state,
+                    reduce
+                )
             }
         }
     }
@@ -75,50 +95,48 @@ internal class HomeViewModel @Inject constructor(
     private fun loadSessionInfo(
         reduce: (HomeState.() -> HomeState) -> Unit,
         postSideEffect: (HomeSideEffect) -> Unit
-    ) {
-        viewModelScope.launch {
-            reduce { copy(isLoading = true) }
-            runCatchingIgnoreCancelled {
-                scheduleRepository.getSessions()
-            }.onSuccess { homeSessions ->
-                reduce {
-                    copy(
-                        sessionList = homeSessions
-                    )
-                }
-            }.onFailure { e ->
-                when (e) {
-                    is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
-                    else -> e.record()
-                }
+    ) = viewModelScope.launch {
+        reduce { copy(isLoading = true) }
+        runCatchingIgnoreCancelled {
+            scheduleRepository.getSessions()
+        }.onSuccess { homeSessions ->
+            reduce {
+                copy(
+                    sessionList = homeSessions
+                )
             }
-            reduce { copy(isLoading = false) }
+        }.onFailure { e ->
+            when (e) {
+                is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
+                else -> e.record()
+            }
         }
+        reduce { copy(isLoading = false) }
     }
+
 
     private fun loadUpcomingSessionInfo(
         reduce: (HomeState.() -> HomeState) -> Unit,
         postSideEffect: (HomeSideEffect) -> Unit
-    ) {
-        viewModelScope.launch {
-            reduce { copy(isLoading = true) }
-            runCatchingIgnoreCancelled {
-                scheduleRepository.refreshUpcomingSessions()
-            }.onSuccess { upcomingSessionInfo ->
-                reduce {
-                    copy(
-                        upcomingSession = upcomingSessionInfo
-                    )
-                }
-            }.onFailure { e ->
-                when (e) {
-                    is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
-                    else -> e.record()
-                }
+    ) = viewModelScope.launch {
+        reduce { copy(isLoading = true) }
+        runCatchingIgnoreCancelled {
+            scheduleRepository.refreshUpcomingSessions()
+        }.onSuccess { upcomingSessionInfo ->
+            reduce {
+                copy(
+                    upcomingSession = upcomingSessionInfo
+                )
             }
-            reduce { copy(isLoading = false) }
+        }.onFailure { e ->
+            when (e) {
+                is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
+                else -> e.record()
+            }
         }
+        reduce { copy(isLoading = false) }
     }
+
 
     private fun requestAttendance(
         sessionId: String?,
