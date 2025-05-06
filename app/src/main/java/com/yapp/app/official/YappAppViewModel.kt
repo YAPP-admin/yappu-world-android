@@ -2,6 +2,7 @@ package com.yapp.app.official
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yapp.core.common.android.record
 import com.yapp.dataapi.OperationsRepository
 import com.yapp.domain.runCatchingIgnoreCancelled
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,6 +21,9 @@ class YappAppViewModel @Inject constructor(
         runCatchingIgnoreCancelled {
             operationsRepository.getUsageInquiryLink()
         }.onSuccess(onSuccess)
-            .onFailure(onError)
+            .onFailure {
+                onError(it)
+                it.record()
+            }
     }
 }
