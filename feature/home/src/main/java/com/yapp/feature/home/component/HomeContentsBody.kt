@@ -20,17 +20,26 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.theme.YappTheme
+import com.yapp.model.UpcomingSessionInfo
 import com.yapp.core.designsystem.R as coreDesignR
 
 @Composable
 internal fun HomeAttendanceNotice(
     modifier: Modifier = Modifier,
-    title: String
+    upcomingSession: UpcomingSessionInfo?
 ) {
     val colorSteps = arrayOf(
         0.2f to YappTheme.colorScheme.primaryNormal,
         1f to YappTheme.colorScheme.secondaryNormal
     )
+
+    val text = if (upcomingSession == null) {
+        "다가오는 세션이 없어요."
+    } else if (upcomingSession.remainingDays == 0) {
+        "세션 당일이예요! 활기찬 하루 되세요 :)"
+    } else {
+        "다가오는 세션을 준비해볼까요?"
+    }
 
     Box(
         modifier = Modifier.background(brush = Brush.horizontalGradient(colorStops = colorSteps))
@@ -59,7 +68,7 @@ internal fun HomeAttendanceNotice(
                     painter = painterResource(coreDesignR.drawable.home_attandance),
                     contentDescription = null
                 )
-                Text(title, style = YappTheme.typography.label1NormalMedium)
+                Text(text, style = YappTheme.typography.label1NormalMedium)
             }
 
             Spacer(modifier = Modifier.height(12.dp))

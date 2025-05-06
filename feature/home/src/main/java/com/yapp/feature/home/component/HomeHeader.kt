@@ -38,8 +38,8 @@ import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.SessionChip
 import com.yapp.core.ui.util.formatTimeRange
-import com.yapp.feature.home.HomeState
 import com.yapp.feature.home.R
+import com.yapp.model.HomeSession
 import com.yapp.model.ScheduleProgressPhase
 import kotlinx.coroutines.launch
 import com.yapp.core.designsystem.R as coreDesignR
@@ -47,8 +47,8 @@ import com.yapp.core.designsystem.R as coreDesignR
 @Composable
 internal fun HomeHeader(
     modifier: Modifier = Modifier,
-    sessions: List<HomeState.Session>,
-    upcomingSessionId: String,
+    sessions: List<HomeSession>,
+    upcomingSessionId: String?,
     onClickShowAll: () -> Unit,
 ) {
     val pageIndex = sessions.indexOfFirst { it.id == upcomingSessionId }
@@ -121,19 +121,17 @@ internal fun HomeHeader(
             ) {
                 SessionItem(
                     id = it.id,
-                    title = it.title,
+                    title = it.name,
                     date = it.date,
                     place = it.place,
                     startTime = it.startTime,
                     endTime = it.endTime,
-                    startDayOfWeek = it.startDayOfWeek,
+                    dayOfWeek = it.dayOfWeek,
                     progressPhase = it.progressPhase,
                     onClickSessionItem = {  }
                 )
             }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -164,9 +162,9 @@ private fun SessionItem(
     title: String,
     date: String,
     place: String,
-    startTime: String,
-    endTime: String,
-    startDayOfWeek: String,
+    startTime: String?,
+    endTime: String?,
+    dayOfWeek: String,
     progressPhase: ScheduleProgressPhase,
     onClickSessionItem: (String) -> Unit
 ) {
@@ -197,7 +195,7 @@ private fun SessionItem(
             SessionChip(progressPhase = progressPhase)
             Text(title, style = YappTheme.typography.body1NormalMedium)
         }
-        Text("$date ($startDayOfWeek)", style = YappTheme.typography.caption1Bold)
+        Text("$date ($dayOfWeek)", style = YappTheme.typography.caption1Bold)
         Spacer(modifier = Modifier.height(17.dp))
         Column {
             if (place.isNotEmpty()) {
@@ -240,15 +238,17 @@ private fun HomeStickHeaderPreview() {
     HomeHeader(
         modifier = Modifier.background(brush = Brush.horizontalGradient(colorStops = colorStops)),
         sessions = listOf(
-            HomeState.Session(
+            HomeSession(
                 id = "1",
-                title = "2차 데모데이",
+                name = "2차 데모데이",
                 date = "2025. 03. 15",
                 place = "공덕 창업허브",
                 startTime = "오후 6시",
                 endTime = "오후 8시",
-                startDayOfWeek = "금",
-                progressPhase = ScheduleProgressPhase.TODAY
+                dayOfWeek = "금",
+                progressPhase = ScheduleProgressPhase.TODAY,
+                attendanceStatus = null,
+                relativeDays = 0
             )
         ),
         onClickShowAll = { },
