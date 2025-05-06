@@ -30,7 +30,7 @@ data class UpcomingSessionAttendanceResponse(
         startTime = startTime,
         endTime = endTime,
         location = place,
-        remainingDays = max(0, relativeDays),
+        remainingDays = max(0, -relativeDays),
         canCheckIn = canCheckIn,
         status = status.toAttendanceStatus()
     )
