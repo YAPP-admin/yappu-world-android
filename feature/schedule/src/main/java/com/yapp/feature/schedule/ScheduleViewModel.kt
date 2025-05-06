@@ -91,11 +91,13 @@ class ScheduleViewModel @Inject constructor(
     private fun loadUpcomingSessionInfo(
         reduce: (ScheduleState.() -> ScheduleState) -> Unit
     ) = viewModelScope.launch {
+        reduce { copy(isLoading = true) }
         runCatchingIgnoreCancelled {
-            reduce { copy(isLoading = true) }
-            val info = scheduleRepository.getUpcomingSessions()
-            reduce { copy(isLoading = false, upcomingSessionInfo = info) }
+            scheduleRepository.getUpcomingSessions()
+        }.onSuccess {
+            reduce { copy(isLoading = false, upcomingSessionInfo = it) }
         }.onFailure { e ->
+            reduce { copy(isLoading = false) }
             e.record()
         }
     }
@@ -103,11 +105,13 @@ class ScheduleViewModel @Inject constructor(
     private fun loadSessions(
         reduce: (ScheduleState.() -> ScheduleState) -> Unit
     ) = viewModelScope.launch {
+        reduce { copy(isLoading = true) }
         runCatchingIgnoreCancelled {
-            reduce { copy(isLoading = true) }
-            val result = scheduleRepository.getDateGroupedSessions()
-            reduce { copy(isLoading = false, sessions = result) }
+            scheduleRepository.getDateGroupedSessions()
+        }.onSuccess {
+            reduce { copy(isLoading = false, sessions = it) }
         }.onFailure { e ->
+            reduce { copy(isLoading = false) }
             e.record()
         }
     }
@@ -117,16 +121,18 @@ class ScheduleViewModel @Inject constructor(
         month: Int,
         reduce: (ScheduleState.() -> ScheduleState) -> Unit
     ) = viewModelScope.launch {
+        reduce { copy(isLoading = true) }
         runCatchingIgnoreCancelled {
-            reduce { copy(isLoading = true) }
-            val refreshSchedules = scheduleRepository.refreshSchedules(year, month)
+            scheduleRepository.refreshSchedules(year, month)
+        }.onSuccess {
             reduce {
                 copy(
                     isLoading = false,
-                    schedules = schedules.toMutableMap().apply { put(year to month, refreshSchedules) }
+                    schedules = schedules.toMutableMap().apply { put(year to month, it) }
                 )
             }
         }.onFailure { e ->
+            reduce { copy(isLoading = false) }
             e.record()
         }
     }
@@ -134,16 +140,18 @@ class ScheduleViewModel @Inject constructor(
     private fun refreshUpcomingSessionInfo(
         reduce: (ScheduleState.() -> ScheduleState) -> Unit
     ) = viewModelScope.launch {
+        reduce { copy(isLoading = true) }
         runCatchingIgnoreCancelled {
-            reduce { copy(isLoading = true) }
-            val upcomingSessionInfo = scheduleRepository.refreshUpcomingSessions()
+            scheduleRepository.refreshUpcomingSessions()
+        }.onSuccess {
             reduce {
                 copy(
                     isLoading = false,
-                    upcomingSessionInfo = upcomingSessionInfo
+                    upcomingSessionInfo = it
                 )
             }
         }.onFailure { e ->
+            reduce { copy(isLoading = false) }
             e.record()
         }
     }
@@ -151,16 +159,18 @@ class ScheduleViewModel @Inject constructor(
     private fun refreshSessions(
         reduce: (ScheduleState.() -> ScheduleState) -> Unit
     ) = viewModelScope.launch {
+        reduce { copy(isLoading = true) }
         runCatchingIgnoreCancelled {
-            reduce { copy(isLoading = true) }
-            val sessions = scheduleRepository.refreshDateGroupedSessions()
+            scheduleRepository.refreshDateGroupedSessions()
+        }.onSuccess {
             reduce {
                 copy(
                     isLoading = false,
-                    sessions = sessions
+                    sessions = it
                 )
             }
         }.onFailure { e ->
+            reduce { copy(isLoading = false) }
             e.record()
         }
     }

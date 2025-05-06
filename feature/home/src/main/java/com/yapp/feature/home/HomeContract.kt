@@ -4,6 +4,7 @@ import com.yapp.model.HomeSessionList
 import com.yapp.model.UpcomingSessionInfo
 
 data class HomeState(
+    val isLoading: Boolean = true,
     val sessionList: HomeSessionList = HomeSessionList(
         sessions = emptyList(),
         upcomingSessionId = null
@@ -24,6 +25,8 @@ sealed interface HomeIntent {
     data object ClickDismissDialog : HomeIntent
     data object EnterHomeScreen : HomeIntent
     data object ClickShowAllSession : HomeIntent
+
+    data object RefreshUpcomingSession : HomeIntent
 
     data class ChangeAttendanceCodeDigits(val code: List<String>) : HomeIntent
     data object ClickRequestAttendance : HomeIntent
