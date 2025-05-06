@@ -27,16 +27,16 @@ import com.yapp.core.designsystem.component.chip.ChipColorType
 import com.yapp.core.designsystem.component.chip.YappChipSmall
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.extension.dashedBorder
+import com.yapp.core.ui.util.formatToKoreanTime
 import com.yapp.feature.home.R
 import com.yapp.model.UpcomingSessionInfo
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 import com.yapp.core.designsystem.R as coreDesignR
 
 @Composable
-internal fun HomeAttendanceContents(
+internal fun HomeAttendanceContent(
     modifier: Modifier = Modifier,
     upcomingSession: UpcomingSessionInfo?,
     onClickAttend: () -> Unit
@@ -83,11 +83,8 @@ private fun UpcomingSessionCard(
     today: LocalDate,
     upcomingDate: String
 ) {
-    val inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-    val outputFormat = DateTimeFormatter.ofPattern("M월 d일")
-
     val parsedDate = remember(upcomingDate) {
-        runCatching { LocalDate.parse(upcomingDate, inputFormat) }.getOrNull()
+        formatSessionDate(upcomingDate)
     }
 
     Column(
@@ -95,7 +92,7 @@ private fun UpcomingSessionCard(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = stringResource(R.string.session_today_text, today.format(outputFormat)),
+            text = stringResource(R.string.session_today_text, today.format(DATE_OUTPUT)),
             style = YappTheme.typography.label2Medium,
             color = YappTheme.colorScheme.labelNormal
         )
@@ -104,7 +101,7 @@ private fun UpcomingSessionCard(
             modifier = Modifier.fillMaxWidth(),
             text = parsedDate?.let {
                 stringResource(R.string.session_scheduled).let { scheduled ->
-                    "${it.format(outputFormat)} $scheduled"
+                    "${it.format(DATE_OUTPUT)} $scheduled"
                 }
             } ?: stringResource(R.string.session_date_error),
             enable = false,
@@ -123,15 +120,9 @@ fun TodaySessionCard(
 
     val isAttended = session.status != null
 
-    val displayTime = remember(session, isAttended) {
-        val timeStr = if (isAttended) session.endTime else session.startTime
-        runCatching {
-            LocalTime.parse(timeStr, DateTimeFormatter.ofPattern("HH:mm:ss"))
-                .format(DateTimeFormatter.ofPattern("a h시 mm분", Locale.KOREAN))
-                .replace("AM", "오전")
-                .replace("PM", "오후")
-        }.getOrNull()
-    } ?: stringResource(R.string.session_date_error)
+    val timeStr = if (isAttended) session.endTime else session.startTime
+    val displayTime = timeStr?.let { formatToKoreanTime(context, it) }
+        ?: stringResource(R.string.session_date_error)
 
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
@@ -214,11 +205,23 @@ fun TodaySessionCard(
     }
 }
 
+private val HH_MM_SS_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss")
+private val HH_MM_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
+
+val DATE_INPUT: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+val DATE_OUTPUT: DateTimeFormatter = DateTimeFormatter.ofPattern("M월 d일")
+
 private fun formatStartTime(context: Context, startTime: String?): String {
+    if (startTime.isNullOrBlank()) {
+        return context.getString(R.string.session_time_missing)
+    }
     return runCatching {
-        val time = LocalTime.parse(startTime, DateTimeFormatter.ofPattern("HH:mm:ss"))
-        time.format(DateTimeFormatter.ofPattern("HH:mm")) + "~"
+        val time = LocalTime.parse(startTime, HH_MM_SS_FORMATTER)
+        "${time.format(HH_MM_FORMATTER)}~"
     }.getOrElse {
         context.getString(R.string.session_time_missing)
     }
 }
+
+private fun formatSessionDate(date: String): LocalDate? =
+    runCatching { LocalDate.parse(date, DATE_INPUT) }.getOrNull()
