@@ -138,7 +138,9 @@ private fun ScheduleAllScreen(
     schedules: ScheduleList,
     onIntent: (ScheduleIntent) -> Unit
 ) {
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+    ) {
         item {
             Spacer(modifier = Modifier.height(20.dp))
             MonthHeader(
