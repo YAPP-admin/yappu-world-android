@@ -42,6 +42,7 @@
     <!--  AttendanceDialog  -->
     <string name="attendance_dialog_title">오늘의 출석을 인증해주세요!</string>
     <string name="attendance_dialog_message">출석 코드를 입력하면 오늘 출석이 완료돼요.</string>
+    <string name="attendance_dialog_code_not_correct">출석코드가 일치하지 않습니다. 다시 확인해주세요</string>
     <string name="attendance_dialog_confirm_button">출석</string>
     <string name="attendance_dialog_cancel_button">닫기</string>
 </resources>
