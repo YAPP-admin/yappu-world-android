@@ -35,7 +35,7 @@ internal fun LoginRoute(
     navigateToSignupPending: () -> Unit,
     navigateToSignupReject: () -> Unit,
     navigateToHome: () -> Unit,
-    modifier: Modifier = Modifier,
+    handleException: (Throwable) -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
@@ -54,9 +54,7 @@ internal fun LoginRoute(
             }
 
             LoginSideEffect.NavigateToHome -> navigateToHome()
-            is LoginSideEffect.ShowToast -> {
-                Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
-            }
+            is LoginSideEffect.HandleException -> handleException(effect.exception)
 
             LoginSideEffect.NavigateToSignUpPending -> navigateToSignupPending()
             LoginSideEffect.NavigateToSignUpReject -> navigateToSignupReject()
@@ -129,11 +127,9 @@ fun LoginScreen(
 @Composable
 private fun LoginScreenPreview() {
     YappTheme {
-        LoginRoute(
-            navigateToSignupName = {},
-            navigateToSignupPending = {},
-            navigateToSignupReject = {},
-            navigateToHome = {}
+        LoginScreen(
+            loginState = LoginState(),
+            onIntent = {},
         )
     }
 }

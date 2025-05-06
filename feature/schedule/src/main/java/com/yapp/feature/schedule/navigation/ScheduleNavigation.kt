@@ -14,8 +14,14 @@ fun NavController.navigateToSchedule(navOptions: NavOptions? = null) {
     navigate(ScheduleRoute, navOptions)
 }
 
-fun NavGraphBuilder.scheduleNavGraph() {
+fun NavGraphBuilder.scheduleNavGraph(
+    handleException: (Throwable) -> Unit,
+    navigateToLogin: () -> Unit,
+) {
     composable<ScheduleRoute> {
-        ScheduleRoute()
+        ScheduleRoute(
+            handleException = handleException,
+            navigateToLogin = navigateToLogin,
+        )
     }
 }

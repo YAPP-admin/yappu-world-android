@@ -36,6 +36,7 @@ fun SettingRoute(
     viewModel: SettingViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
     navigateLogin: () -> Unit,
+    handleException: (Throwable) -> Unit,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
 
@@ -57,6 +58,8 @@ fun SettingRoute(
             is SettingSideEffect.ShowUrlLoadFailToast -> {
                 Toast.makeText(context, context.getString(coreR.string.toast_message_error_loading_url), Toast.LENGTH_SHORT).show()
             }
+
+            is SettingSideEffect.HandleException -> handleException(sideEffect.exception)
         }
     }
 

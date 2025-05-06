@@ -2,10 +2,12 @@ package com.yapp.feature.signup.signup.page.email
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yapp.core.common.android.record
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.AuthRepository
 import com.yapp.domain.runCatchingIgnoreCancelled
+import com.yapp.model.exceptions.AlreadyRegisteredException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -64,11 +66,20 @@ class EmailViewModel @Inject constructor(
                             }
                         }
                         .onFailure {
-                            reduce {
-                                copy(
-                                    isEmailDuplicated = true,
-                                    isEmailChecking = false
-                                )
+                            when (it) {
+                                is AlreadyRegisteredException -> {
+                                    reduce {
+                                        copy(
+                                            isEmailDuplicated = true,
+                                            isEmailChecking = false
+                                        )
+                                    }
+                                }
+
+                                else -> {
+                                    postSideEffect(EmailSideEffect.HandleException(it))
+                                    it.record()
+                                }
                             }
                         }
 

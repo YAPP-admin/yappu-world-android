@@ -10,6 +10,7 @@ import com.yapp.model.Regex
 import com.yapp.model.exceptions.InvalidRequestArgument
 import com.yapp.model.exceptions.RecentSignUpRejectedException
 import com.yapp.model.exceptions.SignUpPendingException
+import com.yapp.model.exceptions.UserNotFoundForEmailException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -120,7 +121,7 @@ class LoginViewModel @Inject constructor(
         if (!email.matches(Regex.email)) {
             reduce {
                 copy(
-                    isLoginEnabled = false,
+                    isLoginEnabled = true,
                     emailErrorDescription = "입력하신 이메일을 확인해주세요.",
                     passwordErrorDescription = null
                 )
@@ -134,7 +135,7 @@ class LoginViewModel @Inject constructor(
                 }
                 .onFailure {
                     val errorMessage = it.message ?: ""
-                    reduce { copy(isLoginEnabled = false) }
+                    reduce { copy(isLoginEnabled = true) }
                     when (it) {
                         is InvalidRequestArgument -> {
                             reduce {
@@ -144,15 +145,21 @@ class LoginViewModel @Inject constructor(
                                 )
                             }
                         }
+                        is UserNotFoundForEmailException -> {
+                            reduce {
+                                copy(
+                                    emailErrorDescription = errorMessage,
+                                )
+                            }
+                        }
                         is SignUpPendingException -> {
-                            // 회원가입 대기 화면으로 이동
                             postSideEffect(LoginSideEffect.NavigateToSignUpPending)
                         }
                         is RecentSignUpRejectedException -> {
                             postSideEffect(LoginSideEffect.NavigateToSignUpReject)
                         }
                         else -> {
-                            postSideEffect(LoginSideEffect.ShowToast(errorMessage))
+                            postSideEffect(LoginSideEffect.HandleException(it))
                         }
                     }
                 }

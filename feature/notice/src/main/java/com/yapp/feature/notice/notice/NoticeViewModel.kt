@@ -7,6 +7,7 @@ import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.PostsRepository
 import com.yapp.model.NoticeType
+import com.yapp.model.exceptions.InvalidTokenException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
@@ -39,7 +40,7 @@ class NoticeViewModel @Inject constructor(
             )
 
             is NoticeIntent.ClickNoticeType -> {
-                loadNoticeTypeList(reduce, intent.noticeType)
+                loadNoticeTypeList(reduce, postSideEffect, intent.noticeType)
             }
 
             NoticeIntent.LoadMoreNoticeItem -> if (state.notices.hasNext) loadNotices(state, reduce)
@@ -75,6 +76,7 @@ class NoticeViewModel @Inject constructor(
 
     private fun loadNoticeTypeList(
         reduce: (NoticeState.() -> NoticeState) -> Unit,
+        postSideEffect: (NoticeSideEffect) -> Unit,
         noticeType: NoticeType,
     ) {
         reduce { copy(noticeType = noticeType, isNoticesLoading = true) }
@@ -83,7 +85,17 @@ class NoticeViewModel @Inject constructor(
             .onEach { noticeList ->
                 reduce { copy(notices = noticeList, isNoticesLoading = false) }
             }
-            .catch { it.record() }
+            .catch {
+                when (it) {
+                    is InvalidTokenException -> {
+                        postSideEffect(NoticeSideEffect.NavigateToLogin)
+                    }
+                    else -> {
+                        postSideEffect(NoticeSideEffect.HandleException(it))
+                        it.record()
+                    }
+                }
+            }
             .launchIn(viewModelScope)
     }
 }

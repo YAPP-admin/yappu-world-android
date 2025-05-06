@@ -29,11 +29,13 @@ import com.yapp.feature.signup.R
 fun EmailPage(
     viewModel: EmailViewModel = hiltViewModel(),
     onEmailChanged: (String, Boolean) -> Unit,
+    handleException: (Throwable) -> Unit,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
     viewModel.store.sideEffects.collectWithLifecycle {
         when (it) {
             is EmailSideEffect.EmailChanged -> onEmailChanged(it.email, it.verified)
+            is EmailSideEffect.HandleException -> handleException(it.exception)
         }
     }
 

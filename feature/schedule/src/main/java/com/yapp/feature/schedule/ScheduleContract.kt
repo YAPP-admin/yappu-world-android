@@ -23,7 +23,8 @@ sealed interface ScheduleIntent {
 }
 
 sealed interface ScheduleSideEffect {
-    data class ShowToast(val message: String): ScheduleSideEffect
+    data class HandleException(val exception: Throwable): ScheduleSideEffect
+    data object NavigateToLogin: ScheduleSideEffect
 }
 
 enum class ScheduleTab(val index: Int, val labelResId: Int) {

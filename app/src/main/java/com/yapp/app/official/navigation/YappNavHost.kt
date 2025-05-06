@@ -23,6 +23,7 @@ import com.yapp.feature.signup.signup.SignUpStep
 fun YappNavHost(
     navigator: NavigatorState,
     modifier: Modifier = Modifier,
+    handleException: (Throwable) -> Unit,
 ) {
     NavHost(
         navController = navigator.navController,
@@ -39,7 +40,8 @@ fun YappNavHost(
                 navigator.navigateHomeScreen(
                     navOptions = clearBackStackNavOptions
                 )
-            }
+            },
+            handleException = handleException,
         )
         signupNavGraph(
             navigateBack = { navigator.popBackStack() },
@@ -47,7 +49,8 @@ fun YappNavHost(
                 navigator.navigateHomeScreen(
                     navOptions = clearBackStackNavOptions
                 )
-            }
+            },
+            handleException = handleException,
         )
         homeNavGraph(
             navigateLogin = {
@@ -65,29 +68,52 @@ fun YappNavHost(
                     navOptions = clearBackStackNavOptions
                 )
             },
-            navigateBack = { navigator.popBackStack() }
+            navigateBack = { navigator.popBackStack() },
+            handleException = handleException,
         )
-        scheduleNavGraph()
+        scheduleNavGraph(
+            navigateToLogin = {
+                navigator.navigateLoginScreen(
+                    navOptions = clearBackStackNavOptions
+                )
+            },
+            handleException = handleException,
+        )
         noticeNavGraph(
             navigateToNoticeDetail = { noticeId ->
                 navigator.navigateToNoticeDetail(noticeId)
             },
-            navigateBack = { navigator.popBackStack() }
+            navigateBack = { navigator.popBackStack() },
+            navigateToLogin = {
+                navigator.navigateLoginScreen(
+                    navOptions = clearBackStackNavOptions
+                )
+            },
+            handleException = handleException,
         )
         noticeDetailNavGraph(
-            navigateBack = { navigator.popBackStack() }
+            navigateBack = { navigator.popBackStack() },
+            navigateLogin = {
+                navigator.navigateLoginScreen(
+                    navOptions = clearBackStackNavOptions
+                )
+            },
+            handleException = handleException,
         )
         profileNavGraph(
             onNavigateToSetting = { navigator.navigateSettingScreen() },
             onNavigateToLogin = { navigator.navigateLoginScreen(clearBackStackNavOptions) },
             onNavigateToPreviousHistory = { navigator.navigateToPreviousHistory() },
-            onNavigateToAttendHistory = { navigator.navigateToAttendance() }
+            onNavigateToAttendHistory = { navigator.navigateToAttendance() },
+            handleException = handleException,
         )
         attendanceHistoryNavGraph(
             navigateToBack = { navigator.popBackStack() }
         )
         previousHistoryNavGraph(
-            navigateToBack = { navigator.popBackStack() }
+            navigateToBack = { navigator.popBackStack() },
+            navigateToLogin = { navigator.navigateLoginScreen(clearBackStackNavOptions) },
+            handleException = handleException,
         )
     }
 }

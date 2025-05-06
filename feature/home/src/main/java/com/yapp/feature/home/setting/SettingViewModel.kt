@@ -2,10 +2,13 @@ package com.yapp.feature.home.setting
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yapp.core.common.android.record
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.AlarmRepository
 import com.yapp.dataapi.OperationsRepository
+import com.yapp.domain.runCatchingIgnoreCancelled
+import com.yapp.model.exceptions.InvalidTokenException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -36,17 +39,42 @@ class SettingViewModel @Inject constructor(
         when (intent) {
             SettingIntent.EnterScreen -> {
                 viewModelScope.launch {
-                    val enabled = alarmRepository.getMasterAlarmStatus()
-                    val appVersion = operationsRepository.getAppVersion()
-                    reduce { copy(isNotificationEnabled = enabled, appVersion = appVersion) }
+                    runCatchingIgnoreCancelled {
+                        val enabled = alarmRepository.getMasterAlarmStatus()
+                        val appVersion = operationsRepository.getAppVersion()
+                        reduce { copy(isNotificationEnabled = enabled, appVersion = appVersion) }
+                    }.onFailure { e ->
+                        when (e) {
+                            is InvalidTokenException -> {
+                                postSideEffect(SettingSideEffect.NavigateToLogin)
+                            }
+                            else -> {
+                                postSideEffect(SettingSideEffect.HandleException(e))
+                                e.record()
+                            }
+                        }
+                    }
+
                     updateUrl()
                 }
             }
 
             is SettingIntent.ClickNotificationSwitch -> {
                 viewModelScope.launch {
-                    val enabled = alarmRepository.updateMasterAlarmStatus()
-                    reduce { copy(isNotificationEnabled = enabled) }
+                    runCatchingIgnoreCancelled {
+                        val enabled = alarmRepository.updateMasterAlarmStatus()
+                        reduce { copy(isNotificationEnabled = enabled) }
+                    }.onFailure { e ->
+                        when (e) {
+                            is InvalidTokenException -> {
+                                postSideEffect(SettingSideEffect.NavigateToLogin)
+                            }
+                            else -> {
+                                postSideEffect(SettingSideEffect.HandleException(e))
+                                e.record()
+                            }
+                        }
+                    }
                 }
             }
 

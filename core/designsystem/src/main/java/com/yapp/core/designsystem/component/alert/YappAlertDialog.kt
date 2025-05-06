@@ -15,13 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import com.yapp.core.designsystem.component.button.outlined.YappOutlinedSecondaryButtonXLarge
 import com.yapp.core.designsystem.component.button.solid.YappSolidPrimaryButtonXLarge
 import com.yapp.core.designsystem.theme.YappTheme
 
 @Composable
-fun YappAlertDialog(
+fun YappAlertShortDialog(
     onDismissRequest: () -> Unit,
     title: String? = null,
     body: String? = null,
@@ -90,11 +89,94 @@ fun YappAlertDialog(
     }
 }
 
+@Composable
+fun YappAlertLongDialog(
+    onDismissRequest: () -> Unit,
+    title: String? = null,
+    body: String? = null,
+    actionButtonText: String? = null,
+    recommendActionButtonText: String? = null,
+    onActionButtonClick: (() -> Unit)? = null,
+    onRecommendActionButtonClick: (() -> Unit)? = null,
+) {
+    Dialog(
+        onDismissRequest = onDismissRequest,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    color = YappTheme.colorScheme.backgroundNormalNormal,
+                    shape = RoundedCornerShape(20.dp)
+                )
+                .padding(16.dp),
+        ) {
+            title?.let {
+                Text(
+                    text = it,
+                    style = YappTheme.typography.headline1Bold,
+                    color = YappTheme.colorScheme.labelNormal,
+                )
+            }
+
+            if (title != null && body != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
+            body?.let {
+                Text(
+                    text = it,
+                    style = YappTheme.typography.label1ReadingRegular,
+                    color = YappTheme.colorScheme.labelNeutral,
+                )
+            }
+
+            if (actionButtonText != null || recommendActionButtonText != null) {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                recommendActionButtonText?.let {
+                    YappSolidPrimaryButtonXLarge(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = it,
+                        onClick = onRecommendActionButtonClick ?: {}
+                    )
+                }
+
+                actionButtonText?.let {
+                    YappOutlinedSecondaryButtonXLarge(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = it,
+                        onClick = onActionButtonClick ?: {}
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Preview
 @Composable
-private fun YappAlertDialogPreview() {
+private fun YappAlertShortDialogPreview() {
     YappTheme {
-        YappAlertDialog(
+        YappAlertShortDialog(
+            title = "Title",
+            body = "body",
+            actionButtonText = "Action",
+            recommendActionButtonText = "Recom",
+            onDismissRequest = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun YappAlertLongDialogPreview() {
+    YappTheme {
+        YappAlertLongDialog(
             title = "Title",
             body = "body",
             actionButtonText = "Action",

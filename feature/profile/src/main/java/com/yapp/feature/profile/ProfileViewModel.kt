@@ -42,38 +42,47 @@ internal class ProfileViewModel @Inject constructor(
                     reduce = reduce
                 )
             }
+
             ProfileIntent.CancelWithdraw -> {
                 reduce {
                     copy(showWithDrawDialog = state.showWithDrawDialog.not())
                 }
             }
+
             ProfileIntent.ClickUsage -> {
                 sideEffect(ProfileSideEffect.NavigateToUsage)
             }
+
             ProfileIntent.ClickLogout -> {
                 reduce {
                     copy(showLogoutDialog = state.showLogoutDialog.not())
                 }
             }
+
             ProfileIntent.ClickSettings -> {
                 sideEffect(ProfileSideEffect.NavigateToSetting)
             }
+
             ProfileIntent.ClickWithdraw -> {
                 reduce {
                     copy(showWithDrawDialog = state.showWithDrawDialog.not())
                 }
             }
+
             ProfileIntent.ClickAttendHistory -> {
                 sideEffect(ProfileSideEffect.NavigateToAttendHistory)
             }
+
             ProfileIntent.ClickPreviousHistory -> {
                 sideEffect(ProfileSideEffect.NavigateToPreviousHistory)
             }
+
             ProfileIntent.CancelLogout, ProfileIntent.DismissLogout -> {
                 reduce {
                     copy(showLogoutDialog = state.showLogoutDialog.not())
                 }
             }
+
             ProfileIntent.LaunchedLogout -> {
                 viewModelScope.launch {
                     logoutUseCase().onSuccess {
@@ -81,11 +90,16 @@ internal class ProfileViewModel @Inject constructor(
                     }
                 }
             }
+
             ProfileIntent.LaunchedWithdraw -> {
                 viewModelScope.launch {
-                    userDeleteAccountUseCase().onSuccess {
-                        sideEffect(ProfileSideEffect.NavigateToLogin)
-                    }
+                    userDeleteAccountUseCase()
+                        .onSuccess {
+                            sideEffect(ProfileSideEffect.NavigateToLogin)
+                        }
+                        .onFailure {
+                            sideEffect(ProfileSideEffect.HandleException(it))
+                        }
                 }
             }
         }
@@ -98,9 +112,15 @@ internal class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             getUserProfileUseCase.invoke()
                 .catch { exception ->
-                    when(exception) {
-                        is UserNotFoundForEmailException, is InvalidTokenException -> postSideEffect(ProfileSideEffect.NavigateToLogin)
-                        else -> exception.record()
+                    when (exception) {
+                        is InvalidTokenException -> postSideEffect(
+                            ProfileSideEffect.NavigateToLogin
+                        )
+
+                        else -> {
+                            postSideEffect(ProfileSideEffect.HandleException(exception))
+                            exception.record()
+                        }
                     }
                 }.collectLatest { result ->
                     reduce {

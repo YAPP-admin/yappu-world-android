@@ -15,6 +15,8 @@ data class PreviousHistoryState(
 
 sealed interface PreviousHistorySideEffect {
     data object Finish : PreviousHistorySideEffect
+    data object NavigateLogin : PreviousHistorySideEffect
+    data class HandleException(val exception: Throwable) : PreviousHistorySideEffect
 }
 
 sealed interface PreviousHistoryIntent {

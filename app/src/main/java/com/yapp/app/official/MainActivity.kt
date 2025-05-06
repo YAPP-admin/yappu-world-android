@@ -17,9 +17,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.yapp.app.official.ui.YappApp
+import com.yapp.app.YappApp
 import com.yapp.app.official.ui.rememberNavigator
-import com.yapp.core.designsystem.component.alert.YappAlertDialog
+import com.yapp.core.designsystem.component.alert.YappAlertShortDialog
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.dataapi.OperationsRepository
 import com.yapp.domain.CheckLoginStatusUseCase
@@ -43,11 +43,12 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var checkLoginStatusUseCase: CheckLoginStatusUseCase
 
-    private var showForceUpdateDialog by mutableStateOf(false)
-
     private val scope = MainScope()
 
+    private var showForceUpdateDialog by mutableStateOf(false)
+
     private var showSplashScreen by mutableStateOf(true)
+
 
     private val requestPermissionLauncher = registerForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
@@ -95,7 +96,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun ForceUpdateDialog() {
-        YappAlertDialog(
+        YappAlertShortDialog(
             onDismissRequest = {},
             title = stringResource(R.string.main_activity_force_update_dialog_title),
             body = stringResource(R.string.main_activity_force_update_dialog_body),

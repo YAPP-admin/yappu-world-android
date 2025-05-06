@@ -32,4 +32,5 @@ sealed interface ProfileSideEffect {
     data object NavigateToPreviousHistory : ProfileSideEffect
     data object NavigateToLogin : ProfileSideEffect
     data object NavigateToUsage : ProfileSideEffect
+    data class HandleException(val exception: Throwable) : ProfileSideEffect
 }

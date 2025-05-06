@@ -29,19 +29,25 @@ fun NavController.navigateToNoticeDetail(noticeId: String, navOptions: NavOption
 fun NavGraphBuilder.noticeNavGraph(
     navigateToNoticeDetail: (String) -> Unit,
     navigateBack: () -> Unit,
+    handleException: (Throwable) -> Unit,
+    navigateToLogin: () -> Unit,
 ) {
     composable<NoticeRoute> {
         NoticeRoute(
             navigateToNoticeDetail = { noticeId ->
                 navigateToNoticeDetail(noticeId)
             },
-            navigateBack = navigateBack
+            navigateBack = navigateBack,
+            handleException = handleException,
+            navigateToLogin = navigateToLogin,
         )
     }
 }
 
 fun NavGraphBuilder.noticeDetailNavGraph(
     navigateBack: () -> Unit,
+    navigateLogin: () -> Unit,
+    handleException: (Throwable) -> Unit,
 ) {
     composable<NoticeDetailRoute>(
         deepLinks = listOf(
@@ -51,7 +57,11 @@ fun NavGraphBuilder.noticeDetailNavGraph(
         )
     ) { backStackEntry ->
         val noticeId = backStackEntry.toRoute<NoticeDetailRoute>().id
-        NoticeDetailRoute(noticeId = noticeId, navigateBack = navigateBack)
+        NoticeDetailRoute(
+            noticeId = noticeId, navigateBack = navigateBack,
+            navigateLogin = navigateLogin,
+            handleException = handleException,
+        )
     }
 }
 
