@@ -85,7 +85,8 @@ internal fun AttendanceDialog(
                     PinCodeInput(
                         values = code,
                         onValueChange = { index, new ->
-                            onCodeChange(code.toMutableList().apply { this[index] = new })
+                            val newCode = code.mapIndexed { i, v -> if (i == index) new else v }
+                            onCodeChange(newCode)
                         },
                         focusRequesters = focusRequesters,
                         isAllValuesEntered = code.all { it.isNotEmpty() },
