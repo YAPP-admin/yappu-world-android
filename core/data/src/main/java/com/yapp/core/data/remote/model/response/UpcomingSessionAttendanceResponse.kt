@@ -1,6 +1,5 @@
 package com.yapp.core.data.remote.model.response
 
-import com.yapp.core.data.remote.model.response.ScheduleResponse.Companion.toAttendanceStatus
 import com.yapp.model.UpcomingSessionInfo
 import kotlinx.serialization.Serializable
 import kotlin.math.max
