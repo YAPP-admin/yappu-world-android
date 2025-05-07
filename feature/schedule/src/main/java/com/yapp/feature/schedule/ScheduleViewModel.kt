@@ -104,7 +104,7 @@ class ScheduleViewModel @Inject constructor(
     ) = viewModelScope.launch {
         reduce { copy(isLoading = true) }
         runCatchingIgnoreCancelled {
-            scheduleRepository.getUpcomingSessions()
+            scheduleRepository.getUpcomingSession()
         }.onSuccess {
             reduce { copy(isLoading = false, upcomingSessionInfo = it) }
         }.onFailure { e ->

@@ -11,7 +11,7 @@ interface ScheduleApi {
     suspend fun getSessions(): SessionResponse
 
     @GET("v1/sessions/upcoming")
-    suspend fun getUpcomingSessions(): UpcomingSessionAttendanceResponse
+    suspend fun getUpcomingSession(): UpcomingSessionAttendanceResponse
 
     @GET("v1/schedules")
     suspend fun getSchedules(

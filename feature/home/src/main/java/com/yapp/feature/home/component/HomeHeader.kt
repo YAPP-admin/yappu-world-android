@@ -40,7 +40,7 @@ import com.yapp.core.ui.component.SessionChip
 import com.yapp.core.ui.util.formatTimeRange
 import com.yapp.feature.home.R
 import com.yapp.model.HomeSession
-import com.yapp.model.ScheduleProgressPhase
+import com.yapp.model.SessionProgressPhase
 import kotlinx.coroutines.launch
 import com.yapp.core.designsystem.R as coreDesignR
 
@@ -165,12 +165,12 @@ private fun SessionItem(
     startTime: String?,
     endTime: String?,
     dayOfWeek: String,
-    progressPhase: ScheduleProgressPhase,
+    progressPhase: SessionProgressPhase,
     onClickSessionItem: (String) -> Unit
 ) {
     val context = LocalContext.current
 
-    val (clickableModifier, backgroundColor) = if (progressPhase != ScheduleProgressPhase.DONE) {
+    val (clickableModifier, backgroundColor) = if (progressPhase != SessionProgressPhase.DONE) {
         Modifier.yappClickable { onClickSessionItem(id) } to YappTheme.colorScheme.backgroundNormalNormal
     } else {
         Modifier to YappTheme.colorScheme.backgroundNormalNormal.copy(alpha = 0.6f)
@@ -246,7 +246,7 @@ private fun HomeStickHeaderPreview() {
                 startTime = "오후 6시",
                 endTime = "오후 8시",
                 dayOfWeek = "금",
-                progressPhase = ScheduleProgressPhase.TODAY,
+                progressPhase = SessionProgressPhase.TODAY,
                 attendanceStatus = null,
                 relativeDays = 0
             )

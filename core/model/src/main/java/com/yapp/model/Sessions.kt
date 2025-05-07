@@ -14,6 +14,13 @@ data class HomeSession(
     val relativeDays: Int,
     val startTime: String?,
     val endTime: String?,
-    val progressPhase: ScheduleProgressPhase,
+    val progressPhase: SessionProgressPhase,
     val attendanceStatus: AttendanceStatus?
 )
+
+enum class SessionProgressPhase(val title: String) {
+    DONE("완료"),
+    TODAY("당일"),
+    UPCOMING("임박"),
+    PENDING("예정");
+}
