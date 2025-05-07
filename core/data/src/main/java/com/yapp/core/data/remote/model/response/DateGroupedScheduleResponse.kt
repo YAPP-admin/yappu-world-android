@@ -62,19 +62,17 @@ data class ScheduleResponse(
         scheduleProgressPhase = scheduleProgressPhase.toScheduleProgressPhase(),
         attendanceStatus = attendanceStatus.toAttendanceStatus(),
     )
-
-    companion object {
-        fun String.toScheduleType() =
-            ScheduleType.entries.firstOrNull { it.name == this } ?: ScheduleType.ETC
-
-        fun String?.toSessionType() =
-            SessionType.entries.firstOrNull { it.name == this }
-
-        fun String?.toScheduleProgressPhase() =
-            ScheduleProgressPhase.entries.firstOrNull { it.name == this }
-                ?: ScheduleProgressPhase.PENDING
-
-        fun String?.toAttendanceStatus() =
-            AttendanceStatus.entries.firstOrNull { it.label == this }
-    }
 }
+
+fun String.toScheduleType() =
+    ScheduleType.entries.firstOrNull { it.name == this } ?: ScheduleType.ETC
+
+fun String?.toSessionType() =
+    SessionType.entries.firstOrNull { it.name == this }
+
+fun String?.toScheduleProgressPhase() =
+    ScheduleProgressPhase.entries.firstOrNull { it.name == this }
+        ?: ScheduleProgressPhase.PENDING
+
+fun String?.toAttendanceStatus() =
+    AttendanceStatus.entries.firstOrNull { it.label == this }
