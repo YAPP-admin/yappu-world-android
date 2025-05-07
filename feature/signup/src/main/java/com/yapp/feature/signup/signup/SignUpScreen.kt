@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -97,7 +98,9 @@ fun SignUpScreen(
         onIntent(SignUpIntent.EnterScreen)
     }
 
-    YappBackground {
+    YappBackground(
+        contentWindowInsets = WindowInsets.systemBars,
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
