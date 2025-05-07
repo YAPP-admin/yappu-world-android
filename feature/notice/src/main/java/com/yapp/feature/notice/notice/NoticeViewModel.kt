@@ -10,10 +10,8 @@ import com.yapp.model.NoticeType
 import com.yapp.model.exceptions.InvalidTokenException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -64,7 +62,7 @@ class NoticeViewModel @Inject constructor(
             .onEach { noticeList ->
                 reduce {
                     copy(
-                        notices = noticeList.copy(notices = noticeList.notices + state.notices.notices),
+                        notices = noticeList.copy(notices = state.notices.notices + noticeList.notices),
                         isNoticesLoading = false
                     )
                 }
