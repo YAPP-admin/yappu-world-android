@@ -98,9 +98,7 @@ fun SignUpScreen(
         onIntent(SignUpIntent.EnterScreen)
     }
 
-    YappBackground(
-        contentWindowInsets = WindowInsets.systemBars,
-    ) {
+    YappBackground {
         Column(
             modifier = Modifier
                 .fillMaxSize()

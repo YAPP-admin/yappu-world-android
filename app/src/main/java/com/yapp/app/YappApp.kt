@@ -5,6 +5,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -66,7 +68,11 @@ fun YappApp(
     ) { padding ->
         YappNavHost(
             navigator = navigator,
-            modifier = Modifier.padding(padding),
+            modifier = Modifier
+                .padding(padding)
+                .consumeWindowInsets(
+                    WindowInsets(0.dp).takeIf { !navigator.shouldShowBottomBar } ?: WindowInsets.navigationBars
+                ),
             handleException = { showCommonErrorDialog = true }
         )
     }
@@ -81,7 +87,11 @@ fun YappApp(
                         uriHandler.safeOpenUri(it)
                     },
                     onError = {
-                        Toast.makeText(context, context.getString(R.string.toast_message_error_loading_url), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.toast_message_error_loading_url),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 )
             }
