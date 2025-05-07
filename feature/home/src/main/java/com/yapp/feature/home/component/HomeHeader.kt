@@ -123,6 +123,7 @@ internal fun HomeHeader(
                     id = it.id,
                     title = it.name,
                     date = it.date,
+                    relativeDays = it.relativeDays,
                     place = it.place,
                     startTime = it.startTime,
                     endTime = it.endTime,
@@ -161,6 +162,7 @@ private fun SessionItem(
     id: String,
     title: String,
     date: String,
+    relativeDays: Int,
     place: String,
     startTime: String?,
     endTime: String?,
@@ -192,7 +194,12 @@ private fun SessionItem(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            SessionChip(progressPhase = progressPhase)
+            when (progressPhase) {
+                SessionProgressPhase.PENDING -> {
+                    if (relativeDays < 0) SessionChip(progressPhase = progressPhase)
+                }
+                else -> SessionChip(progressPhase = progressPhase)
+            }
             Text(title, style = YappTheme.typography.body1NormalMedium)
         }
         Text("$date ($dayOfWeek)", style = YappTheme.typography.caption1Bold)
