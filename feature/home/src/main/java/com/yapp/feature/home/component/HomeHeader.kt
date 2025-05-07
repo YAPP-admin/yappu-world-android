@@ -123,12 +123,12 @@ internal fun HomeHeader(
                     id = it.id,
                     title = it.name,
                     date = it.date,
-                    relativeDays = it.relativeDays,
                     place = it.place,
                     startTime = it.startTime,
                     endTime = it.endTime,
                     dayOfWeek = it.dayOfWeek,
                     progressPhase = it.progressPhase,
+                    showSessionChip = it.showSessionChip,
                     onClickSessionItem = {  }
                 )
             }
@@ -162,12 +162,12 @@ private fun SessionItem(
     id: String,
     title: String,
     date: String,
-    relativeDays: Int,
     place: String,
     startTime: String?,
     endTime: String?,
     dayOfWeek: String,
     progressPhase: SessionProgressPhase,
+    showSessionChip: Boolean,
     onClickSessionItem: (String) -> Unit
 ) {
     val context = LocalContext.current
@@ -194,12 +194,7 @@ private fun SessionItem(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            when (progressPhase) {
-                SessionProgressPhase.PENDING -> {
-                    if (relativeDays < 0) SessionChip(progressPhase = progressPhase)
-                }
-                else -> SessionChip(progressPhase = progressPhase)
-            }
+            if (showSessionChip) SessionChip(progressPhase = progressPhase)
             Text(title, style = YappTheme.typography.body1NormalMedium)
         }
         Text("$date ($dayOfWeek)", style = YappTheme.typography.caption1Bold)
