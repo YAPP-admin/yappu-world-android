@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.onConsumedWindowInsetsChanged
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -21,7 +21,7 @@ import com.yapp.core.designsystem.theme.YappTheme
 fun YappBackground(
     modifier: Modifier = Modifier,
     color: Color = YappTheme.colorScheme.backgroundElevatedNormal,
-    contentWindowInsets: WindowInsets = WindowInsets.systemBars,
+    contentWindowInsets: WindowInsets = WindowInsets.statusBars,
     content: @Composable () -> Unit,
 ) {
     val safeInsets = remember(contentWindowInsets) {
@@ -35,7 +35,6 @@ fun YappBackground(
         modifier = modifier
             .fillMaxSize()
             .onConsumedWindowInsetsChanged { consumedWindowInsets ->
-                // Exclude currently consumed window insets from user provided contentWindowInsets
                 safeInsets.insets = contentWindowInsets.exclude(consumedWindowInsets)
             }
             .padding(safeInsets.insets.asPaddingValues()),
