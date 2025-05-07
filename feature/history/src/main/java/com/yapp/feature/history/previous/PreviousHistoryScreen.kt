@@ -89,7 +89,10 @@ private fun PreviousHistoryScreen(
                         generation = item.generation,
                         slot = {
                             if (item.showSlot) {
-                                Text("${item.activityStartDate} - ${item.activityEndDate}")
+                                Text(
+                                    text = "${item.activityStartDate} - ${item.activityEndDate}",
+                                    style = YappTheme.typography.label2Regular.copy(color = YappTheme.colorScheme.lineNormalStrong)
+                                )
                             }
                         }
                     )
