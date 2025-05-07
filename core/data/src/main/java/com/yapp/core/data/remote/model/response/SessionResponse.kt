@@ -3,11 +3,13 @@ package com.yapp.core.data.remote.model.response
 import com.yapp.core.data.remote.model.response.ScheduleResponse.Companion.toAttendanceStatus
 import com.yapp.core.data.remote.model.response.ScheduleResponse.Companion.toScheduleProgressPhase
 import com.yapp.core.data.remote.model.response.ScheduleResponse.Companion.toSessionType
+import com.yapp.core.data.remote.model.response.SessionResponse.Companion.toSessionProgressPhase
 import com.yapp.model.DateGroupedSchedule
 import com.yapp.model.HomeSession
 import com.yapp.model.HomeSessionList
 import com.yapp.model.ScheduleInfo
 import com.yapp.model.ScheduleType
+import com.yapp.model.SessionProgressPhase
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -31,6 +33,12 @@ data class SessionResponse(
         val progressPhase: String,
         val attendanceStatus: String?
     )
+
+    companion object {
+        fun String.toSessionProgressPhase() =
+            SessionProgressPhase.entries.firstOrNull { it.name == this }
+                ?: SessionProgressPhase.PENDING
+    }
 }
 
 fun List<SessionResponse.Session>.toDateGroupedScheduleList(): List<DateGroupedSchedule> {
@@ -74,7 +82,7 @@ fun SessionResponse.Session.toHomeSessionModel(): HomeSession {
         relativeDays = relativeDays,
         startTime = time,
         endTime = endTime.orEmpty(),
-        progressPhase = progressPhase.toScheduleProgressPhase(),
+        progressPhase = progressPhase.toSessionProgressPhase(),
         attendanceStatus = attendanceStatus?.toAttendanceStatus()
     )
 }

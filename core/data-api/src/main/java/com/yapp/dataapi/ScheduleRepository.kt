@@ -9,7 +9,7 @@ interface ScheduleRepository {
 
     suspend fun getDateGroupedSessions(): ScheduleList
 
-    suspend fun getUpcomingSessions(): UpcomingSessionInfo
+    suspend fun getUpcomingSession(): UpcomingSessionInfo
 
     suspend fun getSchedules(year: Int, month: Int): ScheduleList
 

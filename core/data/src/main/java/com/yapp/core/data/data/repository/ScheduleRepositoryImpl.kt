@@ -31,8 +31,8 @@ internal class ScheduleRepositoryImpl @Inject constructor(
             .let { ScheduleList(it.toDateGroupedScheduleList()) }
     }
 
-    override suspend fun getUpcomingSessions(): UpcomingSessionInfo {
-        return upcomingSessionCache ?: scheduleApi.getUpcomingSessions()
+    override suspend fun getUpcomingSession(): UpcomingSessionInfo {
+        return upcomingSessionCache ?: scheduleApi.getUpcomingSession()
             .toUpcomingSessionInfoModel()
             .also { upcomingSessionCache = it }
     }
@@ -55,7 +55,7 @@ internal class ScheduleRepositoryImpl @Inject constructor(
     }
 
     override suspend fun refreshUpcomingSessions(): UpcomingSessionInfo {
-        return scheduleApi.getUpcomingSessions()
+        return scheduleApi.getUpcomingSession()
             .toUpcomingSessionInfoModel()
             .also { upcomingSessionCache = it }
     }
