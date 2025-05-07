@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -180,10 +181,8 @@ private fun SessionItem(
 
     Column(
         modifier = modifier
-            .background(
-                color = backgroundColor,
-                shape = RoundedCornerShape(10)
-            )
+            .clip(RoundedCornerShape(10))
+            .background(color = backgroundColor,)
             .width(272.dp)
             .heightIn(min = 120.dp)
             .then(clickableModifier)
