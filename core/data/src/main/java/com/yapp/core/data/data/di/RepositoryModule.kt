@@ -1,14 +1,18 @@
 package com.yapp.core.data.data.di
 
 import com.yapp.core.data.data.repository.AlarmRepositoryImpl
+import com.yapp.core.data.data.repository.AttendanceRepositoryImpl
 import com.yapp.core.data.data.repository.AuthRepositoryImpl
 import com.yapp.core.data.data.repository.OperationsRepositoryImpl
 import com.yapp.core.data.data.repository.PostsRepositoryImpl
+import com.yapp.core.data.data.repository.ScheduleRepositoryImpl
 import com.yapp.core.data.data.repository.UserRepositoryImpl
 import com.yapp.dataapi.AlarmRepository
+import com.yapp.dataapi.AttendanceRepository
 import com.yapp.dataapi.AuthRepository
 import com.yapp.dataapi.OperationsRepository
 import com.yapp.dataapi.PostsRepository
+import com.yapp.dataapi.ScheduleRepository
 import com.yapp.dataapi.UserRepository
 import dagger.Binds
 import dagger.Module
@@ -43,4 +47,14 @@ internal abstract class RepositoryModule {
     abstract fun bindPostsRepositoryImpl(
         repositoryImpl: PostsRepositoryImpl,
     ): PostsRepository
+
+    @Binds
+    abstract fun bindsAttendanceRepositoryImpl(
+        repositoryImpl: AttendanceRepositoryImpl
+    ): AttendanceRepository
+
+    @Binds
+    abstract fun bindsSessionRepositoryImpl(
+        repositoryImpl: ScheduleRepositoryImpl
+    ): ScheduleRepository
 }

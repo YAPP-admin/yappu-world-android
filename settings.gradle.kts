@@ -44,5 +44,7 @@ include(
     ":feature:login",
     ":feature:schedule",
     ":feature:profile",
+    ":feature:history",
+    ":feature:setting"
 )
 include(":core:common-android")

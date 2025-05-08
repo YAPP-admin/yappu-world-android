@@ -1,36 +1,44 @@
 package com.yapp.feature.home
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.yapp.core.designsystem.component.header.YappDefaultHeader
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
-import com.yapp.feature.home.component.NoticeSection
-import com.yapp.feature.home.component.ProfileLoadingSection
-import com.yapp.feature.home.component.ProfileSection
+import com.yapp.feature.home.component.HomeAttendanceContent
+import com.yapp.feature.home.component.HomeAttendanceNotice
+import com.yapp.feature.home.component.HomeHeader
+import com.yapp.feature.home.dialog.AttendanceDialog
 
 @Composable
 internal fun HomeRoute(
-    navigateToNotice: () -> Unit,
-    navigateToSetting: () -> Unit,
     navigateToLogin: () -> Unit,
-    navigateToNoticeDetail: (String) -> Unit,
+    navigateToSchedule: () -> Unit,
+    handleException: (Throwable) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
@@ -41,14 +49,10 @@ internal fun HomeRoute(
     val context = LocalContext.current
     viewModel.store.sideEffects.collectWithLifecycle { effect ->
         when (effect) {
-            HomeSideEffect.NavigateToNotice -> navigateToNotice()
-            HomeSideEffect.NavigateToSetting -> navigateToSetting()
-            is HomeSideEffect.ShowToast -> {
-                Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
-            }
-
+            HomeSideEffect.NavigateToSchedule -> navigateToSchedule()
+            is HomeSideEffect.ShowToast -> Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
             HomeSideEffect.NavigateToLogin -> navigateToLogin()
-            is HomeSideEffect.NavigateToNoticeDetail -> navigateToNoticeDetail(effect.noticeId)
+            is HomeSideEffect.HandleException -> handleException(effect.exception)
         }
     }
 
@@ -58,49 +62,84 @@ internal fun HomeRoute(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     homeState: HomeState,
     onIntent: (HomeIntent) -> Unit = {},
 ) {
+    val colorSteps = arrayOf(
+        0.2f to YappTheme.colorScheme.primaryNormal,
+        1f to YappTheme.colorScheme.secondaryNormal
+    )
+
+    val pullToRefreshState = rememberPullToRefreshState()
+
     YappBackground(
-        color = YappTheme.colorScheme.backgroundNormalAlternative
+        color = YappTheme.colorScheme.staticWhite,
+        contentWindowInsets = WindowInsets.navigationBars,
     ) {
-        val scrollState = rememberScrollState()
-        Column {
-            YappDefaultHeader(
-                onClickRightIcon = { onIntent(HomeIntent.ClickSettingButton) }
-            )
+        PullToRefreshBox(
+            isRefreshing = homeState.isLoading,
+            state = pullToRefreshState,
+            onRefresh = {
+                onIntent(HomeIntent.RefreshUpcomingSession)
+            },
+            indicator = {
+                Indicator(
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    isRefreshing = homeState.isLoading,
+                    state = pullToRefreshState,
+                    containerColor = YappTheme.colorScheme.staticWhite
+                )
+            }
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(scrollState)
-                    .padding(horizontal = 20.dp, vertical = 16.dp)
+                    .verticalScroll(rememberScrollState())
             ) {
-                if (homeState.isLoading) {
-                    ProfileLoadingSection(homeState.name)
-                    Spacer(Modifier.height(8.dp))
-                    NoticeSection(
-                        null,
-                        onMoreButtonClick = { onIntent(HomeIntent.ClickMoreButton) },
-                        onNoticeDetailClick = { onIntent(HomeIntent.ClickNoticeItem(it)) }
-                    )
-                } else {
-                    ProfileSection(
-                        name = homeState.name,
-                        activityStatus = homeState.role,
-                        generation = (homeState.activityUnits.firstOrNull()?.generation) ?: 25,
-                        position = (homeState.activityUnits.firstOrNull()?.position) ?: "Android"
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    NoticeSection(
-                        noticeInfo = homeState.noticeInfo,
-                        onMoreButtonClick = { onIntent(HomeIntent.ClickMoreButton) },
-                        onNoticeDetailClick = { onIntent(HomeIntent.ClickNoticeItem(it)) }
-                    )
-                }
+                HomeHeader(
+                    modifier = Modifier
+                        .background(brush = Brush.horizontalGradient(colorStops = colorSteps))
+                        .padding(WindowInsets.statusBars.asPaddingValues())
+                        .padding(top = 18.dp),
+                    sessions = homeState.sessionList.sessions,
+                    upcomingSessionId = homeState.sessionList.upcomingSessionId,
+                    onClickShowAll = { onIntent(HomeIntent.ClickShowAllSession) },
+                )
+
+                HomeAttendanceNotice(
+                    upcomingSession = homeState.upcomingSession
+                )
+
+                HomeAttendanceContent(
+                    upcomingSession = homeState.upcomingSession,
+                    onClickAttend = { onIntent(HomeIntent.ClickRequestAttendCode) }
+                )
             }
         }
+    }
+
+    if (homeState.showAttendCodeBottomSheet) {
+        AttendanceDialog(
+            code = homeState.attendanceCodeDigits,
+            inputCompleteButtonEnabled = homeState.inputCompleteButtonEnabled,
+            isCodeInputTextError = homeState.showAttendanceCodeError,
+            onDismissRequest = {
+                onIntent(HomeIntent.ClickDismissDialog)
+            },
+            onCodeChange = { code ->
+                onIntent(
+                    HomeIntent.ChangeAttendanceCodeDigits(code)
+                )
+            },
+            clickAttendanceButton = {
+                onIntent(
+                    HomeIntent.ClickRequestAttendance
+                )
+            }
+        )
     }
 }
 
@@ -108,11 +147,8 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenPreview() {
     YappTheme {
-        HomeRoute(
-            navigateToLogin = {},
-            navigateToNotice = {},
-            navigateToSetting = {},
-            navigateToNoticeDetail = {}
+        HomeScreen(
+            homeState = HomeState()
         )
     }
 }

@@ -39,4 +39,5 @@ sealed interface EmailIntent {
 
 sealed interface EmailSideEffect {
     data class EmailChanged(val email: String, val verified: Boolean = false) : EmailSideEffect
+    data class HandleException(val exception: Throwable) : EmailSideEffect
 }

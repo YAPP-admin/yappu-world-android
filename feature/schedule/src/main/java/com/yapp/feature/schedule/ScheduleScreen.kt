@@ -1,5 +1,6 @@
 package com.yapp.feature.schedule
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,13 +13,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -26,117 +30,172 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.yapp.core.designsystem.component.chip.ChipColorType
+import com.yapp.core.designsystem.component.chip.YappChipSmall
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.component.AttendanceStatus
-import com.yapp.feature.schedule.component.AssignmentItem
+import com.yapp.core.ui.component.YappBackground
+import com.yapp.core.ui.extension.collectWithLifecycle
+import com.yapp.feature.schedule.component.DateGroupedScheduleItem
 import com.yapp.feature.schedule.component.ScheduleTabRow
-import com.yapp.feature.schedule.component.SessionItem
-import com.yapp.feature.schedule.component.TodaySessionSection
+import com.yapp.feature.schedule.component.UpcomingSessionSection
+import com.yapp.model.ScheduleList
+import com.yapp.core.ui.R as coreR
+import com.yapp.model.UpcomingSessionInfo
 
 @Composable
 internal fun ScheduleRoute(
-
+    viewModel: ScheduleViewModel = hiltViewModel(),
+    handleException: (Throwable) -> Unit,
+    navigateToLogin: () -> Unit,
 ) {
-    ScheduleScreen()
+    LaunchedEffect(Unit) {
+        viewModel.store.onIntent(ScheduleIntent.EnterScheduleScreen)
+    }
+
+    val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
+    viewModel.store.sideEffects.collectWithLifecycle { effect ->
+        when (effect) {
+            is ScheduleSideEffect.HandleException -> handleException(effect.exception)
+            ScheduleSideEffect.NavigateToLogin -> navigateToLogin()
+        }
+    }
+
+    ScheduleScreen(
+        scheduleState = uiState,
+        onIntent = { viewModel.store.onIntent(it) }
+    )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ScheduleScreen(
-
+    scheduleState: ScheduleState,
+    onIntent: (ScheduleIntent) -> Unit = {},
 ) {
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
+    val pullToRefreshState = rememberPullToRefreshState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(YappTheme.colorScheme.staticWhite)
+    YappBackground(
+        color = YappTheme.colorScheme.staticWhite,
     ) {
-        ScheduleHeader()
-        Spacer(modifier = Modifier.height(6.dp))
+        PullToRefreshBox(
+            isRefreshing = scheduleState.isLoading,
+            state = pullToRefreshState,
+            onRefresh = { onIntent(ScheduleIntent.RefreshTab(scheduleState.selectedTab)) },
+            indicator = {
+                Indicator(
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    isRefreshing = scheduleState.isLoading,
+                    state = pullToRefreshState,
+                    containerColor = YappTheme.colorScheme.staticWhite
+                )
+            },
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                ScheduleHeader()
+                Spacer(modifier = Modifier.height(6.dp))
 
-        ScheduleTabRow(
-            selectedTabIndex = selectedTabIndex,
-            tabList = listOf(
-                stringResource(id = R.string.schedule_tab_all),
-                stringResource(id = R.string.schedule_tab_session)
-            ),
-            onTabSelected = { selectedTabIndex = it }
-        )
+                ScheduleTabRow(
+                    selectedTab = scheduleState.selectedTab,
+                    tabList = ScheduleTab.entries,
+                    onTabSelected = {
+                        onIntent(ScheduleIntent.SelectTab(it))
+                    }
+                )
 
-        when (selectedTabIndex) {
-            0 -> ScheduleAllScreen()
-            1 -> ScheduleSessionScreen()
+                when (scheduleState.selectedTab) {
+                    ScheduleTab.ALL -> {
+                        ScheduleAllScreen(
+                            selectedYear = scheduleState.selectedYear,
+                            selectedMonth = scheduleState.selectedMonth,
+                            schedules = scheduleState.schedules[
+                                Pair(scheduleState.selectedYear, scheduleState.selectedMonth)
+                            ],
+                            onIntent = onIntent
+                        )
+                    }
+
+                    ScheduleTab.SESSION -> ScheduleSessionScreen(
+                        upcomingSessionInfo = scheduleState.upcomingSessionInfo,
+                        sessions = scheduleState.sessions
+                    )
+                }
+            }
         }
     }
 }
 
 @Composable
-private fun ScheduleAllScreen() {
-    LazyColumn {
+private fun ScheduleAllScreen(
+    selectedYear: Int,
+    selectedMonth: Int,
+    schedules: ScheduleList?,
+    onIntent: (ScheduleIntent) -> Unit
+) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+    ) {
         item {
             Spacer(modifier = Modifier.height(20.dp))
             MonthHeader(
                 modifier = Modifier.padding(horizontal = 20.dp),
-                year = 2024,
-                month = 12,
-                onPreviousMonthClick = {},
-                onNextMonthClick = {}
+                year = selectedYear,
+                month = selectedMonth,
+                onPreviousMonthClick = { onIntent(ScheduleIntent.ClickPreviousMonth) },
+                onNextMonthClick = { onIntent(ScheduleIntent.ClickNextMonth) }
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        val statuses = listOf(
-            AttendanceStatus.SCHEDULED,
-            AttendanceStatus.ATTENDED,
-            AttendanceStatus.LATE
-        )
-
-        for (index in 0..6) {
+        if (schedules?.isEmpty == true) {
             item {
-                SessionItem(
-                    id = index.toLong(),
-                    title = "세션 제목",
-                    assignmentTitle = if (index == 1) "과제 제목" else null,
-                    assignmentContent = if (index == 1) "과제 내용" else null,
-                    status = statuses[index % statuses.size],
-                    date = "${9 - index}",
-                    dayOfWeek = "금",
-                    isToday = index == 0,
-                    isPast = index > 0,
-                    location = "공덕 창업허브",
-                    time = "오후 2시 - 오후 6시",
-                    onClick = {}
-                )
-
-                Spacer(
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .padding(horizontal = 20.dp)
-                        .background(YappTheme.colorScheme.lineNormalAlternative)
-                )
+                        .fillParentMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = coreR.drawable.illust_yappu_sleeping),
+                        contentDescription = null,
+                    )
+                    Spacer(Modifier.height(32.dp))
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "등록된 일정이 없습니다.",
+                        color = YappTheme.colorScheme.labelAlternative,
+                        style = YappTheme.typography.label1NormalRegular,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
         }
 
-        item {
-            AssignmentItem(
-                id = 0,
-                title = "과제 제목",
-                content = "과제 내용",
-                date = "2",
-                dayOfWeek = "금",
-                isToday = false,
-                isPast = true,
-                onClick = {}
-            )
+        if (schedules != null) {
+            items(
+                items = schedules.dates,
+                key = { it.date },
+            ) {
+                DateGroupedScheduleItem(
+                    date = it.date,
+                    dayOfWeek = it.dayOfTheWeek,
+                    isToday = it.isToday,
+                    schedules = it.schedules,
+                ) { }
+            }
         }
     }
 }
 
 @Composable
 private fun ScheduleSessionScreen(
-    hasTodaySession: Boolean = true,
+    upcomingSessionInfo: UpcomingSessionInfo?,
+    sessions: ScheduleList
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth()
@@ -145,23 +204,43 @@ private fun ScheduleSessionScreen(
             Column(
                 modifier = Modifier.padding(20.dp)
             ) {
-                Text(
-                    text = stringResource(id = R.string.today_session_section_title),
-                    style = YappTheme.typography.headline2Bold,
-                    color = YappTheme.colorScheme.labelNormal
-                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.upcoming_session_section_title),
+                        style = YappTheme.typography.headline2Bold,
+                        color = YappTheme.colorScheme.labelNormal
+                    )
+
+                    if (upcomingSessionInfo != null) {
+                        YappChipSmall(
+                            text = if (upcomingSessionInfo.remainingDays > 0) {
+                                stringResource(
+                                    id = R.string.d_day_remaining,
+                                    upcomingSessionInfo.remainingDays
+                                )
+                            } else {
+                                stringResource(id = R.string.d_day)
+                            },
+                            colorType = ChipColorType.Main,
+                            isFill = true
+                        )
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                if (hasTodaySession) {
-                    TodaySessionSection(
-                        id = 0,
-                        title = "오늘의 세션",
-                        date = "2024.12.25",
-                        dayOfWeek = "화요일",
-                        location = "서울시 강남구",
-                        time = "오후 2:00 - 오후 3:00",
-                        remainingDays = 2,
+                if (upcomingSessionInfo != null) {
+                    UpcomingSessionSection(
+                        id = upcomingSessionInfo.sessionId,
+                        title = upcomingSessionInfo.name,
+                        date = upcomingSessionInfo.startDate,
+                        dayOfWeek = upcomingSessionInfo.startDayOfTheWeek,
+                        location = upcomingSessionInfo.location,
+                        startTime = upcomingSessionInfo.startTime,
+                        endTime = upcomingSessionInfo.endTime,
                         onClick = {}
                     )
                 } else {
@@ -169,13 +248,12 @@ private fun ScheduleSessionScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 12.dp),
-                        text = stringResource(id = R.string.today_session_empty_message),
+                        text = stringResource(id = R.string.upcoming_session_empty_message),
                         style = YappTheme.typography.label2Regular,
                         color = YappTheme.colorScheme.labelAlternative,
                         textAlign = TextAlign.Center
                     )
                 }
-
             }
             Spacer(
                 modifier = Modifier
@@ -185,37 +263,17 @@ private fun ScheduleSessionScreen(
             )
         }
 
-        val statuses = listOf(
-            AttendanceStatus.SCHEDULED,
-            AttendanceStatus.ATTENDED,
-            AttendanceStatus.LATE
-        )
-
-        for (index in 0..7) {
-            item {
-                SessionItem(
-                    id = index.toLong(),
-                    title = "세션 제목",
-                    status = statuses[index % statuses.size],
-                    date = "12. ${9 - index}",
-                    dayOfWeek = "금",
-                    isToday = index == 0,
-                    isPast = index > 0,
-                    location = "공덕 창업허브",
-                    time = "오후 2시 - 오후 6시",
-                    onClick = {}
-                )
-
-                if (index != 7) {
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(1.dp)
-                            .padding(horizontal = 20.dp)
-                            .background(YappTheme.colorScheme.lineNormalAlternative)
-                    )
-                }
-            }
+        items(
+            items = sessions.dates,
+            key = { it.date },
+        ) {
+            DateGroupedScheduleItem(
+                date = it.date,
+                dayOfWeek = it.dayOfTheWeek,
+                isToday = it.isToday,
+                showMonth = true,
+                schedules = it.schedules,
+            ) { }
         }
     }
 }
@@ -258,6 +316,7 @@ private fun MonthHeader(
                 .size(24.dp)
                 .yappClickable(
                     rippleBounded = false,
+                    singleClick = false,
                     rippleRadius = 24.dp
                 ) {
                     onPreviousMonthClick()
@@ -280,6 +339,7 @@ private fun MonthHeader(
         Icon(
             modifier = Modifier.yappClickable(
                 rippleBounded = false,
+                singleClick = false,
                 rippleRadius = 24.dp
             ) {
                 onNextMonthClick()
@@ -295,6 +355,6 @@ private fun MonthHeader(
 @Composable
 private fun ScheduleScreenPreview() {
     YappTheme {
-        ScheduleRoute()
+        ScheduleScreen(scheduleState = ScheduleState())
     }
 }

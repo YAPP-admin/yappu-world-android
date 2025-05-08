@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -53,6 +54,7 @@ fun SignUpRoute(
     viewModel: SignUpViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
     navigateHome: () -> Unit,
+    handleException: (Throwable) -> Unit,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
@@ -72,6 +74,8 @@ fun SignUpRoute(
                     Toast.LENGTH_SHORT
                 ).show()
             }
+
+            is SignUpSideEffect.HandleException -> handleException(it.exception)
         }
     }
 
@@ -136,7 +140,8 @@ fun SignUpScreen(
                                     verified
                                 )
                             )
-                        }
+                        },
+                        handleException = { onIntent(SignUpIntent.HandleException(it)) },
                     )
 
                     SignUpStep.Password -> PasswordPage(

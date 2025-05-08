@@ -2,28 +2,30 @@ package com.yapp.feature.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yapp.core.common.android.record
-import com.yapp.core.ui.component.UserRole
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
-import com.yapp.dataapi.PostsRepository
-import com.yapp.domain.GetUserProfileUseCase
-import com.yapp.model.NoticeType
+import com.yapp.dataapi.AttendanceRepository
+import com.yapp.dataapi.ScheduleRepository
+import com.yapp.domain.runCatchingIgnoreCancelled
+import com.yapp.model.AttendanceInfo
+import com.yapp.model.AttendanceStatus
+import com.yapp.model.HomeSessionList
+import com.yapp.model.exceptions.CodeNotCorrectException
 import com.yapp.model.exceptions.InvalidTokenException
 import com.yapp.model.exceptions.UserNotFoundForEmailException
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val getUserProfileUseCase: GetUserProfileUseCase,
-    private val getNoticeListRepository: PostsRepository,
+internal class HomeViewModel @Inject constructor(
+    private val scheduleRepository: ScheduleRepository,
+    private val attendanceRepository: AttendanceRepository
 ) : ViewModel() {
+    private var isInitialized = false
 
     val store: MviIntentStore<HomeState, HomeIntent, HomeSideEffect> =
         mviIntentStore(
@@ -38,52 +40,153 @@ class HomeViewModel @Inject constructor(
         postSideEffect: (HomeSideEffect) -> Unit,
     ) {
         when (intent) {
-            HomeIntent.ClickMoreButton -> postSideEffect(HomeSideEffect.NavigateToNotice)
-            HomeIntent.ClickSettingButton -> postSideEffect(HomeSideEffect.NavigateToSetting)
-            HomeIntent.EnterHomeScreen -> { loadHomeInfo( reduce,postSideEffect)  }
-            is HomeIntent.ClickNoticeItem -> postSideEffect(HomeSideEffect.NavigateToNoticeDetail(intent.noticeId))
-        }
-    }
+            HomeIntent.EnterHomeScreen -> {
+                if (isInitialized) return
 
-    private fun loadHomeInfo(
-        reduce: (HomeState.() -> HomeState) -> Unit,
-        postSideEffect: (HomeSideEffect) -> Unit
-    ) = viewModelScope.launch {
-        reduce { copy(isLoading = true, isUserInfoLoading = true, isNoticesLoading = true) }
-        getUserProfileUseCase()
-            .catch { error->
-                when(error) {
-                    is UserNotFoundForEmailException, is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
-                    else -> error.record()
+                viewModelScope.launch {
+                    joinAll(
+                        loadSessionInfo(reduce, postSideEffect),
+                        loadUpcomingSessionInfo(reduce, postSideEffect)
+                    )
+                    isInitialized = true
                 }
             }
-            .collectLatest{ userInfo ->
+
+            HomeIntent.RefreshUpcomingSession -> {
+                loadUpcomingSessionInfo(reduce, postSideEffect)
+            }
+
+            HomeIntent.ClickShowAllSession -> postSideEffect(HomeSideEffect.NavigateToSchedule)
+            HomeIntent.ClickRequestAttendCode -> {
+                reduce {
+                    copy(showAttendCodeBottomSheet = true)
+                }
+            }
+
+            HomeIntent.ClickDismissDialog -> {
                 reduce {
                     copy(
-                        isUserInfoLoading = false,
-                        name = userInfo.name,
-                        role = UserRole.fromRole(userInfo.role),
-                        activityUnits = userInfo.activityUnits
+                        showAttendCodeBottomSheet = false,
+                        showAttendanceCodeError = false,
+                        attendanceCodeDigits = List(4) { "" },
                     )
                 }
             }
 
-        getNoticeListRepository.getNoticeList(
-            noticeType = NoticeType.ALL.apiValue,
-            lastNoticeId = null,
-            limit = 3
-        ).collectLatest{ noticeInfo ->
-            reduce { copy(noticeInfo = noticeInfo, isNoticesLoading = false) }
-        }
+            is HomeIntent.ChangeAttendanceCodeDigits -> {
+                reduce {
+                    copy(
+                        attendanceCodeDigits = intent.code,
+                        showAttendanceCodeError = false
+                    )
+                }
+            }
 
-        combine(
-            store.uiState.map { it.isUserInfoLoading },
-            store.uiState.map { it.isNoticesLoading },
-        ) { isUserInfoLoading, isNoticesLoading ->
-            (isUserInfoLoading && isNoticesLoading)
-        }.collect { isLoading ->
-            reduce { copy(isLoading = isLoading) }
+            is HomeIntent.ClickRequestAttendance -> {
+                requestAttendance(
+                    state.upcomingSession?.sessionId,
+                    state.attendanceCode,
+                    state,
+                    reduce,
+                    postSideEffect,
+                )
+            }
         }
+    }
 
+    private fun loadSessionInfo(
+        reduce: (HomeState.() -> HomeState) -> Unit,
+        postSideEffect: (HomeSideEffect) -> Unit
+    ) = viewModelScope.launch {
+        reduce { copy(isLoading = true) }
+        runCatchingIgnoreCancelled {
+            scheduleRepository.getSessions()
+        }.onSuccess { homeSessions ->
+            reduce {
+                copy(
+                    sessionList = homeSessions
+                )
+            }
+        }.onFailure { e ->
+            when (e) {
+                is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
+                else -> e.record()
+            }
+        }
+        reduce { copy(isLoading = false) }
+    }
+
+
+    private fun loadUpcomingSessionInfo(
+        reduce: (HomeState.() -> HomeState) -> Unit,
+        postSideEffect: (HomeSideEffect) -> Unit
+    ) = viewModelScope.launch {
+        reduce { copy(isLoading = true) }
+        runCatchingIgnoreCancelled {
+            scheduleRepository.refreshUpcomingSessions()
+        }.onSuccess { upcomingSessionInfo ->
+            reduce {
+                copy(
+                    upcomingSession = upcomingSessionInfo
+                )
+            }
+        }.onFailure { e ->
+            when (e) {
+                is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
+                else -> e.record()
+            }
+        }
+        reduce { copy(isLoading = false) }
+    }
+
+
+    private fun requestAttendance(
+        sessionId: String?,
+        code: String,
+        state: HomeState,
+        reduce: (HomeState.() -> HomeState) -> Unit,
+        postSideEffect: (HomeSideEffect) -> Unit
+    ) {
+        if (sessionId == null) return
+
+        viewModelScope.launch {
+            runCatchingIgnoreCancelled {
+                attendanceRepository.postAttendance(AttendanceInfo(sessionId, code))
+            }.onSuccess {
+                val updatedSessions = HomeSessionList(
+                    sessions = state.sessionList.sessions.map { session ->
+                        if (session.id == sessionId) {
+                            session.copy(attendanceStatus = AttendanceStatus.ATTENDED)
+                        } else {
+                            session
+                        }
+                    },
+                    upcomingSessionId = state.sessionList.upcomingSessionId
+                )
+
+                reduce {
+                    copy(
+                        sessionList = updatedSessions,
+                        upcomingSession = state.upcomingSession?.copy(
+                            canCheckIn = false,
+                            status = AttendanceStatus.ATTENDED
+                        ),
+                        showAttendCodeBottomSheet = false,
+                        showAttendanceCodeError = false
+                    )
+                }
+            }.onFailure {
+                when (it) {
+                    is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
+                    is CodeNotCorrectException -> {
+                        reduce { copy(showAttendanceCodeError = true) }
+                    }
+                    else -> {
+                        postSideEffect(HomeSideEffect.HandleException(it))
+                        it.record()
+                    }
+                }
+            }
+        }
     }
 }

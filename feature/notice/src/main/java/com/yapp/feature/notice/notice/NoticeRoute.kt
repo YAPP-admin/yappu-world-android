@@ -17,7 +17,9 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -28,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.component.gradient.GradientBottom
-import com.yapp.core.designsystem.component.header.YappHeaderActionbarExpanded
+import com.yapp.core.designsystem.component.header.YappHeaderTitle
 import com.yapp.core.designsystem.extension.OnBottomReached
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.NoticeItem
@@ -37,20 +39,23 @@ import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.borderBottom
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.notice.R
+import com.yapp.core.ui.R as coreR
 import com.yapp.feature.notice.notice.component.NoticeCategoryButton
 import com.yapp.model.NoticeType
 
 @Composable
 fun NoticeRoute(
     viewModel: NoticeViewModel = hiltViewModel(),
-    navigateBack: () -> Unit,
     navigateToNoticeDetail: (String) -> Unit,
+    handleException: (Throwable) -> Unit,
+    navigateToLogin: () -> Unit,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
     viewModel.store.sideEffects.collectWithLifecycle { sideEffect ->
         when (sideEffect) {
             is NoticeSideEffect.NavigateToNoticeDetail -> { navigateToNoticeDetail(sideEffect.noticeId)}
-            NoticeSideEffect.NavigateToBack -> navigateBack()
+            is NoticeSideEffect.HandleException -> handleException(sideEffect.exception)
+            NoticeSideEffect.NavigateToLogin -> navigateToLogin()
         }
     }
 
@@ -70,16 +75,14 @@ fun NoticeScreen(
     onIntent: (NoticeIntent) -> Unit = {},
 ) {
     val lazyScrollState = rememberLazyListState()
+    val showGradientBottom by remember {
+        derivedStateOf { lazyScrollState.canScrollBackward }
+    }
 
     YappBackground {
         Column {
-            YappHeaderActionbarExpanded(
+            YappHeaderTitle(
                 title = stringResource(R.string.notice_screen_header_title),
-                leftIcon = com.yapp.core.designsystem.R.drawable.icon_chevron_left,
-                contentDescription = stringResource(R.string.notice_screen_header_back_icon_content_description),
-                onClickLeftIcon = {
-                    onIntent(NoticeIntent.ClickBackButton)
-                },
             )
             Row(
                 modifier = Modifier
@@ -119,7 +122,7 @@ fun NoticeScreen(
                         verticalArrangement = Arrangement.Center
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.illust_emtpy_notices),
+                            painter = painterResource(id = coreR.drawable.illust_yappu_sleeping),
                             contentDescription = null,
                         )
                         Spacer(Modifier.height(32.dp))
@@ -158,12 +161,15 @@ fun NoticeScreen(
                         }
                     }
                 }
-                GradientBottom(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(40.dp),
-                    color = YappTheme.colorScheme.staticWhite
-                )
+
+                if (showGradientBottom) {
+                    GradientBottom(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(40.dp),
+                        color = YappTheme.colorScheme.staticWhite
+                    )
+                }
             }
         }
 

@@ -45,6 +45,7 @@ sealed interface SignUpIntent {
     data object ClickInputCompleteButton : SignUpIntent
     data object ClickPendingButton : SignUpIntent
     data class ChangeSignUpCode(val signUpCode: String) : SignUpIntent
+    data class HandleException(val exception: Throwable) : SignUpIntent
 }
 
 sealed interface SignUpSideEffect {
@@ -53,6 +54,7 @@ sealed interface SignUpSideEffect {
     data object ClearFocus : SignUpSideEffect
     data class OpenWebBrowser(val link: String) : SignUpSideEffect
     data object ShowUrlLoadFailToast : SignUpSideEffect
+    data class HandleException(val exception: Throwable) : SignUpSideEffect
 }
 
 enum class SignUpStep {

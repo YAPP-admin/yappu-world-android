@@ -199,6 +199,8 @@ class SignUpViewModel @Inject constructor(
                     }
                 }
             }
+
+            is SignUpIntent.HandleException -> postSideEffect(SignUpSideEffect.HandleException(intent.exception))
         }
     }
 
@@ -228,7 +230,10 @@ class SignUpViewModel @Inject constructor(
                         )
                     }
 
-                    else -> it.record()
+                    else -> {
+                        postSideEffect(SignUpSideEffect.HandleException(it))
+                        it.record()
+                    }
                 }
             }
     }

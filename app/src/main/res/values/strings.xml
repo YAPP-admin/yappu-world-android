@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">YappOfficial</string>
+    <string name="app_name">Yapp Official</string>
     <string name="main_activity_force_update_dialog_title">업데이트가 필요해요!</string>
     <string name="main_activity_force_update_dialog_body">더 안전하고 원활한 사용을 위해 최신 버전이 필요합니다. 업데이트 후 계속 이용해 주세요!</string>
     <string name="main_activity_force_update_dialog_button_text">업데이트 하러가기</string>

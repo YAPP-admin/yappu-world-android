@@ -1,14 +1,10 @@
 package com.yapp.feature.profile.navigation
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.yapp.feature.profile.ProfileRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -18,13 +14,20 @@ fun NavController.navigateToProfile(navOptions: NavOptions? = null) {
     navigate(ProfileRoute, navOptions)
 }
 
-fun NavGraphBuilder.profileNavGraph() {
+fun NavGraphBuilder.profileNavGraph(
+    onNavigateToSetting: () -> Unit,
+    onNavigateToAttendHistory: () -> Unit,
+    onNavigateToPreviousHistory: () -> Unit,
+    onNavigateToLogin: () -> Unit,
+    handleException: (Throwable) -> Unit,
+) {
     composable<ProfileRoute> {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("Profile Screen")
-        }
+        ProfileRoute(
+            onNavigateToSettings = onNavigateToSetting,
+            onNavigateToAttendHistory = onNavigateToAttendHistory,
+            onNavigateToLogin = onNavigateToLogin,
+            onNavigateToPreviousHistory = onNavigateToPreviousHistory,
+            handleException = handleException,
+        )
     }
 }

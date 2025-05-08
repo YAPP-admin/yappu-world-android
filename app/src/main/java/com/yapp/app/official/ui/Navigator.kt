@@ -13,14 +13,16 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.yapp.app.official.navigation.TopLevelDestination
+import com.yapp.feature.history.navigation.navigateToAttendance
+import com.yapp.feature.history.navigation.navigateToPreviousHistory
 import com.yapp.feature.home.navigation.navigateToHome
-import com.yapp.feature.home.navigation.navigateToSetting
 import com.yapp.feature.login.navigation.LoginRoute
 import com.yapp.feature.login.navigation.navigateToLogin
 import com.yapp.feature.notice.navigation.navigateToNotice
 import com.yapp.feature.notice.navigation.navigateToNoticeDetail
 import com.yapp.feature.profile.navigation.navigateToProfile
 import com.yapp.feature.schedule.navigation.navigateToSchedule
+import com.yapp.feature.setting.navigation.navigateToSetting
 import com.yapp.feature.signup.navigation.navigateToSignUp
 
 
@@ -79,6 +81,14 @@ class NavigatorState(
 
     fun navigateToNoticeDetail(noticeId: String) {
         navController.navigateToNoticeDetail(noticeId)
+    }
+
+    fun navigateToAttendance() {
+        navController.navigateToAttendance()
+    }
+
+    fun navigateToPreviousHistory() {
+        navController.navigateToPreviousHistory()
     }
 
     fun popBackStack() {
