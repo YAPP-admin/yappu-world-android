@@ -12,14 +12,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.yapp.core.ui.R as coreR
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
-import com.yapp.core.ui.extension.openUrl
+import com.yapp.core.ui.extension.safeOpenUri
 import com.yapp.feature.login.component.AgreementBottomDialog
 import com.yapp.feature.login.component.LoginDivider
 import com.yapp.feature.login.component.LoginInputSection
@@ -33,11 +35,12 @@ internal fun LoginRoute(
     navigateToSignupPending: () -> Unit,
     navigateToSignupReject: () -> Unit,
     navigateToHome: () -> Unit,
-    modifier: Modifier = Modifier,
+    handleException: (Throwable) -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val uriHandler = LocalUriHandler.current
 
     LaunchedEffect(Unit) {
         viewModel.store.onIntent(LoginIntent.EnterLoginScreen)
@@ -47,15 +50,21 @@ internal fun LoginRoute(
         when (effect) {
             LoginSideEffect.NavigateToSignUp -> navigateToSignupName()
             is LoginSideEffect.OpenWebBrowser -> {
-                context.openUrl(effect.link)
+                uriHandler.safeOpenUri(effect.link)
             }
 
             LoginSideEffect.NavigateToHome -> navigateToHome()
-            is LoginSideEffect.ShowToast -> {
-                Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
-            }
+            is LoginSideEffect.HandleException -> handleException(effect.exception)
+
             LoginSideEffect.NavigateToSignUpPending -> navigateToSignupPending()
             LoginSideEffect.NavigateToSignUpReject -> navigateToSignupReject()
+            LoginSideEffect.ShowUrlLoadFailToast -> {
+                Toast.makeText(
+                    context,
+                    context.getString(coreR.string.toast_message_error_loading_url),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
     LoginScreen(
@@ -118,11 +127,9 @@ fun LoginScreen(
 @Composable
 private fun LoginScreenPreview() {
     YappTheme {
-        LoginRoute(
-            navigateToSignupName = {},
-            navigateToSignupPending = {},
-            navigateToSignupReject = {},
-            navigateToHome = {}
+        LoginScreen(
+            loginState = LoginState(),
+            onIntent = {},
         )
     }
 }

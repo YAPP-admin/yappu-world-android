@@ -1,5 +1,6 @@
 package com.yapp.feature.signup.signup
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,9 +35,10 @@ import com.yapp.core.designsystem.component.header.YappHeaderActionbar
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
-import com.yapp.core.ui.extension.openUrl
+import com.yapp.core.ui.extension.safeOpenUri
 import com.yapp.core.ui.util.keyboardAsState
 import com.yapp.feature.signup.R
+import com.yapp.core.ui.R as coreR
 import com.yapp.feature.signup.signup.component.SignUpCodeBottomDialog
 import com.yapp.feature.signup.signup.extension.signUpAnimatedContentTransitionSpec
 import com.yapp.feature.signup.signup.page.CompletePage
@@ -50,17 +54,28 @@ fun SignUpRoute(
     viewModel: SignUpViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
     navigateHome: () -> Unit,
+    handleException: (Throwable) -> Unit,
 ) {
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
+    val uriHandler = LocalUriHandler.current
 
     viewModel.store.sideEffects.collectWithLifecycle {
         when (it) {
             SignUpSideEffect.NavigateBack -> navigateBack()
             SignUpSideEffect.ClearFocus -> focusManager.clearFocus(force = true)
             SignUpSideEffect.NavigateHome -> navigateHome()
-            is SignUpSideEffect.OpenWebBrowser -> context.openUrl(it.link)
+            is SignUpSideEffect.OpenWebBrowser -> uriHandler.safeOpenUri(it.link)
+            is SignUpSideEffect.ShowUrlLoadFailToast -> {
+                Toast.makeText(
+                    context,
+                    context.getString(coreR.string.toast_message_error_loading_url),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            is SignUpSideEffect.HandleException -> handleException(it.exception)
         }
     }
 
@@ -125,7 +140,8 @@ fun SignUpScreen(
                                     verified
                                 )
                             )
-                        }
+                        },
+                        handleException = { onIntent(SignUpIntent.HandleException(it)) },
                     )
 
                     SignUpStep.Password -> PasswordPage(
@@ -187,7 +203,7 @@ private fun SignUpScreenButton(
         return
     }
 
-    if (uiState.showRejectButton){
+    if (uiState.showRejectButton) {
         YappTextAssistiveButtonMedium(
             modifier = Modifier
                 .padding(horizontal = 20.dp)

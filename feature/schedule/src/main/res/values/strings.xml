@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="schedule_screen_title">일정</string>
+    <string name="schedule_tab_all">전체</string>
+    <string name="schedule_tab_session">세션</string>
+
+    <string name="upcoming_session_section_title">다음 세션</string>
+    <string name="upcoming_session_empty_message">아직 예정된 세션이 없어요.</string>
+    <string name="session_section_title">세션 전체 내역</string>
+
+    <string name="d_day_remaining">D-%1$d</string>
+    <string name="d_day">D-day</string>
+</resources>

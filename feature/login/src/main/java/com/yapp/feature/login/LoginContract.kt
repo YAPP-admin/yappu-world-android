@@ -35,5 +35,6 @@ sealed interface LoginSideEffect {
     data object NavigateToSignUpPending : LoginSideEffect
     data object NavigateToSignUpReject : LoginSideEffect
     data class OpenWebBrowser(val link: String) : LoginSideEffect
-    data class ShowToast(val message: String) : LoginSideEffect
+    data object ShowUrlLoadFailToast : LoginSideEffect
+    data class HandleException(val exception: Throwable) : LoginSideEffect
 }

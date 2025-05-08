@@ -14,13 +14,14 @@ import com.yapp.model.SignUpResult
 import com.yapp.model.exceptions.SignUpCodeException
 import com.yapp.model.exceptions.UnprocessedSignUpException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.sign
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
@@ -30,7 +31,7 @@ class SignUpViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private var signUpInfo = SignUpInfo()
-    private var inquiryLink = ""
+    private var inquiryLink: String? = null
 
     companion object {
         private const val STEP_ID_KEY = "currentStep"
@@ -55,7 +56,7 @@ class SignUpViewModel @Inject constructor(
     ) {
         when (intent) {
             is SignUpIntent.EnterScreen -> {
-                reduce{copy(currentStep= SignUpStep.from(step))}
+                reduce { copy(currentStep = SignUpStep.from(step)) }
                 getPositionConfigsUseCase()
                     .onEach {
                         reduce { copy(positions = it) }
@@ -65,12 +66,9 @@ class SignUpViewModel @Inject constructor(
                     }
                     .launchIn(viewModelScope)
 
-                operationsRepository.getUsageInquiryLink()
-                    .onEach {
-                        inquiryLink = it
-                    }
-                    .catch { it.record() }
-                    .launchIn(viewModelScope)
+                viewModelScope.launch {
+                    updateUrl()
+                }
             }
 
             SignUpIntent.BackPressed,
@@ -85,6 +83,7 @@ class SignUpViewModel @Inject constructor(
                         postSideEffect(SignUpSideEffect.NavigateBack)
                         return
                     }
+
                     SignUpStep.Complete -> {
                         postSideEffect(SignUpSideEffect.NavigateHome)
                         return
@@ -139,7 +138,8 @@ class SignUpViewModel @Inject constructor(
             }
 
             is SignUpIntent.EmailChanged -> {
-                signUpInfo = signUpInfo.copy(email = intent.email, isEmailVerified = intent.verified)
+                signUpInfo =
+                    signUpInfo.copy(email = intent.email, isEmailVerified = intent.verified)
                 reduce { copy(primaryButtonEnable = intent.verified) }
             }
 
@@ -190,8 +190,17 @@ class SignUpViewModel @Inject constructor(
             }
 
             SignUpIntent.ClickPendingButton -> {
-                postSideEffect(SignUpSideEffect.OpenWebBrowser(link = inquiryLink))
+                viewModelScope.launch {
+                    updateUrl()
+                    inquiryLink?.let { inquiryLink ->
+                        postSideEffect(SignUpSideEffect.OpenWebBrowser(link = inquiryLink))
+                    } ?: run {
+                        postSideEffect(SignUpSideEffect.ShowUrlLoadFailToast)
+                    }
+                }
             }
+
+            is SignUpIntent.HandleException -> postSideEffect(SignUpSideEffect.HandleException(intent.exception))
         }
     }
 
@@ -214,8 +223,17 @@ class SignUpViewModel @Inject constructor(
             .onFailure {
                 when (it) {
                     is SignUpCodeException -> reduce { copy(signUpErrorInputTextDescription = it.message) }
-                    is UnprocessedSignUpException -> reduce { copy(currentStep = SignUpStep.Pending, showSignUpCodeBottomDialog = false)}
-                    else -> it.record()
+                    is UnprocessedSignUpException -> reduce {
+                        copy(
+                            currentStep = SignUpStep.Pending,
+                            showSignUpCodeBottomDialog = false
+                        )
+                    }
+
+                    else -> {
+                        postSideEffect(SignUpSideEffect.HandleException(it))
+                        it.record()
+                    }
                 }
             }
     }
@@ -230,5 +248,17 @@ class SignUpViewModel @Inject constructor(
             SignUpStep.Reject,
             SignUpStep.Pending -> true
         }
+    }
+
+    private suspend fun updateUrl() = coroutineScope {
+        val inquiryDeferred = async {
+            if (inquiryLink == null) {
+                runCatching { operationsRepository.getUsageInquiryLink() }
+            } else {
+                Result.success(inquiryLink)
+            }
+        }
+
+        inquiryLink = inquiryDeferred.await().getOrNull()
     }
 }

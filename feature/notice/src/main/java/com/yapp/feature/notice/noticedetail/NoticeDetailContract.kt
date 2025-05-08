@@ -25,4 +25,6 @@ sealed interface NoticeDetailIntent {
 
 sealed interface NoticeDetailSideEffect {
     data object NavigateToBack : NoticeDetailSideEffect
+    data object NavigateToLogin : NoticeDetailSideEffect
+    data class HandleException(val exception: Throwable) : NoticeDetailSideEffect
 }

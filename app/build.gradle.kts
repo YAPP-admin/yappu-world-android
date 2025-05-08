@@ -23,31 +23,43 @@ android {
 
     defaultConfig {
         applicationId = "com.yapp.app.official"
-        versionCode = 2
-        versionName = "1.0.0"
+        versionCode = 5
+        versionName = "1.1.0"
 
         targetSdk = 35
     }
     buildTypes {
-        getByName("release") {
-            signingConfig = signingConfigs.getByName("release")
+        getByName("debug") {
+            applicationIdSuffix = ".dev"
+            isDebuggable = true
         }
 
         create("qa") {
             initWith(getByName("release"))
+            applicationIdSuffix = ".qa"
             signingConfig = signingConfigs.getByName("release")
             matchingFallbacks += listOf("release")
+            isDebuggable = true
+        }
+
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 }
 
 dependencies {
     implementation(projects.feature.home)
+    implementation(projects.feature.schedule)
     implementation(projects.feature.notice)
+    implementation(projects.feature.profile)
     implementation(projects.feature.signup)
     implementation(projects.feature.login)
+    implementation(projects.feature.history)
+    implementation(projects.feature.setting)
     implementation(projects.core.designsystem)
-    implementation(projects.core.data) // For di
+    implementation(projects.core.ui)
+    implementation(projects.core.data)
     implementation(projects.core.dataApi)
     implementation(projects.core.domain)
     implementation(projects.core.commonAndroid)

@@ -3,6 +3,7 @@ package com.yapp.core.data.data.repository
 import com.yapp.core.data.local.SecurityPreferences
 import com.yapp.core.data.remote.api.UserApi
 import com.yapp.dataapi.UserRepository
+import com.yapp.model.ActivityHistory
 import com.yapp.model.UserInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -22,4 +23,7 @@ internal class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getUserProfile() = flow<UserInfo> {  emit(userApi.getUserProfile().toModel())}
+    override fun getUserActivityHistories() = flow {
+        emit(userApi.getUserActivityHistories().toModel())
+    }
 }

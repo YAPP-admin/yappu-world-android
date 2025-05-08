@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.Color
 
 internal val LightColorScheme = YappColorScheme(
     primaryNormal = Color(0xFFFA6027),
+    secondaryNormal = Color(0xFFFFAD31),
 
     labelNormal = Color(0xFF171719),
     labelStrong = Color(0xFF000000),
@@ -44,9 +45,25 @@ internal val LightColorScheme = YappColorScheme(
     staticWhite = Color(0xFFFFFFFF),
     staticBlack = Color(0xFF000000),
 
+    accentLightBlue = Color(0xFF00AEFF),
+    accentLightBlueWeak = Color(0xFFE5F7FF),
+
+    accentRed = Color(0xFFE32908),
+    accentRedWeak = Color(0xFFFEE6E1),
+
+    accentViolet = Color(0xFF6541F2),
+    accentVioletWeak = Color(0xFFECE7FD),
+
+    coolNeutral50 = Color(0xFF70737C),
+    neutral40 = Color(0xFF5C5C5C),
+    neutral95 = Color(0xFFDCDCDC),
+    orange99 = Color(0xFFFFF8F5),
+    yellow95 = Color(0xFFFFF7EA),
+
     materialDimmer = Color(0x85171719),
 
     semanticFillString = Color(0x2970737C),
+    semanticFillAlternative = Color(0xFFDFDFDF),
 
     skeleton = Brush.linearGradient(
         colors = listOf(
@@ -61,6 +78,7 @@ internal val LightColorScheme = YappColorScheme(
 @Immutable
 data class YappColorScheme(
     val primaryNormal: Color,
+    val secondaryNormal: Color,
 
     val labelNormal: Color,
     val labelStrong: Color,
@@ -97,9 +115,25 @@ data class YappColorScheme(
     val staticWhite: Color,
     val staticBlack: Color,
 
+    val accentLightBlue: Color,
+    val accentLightBlueWeak: Color,
+
+    val accentRed: Color,
+    val accentRedWeak: Color,
+
+    val accentViolet: Color,
+    val accentVioletWeak: Color,
+
+    val coolNeutral50: Color,
+    val neutral40: Color,
+    val neutral95: Color,
+    val orange99: Color,
+    val yellow95: Color,
+
     val materialDimmer: Color,
 
     val semanticFillString: Color,
+    val semanticFillAlternative: Color,
 
     val skeleton: Brush,
 
@@ -108,6 +142,7 @@ data class YappColorScheme(
 val LocalColorScheme = staticCompositionLocalOf {
     YappColorScheme(
         primaryNormal = Color.Unspecified,
+        secondaryNormal = Color.Unspecified,
         labelNormal = Color.Unspecified,
         labelStrong = Color.Unspecified,
         labelNeutral = Color.Unspecified,
@@ -136,8 +171,20 @@ val LocalColorScheme = staticCompositionLocalOf {
         statusNegative = Color.Unspecified,
         staticWhite = Color.Unspecified,
         staticBlack = Color.Unspecified,
+        accentLightBlue = Color.Unspecified,
+        accentLightBlueWeak = Color.Unspecified,
+        accentRed = Color.Unspecified,
+        accentRedWeak = Color.Unspecified,
+        accentViolet = Color.Unspecified,
+        accentVioletWeak = Color.Unspecified,
+        coolNeutral50 = Color.Unspecified,
+        neutral40 = Color.Unspecified,
+        neutral95 = Color.Unspecified,
+        orange99 = Color.Unspecified,
+        yellow95 = Color.Unspecified,
         materialDimmer = Color.Unspecified,
         semanticFillString = Color.Unspecified,
+        semanticFillAlternative = Color.Unspecified,
         skeleton = Brush.linearGradient(
             colors = listOf(Color.Unspecified, Color.Unspecified)
         )

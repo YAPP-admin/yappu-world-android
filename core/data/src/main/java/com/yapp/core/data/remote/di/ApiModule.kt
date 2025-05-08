@@ -1,9 +1,11 @@
 package com.yapp.core.data.remote.di
 
 import com.yapp.core.data.remote.api.AlarmApi
+import com.yapp.core.data.remote.api.AttendanceApi
 import com.yapp.core.data.remote.api.AuthApi
 import com.yapp.core.data.remote.api.OperationsApi
 import com.yapp.core.data.remote.api.PostsApi
+import com.yapp.core.data.remote.api.ScheduleApi
 import com.yapp.core.data.remote.api.UserApi
 import dagger.Module
 import dagger.Provides
@@ -44,5 +46,17 @@ internal object ApiModule {
     @Provides
     fun providePostsApi(retrofit: Retrofit): PostsApi {
         return retrofit.create(PostsApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAttendanceApi(@AuthRetrofit retrofit: Retrofit): AttendanceApi {
+        return retrofit.create(AttendanceApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun providesSessionsApi(@AuthRetrofit retrofit: Retrofit): ScheduleApi {
+        return retrofit.create(ScheduleApi::class.java)
     }
 }

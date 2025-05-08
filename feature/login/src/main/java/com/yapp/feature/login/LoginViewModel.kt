@@ -2,20 +2,19 @@ package com.yapp.feature.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yapp.core.common.android.record
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.OperationsRepository
 import com.yapp.domain.LoginUseCase
 import com.yapp.model.Regex
 import com.yapp.model.exceptions.InvalidRequestArgument
+import com.yapp.model.exceptions.LoginException
 import com.yapp.model.exceptions.RecentSignUpRejectedException
 import com.yapp.model.exceptions.SignUpPendingException
+import com.yapp.model.exceptions.UserNotFoundForEmailException
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,8 +23,8 @@ class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val operationsRepository: OperationsRepository,
 ) : ViewModel() {
-    private var privacyPolicyLink = ""
-    private var termsLink = ""
+    private var privacyPolicyLink: String? = null
+    private var termsLink: String? = null
 
     val store: MviIntentStore<LoginState, LoginIntent, LoginSideEffect> =
         mviIntentStore(
@@ -85,15 +84,31 @@ class LoginViewModel @Inject constructor(
                 postSideEffect(LoginSideEffect.NavigateToSignUp)
             }
 
-            LoginIntent.ClickTerms -> postSideEffect(LoginSideEffect.OpenWebBrowser(termsLink))
-            LoginIntent.ClickPersonalPolicy -> postSideEffect(
-                LoginSideEffect.OpenWebBrowser(
-                    privacyPolicyLink
-                )
-            )
+            LoginIntent.ClickTerms -> {
+                viewModelScope.launch {
+                    updateUrl()
+                    termsLink?.let {
+                        postSideEffect(LoginSideEffect.OpenWebBrowser(it))
+                    } ?: run {
+                        postSideEffect(LoginSideEffect.ShowUrlLoadFailToast)
+                    }
+                }
+            }
+            LoginIntent.ClickPersonalPolicy -> {
+                viewModelScope.launch {
+                    updateUrl()
+                    privacyPolicyLink?.let {
+                        postSideEffect(LoginSideEffect.OpenWebBrowser(it))
+                    } ?: run {
+                        postSideEffect(LoginSideEffect.ShowUrlLoadFailToast)
+                    }
+                }
+            }
 
             LoginIntent.EnterLoginScreen -> {
-                loadUrl()
+                viewModelScope.launch {
+                    updateUrl()
+                }
             }
         }
     }
@@ -107,7 +122,7 @@ class LoginViewModel @Inject constructor(
         if (!email.matches(Regex.email)) {
             reduce {
                 copy(
-                    isLoginEnabled = false,
+                    isLoginEnabled = true,
                     emailErrorDescription = "입력하신 이메일을 확인해주세요.",
                     passwordErrorDescription = null
                 )
@@ -121,7 +136,7 @@ class LoginViewModel @Inject constructor(
                 }
                 .onFailure {
                     val errorMessage = it.message ?: ""
-                    reduce { copy(isLoginEnabled = false) }
+                    reduce { copy(isLoginEnabled = true) }
                     when (it) {
                         is InvalidRequestArgument -> {
                             reduce {
@@ -131,33 +146,45 @@ class LoginViewModel @Inject constructor(
                                 )
                             }
                         }
+                        is UserNotFoundForEmailException, is LoginException -> {
+                            reduce {
+                                copy(
+                                    emailErrorDescription = errorMessage,
+                                )
+                            }
+                        }
                         is SignUpPendingException -> {
-                            // 회원가입 대기 화면으로 이동
                             postSideEffect(LoginSideEffect.NavigateToSignUpPending)
                         }
                         is RecentSignUpRejectedException -> {
                             postSideEffect(LoginSideEffect.NavigateToSignUpReject)
                         }
                         else -> {
-                            postSideEffect(LoginSideEffect.ShowToast(errorMessage))
+                            postSideEffect(LoginSideEffect.HandleException(it))
                         }
                     }
                 }
         }
     }
 
-    private fun loadUrl() {
-        combine(
-            operationsRepository.getPrivacyPolicyLink(),
-            operationsRepository.getTermsOfServiceLink(),
-        ) { privacyPolicyLink, termsLink ->
-            Pair(privacyPolicyLink, termsLink)
-        }.onEach { (privacyPolicyLink, termsLink) ->
-            this@LoginViewModel.privacyPolicyLink = privacyPolicyLink
-            this@LoginViewModel.termsLink = termsLink
-        }.catch { e ->
-            e.record()
-        }.launchIn(viewModelScope)
+    private suspend fun updateUrl() = coroutineScope {
+        val privacyPolicyDeferred = async {
+            if (privacyPolicyLink == null) {
+                runCatching { operationsRepository.getPrivacyPolicyLink() }
+            } else {
+                Result.success(privacyPolicyLink)
+            }
+        }
+        val termsDeferred = async {
+            if (termsLink == null) {
+                runCatching { operationsRepository.getTermsOfServiceLink() }
+            } else {
+                Result.success(termsLink)
+            }
+        }
+
+        privacyPolicyLink = privacyPolicyDeferred.await().getOrNull()
+        termsLink = termsDeferred.await().getOrNull()
     }
 }
 

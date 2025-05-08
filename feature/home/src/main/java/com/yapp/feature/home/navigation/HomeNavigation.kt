@@ -5,49 +5,27 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.yapp.feature.home.HomeRoute
-import com.yapp.feature.home.setting.SettingRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
 data object HomeRoute
 
-@Serializable
-data object SettingRoute
-
 fun NavController.navigateToHome(navOptions: NavOptions? = null) {
     navigate(HomeRoute, navOptions)
 }
 
-fun NavController.navigateToSetting(navOptions: NavOptions? = null) {
-    navigate(SettingRoute, navOptions)
-}
-
 fun NavGraphBuilder.homeNavGraph(
-    navigateNotice: () -> Unit,
-    navigateSetting: () -> Unit,
     navigateLogin : () -> Unit,
-    navigateToNoticeDetail: (String) -> Unit
+    navigateSchedule: () -> Unit,
+    handleException: (Throwable) -> Unit,
 ) {
     composable<HomeRoute> {
         HomeRoute(
-            navigateToNotice = navigateNotice,
-            navigateToSetting = navigateSetting,
             navigateToLogin = navigateLogin,
-            navigateToNoticeDetail = { noticeId ->
-                navigateToNoticeDetail(noticeId)
-            }
+            navigateToSchedule = navigateSchedule,
+            handleException = handleException,
         )
     }
 }
 
-fun NavGraphBuilder.settingNavGraph(
-    navigateLogin: () -> Unit,
-    navigateBack: () -> Unit,
-) {
-    composable<SettingRoute> {
-        SettingRoute(
-            navigateBack = navigateBack,
-            navigateLogin = navigateLogin,
-        )
-    }
-}
+
