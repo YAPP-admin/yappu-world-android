@@ -11,10 +11,12 @@ data class SignUpState(
     val signUpCode: String = "",
     val signUpErrorInputTextDescription: String? = null,
     val positions: List<String> = emptyList(),
+    private val isSignUpRequesting: Boolean = false,
 ) {
     val showKeyboardAboveButton = currentStep != SignUpStep.Position
     val showSignUpScreenButton: Boolean = showSignUpCodeBottomDialog.not()
-    val inputCompleteButtonEnable = signUpCode.isNotBlank()
+    val noSignUpCodeButtonEnable: Boolean = isSignUpRequesting.not()
+    val inputCompleteButtonEnable = signUpCode.isNotBlank() && isSignUpRequesting.not()
     val isSignUpErrorInputTextError = signUpErrorInputTextDescription != null
     val backIcon: Int? = when (currentStep) {
         SignUpStep.Complete -> null
