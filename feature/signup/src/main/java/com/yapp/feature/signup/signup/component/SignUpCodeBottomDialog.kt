@@ -23,6 +23,7 @@ fun SignUpCodeBottomDialog(
     inputCompleteButtonEnable: Boolean,
     isSignUpCodeInputTextError: Boolean,
     signUpCodeInputTextDescription: String?,
+    noSignUpCodeButtonEnable: Boolean,
     onDismissRequest: () -> Unit,
     onSignUpCodeChange: (String) -> Unit,
     onInputCompleteButtonClick: () -> Unit,
@@ -64,6 +65,7 @@ fun SignUpCodeBottomDialog(
 
             YappTextPrimaryButtonSmall(
                 modifier = Modifier.fillMaxWidth(),
+                enable = noSignUpCodeButtonEnable,
                 text = stringResource(R.string.signup_code_bottom_dialog_no_code_button),
                 onClick = onNoSignUpCodeButtonClick
             )
