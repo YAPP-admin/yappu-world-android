@@ -48,6 +48,22 @@ android {
     }
 }
 
+tasks.register("mergeDetektReports") {
+    doLast {
+        val output = File(buildDir, "reports/detekt")
+        output.mkdirs()
+        val merged = File(output, "detekt.xml")
+        merged.writeText("")
+        subprojects.forEach { sub ->
+            val report = File(sub.buildDir, "reports/detekt/detekt.xml")
+            if (report.exists()) {
+                merged.appendText(report.readText())
+            }
+        }
+    }
+}
+
+
 dependencies {
     implementation(projects.feature.home)
     implementation(projects.feature.schedule)

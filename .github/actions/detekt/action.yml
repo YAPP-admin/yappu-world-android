@@ -9,9 +9,13 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Run Detekt
+    - name: Run Detekt in all modules
       shell: bash
       run: ./gradlew detekt --continue
+
+    - name: Merge Detekt reports to root
+      shell: bash
+      run: ./gradlew mergeDetektReports
 
     - uses: reviewdog/action-setup@v1
       with:

@@ -19,6 +19,7 @@ tasks.withType<Detekt> {
     reports {
         html.required.set(false)
         xml.required.set(true)
+        xml.outputLocation.set(file("$rootDir/build/reports/detekt/detekt.xml"))
         sarif.required.set(false)
         md.required.set(false)
     }
