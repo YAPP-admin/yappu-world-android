@@ -13,6 +13,10 @@ runs:
       shell: bash
       run: ./gradlew detekt --continue
 
+    - uses: reviewdog/action-setup@v1
+      with:
+        reviewdog_version: latest
+
     - name: Run Reviewdog on Detekt
       shell: bash
       env:
