@@ -19,6 +19,11 @@ jobs:
       - id: build-configuration
         name: Build Configuration
         uses: ./.github/actions/build-configuration
+        with:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
 
       - id: dekekt
         name: Dekekt
