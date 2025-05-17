@@ -5,3 +5,20 @@ runs:
       run: chmod +x gradlew
       shell: bash
 
+
+    - name: Decode keystore from base64
+      run: |
+        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > yapp.keystore
+      shell: bash
+      
+
+    - name: Generate keystore.properties
+      run: |
+        echo "store.file.path=yapp.keystore" > keystore.properties
+        echo "store.password=${{ secrets.KEYSTORE_PASSWORD }}" >> keystore.properties
+        echo "key.password=${{ secrets.KEY_PASSWORD }}" >> keystore.properties
+        echo "key.alias=${{ secrets.KEY_ALIAS }}" >> keystore.properties
+      shell: bash
+
+
+
