@@ -24,6 +24,9 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          BASE_URL_DEBUG: ${{ secrets.BASE_URL_DEBUG }}
+          BASE_URL_RELEASE: ${{ secrets.BASE_URL_RELEASE }}
+          BASE_URL_QA: ${{ secrets.BASE_URL_QA }}
 
       - id: dekekt
         name: Dekekt

@@ -9,6 +9,12 @@ inputs:
     required: true
   KEY_ALIAS:
     required: true
+  BASE_URL_DEBUG:
+    required: true
+  BASE_URL_RELEASE:
+    required: true
+  BASE_URL_QA:
+    required: true
 
 runs:
   using: 'composite' # 외부에서 사용하도록 처리
@@ -30,6 +36,14 @@ runs:
         echo "store.password=${{ inputs.KEYSTORE_PASSWORD }}" >> keystore.properties
         echo "key.password=${{ inputs.KEY_PASSWORD }}" >> keystore.properties
         echo "key.alias=${{ inputs.KEY_ALIAS }}" >> keystore.properties
+      shell: bash
+
+    - name: Generate local.properties
+      run: |
+        echo "sdk.dir=/opt/hostedtoolcache/android/sdk" > local.properties
+        echo "base.url.debug=${{ inputs.BASE_URL_DEBUG }}" >> local.properties
+        echo "base.url.release=${{ inputs.BASE_URL_RELEASE }}" >> local.properties
+        echo "base.url.qa=${{ inputs.BASE_URL_QA }}" >> local.properties
       shell: bash
 
 
