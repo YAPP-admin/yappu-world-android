@@ -156,6 +156,10 @@ hs_err_pid*
 # JIRA plugin
 atlassian-ide-plugin.xml
 
+# Fastlane
+credentials.json
+report.xml
+
 # Mongo Explorer plugin
 .idea/mongoSettings.xml
 
