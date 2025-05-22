@@ -1,0 +1,83 @@
+platform :android do
+  desc "Commit TEST"
+  lane :commit_test do
+    current_version_code = get_version_code
+    new_version_code = current_version_code + 1
+
+    current_version_name = get_version_name
+    update_version_code(new_version_code)
+
+    gradle(
+      task: "assemble",
+      build_type: "debug"
+    )
+
+    git_commit(
+      path: "app/build.gradle.kts",
+      message: "chore: #{current_version_name} (#{new_version_code}) 버전 코드 변경"
+    )
+  end
+
+  desc "Distribute QA Test"
+  lane :distribute_qa_test do
+    gradle(
+      task: "assemble",
+      build_type: "qa"
+    )
+
+    firebase_app_distribution(
+      app: ENV['FIREBASE_APP_ID'],
+      android_artifact_type: "APK",
+      service_credentials_file: File.expand_path(ENV["FIREBASE_CREDENTIAL_PATH"], __dir__),
+      groups: ENV['FIREBASE_GROUP'],
+      debug: true
+    )
+  end
+
+  desc "Distribute QA"
+  lane :distribute_qa do
+    current_version_code = get_version_code
+    new_version_code = current_version_code + 1
+
+    current_version_name = get_version_name
+    update_version_code(new_version_code)
+
+    gradle(
+      task: "assemble",
+      build_type: "qa"
+    )
+
+    git_commit(
+      path: "app/build.gradle.kts",
+      message: "chore: #{current_version_name} (#{new_version_code}) 버전 코드 변경"
+    )
+
+    push_to_git_remote(remote: "origin")
+
+    firebase_app_distribution(
+      app: ENV['FIREBASE_APP_ID'],
+      android_artifact_type: "APK",
+      service_credentials_file: File.expand_path(ENV["FIREBASE_CREDENTIAL_PATH"], __dir__),
+      groups: ENV['FIREBASE_GROUP'],
+      debug: true
+    )
+  end
+end
+
+def get_version_code
+  build_gradle = File.read("../app/build.gradle.kts")
+  match = build_gradle.match(/versionCode\s*=\s*(\d+)/)
+  match[1].to_i
+end
+
+def get_version_name
+  build_gradle = File.read("../app/build.gradle.kts")
+  match = build_gradle.match(/versionName\s*=\s*"(.*?)"/)
+  match[1]
+end
+
+def update_version_code(new_version_code)
+  build_gradle = File.read("../app/build.gradle.kts")
+  updated_build_gradle = build_gradle.gsub(/(versionCode\s*=\s*)\d+/, "versionCode = #{new_version_code}")
+  File.open("../app/build.gradle.kts", "w") { |file| file.puts updated_build_gradle }
+end
