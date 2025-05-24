@@ -136,10 +136,9 @@ internal class HomeViewModel @Inject constructor(
         }.onFailure { e ->
             when (e) {
                 is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
+                is NoScheduledSessionException -> { }
                 else -> {
-                    if (e !is NoScheduledSessionException) {
-                        postSideEffect(HomeSideEffect.HandleException(e))
-                    }
+                    postSideEffect(HomeSideEffect.HandleException(e))
                     e.record()
                 }
             }
