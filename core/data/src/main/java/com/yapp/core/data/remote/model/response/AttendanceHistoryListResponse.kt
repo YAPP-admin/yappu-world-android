@@ -23,6 +23,7 @@ fun AttendanceHistoryListResponse.toAttendanceHistoryListModel() = AttendanceHis
 )
 
 fun AttendanceHistoryListResponse.AttendanceHistoryData.toAttendanceHistoryModel() = AttendanceHistory(
+    name = name,
     checkedInAt = checkedInAt,
     attendanceStatus = attendanceStatus.toAttendanceStatus() ?: AttendanceStatus.ATTENDED,
 )

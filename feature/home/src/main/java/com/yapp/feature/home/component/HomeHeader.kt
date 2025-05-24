@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -172,6 +173,7 @@ private fun SessionItem(
     onClickSessionItem: (String) -> Unit
 ) {
     val context = LocalContext.current
+    val configuration = LocalConfiguration.current
 
     val (clickableModifier, backgroundColor) = if (progressPhase != SessionProgressPhase.DONE) {
         Modifier.yappClickable { onClickSessionItem(id) } to YappTheme.colorScheme.backgroundNormalNormal
@@ -183,7 +185,7 @@ private fun SessionItem(
         modifier = modifier
             .clip(RoundedCornerShape(10))
             .background(color = backgroundColor,)
-            .width(272.dp)
+            .width(configuration.screenWidthDp.dp - 88.dp)
             .heightIn(min = 120.dp)
             .then(clickableModifier)
             .padding(12.dp),
@@ -236,23 +238,25 @@ private fun HomeStickHeaderPreview() {
         1f to YappTheme.colorScheme.secondaryNormal
     )
 
-    HomeHeader(
-        modifier = Modifier.background(brush = Brush.horizontalGradient(colorStops = colorStops)),
-        sessions = listOf(
-            HomeSession(
-                id = "1",
-                name = "2차 데모데이",
-                date = "2025. 03. 15",
-                place = "공덕 창업허브",
-                startTime = "오후 6시",
-                endTime = "오후 8시",
-                dayOfWeek = "금",
-                progressPhase = SessionProgressPhase.TODAY,
-                attendanceStatus = null,
-                relativeDays = 0
-            )
-        ),
-        onClickShowAll = { },
-        upcomingSessionId = "123"
-    )
+    YappTheme {
+        HomeHeader(
+            modifier = Modifier.background(brush = Brush.horizontalGradient(colorStops = colorStops)),
+            sessions = listOf(
+                HomeSession(
+                    id = "1",
+                    name = "2차 데모데이",
+                    date = "2025. 03. 15",
+                    place = "공덕 창업허브",
+                    startTime = "오후 6시",
+                    endTime = "오후 8시",
+                    dayOfWeek = "금",
+                    progressPhase = SessionProgressPhase.TODAY,
+                    attendanceStatus = null,
+                    relativeDays = 0
+                )
+            ),
+            onClickShowAll = { },
+            upcomingSessionId = "123"
+        )
+    }
 }
