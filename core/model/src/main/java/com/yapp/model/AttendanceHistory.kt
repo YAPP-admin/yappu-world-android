@@ -5,6 +5,7 @@ data class AttendanceHistoryList(
 )
 
 data class AttendanceHistory(
+    val name: String,
     val checkedInAt: String?,
     val attendanceStatus: AttendanceStatus
 )
