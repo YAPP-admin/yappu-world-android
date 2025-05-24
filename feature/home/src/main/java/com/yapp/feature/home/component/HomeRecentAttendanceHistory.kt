@@ -13,10 +13,14 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.ScheduleStatusChip
+import com.yapp.feature.home.R
+import com.yapp.model.AttendanceHistory
 import com.yapp.model.AttendanceHistoryList
 import com.yapp.model.AttendanceStatus
 import com.yapp.model.ScheduleProgressPhase
@@ -24,7 +28,8 @@ import com.yapp.model.ScheduleProgressPhase
 @Composable
 internal fun HomeRecentAttendanceHistory(
     modifier: Modifier = Modifier,
-    recentAttendanceHistory: AttendanceHistoryList
+    recentAttendanceHistory: AttendanceHistoryList,
+    onClickShowAll: () -> Unit = {  }
 ) {
     Column(
         modifier = modifier
@@ -39,9 +44,16 @@ internal fun HomeRecentAttendanceHistory(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "전체 출석 내역",
+                text = stringResource(id = R.string.home_recent_attendance_title),
                 style = YappTheme.typography.headline1Bold,
                 color = YappTheme.colorScheme.labelNormal
+            )
+
+            Text(
+                modifier = Modifier.yappClickable(onClick = onClickShowAll),
+                text = stringResource(id = R.string.home_recent_attendance_all_title),
+                style = YappTheme.typography.label1NormalRegular,
+                color = YappTheme.colorScheme.labelAlternative,
             )
         }
 
@@ -49,7 +61,7 @@ internal fun HomeRecentAttendanceHistory(
 
         recentAttendanceHistory.histories.forEachIndexed { index, attendanceHistory ->
             HomeRecentAttendanceHistoryItem(
-                date = attendanceHistory.checkedInAt ?: "2023.10.01",
+                name = attendanceHistory.name,
                 attendanceStatus = attendanceHistory.attendanceStatus
             )
             if (index != recentAttendanceHistory.histories.size - 1) {
@@ -64,7 +76,7 @@ internal fun HomeRecentAttendanceHistory(
 
 @Composable
 private fun HomeRecentAttendanceHistoryItem(
-    date: String,
+    name: String,
     attendanceStatus: AttendanceStatus
 ) {
     Row(
@@ -74,9 +86,9 @@ private fun HomeRecentAttendanceHistoryItem(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = date,
+            text = name,
             style = YappTheme.typography.label2Regular,
-            color = YappTheme.colorScheme.labelAlternative
+            color = YappTheme.colorScheme.labelNeutral
         )
 
         ScheduleStatusChip(
@@ -89,8 +101,17 @@ private fun HomeRecentAttendanceHistoryItem(
 @Preview
 @Composable
 private fun HomeRecentAttendanceHistoryItemPreview() {
-    HomeRecentAttendanceHistoryItem(
-        date = "2023.10.01",
+    val previewData = AttendanceHistory(
+        checkedInAt = "2023.10.01",
+        name = "YAPP 스터디",
         attendanceStatus = AttendanceStatus.ATTENDED
     )
+
+    YappTheme {
+        HomeRecentAttendanceHistory(
+            recentAttendanceHistory = AttendanceHistoryList(
+                histories = List(5) { previewData }
+            )
+        )
+    }
 }

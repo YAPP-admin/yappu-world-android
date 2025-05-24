@@ -28,6 +28,9 @@
     <string name="session_in_progress">진행중</string>
     <string name="session_attendance_not_yet_message">20분 전부터 출석이 가능해요</string>
 
+    <string name="home_recent_attendance_title">최근 출석 현황</string>
+    <string name="home_recent_attendance_all_title">전체 보기</string>
+
     <!--  AttendanceDialog  -->
     <string name="attendance_dialog_title">오늘의 출석을 인증해주세요!</string>
     <string name="attendance_dialog_message">출석 코드를 입력하면 오늘 출석이 완료돼요.</string>
