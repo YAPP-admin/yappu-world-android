@@ -79,15 +79,15 @@ class NavigatorState(
         navController.navigateToNotice()
     }
 
-    fun navigateToNoticeDetail(noticeId: String) {
+    fun navigateNoticeDetail(noticeId: String) {
         navController.navigateToNoticeDetail(noticeId)
     }
 
-    fun navigateToAttendance() {
+    fun navigateAttendance() {
         navController.navigateToAttendance()
     }
 
-    fun navigateToPreviousHistory() {
+    fun navigatePreviousHistory() {
         navController.navigateToPreviousHistory()
     }
 
