@@ -14,6 +14,7 @@ import com.yapp.model.AttendanceStatus
 import com.yapp.model.HomeSessionList
 import com.yapp.model.exceptions.CodeNotCorrectException
 import com.yapp.model.exceptions.InvalidTokenException
+import com.yapp.model.exceptions.NoScheduledSessionException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
@@ -52,8 +53,9 @@ internal class HomeViewModel @Inject constructor(
                 }
             }
 
-            HomeIntent.RefreshUpcomingSession -> {
+            HomeIntent.Refresh -> {
                 loadUpcomingSessionInfo(reduce, postSideEffect)
+                loadRecentAttendanceHistory(reduce, postSideEffect)
             }
 
             HomeIntent.ClickShowAllSession -> postSideEffect(HomeSideEffect.NavigateToSchedule)
@@ -134,7 +136,12 @@ internal class HomeViewModel @Inject constructor(
         }.onFailure { e ->
             when (e) {
                 is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
-                else -> e.record()
+                else -> {
+                    if (e !is NoScheduledSessionException) {
+                        postSideEffect(HomeSideEffect.HandleException(e))
+                    }
+                    e.record()
+                }
             }
         }
         reduce { copy(isLoading = false) }
@@ -158,7 +165,10 @@ internal class HomeViewModel @Inject constructor(
         }.onFailure { e ->
             when (e) {
                 is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
-                else -> e.record()
+                else -> {
+                    postSideEffect(HomeSideEffect.HandleException(e))
+                    e.record()
+                }
             }
         }
         reduce { copy(isLoading = false) }
@@ -199,15 +209,15 @@ internal class HomeViewModel @Inject constructor(
                         showAttendanceCodeError = false
                     )
                 }
-            }.onFailure {
-                when (it) {
+            }.onFailure { e ->
+                when (e) {
                     is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
                     is CodeNotCorrectException -> {
                         reduce { copy(showAttendanceCodeError = true) }
                     }
                     else -> {
-                        postSideEffect(HomeSideEffect.HandleException(it))
-                        it.record()
+                        postSideEffect(HomeSideEffect.HandleException(e))
+                        e.record()
                     }
                 }
             }

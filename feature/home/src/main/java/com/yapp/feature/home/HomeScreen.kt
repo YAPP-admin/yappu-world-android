@@ -87,7 +87,7 @@ fun HomeScreen(
             isRefreshing = homeState.isLoading,
             state = pullToRefreshState,
             onRefresh = {
-                onIntent(HomeIntent.RefreshUpcomingSession)
+                onIntent(HomeIntent.Refresh)
             },
             indicator = {
                 Indicator(

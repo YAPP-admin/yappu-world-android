@@ -31,7 +31,7 @@ sealed interface HomeIntent {
     data object ClickShowAllSession : HomeIntent
     data object ClickShowAllAttendanceHistory : HomeIntent
 
-    data object RefreshUpcomingSession : HomeIntent
+    data object Refresh : HomeIntent
 
     data class ChangeAttendanceCodeDigits(val code: List<String>) : HomeIntent
     data object ClickRequestAttendance : HomeIntent
