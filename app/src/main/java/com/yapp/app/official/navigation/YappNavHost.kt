@@ -61,6 +61,9 @@ fun YappNavHost(
             navigateSchedule = {
                 navigator.navigateToTopLevelDestination(TopLevelDestination.SCHEDULE)
             },
+            navigateAttendanceHistory = {
+                navigator.navigateAttendance()
+            },
             handleException = handleException,
         )
         settingNavGraph(
@@ -82,7 +85,7 @@ fun YappNavHost(
         )
         noticeNavGraph(
             navigateToNoticeDetail = { noticeId ->
-                navigator.navigateToNoticeDetail(noticeId)
+                navigator.navigateNoticeDetail(noticeId)
             },
             navigateToLogin = {
                 navigator.navigateLoginScreen(
@@ -103,8 +106,8 @@ fun YappNavHost(
         profileNavGraph(
             onNavigateToSetting = { navigator.navigateSettingScreen() },
             onNavigateToLogin = { navigator.navigateLoginScreen(clearBackStackNavOptions) },
-            onNavigateToPreviousHistory = { navigator.navigateToPreviousHistory() },
-            onNavigateToAttendHistory = { navigator.navigateToAttendance() },
+            onNavigateToPreviousHistory = { navigator.navigatePreviousHistory() },
+            onNavigateToAttendHistory = { navigator.navigateAttendance() },
             handleException = handleException,
         )
         attendanceHistoryNavGraph(

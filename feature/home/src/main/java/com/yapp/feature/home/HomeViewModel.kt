@@ -2,19 +2,19 @@ package com.yapp.feature.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yapp.core.common.android.record
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.AttendanceRepository
 import com.yapp.dataapi.ScheduleRepository
 import com.yapp.domain.runCatchingIgnoreCancelled
+import com.yapp.model.AttendanceHistoryList
 import com.yapp.model.AttendanceInfo
 import com.yapp.model.AttendanceStatus
 import com.yapp.model.HomeSessionList
 import com.yapp.model.exceptions.CodeNotCorrectException
 import com.yapp.model.exceptions.InvalidTokenException
-import com.yapp.model.exceptions.UserNotFoundForEmailException
+import com.yapp.model.exceptions.NoScheduledSessionException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
@@ -46,17 +46,20 @@ internal class HomeViewModel @Inject constructor(
                 viewModelScope.launch {
                     joinAll(
                         loadSessionInfo(reduce, postSideEffect),
-                        loadUpcomingSessionInfo(reduce, postSideEffect)
+                        loadUpcomingSessionInfo(reduce, postSideEffect),
+                        loadRecentAttendanceHistory(reduce, postSideEffect)
                     )
                     isInitialized = true
                 }
             }
 
-            HomeIntent.RefreshUpcomingSession -> {
+            HomeIntent.Refresh -> {
                 loadUpcomingSessionInfo(reduce, postSideEffect)
+                loadRecentAttendanceHistory(reduce, postSideEffect)
             }
 
             HomeIntent.ClickShowAllSession -> postSideEffect(HomeSideEffect.NavigateToSchedule)
+            HomeIntent.ClickShowAllAttendanceHistory -> postSideEffect(HomeSideEffect.NavigateToAttendanceHistory)
             HomeIntent.ClickRequestAttendCode -> {
                 reduce {
                     copy(showAttendCodeBottomSheet = true)
@@ -133,12 +136,42 @@ internal class HomeViewModel @Inject constructor(
         }.onFailure { e ->
             when (e) {
                 is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
-                else -> e.record()
+                is NoScheduledSessionException -> { }
+                else -> {
+                    postSideEffect(HomeSideEffect.HandleException(e))
+                    e.record()
+                }
             }
         }
         reduce { copy(isLoading = false) }
     }
 
+    private fun loadRecentAttendanceHistory(
+        reduce: (HomeState.() -> HomeState) -> Unit,
+        postSideEffect: (HomeSideEffect) -> Unit
+    ) = viewModelScope.launch {
+        reduce { copy(isLoading = true) }
+        runCatchingIgnoreCancelled {
+            attendanceRepository.getAttendanceHistory()
+        }.onSuccess { attendanceHistory ->
+            reduce {
+                copy(
+                    recentAttendanceHistory = AttendanceHistoryList(
+                        histories = attendanceHistory.histories.take(5)
+                    )
+                )
+            }
+        }.onFailure { e ->
+            when (e) {
+                is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
+                else -> {
+                    postSideEffect(HomeSideEffect.HandleException(e))
+                    e.record()
+                }
+            }
+        }
+        reduce { copy(isLoading = false) }
+    }
 
     private fun requestAttendance(
         sessionId: String?,
@@ -175,15 +208,15 @@ internal class HomeViewModel @Inject constructor(
                         showAttendanceCodeError = false
                     )
                 }
-            }.onFailure {
-                when (it) {
+            }.onFailure { e ->
+                when (e) {
                     is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
                     is CodeNotCorrectException -> {
                         reduce { copy(showAttendanceCodeError = true) }
                     }
                     else -> {
-                        postSideEffect(HomeSideEffect.HandleException(it))
-                        it.record()
+                        postSideEffect(HomeSideEffect.HandleException(e))
+                        e.record()
                     }
                 }
             }

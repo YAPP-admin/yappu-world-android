@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.yapp.feature.setting.SettingRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -19,7 +20,7 @@ fun NavGraphBuilder.settingNavGraph(
     handleException: (Throwable) -> Unit,
 ) {
     composable<SettingRoute> {
-        com.yapp.feature.setting.SettingRoute(
+        SettingRoute(
             navigateBack = navigateBack,
             navigateLogin = navigateLogin,
             handleException = handleException,

@@ -20,6 +20,8 @@ jobs:
   ci_dev:
     needs: ready_to_ci
     uses: ./.github/workflows/build_check.yml
+    with:
+      ref: ${{ github.event.pull_request.head.ref }}
     strategy:
       matrix:
         include:

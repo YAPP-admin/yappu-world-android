@@ -1,4 +1,4 @@
-name: "Detekt With Review dogs"
+name: "Detekt With Reviewdog"
 description: "내부 코드 품질 개선 액션"
 
 inputs:
@@ -7,20 +7,23 @@ inputs:
     required: true
 
 runs:
-  using: 'composite' # 외부에서 사용하도록 처리
+  using: 'composite'
   steps:
-    # detekt 머지 처리
-    - name: Build detekt
+    - name: Run Detekt in all modules
       shell: bash
-      run: ./gradlew detekt reportMerge --continue
+      run: ./gradlew detekt --continue
 
-    - name: Run Default reviewdog
+    - name: Merge Detekt reports to root
+      shell: bash
+      run: ./gradlew mergeDetektReports
+
+    - uses: reviewdog/action-setup@v1
+      with:
+        reviewdog_version: latest
+
+    - name: Run Reviewdog on Detekt
+      shell: bash
       env:
         REVIEWDOG_GITHUB_API_TOKEN: ${{ inputs.GH_TOKEN }}
-      shell: bash
       run: |
-        cat build/reports/detekt/merge.xml | reviewdog -f=checkstyle -name="detekt-default" -reporter="github-pr-review" -level="info"
-    
-    
-
-      
+        cat build/reports/detekt/detekt.xml | reviewdog -f=checkstyle -name="detekt" -reporter=github-pr-review -level=info
