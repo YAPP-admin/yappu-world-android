@@ -1,6 +1,7 @@
 package com.yapp.feature.history.attend
 
 import com.yapp.model.AttendanceHistoryList
+import java.text.DecimalFormat
 
 data class AttendHistoryState(
     val totalSessionCount: Int = 0,
@@ -14,7 +15,14 @@ data class AttendHistoryState(
     val attendanceHistoryList: AttendanceHistoryList = AttendanceHistoryList(
         histories = emptyList()
     ),
-)
+) {
+    val formattedSessionProgressRate: String
+        get() = if (sessionProgressRate % 1.0 == 0.0) {
+            "${sessionProgressRate.toInt()}%"
+        } else {
+            "${DecimalFormat("#.#").format(sessionProgressRate)}%"
+        }
+}
 
 sealed interface AttendHistoryIntent {
     data object OnEntryScreen : AttendHistoryIntent

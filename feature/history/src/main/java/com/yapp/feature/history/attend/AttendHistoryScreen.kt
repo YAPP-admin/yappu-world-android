@@ -46,7 +46,7 @@ internal fun AttendHistoryRoute(
 
     AttendHistoryScreen(
         attendancePoint = uiState.attendancePoint,
-        sessionProgressRate = uiState.sessionProgressRate,
+        sessionProgressRate = uiState.formattedSessionProgressRate,
         totalSessionCount = uiState.totalSessionCount,
         totalRemainSessionCount = uiState.remainingSessionCount,
         attendance = uiState.attendanceCount,
@@ -63,7 +63,7 @@ internal fun AttendHistoryRoute(
 @Composable
 private fun AttendHistoryScreen(
     attendancePoint: Int,
-    sessionProgressRate: Double,
+    sessionProgressRate: String,
     totalSessionCount: Int,
     totalRemainSessionCount: Int,
     attendance: Int,
@@ -106,7 +106,7 @@ private fun AttendHistoryScreen(
                         modifier = Modifier.padding(horizontal = 20.dp),
                         title = stringResource(R.string.session_title),
                         subTitle = stringResource(R.string.total_remain_session_progress_rate_title),
-                        totalRate = "${sessionProgressRate}%",
+                        totalRate = sessionProgressRate,
                         slot = {
                             StatusItem(
                                 modifier = Modifier.weight(1f),
