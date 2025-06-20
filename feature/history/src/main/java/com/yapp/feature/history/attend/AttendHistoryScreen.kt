@@ -17,8 +17,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.component.header.YappHeaderActionbar
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.core.ui.component.YappBackground
+import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.history.R
 import com.yapp.feature.history.attend.component.AttendanceStatusSection
 import com.yapp.feature.history.attend.component.SessionAttendanceHistory
@@ -63,7 +63,7 @@ internal fun AttendHistoryRoute(
 @Composable
 private fun AttendHistoryScreen(
     attendancePoint: Int,
-    sessionProgressRate: Int,
+    sessionProgressRate: Double,
     totalSessionCount: Int,
     totalRemainSessionCount: Int,
     attendance: Int,
