@@ -42,7 +42,6 @@ import com.yapp.feature.schedule.component.DateGroupedScheduleItem
 import com.yapp.feature.schedule.component.ScheduleTabRow
 import com.yapp.feature.schedule.component.UpcomingSessionSection
 import com.yapp.model.ScheduleList
-import com.yapp.core.ui.R as coreR
 import com.yapp.model.UpcomingSessionInfo
 
 @Composable
@@ -161,13 +160,13 @@ private fun ScheduleAllScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Image(
-                        painter = painterResource(id = coreR.drawable.illust_yappu_sleeping),
+                        painter = painterResource(id = com.yapp.core.ui.R.drawable.illust_yappu_construction),
                         contentDescription = null,
                     )
                     Spacer(Modifier.height(32.dp))
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = "등록된 일정이 없습니다.",
+                        text = stringResource(R.string.schedule_empty_text),
                         color = YappTheme.colorScheme.labelAlternative,
                         style = YappTheme.typography.label1NormalRegular,
                         textAlign = TextAlign.Center
