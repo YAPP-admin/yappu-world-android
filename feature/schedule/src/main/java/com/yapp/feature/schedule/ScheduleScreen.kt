@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -137,7 +138,9 @@ private fun ScheduleAllScreen(
     onIntent: (ScheduleIntent) -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
+            .navigationBarsPadding()
+        ,
     ) {
         item {
             Spacer(modifier = Modifier.height(20.dp))
@@ -155,7 +158,9 @@ private fun ScheduleAllScreen(
             item {
                 Column(
                     modifier = Modifier
-                        .fillParentMaxSize(),
+                        .fillParentMaxSize()
+                        .padding(bottom = 56.dp)
+                    ,
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
@@ -173,7 +178,6 @@ private fun ScheduleAllScreen(
                 }
             }
         }
-
         if (schedules != null) {
             items(
                 items = schedules.dates,
