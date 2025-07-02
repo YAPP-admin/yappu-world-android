@@ -163,7 +163,6 @@ private fun ScheduleAllScreen(
                         painter = painterResource(id = com.yapp.core.ui.R.drawable.illust_yappu_construction),
                         contentDescription = null,
                     )
-                    Spacer(Modifier.height(32.dp))
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = stringResource(R.string.schedule_empty_text),
