@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -115,11 +114,10 @@ internal fun ScheduleScreen(
                             selectedMonth = scheduleState.selectedMonth,
                             schedules = scheduleState.schedules[
                                 Pair(scheduleState.selectedYear, scheduleState.selectedMonth)
-                            ],
+                            ] ?: ScheduleList(emptyList()),
                             onIntent = onIntent
                         )
                     }
-
                     ScheduleTab.SESSION -> ScheduleSessionScreen(
                         upcomingSessionInfo = scheduleState.upcomingSessionInfo,
                         sessions = scheduleState.sessions
@@ -134,61 +132,56 @@ internal fun ScheduleScreen(
 private fun ScheduleAllScreen(
     selectedYear: Int,
     selectedMonth: Int,
-    schedules: ScheduleList?,
-    onIntent: (ScheduleIntent) -> Unit
+    schedules: ScheduleList,
+    onIntent: (ScheduleIntent) -> Unit,
 ) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-            .navigationBarsPadding()
-        ,
-    ) {
-        item {
-            Spacer(modifier = Modifier.height(20.dp))
-            MonthHeader(
-                modifier = Modifier.padding(horizontal = 20.dp),
-                year = selectedYear,
-                month = selectedMonth,
-                onPreviousMonthClick = { onIntent(ScheduleIntent.ClickPreviousMonth) },
-                onNextMonthClick = { onIntent(ScheduleIntent.ClickNextMonth) }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-        }
+    Spacer(modifier = Modifier.height(20.dp))
+    MonthHeader(
+        modifier = Modifier.padding(horizontal = 20.dp),
+        year = selectedYear,
+        month = selectedMonth,
+        onPreviousMonthClick = { onIntent(ScheduleIntent.ClickPreviousMonth) },
+        onNextMonthClick = { onIntent(ScheduleIntent.ClickNextMonth) }
+    )
+    Spacer(modifier = Modifier.height(8.dp))
 
-        if (schedules?.isEmpty == true) {
-            item {
-                Column(
-                    modifier = Modifier
-                        .fillParentMaxSize()
-                        .padding(bottom = 56.dp)
-                    ,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Image(
-                        painter = painterResource(id = com.yapp.core.ui.R.drawable.illust_yappu_construction),
-                        contentDescription = null,
-                    )
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = stringResource(R.string.schedule_empty_text),
-                        color = YappTheme.colorScheme.labelAlternative,
-                        style = YappTheme.typography.label1NormalRegular,
-                        textAlign = TextAlign.Center
-                    )
-                }
+    when (schedules.isEmpty) {
+        true -> {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Image(
+                    painter = painterResource(id = com.yapp.core.ui.R.drawable.illust_yappu_construction),
+                    contentDescription = null,
+                )
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(R.string.schedule_empty_text),
+                    color = YappTheme.colorScheme.labelAlternative,
+                    style = YappTheme.typography.label1NormalRegular,
+                    textAlign = TextAlign.Center
+                )
             }
         }
-        if (schedules != null) {
-            items(
-                items = schedules.dates,
-                key = { it.date },
+
+        false -> {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
             ) {
-                DateGroupedScheduleItem(
-                    date = it.date,
-                    dayOfWeek = it.dayOfTheWeek,
-                    isToday = it.isToday,
-                    schedules = it.schedules,
-                ) { }
+                items(
+                    items = schedules.dates,
+                    key = { it.date },
+                ) {
+                    DateGroupedScheduleItem(
+                        date = it.date,
+                        dayOfWeek = it.dayOfTheWeek,
+                        isToday = it.isToday,
+                        schedules = it.schedules,
+                    ) { }
+                }
+
             }
         }
     }
@@ -197,7 +190,7 @@ private fun ScheduleAllScreen(
 @Composable
 private fun ScheduleSessionScreen(
     upcomingSessionInfo: UpcomingSessionInfo?,
-    sessions: ScheduleList
+    sessions: ScheduleList,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth()
