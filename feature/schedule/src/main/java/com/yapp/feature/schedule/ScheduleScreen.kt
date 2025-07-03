@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,6 +27,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -118,6 +121,7 @@ internal fun ScheduleScreen(
                             onIntent = onIntent
                         )
                     }
+
                     ScheduleTab.SESSION -> ScheduleSessionScreen(
                         upcomingSessionInfo = scheduleState.upcomingSessionInfo,
                         sessions = scheduleState.sessions
@@ -135,54 +139,61 @@ private fun ScheduleAllScreen(
     schedules: ScheduleList,
     onIntent: (ScheduleIntent) -> Unit,
 ) {
-    Spacer(modifier = Modifier.height(20.dp))
-    MonthHeader(
-        modifier = Modifier.padding(horizontal = 20.dp),
-        year = selectedYear,
-        month = selectedMonth,
-        onPreviousMonthClick = { onIntent(ScheduleIntent.ClickPreviousMonth) },
-        onNextMonthClick = { onIntent(ScheduleIntent.ClickNextMonth) }
-    )
-    Spacer(modifier = Modifier.height(8.dp))
+    val density = LocalDensity.current
+    val navigationBarHeightDp = with(density) {
+        WindowInsets.navigationBars.getBottom(this).toDp()
+    }
 
-    when (schedules.isEmpty) {
-        true -> {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Image(
-                    painter = painterResource(id = com.yapp.core.ui.R.drawable.illust_yappu_construction),
-                    contentDescription = null,
-                )
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(R.string.schedule_empty_text),
-                    color = YappTheme.colorScheme.labelAlternative,
-                    style = YappTheme.typography.label1NormalRegular,
-                    textAlign = TextAlign.Center
-                )
-            }
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+            MonthHeader(
+                modifier = Modifier.padding(horizontal = 20.dp),
+                year = selectedYear,
+                month = selectedMonth,
+                onPreviousMonthClick = { onIntent(ScheduleIntent.ClickPreviousMonth) },
+                onNextMonthClick = { onIntent(ScheduleIntent.ClickNextMonth) }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
         }
-
-        false -> {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                items(
-                    items = schedules.dates,
-                    key = { it.date },
+        if (schedules.isEmpty) {
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillParentMaxSize()
+                        .padding(bottom = navigationBarHeightDp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    DateGroupedScheduleItem(
-                        date = it.date,
-                        dayOfWeek = it.dayOfTheWeek,
-                        isToday = it.isToday,
-                        schedules = it.schedules,
-                    ) { }
+                    Image(
+                        painter = painterResource(id = com.yapp.core.ui.R.drawable.illust_yappu_construction),
+                        contentDescription = null,
+                    )
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = stringResource(R.string.schedule_empty_text),
+                        color = YappTheme.colorScheme.labelAlternative,
+                        style = YappTheme.typography.label1NormalRegular,
+                        textAlign = TextAlign.Center
+                    )
                 }
 
             }
+        } else {
+            items(
+                items = schedules.dates,
+                key = { it.date },
+            ) {
+                DateGroupedScheduleItem(
+                    date = it.date,
+                    dayOfWeek = it.dayOfTheWeek,
+                    isToday = it.isToday,
+                    schedules = it.schedules,
+                ) { }
+            }
+
         }
     }
 }
