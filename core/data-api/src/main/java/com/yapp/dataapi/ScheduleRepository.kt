@@ -5,7 +5,7 @@ import com.yapp.model.ScheduleList
 import com.yapp.model.UpcomingSessionInfo
 
 interface ScheduleRepository {
-    suspend fun getSessions(): HomeSessionList
+    suspend fun getSessions(startDate: String, endDate: String): HomeSessionList
 
     suspend fun getDateGroupedSessions(): ScheduleList
 
