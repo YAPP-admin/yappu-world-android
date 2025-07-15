@@ -17,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination
@@ -47,6 +48,8 @@ fun YappApp(
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
 
+    var bottomBarHeightDp by remember { mutableStateOf(0.dp) }
+
     Scaffold(
         bottomBar = {
             AnimatedVisibility(
@@ -60,7 +63,8 @@ fun YappApp(
                     currentDestination = navigator.currentDestination,
                     onNavigateToDestination = { destination ->
                         navigator.navigateToTopLevelDestination(destination)
-                    }
+                    },
+                    onHeightMeasured = { height -> bottomBarHeightDp = height}
                 )
             }
         },
@@ -71,7 +75,8 @@ fun YappApp(
             modifier = Modifier
                 .padding(padding)
                 .consumeWindowInsets(
-                    WindowInsets(0.dp).takeIf { !navigator.shouldShowBottomBar } ?: WindowInsets.navigationBars
+                    WindowInsets(0.dp).takeIf { !navigator.shouldShowBottomBar }
+                        ?: WindowInsets.navigationBars
                 ),
             handleException = { showCommonErrorDialog = true }
         )
@@ -123,7 +128,8 @@ private fun YappBottomNavigationBar(
     modifier: Modifier = Modifier,
     destinations: List<TopLevelDestination>,
     currentDestination: NavDestination?,
-    onNavigateToDestination: (TopLevelDestination) -> Unit
+    onNavigateToDestination: (TopLevelDestination) -> Unit,
+    onHeightMeasured: (Dp) -> Unit
 ) {
     BottomNavigationBar(
         modifier = modifier

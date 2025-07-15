@@ -7,11 +7,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -39,6 +37,7 @@ import com.yapp.core.designsystem.component.chip.ChipColorType
 import com.yapp.core.designsystem.component.chip.YappChipSmall
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
+import com.yapp.core.ui.component.LocalBottomBarHeight
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.schedule.component.DateGroupedScheduleItem
@@ -140,9 +139,7 @@ private fun ScheduleAllScreen(
     onIntent: (ScheduleIntent) -> Unit,
 ) {
     val density = LocalDensity.current
-    val navigationBarHeightDp = with(density) {
-        WindowInsets.navigationBars.getBottom(this).toDp()
-    }
+    val bottomBarHeightDp = LocalBottomBarHeight.current
 
     LazyColumn(
         modifier = Modifier.fillMaxSize()
@@ -163,7 +160,7 @@ private fun ScheduleAllScreen(
                 Column(
                     modifier = Modifier
                         .fillParentMaxSize()
-                        .padding(bottom = navigationBarHeightDp),
+                        .padding(bottom = bottomBarHeightDp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
