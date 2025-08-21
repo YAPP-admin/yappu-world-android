@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.theme.YappTheme
 
-val LocalBottomBarHeight = compositionLocalOf { 56.dp }
+val LocalBottomBarHeight = compositionLocalOf { 0.dp }
 
 @Composable
 fun BottomNavigationBar(
