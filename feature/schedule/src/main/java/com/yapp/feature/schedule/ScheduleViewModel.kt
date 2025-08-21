@@ -7,6 +7,7 @@ import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.ScheduleRepository
 import com.yapp.domain.runCatchingIgnoreCancelled
+import com.yapp.model.ScheduleProgressPhase
 import com.yapp.model.exceptions.InvalidTokenException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -40,7 +41,6 @@ class ScheduleViewModel @Inject constructor(
                 when (intent.tab) {
                     ScheduleTab.ALL -> loadScheduleInfo(state.selectedYear, state.selectedMonth, reduce, postSideEffect)
                     ScheduleTab.SESSION -> {
-                        loadUpcomingSessionInfo(reduce, postSideEffect)
                         loadSessions(reduce, postSideEffect)
                     }
                 }
@@ -98,22 +98,6 @@ class ScheduleViewModel @Inject constructor(
         reduce { copy(isLoading = false) }
     }
 
-    private fun loadUpcomingSessionInfo(
-        reduce: (ScheduleState.() -> ScheduleState) -> Unit,
-        postSideEffect: (ScheduleSideEffect) -> Unit,
-    ) = viewModelScope.launch {
-        reduce { copy(isLoading = true) }
-        runCatchingIgnoreCancelled {
-            scheduleRepository.getUpcomingSession()
-        }.onSuccess {
-            reduce { copy(isLoading = false, upcomingSessionInfo = it) }
-        }.onFailure { e ->
-            postSideEffect(ScheduleSideEffect.HandleException(e))
-            e.record()
-        }
-        reduce { copy(isLoading = false) }
-    }
-
     private fun loadSessions(
         reduce: (ScheduleState.() -> ScheduleState) -> Unit,
         postSideEffect: (ScheduleSideEffect) -> Unit,
@@ -122,7 +106,15 @@ class ScheduleViewModel @Inject constructor(
         runCatchingIgnoreCancelled {
             scheduleRepository.getDateGroupedSessions()
         }.onSuccess {
-            reduce { copy(isLoading = false, sessions = it) }
+            val upcomingSessions = it.dates
+                .flatMap { date -> date.schedules }
+                .filter { session -> session.scheduleProgressPhase == ScheduleProgressPhase.TODAY || session.scheduleProgressPhase == ScheduleProgressPhase.ONGOING }
+
+            reduce {
+                copy(
+                    isLoading = false, sessions = it, upcomingSessionInfo = upcomingSessions
+                )
+            }
         }.onFailure { e ->
             postSideEffect(ScheduleSideEffect.HandleException(e))
             e.record()
@@ -158,11 +150,15 @@ class ScheduleViewModel @Inject constructor(
     ) = viewModelScope.launch {
         reduce { copy(isLoading = true) }
         runCatchingIgnoreCancelled {
-            scheduleRepository.refreshUpcomingSessions()
+            scheduleRepository.getDateGroupedSessions()
         }.onSuccess {
+            val upcomingSessions = it.dates
+                .flatMap { date -> date.schedules }
+                .filter { session -> session.scheduleProgressPhase == ScheduleProgressPhase.TODAY || session.scheduleProgressPhase == ScheduleProgressPhase.ONGOING }
+
             reduce {
                 copy(
-                    upcomingSessionInfo = it
+                    isLoading = false, upcomingSessionInfo = upcomingSessions
                 )
             }
         }.onFailure { e ->
