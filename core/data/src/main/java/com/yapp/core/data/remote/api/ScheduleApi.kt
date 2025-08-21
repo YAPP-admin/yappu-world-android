@@ -17,6 +17,9 @@ interface ScheduleApi {
     @GET("v1/sessions/upcoming")
     suspend fun getUpcomingSession(): UpcomingSessionAttendanceResponse
 
+    @GET("v1/active-generation/sessions")
+    suspend fun getActiveGenerationSessions(): SessionResponse
+
     @GET("v1/schedules")
     suspend fun getSchedules(
         @Query("year") year: Int,

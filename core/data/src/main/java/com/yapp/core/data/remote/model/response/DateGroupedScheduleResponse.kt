@@ -80,3 +80,26 @@ fun String?.toScheduleProgressPhase() =
 
 fun String?.toAttendanceStatus() =
     AttendanceStatus.entries.firstOrNull { it.label == this }
+
+// v1/active-generation/sessions 대응을 위해 사용
+fun String?.toActiveSessionProgressPhase(): ScheduleProgressPhase {
+    return when (this) {
+        "DONE" -> ScheduleProgressPhase.DONE
+        "ONGOING" -> ScheduleProgressPhase.ONGOING
+        "TODAY" -> ScheduleProgressPhase.TODAY
+        "PENDING" -> ScheduleProgressPhase.PENDING
+        else -> ScheduleProgressPhase.PENDING
+    }
+}
+
+fun String?.toActiveSessionAttendanceStatus(): AttendanceStatus? {
+    return when (this) {
+        "PENDING" -> null
+        "ON_TIME" -> AttendanceStatus.ATTENDED
+        "LATE" -> AttendanceStatus.LATE
+        "ABSENT" -> AttendanceStatus.ABSENT
+        "EARLY_CHECK_OUT" -> AttendanceStatus.EARLY_LEAVE
+        "EXCUSED_ABSENCE" -> AttendanceStatus.EXCUSED
+        else -> null
+    }
+}

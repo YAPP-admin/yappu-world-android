@@ -45,12 +45,14 @@ fun List<SessionResponse.Session>.toDateGroupedScheduleList(): List<DateGroupedS
                     place = it.place,
                     date = it.date,
                     endDate = it.endDate,
+                    startDayOfWeek = it.startDayOfWeek,
+                    endDayOfWeek = it.endDayOfWeek,
                     time = it.time,
                     endTime = it.endTime,
                     scheduleType = ScheduleType.SESSION,
                     sessionType = it.type.toSessionType(),
-                    scheduleProgressPhase = it.progressPhase.toScheduleProgressPhase(),
-                    attendanceStatus = it.attendanceStatus?.toAttendanceStatus()
+                    scheduleProgressPhase = it.progressPhase.toActiveSessionProgressPhase(),
+                    attendanceStatus = it.attendanceStatus?.toActiveSessionAttendanceStatus()
                 )
             }
         )
