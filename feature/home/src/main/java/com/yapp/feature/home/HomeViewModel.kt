@@ -16,6 +16,7 @@ import com.yapp.model.HomeSessionList
 import com.yapp.model.exceptions.CodeNotCorrectException
 import com.yapp.model.exceptions.InvalidTokenException
 import com.yapp.model.exceptions.NoScheduledSessionException
+import com.yapp.model.exceptions.NotFoundException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
@@ -140,6 +141,7 @@ internal class HomeViewModel @Inject constructor(
             when (e) {
                 is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
                 is NoScheduledSessionException -> { }
+                is NotFoundException -> { }
                 else -> {
                     postSideEffect(HomeSideEffect.HandleException(e))
                     e.record()
