@@ -69,9 +69,7 @@ internal fun UpcomingSessionSection(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp),
+            modifier = Modifier.fillMaxWidth(),
             state = lazyListState,
             flingBehavior = flingBehavior,
             horizontalArrangement = Arrangement.spacedBy(8.dp),

@@ -33,6 +33,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.yapp.core.designsystem.component.chip.ChipColorType
+import com.yapp.core.designsystem.component.chip.YappChipSmall
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.LocalBottomBarHeight
@@ -209,12 +211,23 @@ private fun ScheduleSessionScreen(
             Column(
                 modifier = Modifier.padding(vertical = 20.dp)
             ) {
-                Text(
+                Row(
                     modifier = Modifier.padding(start = 20.dp),
-                    text = stringResource(id = R.string.upcoming_session_section_title),
-                    style = YappTheme.typography.headline2Bold,
-                    color = YappTheme.colorScheme.labelNormal
-                )
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.upcoming_session_section_title),
+                        style = YappTheme.typography.headline2Bold,
+                        color = YappTheme.colorScheme.labelNormal
+                    )
+
+                    YappChipSmall(
+                        text = stringResource(id = R.string.d_day),
+                        colorType = ChipColorType.Main,
+                        isFill = true,
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
