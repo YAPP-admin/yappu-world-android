@@ -54,7 +54,7 @@ internal fun SessionItem(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            location?.let {
+            if (!location.isNullOrBlank()) {
                 IconWithText(
                     iconResId = R.drawable.icon_location,
                     text = location,
