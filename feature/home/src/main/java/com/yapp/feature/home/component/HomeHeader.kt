@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
+import com.yapp.core.ui.component.Indicators
 import com.yapp.core.ui.component.SessionChip
 import com.yapp.core.ui.util.formatTimeRange
 import com.yapp.feature.home.R
