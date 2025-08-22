@@ -27,6 +27,56 @@ fun formatTimeRange(context: Context, startTime: String?, endTime: String?): Str
     return "${formatToKoreanTime(context, startTime)} - ${formatToKoreanTime(context, endTime)}"
 }
 
+fun formatScheduleTimeRange(
+    context: Context,
+    date: String?,
+    startDayOfWeek: String?,
+    time: String?,
+    endDate: String?,
+    endDayOfWeek: String?,
+    endTime: String?,
+): String? {
+    val startDate = parseDate(date) ?: return null
+    val startDOW  = startDayOfWeek?.takeIf { it.isNotBlank() } ?: return null
+    val startTime = parseTime(time) ?: return null
+    val endTimeParsed = parseTime(endTime) ?: return null
+
+    val endDateParsed = parseDate(endDate)
+    val dateFmt = DateTimeFormatter.ofPattern("MM.dd")
+    val timeFmt = DateTimeFormatter.ofPattern("HH:mm")
+
+    return if (endDateParsed != null && endDateParsed != startDate) {
+        val endDOW = endDayOfWeek?.takeIf { it.isNotBlank() } ?: return null
+        context.getString(
+            R.string.schedule_range_cross_day,
+            startDate.format(dateFmt),
+            startDOW,
+            startTime.format(timeFmt),
+            endDateParsed.format(dateFmt),
+            endDOW,
+            endTimeParsed.format(timeFmt)
+        )
+    } else {
+        context.getString(
+            R.string.schedule_range_same_day,
+            startDate.format(dateFmt),
+            startDOW,
+            startTime.format(timeFmt),
+            endTimeParsed.format(timeFmt)
+        )
+    }
+}
+
+private fun parseDate(s: String?): LocalDate? =
+    s?.takeIf { it.isNotBlank() }?.let {
+        runCatching { LocalDate.parse(it, DateTimeFormatter.ISO_LOCAL_DATE) }.getOrNull()
+    }
+
+private fun parseTime(s: String?): LocalTime? =
+    s?.takeIf { it.isNotBlank() }?.let {
+        runCatching { LocalTime.parse(it, DateTimeFormatter.ISO_LOCAL_TIME) }.getOrNull()
+    }
+
 fun formatToKoreanTime(context: Context, time: String): String {
     return try {
         val parsedTime = LocalTime.parse(time)

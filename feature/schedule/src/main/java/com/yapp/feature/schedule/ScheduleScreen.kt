@@ -43,8 +43,12 @@ import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.schedule.component.DateGroupedScheduleItem
 import com.yapp.feature.schedule.component.ScheduleTabRow
 import com.yapp.feature.schedule.component.UpcomingSessionSection
+import com.yapp.model.AttendanceStatus
+import com.yapp.model.ScheduleInfo
 import com.yapp.model.ScheduleList
-import com.yapp.model.UpcomingSessionInfo
+import com.yapp.model.ScheduleProgressPhase
+import com.yapp.model.ScheduleType
+import com.yapp.model.SessionType
 
 @Composable
 internal fun ScheduleRoute(
@@ -122,7 +126,7 @@ internal fun ScheduleScreen(
                     }
 
                     ScheduleTab.SESSION -> ScheduleSessionScreen(
-                        upcomingSessionInfo = scheduleState.upcomingSessionInfo,
+                        upcomingSessions = scheduleState.upcomingSessions,
                         sessions = scheduleState.sessions
                     )
                 }
@@ -197,7 +201,7 @@ private fun ScheduleAllScreen(
 
 @Composable
 private fun ScheduleSessionScreen(
-    upcomingSessionInfo: UpcomingSessionInfo?,
+    upcomingSessions: List<ScheduleInfo>,
     sessions: ScheduleList,
 ) {
     LazyColumn(
@@ -205,9 +209,10 @@ private fun ScheduleSessionScreen(
     ) {
         item {
             Column(
-                modifier = Modifier.padding(20.dp)
+                modifier = Modifier.padding(vertical = 20.dp)
             ) {
                 Row(
+                    modifier = Modifier.padding(start = 20.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -217,36 +222,16 @@ private fun ScheduleSessionScreen(
                         color = YappTheme.colorScheme.labelNormal
                     )
 
-                    if (upcomingSessionInfo != null) {
-                        YappChipSmall(
-                            text = if (upcomingSessionInfo.remainingDays > 0) {
-                                stringResource(
-                                    id = R.string.d_day_remaining,
-                                    upcomingSessionInfo.remainingDays
-                                )
-                            } else {
-                                stringResource(id = R.string.d_day)
-                            },
-                            colorType = ChipColorType.Main,
-                            isFill = true
-                        )
-                    }
+                    YappChipSmall(
+                        text = stringResource(id = R.string.d_day),
+                        colorType = ChipColorType.Main,
+                        isFill = true,
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                if (upcomingSessionInfo != null) {
-                    UpcomingSessionSection(
-                        id = upcomingSessionInfo.sessionId,
-                        title = upcomingSessionInfo.name,
-                        date = upcomingSessionInfo.startDate,
-                        dayOfWeek = upcomingSessionInfo.startDayOfTheWeek,
-                        location = upcomingSessionInfo.location,
-                        startTime = upcomingSessionInfo.startTime,
-                        endTime = upcomingSessionInfo.endTime,
-                        onClick = {}
-                    )
-                } else {
+                if (upcomingSessions.isEmpty()) {
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -256,6 +241,10 @@ private fun ScheduleSessionScreen(
                         color = YappTheme.colorScheme.labelAlternative,
                         textAlign = TextAlign.Center
                     )
+                } else {
+                    UpcomingSessionSection(
+                        sessions = upcomingSessions,
+                    )
                 }
             }
             Spacer(
@@ -263,6 +252,19 @@ private fun ScheduleSessionScreen(
                     .fillMaxWidth()
                     .height(12.dp)
                     .background(YappTheme.colorScheme.lineNormalAlternative)
+            )
+        }
+
+        item {
+            Text(
+                modifier = Modifier.padding(
+                    start = 20.dp,
+                    top = 20.dp,
+                    bottom = 12.dp
+                ),
+                text = stringResource(id = R.string.session_section_title),
+                style = YappTheme.typography.headline2Bold,
+                color = YappTheme.colorScheme.labelNormal,
             )
         }
 
@@ -358,6 +360,42 @@ private fun MonthHeader(
 @Composable
 private fun ScheduleScreenPreview() {
     YappTheme {
-        ScheduleScreen(scheduleState = ScheduleState())
+        ScheduleScreen(
+            scheduleState = ScheduleState(
+                selectedTab = ScheduleTab.SESSION,
+                upcomingSessions = listOf(
+                    ScheduleInfo(
+                        id = "1",
+                        name = "팀 회의",
+                        date = "2023-10-01",
+                        endDate = "2023-10-01",
+                        place = "회의실 A",
+                        time = "10:00",
+                        endTime = "11:00",
+                        startDayOfWeek = "일",
+                        endDayOfWeek = "일",
+                        scheduleType = ScheduleType.SESSION,
+                        sessionType = SessionType.TEAM,
+                        scheduleProgressPhase = ScheduleProgressPhase.ONGOING,
+                        attendanceStatus = AttendanceStatus.ATTENDED
+                    ),
+                    ScheduleInfo(
+                        id = "2",
+                        name = "프로젝트 발표",
+                        date = "2023-10-02",
+                        endDate = "2023-10-02",
+                        place = "온라인",
+                        time = "14:00",
+                        endTime = "15:00",
+                        startDayOfWeek = "월",
+                        endDayOfWeek = "월",
+                        scheduleType = ScheduleType.SESSION,
+                        sessionType = SessionType.OFFLINE,
+                        scheduleProgressPhase = ScheduleProgressPhase.TODAY,
+                        attendanceStatus = AttendanceStatus.EARLY_LEAVE
+                    )
+                )
+            )
+        )
     }
 }

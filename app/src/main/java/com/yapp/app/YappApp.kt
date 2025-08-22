@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,7 +18,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination
@@ -31,9 +31,9 @@ import com.yapp.core.designsystem.component.alert.YappAlertLongDialog
 import com.yapp.core.ui.R
 import com.yapp.core.ui.component.BottomNavigationBar
 import com.yapp.core.ui.component.BottomNavigationBarItem
+import com.yapp.core.ui.component.LocalBottomBarHeight
 import com.yapp.core.ui.extension.safeOpenUri
 import kotlin.reflect.KClass
-
 
 @Composable
 fun YappApp(
@@ -47,8 +47,6 @@ fun YappApp(
 
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
-
-    var bottomBarHeightDp by remember { mutableStateOf(0.dp) }
 
     Scaffold(
         bottomBar = {
@@ -64,22 +62,25 @@ fun YappApp(
                     onNavigateToDestination = { destination ->
                         navigator.navigateToTopLevelDestination(destination)
                     },
-                    onHeightMeasured = { height -> bottomBarHeightDp = height}
                 )
             }
         },
         contentWindowInsets = WindowInsets(0.dp),
     ) { padding ->
-        YappNavHost(
-            navigator = navigator,
-            modifier = Modifier
-                .padding(padding)
-                .consumeWindowInsets(
-                    WindowInsets(0.dp).takeIf { !navigator.shouldShowBottomBar }
-                        ?: WindowInsets.navigationBars
-                ),
-            handleException = { showCommonErrorDialog = true }
-        )
+        val bottomBarHeight = padding.calculateBottomPadding()
+
+        CompositionLocalProvider(LocalBottomBarHeight provides bottomBarHeight) {
+            YappNavHost(
+                navigator = navigator,
+                modifier = Modifier
+                    .padding(padding)
+                    .consumeWindowInsets(
+                        WindowInsets(0.dp).takeIf { !navigator.shouldShowBottomBar }
+                            ?: WindowInsets.navigationBars
+                    ),
+                handleException = { showCommonErrorDialog = true }
+            )
+        }
     }
 
     if (showCommonErrorDialog) {
@@ -128,8 +129,7 @@ private fun YappBottomNavigationBar(
     modifier: Modifier = Modifier,
     destinations: List<TopLevelDestination>,
     currentDestination: NavDestination?,
-    onNavigateToDestination: (TopLevelDestination) -> Unit,
-    onHeightMeasured: (Dp) -> Unit
+    onNavigateToDestination: (TopLevelDestination) -> Unit
 ) {
     BottomNavigationBar(
         modifier = modifier

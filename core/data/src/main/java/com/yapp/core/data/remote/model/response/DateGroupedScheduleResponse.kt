@@ -41,7 +41,9 @@ data class ScheduleResponse(
     val name: String,
     val place: String?,
     val date: String,
-    val endDate: String?,
+    val startDayOfTheWeek: String,
+    val endDate: String,
+    val endDayOfTheWeek: String,
     val time: String?,
     val endTime: String?,
     val scheduleType: String,
@@ -55,6 +57,8 @@ data class ScheduleResponse(
         place = place,
         date = date,
         endDate = endDate,
+        startDayOfWeek = startDayOfTheWeek,
+        endDayOfWeek = endDayOfTheWeek,
         time = time,
         endTime = endTime,
         scheduleType = scheduleType.toScheduleType(),
@@ -76,3 +80,37 @@ fun String?.toScheduleProgressPhase() =
 
 fun String?.toAttendanceStatus() =
     AttendanceStatus.entries.firstOrNull { it.label == this }
+
+/**
+ * v1/active-generation/sessions 전용
+ *
+ * 서버 응답의 progressPhase 문자열을 [ScheduleProgressPhase] 로 매핑한다.
+ * 다른 API의 progressPhase 값과는 불일치할 수 있으므로 혼용하지 말 것.
+ */
+fun String?.toActiveSessionProgressPhase(): ScheduleProgressPhase {
+    return when (this) {
+        "DONE" -> ScheduleProgressPhase.DONE
+        "ONGOING" -> ScheduleProgressPhase.ONGOING
+        "TODAY" -> ScheduleProgressPhase.TODAY
+        "PENDING" -> ScheduleProgressPhase.PENDING
+        else -> ScheduleProgressPhase.PENDING
+    }
+}
+
+/**
+ * v1/active-generation/sessions 전용
+ *
+ * 서버 응답의 attendanceStatus 문자열을 [AttendanceStatus] 로 매핑한다.
+ * 다른 API의 attendanceStatus 값과는 다를 수 있으므로 혼용하지 말 것.
+ */
+fun String?.toActiveSessionAttendanceStatus(): AttendanceStatus? {
+    return when (this) {
+        "PENDING" -> null
+        "ON_TIME" -> AttendanceStatus.ATTENDED
+        "LATE" -> AttendanceStatus.LATE
+        "ABSENT" -> AttendanceStatus.ABSENT
+        "EARLY_CHECK_OUT" -> AttendanceStatus.EARLY_LEAVE
+        "EXCUSED_ABSENCE" -> AttendanceStatus.EXCUSED
+        else -> null
+    }
+}

@@ -19,6 +19,8 @@ data class ScheduleInfo(
     val place: String?,
     val date: String,
     val endDate: String?,
+    val startDayOfWeek: String,
+    val endDayOfWeek: String?,
     val time: String?,
     val endTime: String?,
     val scheduleType: ScheduleType,
@@ -36,7 +38,7 @@ enum class SessionType {
 }
 
 enum class ScheduleProgressPhase(val title: String) {
-    DONE("완료"), TODAY("당일"), ONGOING("진행중"), PENDING("예정");
+    DONE("종료"), TODAY("당일"), ONGOING("진행중"), PENDING("예정");
 }
 
 enum class AttendanceStatus(

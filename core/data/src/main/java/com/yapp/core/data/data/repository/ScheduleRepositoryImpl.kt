@@ -26,7 +26,7 @@ internal class ScheduleRepositoryImpl @Inject constructor(
     override suspend fun getDateGroupedSessions(): ScheduleList {
         return sessionsCache?.let {
             ScheduleList(it.toDateGroupedScheduleList())
-        } ?: scheduleApi.getSessions().sessions
+        } ?: scheduleApi.getActiveGenerationSessions().sessions
             .also { sessionsCache = it }
             .let { ScheduleList(it.toDateGroupedScheduleList()) }
     }
@@ -49,7 +49,7 @@ internal class ScheduleRepositoryImpl @Inject constructor(
     }
 
     override suspend fun refreshDateGroupedSessions(): ScheduleList {
-        return scheduleApi.getSessions().sessions
+        return scheduleApi.getActiveGenerationSessions().sessions
             .also { sessionsCache = it }
             .let { ScheduleList(it.toDateGroupedScheduleList()) }
     }
