@@ -55,8 +55,8 @@ internal fun UpcomingSessionSection(
             val visibleItems = lazyListState.layoutInfo.visibleItemsInfo
             if (visibleItems.isEmpty()) 0
             else {
-                val center = lazyListState.layoutInfo.viewportStartOffset +
-                        lazyListState.layoutInfo.viewportEndOffset / 2
+                val center = (lazyListState.layoutInfo.viewportStartOffset +
+                        lazyListState.layoutInfo.viewportEndOffset) / 2
                 visibleItems.minByOrNull {
                     val itemCenter = it.offset + it.size / 2
                     kotlin.math.abs(itemCenter - center)
