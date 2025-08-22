@@ -10,7 +10,7 @@ data class ScheduleState(
     val selectedYear: Int = LocalDate.now().year,
     val selectedMonth: Int = LocalDate.now().monthValue,
     val schedules: Map<Pair<Int, Int>, ScheduleList> = mutableMapOf(),
-    val upcomingSessionInfo: List<ScheduleInfo> = emptyList(),
+    val upcomingSessions: List<ScheduleInfo> = emptyList(),
     val sessions: ScheduleList = ScheduleList(dates = emptyList()),
 )
 

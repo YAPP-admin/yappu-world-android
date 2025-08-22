@@ -112,7 +112,7 @@ class ScheduleViewModel @Inject constructor(
 
             reduce {
                 copy(
-                    isLoading = false, sessions = it, upcomingSessionInfo = upcomingSessions
+                    isLoading = false, sessions = it, upcomingSessions = upcomingSessions
                 )
             }
         }.onFailure { e ->
@@ -158,7 +158,7 @@ class ScheduleViewModel @Inject constructor(
 
             reduce {
                 copy(
-                    isLoading = false, upcomingSessionInfo = upcomingSessions
+                    isLoading = false, upcomingSessions = upcomingSessions
                 )
             }
         }.onFailure { e ->

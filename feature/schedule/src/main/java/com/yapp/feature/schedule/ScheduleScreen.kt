@@ -126,7 +126,7 @@ internal fun ScheduleScreen(
                     }
 
                     ScheduleTab.SESSION -> ScheduleSessionScreen(
-                        upcomingSessions = scheduleState.upcomingSessionInfo,
+                        upcomingSessions = scheduleState.upcomingSessions,
                         sessions = scheduleState.sessions
                     )
                 }
@@ -363,7 +363,7 @@ private fun ScheduleScreenPreview() {
         ScheduleScreen(
             scheduleState = ScheduleState(
                 selectedTab = ScheduleTab.SESSION,
-                upcomingSessionInfo = listOf(
+                upcomingSessions = listOf(
                     ScheduleInfo(
                         id = "1",
                         name = "팀 회의",
