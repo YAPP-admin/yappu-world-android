@@ -154,15 +154,20 @@ private fun UpcomingSessionItem(
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        val duration = formatScheduleTimeRange(
-            context = context,
-            date = date,
-            startDayOfWeek = startDayOfWeek,
-            time = startTime,
-            endDate = endDate,
-            endDayOfWeek = endDayOfWeek,
-            endTime = endTime,
-        )
+        val duration = remember(
+            configuration,
+            date, startDayOfWeek, startTime, endDate, endDayOfWeek, endTime
+        ) {
+            formatScheduleTimeRange(
+                context = context,
+                date = date,
+                startDayOfWeek = startDayOfWeek,
+                time = startTime,
+                endDate = endDate,
+                endDayOfWeek = endDayOfWeek,
+                endTime = endTime,
+            )
+        }
 
         duration?.let {
             IconWithText(

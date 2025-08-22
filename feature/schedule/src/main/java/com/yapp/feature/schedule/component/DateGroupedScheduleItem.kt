@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,11 +36,14 @@ internal fun DateGroupedScheduleItem(
     onClick: (String) -> Unit,
 ) {
     val context = LocalContext.current
+    val configuration = LocalConfiguration.current
+
+    val faded = remember(date) { isPastDate(date) }
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .graphicsLayer { if (isPastDate(date)) alpha = 0.5f }
+            .graphicsLayer { if (faded) alpha = 0.5f }
             .padding(
                 horizontal = 20.dp,
                 vertical = 16.dp
@@ -77,21 +82,33 @@ internal fun DateGroupedScheduleItem(
             schedules.forEach { schedule ->
                 when (schedule.scheduleType) {
                     ScheduleType.SESSION -> {
+                        val duration = remember(
+                            configuration,
+                            schedule.date,
+                            schedule.startDayOfWeek,
+                            schedule.time,
+                            schedule.endDate,
+                            schedule.endDayOfWeek,
+                            schedule.endTime
+                        ) {
+                            formatScheduleTimeRange(
+                                context = context,
+                                date = schedule.date,
+                                startDayOfWeek = schedule.startDayOfWeek,
+                                time = schedule.time,
+                                endDate = schedule.endDate,
+                                endDayOfWeek = schedule.endDayOfWeek,
+                                endTime = schedule.endTime,
+                            )
+                        }
+
                         SessionItem(
                             id = schedule.id,
                             title = schedule.name,
                             attendanceStatus = schedule.attendanceStatus,
                             scheduleProgressPhase = schedule.scheduleProgressPhase,
                             location = schedule.place,
-                            duration = formatScheduleTimeRange(
-                                context,
-                                schedule.date,
-                                schedule.startDayOfWeek,
-                                schedule.time,
-                                schedule.endDate,
-                                schedule.endDayOfWeek,
-                                schedule.endTime,
-                            ),
+                            duration = duration,
                             onClick = onClick,
                         )
                     }

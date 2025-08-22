@@ -52,9 +52,9 @@ internal fun SessionItem(
                 )
             }
 
-            Spacer(modifier = Modifier.height(4.dp))
-
             if (!location.isNullOrBlank()) {
+                Spacer(modifier = Modifier.height(4.dp))
+
                 IconWithText(
                     iconResId = R.drawable.icon_location,
                     text = location,
