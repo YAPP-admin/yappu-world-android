@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.theme.YappTheme
@@ -121,6 +122,7 @@ private fun UpcomingSessionItem(
     startTime: String?,
     endTime: String?,
 ) {
+    val context = LocalContext.current
     val configuration = LocalConfiguration.current
 
     Column(
@@ -153,6 +155,7 @@ private fun UpcomingSessionItem(
         Spacer(modifier = Modifier.height(4.dp))
 
         val duration = formatScheduleTimeRange(
+            context = context,
             date = date,
             startDayOfWeek = startDayOfWeek,
             time = startTime,

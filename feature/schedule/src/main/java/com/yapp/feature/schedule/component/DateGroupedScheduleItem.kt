@@ -84,6 +84,7 @@ internal fun DateGroupedScheduleItem(
                             scheduleProgressPhase = schedule.scheduleProgressPhase,
                             location = schedule.place,
                             duration = formatScheduleTimeRange(
+                                context,
                                 schedule.date,
                                 schedule.startDayOfWeek,
                                 schedule.time,

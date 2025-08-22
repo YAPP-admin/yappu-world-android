@@ -28,6 +28,7 @@ fun formatTimeRange(context: Context, startTime: String?, endTime: String?): Str
 }
 
 fun formatScheduleTimeRange(
+    context: Context,
     date: String?,
     startDayOfWeek: String?,
     time: String?,
@@ -46,10 +47,23 @@ fun formatScheduleTimeRange(
 
     return if (endDateParsed != null && endDateParsed != startDate) {
         val endDOW = endDayOfWeek?.takeIf { it.isNotBlank() } ?: return null
-        "${startDate.format(dateFmt)} ($startDOW) ${startTime.format(timeFmt)} ~ " +
-                "${endDateParsed.format(dateFmt)} ($endDOW) ${endTimeParsed.format(timeFmt)}"
+        context.getString(
+            R.string.schedule_range_cross_day,
+            startDate.format(dateFmt),
+            startDOW,
+            startTime.format(timeFmt),
+            endDateParsed.format(dateFmt),
+            endDOW,
+            endTimeParsed.format(timeFmt)
+        )
     } else {
-        "${startDate.format(dateFmt)} ($startDOW) ${startTime.format(timeFmt)} ~ ${endTimeParsed.format(timeFmt)}"
+        context.getString(
+            R.string.schedule_range_same_day,
+            startDate.format(dateFmt),
+            startDOW,
+            startTime.format(timeFmt),
+            endTimeParsed.format(timeFmt)
+        )
     }
 }
 

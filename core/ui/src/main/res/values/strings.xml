@@ -18,4 +18,7 @@
     <string name="time_format_base">a h시</string>
     <string name="time_format_half_hour_with_base">%1$s 반</string>
     <string name="time_format_hour_minute_with_base">%1$s %2$d분</string>
+
+    <string name="schedule_range_cross_day">%1$s (%2$s) %3$s ~ %4$s (%5$s) %6$s</string>
+    <string name="schedule_range_same_day">%1$s (%2$s) %3$s ~ %4$s</string>
 </resources>
