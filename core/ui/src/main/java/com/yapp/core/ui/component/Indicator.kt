@@ -49,7 +49,6 @@ fun Indicators(
     val density = LocalDensity.current
     val haptics = LocalHapticFeedback.current
 
-
     val dotSpacingPx = with(density) { (dotSize + dotSpacing).toPx() }
     val scrollTarget = remember(currentPage, itemCount) {
         when {

@@ -143,7 +143,7 @@ internal fun HomeHeader(
             itemCount = sessions.size,
             onPageSelect = { index ->
                 scope.launch {
-                    lazyListState.scrollToItem(index)
+                    lazyListState.animateScrollToItem(index)
                 }
             },
             currentPage = selectedIndex

@@ -99,7 +99,7 @@ internal fun UpcomingSessionSection(
             itemCount = sessions.size,
             onPageSelect = { index ->
                 scope.launch {
-                    lazyListState.scrollToItem(index)
+                    lazyListState.animateScrollToItem(index)
                 }
             },
             currentPage = selectedIndex,
