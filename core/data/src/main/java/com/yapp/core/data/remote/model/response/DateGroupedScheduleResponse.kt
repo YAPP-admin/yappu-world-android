@@ -81,7 +81,12 @@ fun String?.toScheduleProgressPhase() =
 fun String?.toAttendanceStatus() =
     AttendanceStatus.entries.firstOrNull { it.label == this }
 
-// v1/active-generation/sessions 대응을 위해 사용
+/**
+ * v1/active-generation/sessions 전용
+ *
+ * 서버 응답의 progressPhase 문자열을 [ScheduleProgressPhase] 로 매핑한다.
+ * 다른 API의 progressPhase 값과는 불일치할 수 있으므로 혼용하지 말 것.
+ */
 fun String?.toActiveSessionProgressPhase(): ScheduleProgressPhase {
     return when (this) {
         "DONE" -> ScheduleProgressPhase.DONE
@@ -92,6 +97,12 @@ fun String?.toActiveSessionProgressPhase(): ScheduleProgressPhase {
     }
 }
 
+/**
+ * v1/active-generation/sessions 전용
+ *
+ * 서버 응답의 attendanceStatus 문자열을 [AttendanceStatus] 로 매핑한다.
+ * 다른 API의 attendanceStatus 값과는 다를 수 있으므로 혼용하지 말 것.
+ */
 fun String?.toActiveSessionAttendanceStatus(): AttendanceStatus? {
     return when (this) {
         "PENDING" -> null
