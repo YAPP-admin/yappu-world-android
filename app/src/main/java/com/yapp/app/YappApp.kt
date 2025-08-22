@@ -16,11 +16,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination
@@ -38,7 +35,6 @@ import com.yapp.core.ui.component.LocalBottomBarHeight
 import com.yapp.core.ui.extension.safeOpenUri
 import kotlin.reflect.KClass
 
-
 @Composable
 fun YappApp(
     navigator: NavigatorState,
@@ -52,31 +48,28 @@ fun YappApp(
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
 
-    var bottomBarHeightDp by remember { mutableStateOf(0.dp) }
+    Scaffold(
+        bottomBar = {
+            AnimatedVisibility(
+                visible = navigator.shouldShowBottomBar,
+                enter = slideInVertically { it },
+                exit = slideOutVertically { it },
+            ) {
+                val destinations = TopLevelDestination.entries
+                YappBottomNavigationBar(
+                    destinations = destinations,
+                    currentDestination = navigator.currentDestination,
+                    onNavigateToDestination = { destination ->
+                        navigator.navigateToTopLevelDestination(destination)
+                    },
+                )
+            }
+        },
+        contentWindowInsets = WindowInsets(0.dp),
+    ) { padding ->
+        val bottomBarHeight = padding.calculateBottomPadding()
 
-    CompositionLocalProvider(
-        LocalBottomBarHeight provides bottomBarHeightDp,
-    ) {
-        Scaffold(
-            bottomBar = {
-                AnimatedVisibility(
-                    visible = navigator.shouldShowBottomBar,
-                    enter = slideInVertically { it },
-                    exit = slideOutVertically { it },
-                ) {
-                    val destinations = TopLevelDestination.entries
-                    YappBottomNavigationBar(
-                        destinations = destinations,
-                        currentDestination = navigator.currentDestination,
-                        onNavigateToDestination = { destination ->
-                            navigator.navigateToTopLevelDestination(destination)
-                        },
-                        onHeightMeasured = { height -> bottomBarHeightDp = height }
-                    )
-                }
-            },
-            contentWindowInsets = WindowInsets(0.dp),
-        ) { padding ->
+        CompositionLocalProvider(LocalBottomBarHeight provides bottomBarHeight) {
             YappNavHost(
                 navigator = navigator,
                 modifier = Modifier
@@ -136,21 +129,10 @@ private fun YappBottomNavigationBar(
     modifier: Modifier = Modifier,
     destinations: List<TopLevelDestination>,
     currentDestination: NavDestination?,
-    onNavigateToDestination: (TopLevelDestination) -> Unit,
-    onHeightMeasured: (Dp) -> Unit
+    onNavigateToDestination: (TopLevelDestination) -> Unit
 ) {
-    val density = LocalDensity.current
-    val navigationBarHeight = with(density) {
-        WindowInsets.navigationBars.getBottom(density).toDp()
-    }
-
     BottomNavigationBar(
-        modifier = modifier.onGloballyPositioned { coordinates ->
-            val heightDp = with(density) { coordinates.size.height.toDp() }
-            val bottomBarHeightWithoutNav = heightDp - navigationBarHeight
-
-            onHeightMeasured(bottomBarHeightWithoutNav)
-        }
+        modifier = modifier
     ) {
         destinations.forEach { destination ->
             val selected = currentDestination.isRouteInHierarchy(destination.baseRoute)
