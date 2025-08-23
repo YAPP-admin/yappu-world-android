@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
+import com.yapp.core.ui.component.Indicators
 import com.yapp.core.ui.component.SessionChip
 import com.yapp.core.ui.util.formatTimeRange
 import com.yapp.feature.home.R
@@ -65,8 +66,8 @@ internal fun HomeHeader(
             val visibleItems = lazyListState.layoutInfo.visibleItemsInfo
             if (visibleItems.isEmpty()) 0
             else {
-                val center = lazyListState.layoutInfo.viewportStartOffset +
-                        lazyListState.layoutInfo.viewportEndOffset / 2
+                val center = (lazyListState.layoutInfo.viewportStartOffset +
+                        lazyListState.layoutInfo.viewportEndOffset) / 2
                 visibleItems.minByOrNull {
                     val itemCenter = it.offset + it.size / 2
                     kotlin.math.abs(itemCenter - center)
@@ -142,7 +143,7 @@ internal fun HomeHeader(
             itemCount = sessions.size,
             onPageSelect = { index ->
                 scope.launch {
-                    lazyListState.scrollToItem(index)
+                    lazyListState.animateScrollToItem(index)
                 }
             },
             currentPage = selectedIndex

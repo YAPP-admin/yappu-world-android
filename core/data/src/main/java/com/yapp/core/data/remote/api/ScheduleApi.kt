@@ -7,11 +7,18 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ScheduleApi {
-    @GET("v1/sessions")
-    suspend fun getSessions(): SessionResponse
+    @GET("v2/sessions")
+    suspend fun getSessions(
+        @Query("generation") generation: Int? = null,
+        @Query("start") start: String? = null,
+        @Query("end") end: String? = null
+    ): SessionResponse
 
     @GET("v1/sessions/upcoming")
     suspend fun getUpcomingSession(): UpcomingSessionAttendanceResponse
+
+    @GET("v1/active-generation/sessions")
+    suspend fun getActiveGenerationSessions(): SessionResponse
 
     @GET("v1/schedules")
     suspend fun getSchedules(

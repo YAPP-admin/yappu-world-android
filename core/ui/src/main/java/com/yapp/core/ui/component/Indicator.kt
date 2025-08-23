@@ -1,4 +1,4 @@
-package com.yapp.feature.home.component
+package com.yapp.core.ui.component
 
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.layout.Arrangement
@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 @Composable
-internal fun Indicators(
+fun Indicators(
     modifier: Modifier = Modifier,
     currentPage: Int,
     itemCount: Int,
@@ -48,7 +48,6 @@ internal fun Indicators(
     val coroutineScope = rememberCoroutineScope()
     val density = LocalDensity.current
     val haptics = LocalHapticFeedback.current
-
 
     val dotSpacingPx = with(density) { (dotSize + dotSpacing).toPx() }
     val scrollTarget = remember(currentPage, itemCount) {

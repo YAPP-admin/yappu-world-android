@@ -3,6 +3,7 @@ package com.yapp.feature.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yapp.core.common.android.record
+import com.yapp.core.common.android.util.toMonthDateRange
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.AttendanceRepository
@@ -15,9 +16,11 @@ import com.yapp.model.HomeSessionList
 import com.yapp.model.exceptions.CodeNotCorrectException
 import com.yapp.model.exceptions.InvalidTokenException
 import com.yapp.model.exceptions.NoScheduledSessionException
+import com.yapp.model.exceptions.NotFoundException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -101,9 +104,11 @@ internal class HomeViewModel @Inject constructor(
         reduce: (HomeState.() -> HomeState) -> Unit,
         postSideEffect: (HomeSideEffect) -> Unit
     ) = viewModelScope.launch {
+        val (startDate, endDate) = LocalDate.now().toMonthDateRange()
+
         reduce { copy(isLoading = true) }
         runCatchingIgnoreCancelled {
-            scheduleRepository.getSessions()
+            scheduleRepository.getSessions(startDate, endDate)
         }.onSuccess { homeSessions ->
             reduce {
                 copy(
@@ -118,7 +123,6 @@ internal class HomeViewModel @Inject constructor(
         }
         reduce { copy(isLoading = false) }
     }
-
 
     private fun loadUpcomingSessionInfo(
         reduce: (HomeState.() -> HomeState) -> Unit,
@@ -137,6 +141,7 @@ internal class HomeViewModel @Inject constructor(
             when (e) {
                 is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
                 is NoScheduledSessionException -> { }
+                is NotFoundException -> { }
                 else -> {
                     postSideEffect(HomeSideEffect.HandleException(e))
                     e.record()

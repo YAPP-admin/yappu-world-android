@@ -19,14 +19,14 @@ internal class ScheduleRepositoryImpl @Inject constructor(
     private var scheduleCache: MutableMap<Pair<Int, Int>, ScheduleList> = mutableMapOf()
     private var upcomingSessionCache: UpcomingSessionInfo? = null
 
-    override suspend fun getSessions(): HomeSessionList {
-        return scheduleApi.getSessions().toHomeSessionListModel()
+    override suspend fun getSessions(startDate: String, endDate: String): HomeSessionList {
+        return scheduleApi.getSessions(start = startDate, end = endDate).toHomeSessionListModel()
     }
 
     override suspend fun getDateGroupedSessions(): ScheduleList {
         return sessionsCache?.let {
             ScheduleList(it.toDateGroupedScheduleList())
-        } ?: scheduleApi.getSessions().sessions
+        } ?: scheduleApi.getActiveGenerationSessions().sessions
             .also { sessionsCache = it }
             .let { ScheduleList(it.toDateGroupedScheduleList()) }
     }
@@ -49,7 +49,7 @@ internal class ScheduleRepositoryImpl @Inject constructor(
     }
 
     override suspend fun refreshDateGroupedSessions(): ScheduleList {
-        return scheduleApi.getSessions().sessions
+        return scheduleApi.getActiveGenerationSessions().sessions
             .also { sessionsCache = it }
             .let { ScheduleList(it.toDateGroupedScheduleList()) }
     }

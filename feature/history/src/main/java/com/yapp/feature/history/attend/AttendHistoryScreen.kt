@@ -17,8 +17,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.component.header.YappHeaderActionbar
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.core.ui.component.YappBackground
+import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.history.R
 import com.yapp.feature.history.attend.component.AttendanceStatusSection
 import com.yapp.feature.history.attend.component.SessionAttendanceHistory
@@ -46,7 +46,7 @@ internal fun AttendHistoryRoute(
 
     AttendHistoryScreen(
         attendancePoint = uiState.attendancePoint,
-        sessionProgressRate = uiState.sessionProgressRate,
+        sessionProgressRate = uiState.formattedSessionProgressRate,
         totalSessionCount = uiState.totalSessionCount,
         totalRemainSessionCount = uiState.remainingSessionCount,
         attendance = uiState.attendanceCount,
@@ -63,7 +63,7 @@ internal fun AttendHistoryRoute(
 @Composable
 private fun AttendHistoryScreen(
     attendancePoint: Int,
-    sessionProgressRate: Int,
+    sessionProgressRate: String,
     totalSessionCount: Int,
     totalRemainSessionCount: Int,
     attendance: Int,
@@ -106,7 +106,7 @@ private fun AttendHistoryScreen(
                         modifier = Modifier.padding(horizontal = 20.dp),
                         title = stringResource(R.string.session_title),
                         subTitle = stringResource(R.string.total_remain_session_progress_rate_title),
-                        totalRate = "${sessionProgressRate}%",
+                        totalRate = sessionProgressRate,
                         slot = {
                             StatusItem(
                                 modifier = Modifier.weight(1f),

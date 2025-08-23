@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,9 +31,9 @@ import com.yapp.core.designsystem.component.alert.YappAlertLongDialog
 import com.yapp.core.ui.R
 import com.yapp.core.ui.component.BottomNavigationBar
 import com.yapp.core.ui.component.BottomNavigationBarItem
+import com.yapp.core.ui.component.LocalBottomBarHeight
 import com.yapp.core.ui.extension.safeOpenUri
 import kotlin.reflect.KClass
-
 
 @Composable
 fun YappApp(
@@ -60,21 +61,26 @@ fun YappApp(
                     currentDestination = navigator.currentDestination,
                     onNavigateToDestination = { destination ->
                         navigator.navigateToTopLevelDestination(destination)
-                    }
+                    },
                 )
             }
         },
         contentWindowInsets = WindowInsets(0.dp),
     ) { padding ->
-        YappNavHost(
-            navigator = navigator,
-            modifier = Modifier
-                .padding(padding)
-                .consumeWindowInsets(
-                    WindowInsets(0.dp).takeIf { !navigator.shouldShowBottomBar } ?: WindowInsets.navigationBars
-                ),
-            handleException = { showCommonErrorDialog = true }
-        )
+        val bottomBarHeight = padding.calculateBottomPadding()
+
+        CompositionLocalProvider(LocalBottomBarHeight provides bottomBarHeight) {
+            YappNavHost(
+                navigator = navigator,
+                modifier = Modifier
+                    .padding(padding)
+                    .consumeWindowInsets(
+                        WindowInsets(0.dp).takeIf { !navigator.shouldShowBottomBar }
+                            ?: WindowInsets.navigationBars
+                    ),
+                handleException = { showCommonErrorDialog = true }
+            )
+        }
     }
 
     if (showCommonErrorDialog) {
