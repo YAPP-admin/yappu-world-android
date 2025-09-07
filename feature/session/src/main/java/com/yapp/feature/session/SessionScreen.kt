@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.yapp.core.designsystem.component.button.icons.YappOutlinedIconButtonSmall
 import com.yapp.core.designsystem.component.chip.ChipColorType
 import com.yapp.core.designsystem.component.chip.YappChipLarge
 import com.yapp.core.designsystem.component.gradient.GradientBottom
@@ -148,17 +150,26 @@ fun SessionScreen(
 
                             // Action buttons (placeholders)
                             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                                CircleActionIcon(
-                                    iconRes = DesignR.drawable.icon_location,
-                                    onClick = { },
+                                Image(
+                                    modifier = Modifier
+                                        .size(32.dp)
+                                        .clip(CircleShape)
+                                        .yappClickable(onClick = {}),
+                                    painter = painterResource(R.drawable.image_kakao_map),
+                                    contentDescription = "카카오맵으로 이동"
                                 )
-                                CircleActionIcon(
-                                    iconRes = DesignR.drawable.icon_location,
-                                    onClick = { },
+                                Image(
+                                    modifier = Modifier
+                                        .size(32.dp)
+                                        .clip(CircleShape)
+                                        .yappClickable(onClick = {}),
+                                    painter = painterResource(R.drawable.image_naver_map),
+                                    contentDescription = "네이버 지도로 이동"
                                 )
-                                CircleActionIcon(
-                                    iconRes = DesignR.drawable.icon_check,
-                                    onClick = { },
+                                YappOutlinedIconButtonSmall(
+                                    resourceId = R.drawable.icon_copy,
+                                    contentDescription = "주소 복사하기",
+                                    onClick = {},
                                 )
                             }
 
@@ -223,27 +234,6 @@ fun SessionScreen(
                 color = YappTheme.colorScheme.staticWhite
             )
         }
-    }
-}
-
-@Composable
-private fun CircleActionIcon(
-    iconRes: Int,
-    onClick: (() -> Unit)? = null,
-) {
-    Box(
-        modifier = Modifier
-            .size(32.dp)
-            .clip(CircleShape)
-            .background(YappTheme.colorScheme.backgroundElevatedAlternative)
-            .yappClickable(onClick = onClick),
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            painter = painterResource(id = iconRes),
-            contentDescription = null,
-            modifier = Modifier.size(20.dp)
-        )
     }
 }
 
