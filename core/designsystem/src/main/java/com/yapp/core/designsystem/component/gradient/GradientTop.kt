@@ -17,14 +17,14 @@ import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.theme.YappTheme
 
 @Composable
-fun GradientBottom(
+fun GradientTop(
     modifier: Modifier,
     color: Color,
 ) {
     val gradientColors = listOf(
-        color,
-        color.copy(alpha = 0.5f),
         Color.Transparent,
+        color.copy(alpha = 0.5f),
+        color,
     )
 
     Box(
@@ -39,10 +39,10 @@ fun GradientBottom(
 
 @Preview
 @Composable
-private fun GradientBottomPreview() {
+private fun GradientTopPreview() {
     YappTheme {
         Box(modifier = Modifier.fillMaxSize()) {
-            GradientBottom(
+            GradientTop(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp),
