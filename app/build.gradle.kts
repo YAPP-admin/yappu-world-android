@@ -73,6 +73,7 @@ dependencies {
     implementation(projects.feature.login)
     implementation(projects.feature.history)
     implementation(projects.feature.setting)
+    implementation(projects.feature.session)
     implementation(projects.core.designsystem)
     implementation(projects.core.ui)
     implementation(projects.core.data)
