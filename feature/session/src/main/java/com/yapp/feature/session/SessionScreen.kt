@@ -29,11 +29,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.yapp.core.designsystem.component.button.icons.YappOutlinedIconButtonSmall
 import com.yapp.core.designsystem.component.chip.ChipColorType
 import com.yapp.core.designsystem.component.chip.YappChipLarge
@@ -47,6 +49,11 @@ import com.yapp.core.ui.component.YappBackground
 import com.yapp.model.NoticeInfo
 import com.yapp.model.NoticeType
 import com.yapp.model.SessionProgressPhase
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import com.naver.maps.geometry.LatLng
+import java.net.URLEncoder
 import com.yapp.core.designsystem.R as DesignR
 
 @Composable
@@ -69,6 +76,9 @@ fun SessionScreen(
     state: SessionState,
     onBack: (() -> Unit)? = null,
 ) {
+    val context = LocalContext.current
+    val seoulCityHall = remember { LatLng(37.5665, 126.9780) }
+
     val scrollState = rememberScrollState()
     val showGradientBottom by remember {
         derivedStateOf { scrollState.canScrollBackward }
@@ -154,7 +164,9 @@ fun SessionScreen(
                                     modifier = Modifier
                                         .size(32.dp)
                                         .clip(CircleShape)
-                                        .yappClickable(onClick = {}),
+                                        .yappClickable(onClick = {
+                                            openKakaoMap(context, seoulCityHall.latitude, seoulCityHall.longitude)
+                                        }),
                                     painter = painterResource(R.drawable.image_kakao_map),
                                     contentDescription = "카카오맵으로 이동"
                                 )
@@ -162,7 +174,9 @@ fun SessionScreen(
                                     modifier = Modifier
                                         .size(32.dp)
                                         .clip(CircleShape)
-                                        .yappClickable(onClick = {}),
+                                        .yappClickable(onClick = {
+                                            openNaverMap(context, seoulCityHall.latitude, seoulCityHall.longitude, "서울시청")
+                                        }),
                                     painter = painterResource(R.drawable.image_naver_map),
                                     contentDescription = "네이버 지도로 이동"
                                 )
@@ -175,13 +189,12 @@ fun SessionScreen(
 
                             Spacer(Modifier.height(8.dp))
 
-                            // Map placeholder
-                            Box(
+                            SessionNaverMap(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(120.dp)
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(YappTheme.colorScheme.skeleton)
+                                    .height(180.dp)
+                                    .clip(RoundedCornerShape(8.dp)),
+                                center = seoulCityHall,
                             )
                         }
                     }
@@ -278,5 +291,43 @@ private fun DummyNotices(): List<NoticeInfo> = listOf(
 private fun SessionScreenPreview() {
     YappTheme {
         SessionScreen(state = SessionState())
+    }
+}
+
+private fun openKakaoMap(context: Context, latitude: Double, longitude: Double) {
+    val kakaoUri = Uri.parse("kakaomap://look?p=$latitude,$longitude")
+    val intent = Intent(Intent.ACTION_VIEW, kakaoUri)
+    // Prefer Kakao Map app explicitly if present
+    intent.`package` = "net.daum.android.map"
+    try {
+        context.startActivity(intent)
+    } catch (e: Exception) {
+        // Fallback to Kakao Map web
+        val web = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse("https://map.kakao.com/link/map/$latitude,$longitude")
+        )
+        context.startActivity(web)
+    }
+}
+
+private fun openNaverMap(context: Context, latitude: Double, longitude: Double, name: String) {
+    val encodedName = try {
+        URLEncoder.encode(name, Charsets.UTF_8.name())
+    } catch (e: Exception) {
+        name
+    }
+    val naverUri = Uri.parse(
+        "nmap://place?lat=$latitude&lng=$longitude&name=$encodedName&appname=${context.packageName}"
+    )
+    val intent = Intent(Intent.ACTION_VIEW, naverUri)
+    intent.`package` = "com.nhn.android.nmap"
+    try {
+        context.startActivity(intent)
+    } catch (e: Exception) {
+        // Fallback to Naver Map web (centered at coordinates or search by name)
+        val webUrl = "https://map.naver.com/v5/search/$encodedName?c=$longitude,$latitude,16,0,0,0,dh"
+        val web = Intent(Intent.ACTION_VIEW, Uri.parse(webUrl))
+        context.startActivity(web)
     }
 }

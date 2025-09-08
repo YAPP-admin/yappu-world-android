@@ -15,6 +15,8 @@ import com.yapp.feature.notice.navigation.noticeDetailNavGraph
 import com.yapp.feature.notice.navigation.noticeNavGraph
 import com.yapp.feature.profile.navigation.profileNavGraph
 import com.yapp.feature.schedule.navigation.scheduleNavGraph
+import com.yapp.feature.session.navigation.SessionRoute
+import com.yapp.feature.session.navigation.sessionNavGraph
 import com.yapp.feature.setting.navigation.settingNavGraph
 import com.yapp.feature.signup.navigation.signupNavGraph
 import com.yapp.feature.signup.signup.SignUpStep
@@ -27,7 +29,7 @@ fun YappNavHost(
 ) {
     NavHost(
         navController = navigator.navController,
-        startDestination = navigator.startDestination,
+        startDestination = SessionRoute,
         modifier = modifier,
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
@@ -118,5 +120,6 @@ fun YappNavHost(
             navigateToLogin = { navigator.navigateLoginScreen(clearBackStackNavOptions) },
             handleException = handleException,
         )
+        sessionNavGraph()
     }
 }
