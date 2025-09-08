@@ -27,6 +27,8 @@ android {
         versionName = "1.1.3"
 
         targetSdk = 35
+        manifestPlaceholders["NAVER_MAP_CLIENT_ID"] =
+            providers.gradleProperty("NAVER_MAP_CLIENT_ID").orNull ?: ""
     }
     buildTypes {
         getByName("debug") {
