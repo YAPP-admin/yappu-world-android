@@ -165,7 +165,7 @@ fun SessionScreen(
                                         .size(32.dp)
                                         .clip(CircleShape)
                                         .yappClickable(onClick = {
-                                            openKakaoMap(context, seoulCityHall.latitude, seoulCityHall.longitude)
+                                            openKakaoMap(context, "KT&G상상플래닛", seoulCityHall.latitude, seoulCityHall.longitude)
                                         }),
                                     painter = painterResource(R.drawable.image_kakao_map),
                                     contentDescription = "카카오맵으로 이동"
@@ -175,7 +175,7 @@ fun SessionScreen(
                                         .size(32.dp)
                                         .clip(CircleShape)
                                         .yappClickable(onClick = {
-                                            openNaverMap(context, seoulCityHall.latitude, seoulCityHall.longitude, "서울시청")
+                                            openNaverMap(context, seoulCityHall.latitude, seoulCityHall.longitude, "KT&G상상플래닛")
                                         }),
                                     painter = painterResource(R.drawable.image_naver_map),
                                     contentDescription = "네이버 지도로 이동"
@@ -294,18 +294,24 @@ private fun SessionScreenPreview() {
     }
 }
 
-private fun openKakaoMap(context: Context, latitude: Double, longitude: Double) {
-    val kakaoUri = Uri.parse("kakaomap://look?p=$latitude,$longitude")
+private fun openKakaoMap(context: Context, name: String, latitude: Double, longitude: Double) {
+    // Use search scheme to show place with name
+    val encodedName = try {
+        URLEncoder.encode(name, Charsets.UTF_8.name())
+    } catch (e: Exception) {
+        name
+    }
+    val kakaoUri = Uri.parse("kakaomap://search?q=$encodedName&p=$latitude,$longitude")
     val intent = Intent(Intent.ACTION_VIEW, kakaoUri)
     // Prefer Kakao Map app explicitly if present
     intent.`package` = "net.daum.android.map"
     try {
         context.startActivity(intent)
     } catch (e: Exception) {
-        // Fallback to Kakao Map web
+        // Fallback to Kakao Map web with place name
         val web = Intent(
             Intent.ACTION_VIEW,
-            Uri.parse("https://map.kakao.com/link/map/$latitude,$longitude")
+            Uri.parse("https://map.kakao.com/link/map/$encodedName,$latitude,$longitude")
         )
         context.startActivity(web)
     }
@@ -318,7 +324,7 @@ private fun openNaverMap(context: Context, latitude: Double, longitude: Double, 
         name
     }
     val naverUri = Uri.parse(
-        "nmap://place?lat=$latitude&lng=$longitude&name=$encodedName&appname=${context.packageName}"
+        "nmap://search?query=$encodedName&appname=${context.packageName}"
     )
     val intent = Intent(Intent.ACTION_VIEW, naverUri)
     intent.`package` = "com.nhn.android.nmap"
