@@ -1,6 +1,8 @@
 package com.yapp.feature.home
 
 import com.yapp.model.HomeSessionList
+import com.yapp.model.NoticeInfo
+import com.yapp.model.NoticeList
 import com.yapp.model.UpcomingSessionInfo
 
 data class HomeState(
@@ -10,6 +12,7 @@ data class HomeState(
         upcomingSessionId = null
     ),
     val upcomingSession: UpcomingSessionInfo? = null,
+    val notices: NoticeList = NoticeList(notices = emptyList(), lastNoticeId = "", hasNext = false),
     val showAttendCodeBottomSheet: Boolean = false,
     val attendanceCodeDigits: List<String> = List(4) { "" },
     val showAttendanceCodeError: Boolean = false,
@@ -25,6 +28,7 @@ sealed interface HomeIntent {
     data object ClickDismissDialog : HomeIntent
     data object EnterHomeScreen : HomeIntent
     data object ClickShowAllSession : HomeIntent
+    data object ClickShowAllNotice : HomeIntent
 
     data object Refresh : HomeIntent
 
@@ -35,6 +39,7 @@ sealed interface HomeIntent {
 sealed interface HomeSideEffect {
     data object NavigateToSchedule : HomeSideEffect
     data object NavigateToLogin : HomeSideEffect
+    data object NavigateToNotice : HomeSideEffect
     data class ShowToast(val message: String) : HomeSideEffect
     data class HandleException(val exception: Throwable) : HomeSideEffect
 }

@@ -7,16 +7,23 @@ import com.yapp.core.common.android.util.toMonthDateRange
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.AttendanceRepository
+import com.yapp.dataapi.PostsRepository
 import com.yapp.dataapi.ScheduleRepository
 import com.yapp.domain.runCatchingIgnoreCancelled
 import com.yapp.model.AttendanceInfo
 import com.yapp.model.AttendanceStatus
 import com.yapp.model.HomeSessionList
+import com.yapp.model.NoticeType
 import com.yapp.model.exceptions.CodeNotCorrectException
 import com.yapp.model.exceptions.InvalidTokenException
 import com.yapp.model.exceptions.NoScheduledSessionException
 import com.yapp.model.exceptions.NotFoundException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -25,7 +32,8 @@ import javax.inject.Inject
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
     private val scheduleRepository: ScheduleRepository,
-    private val attendanceRepository: AttendanceRepository
+    private val attendanceRepository: AttendanceRepository,
+    private val postsRepository: PostsRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -45,6 +53,8 @@ internal class HomeViewModel @Inject constructor(
             HomeIntent.EnterHomeScreen -> {
                 if (isInitialized) return
 
+                loadNoticeHistory(reduce, postSideEffect)
+
                 viewModelScope.launch {
                     joinAll(
                         loadSessionInfo(reduce, postSideEffect),
@@ -56,9 +66,11 @@ internal class HomeViewModel @Inject constructor(
 
             HomeIntent.Refresh -> {
                 loadUpcomingSessionInfo(reduce, postSideEffect)
+                loadNoticeHistory(reduce, postSideEffect)
             }
 
             HomeIntent.ClickShowAllSession -> postSideEffect(HomeSideEffect.NavigateToSchedule)
+            HomeIntent.ClickShowAllNotice -> postSideEffect(HomeSideEffect.NavigateToNotice)
             HomeIntent.ClickRequestAttendCode -> {
                 reduce {
                     copy(showAttendCodeBottomSheet = true)
@@ -147,9 +159,28 @@ internal class HomeViewModel @Inject constructor(
         reduce { copy(isLoading = false) }
     }
 
+    private fun loadNoticeHistory(
         reduce: (HomeState.() -> HomeState) -> Unit,
         postSideEffect: (HomeSideEffect) -> Unit
+    ) {
+        postsRepository.getNoticeList(null, 30, NoticeType.ALL.apiValue)
+            .onStart {  }
+            .onCompletion {  }
+            .catch { exception ->
+                when (exception) {
+                    is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
+                    else -> {
+                        postSideEffect(HomeSideEffect.HandleException(exception))
+                        exception.record()
+                    }
                 }
+            }.onEach { response ->
+                reduce {
+                    copy(notices = response.copy(
+                        notices = response.notices.take(3)
+                    ))
+                }
+            }.launchIn(viewModelScope)
     }
 
     private fun requestAttendance(
