@@ -61,8 +61,6 @@ fun YappNavHost(
             navigateSchedule = {
                 navigator.navigateToTopLevelDestination(TopLevelDestination.SCHEDULE)
             },
-            navigateAttendanceHistory = {
-                navigator.navigateAttendance()
             },
             handleException = handleException,
         )

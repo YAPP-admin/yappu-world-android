@@ -17,14 +17,12 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) {
 fun NavGraphBuilder.homeNavGraph(
     navigateLogin : () -> Unit,
     navigateSchedule: () -> Unit,
-    navigateAttendanceHistory: () -> Unit,
     handleException: (Throwable) -> Unit,
 ) {
     composable<HomeRoute> {
         HomeRoute(
             navigateToLogin = navigateLogin,
             navigateToSchedule = navigateSchedule,
-            navigateToAttendanceHistory = navigateAttendanceHistory,
             handleException = handleException,
         )
     }
