@@ -21,9 +21,7 @@ import com.yapp.model.exceptions.NotFoundException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -164,8 +162,6 @@ internal class HomeViewModel @Inject constructor(
         postSideEffect: (HomeSideEffect) -> Unit
     ) {
         postsRepository.getNoticeList(null, 30, NoticeType.ALL.apiValue)
-            .onStart {  }
-            .onCompletion {  }
             .catch { exception ->
                 when (exception) {
                     is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
