@@ -32,14 +32,14 @@ import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.home.component.HomeAttendanceContent
 import com.yapp.feature.home.component.HomeAttendanceNotice
 import com.yapp.feature.home.component.HomeHeader
-import com.yapp.feature.home.component.HomeRecentAttendanceHistory
+import com.yapp.feature.home.component.HomeNotices
 import com.yapp.feature.home.dialog.AttendanceDialog
 
 @Composable
 internal fun HomeRoute(
     navigateToLogin: () -> Unit,
     navigateToSchedule: () -> Unit,
-    navigateToAttendanceHistory: () -> Unit,
+    navigateToNotice: () -> Unit,
     handleException: (Throwable) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
@@ -53,7 +53,7 @@ internal fun HomeRoute(
         when (effect) {
             HomeSideEffect.NavigateToLogin -> navigateToLogin()
             HomeSideEffect.NavigateToSchedule -> navigateToSchedule()
-            HomeSideEffect.NavigateToAttendanceHistory -> navigateToAttendanceHistory()
+            HomeSideEffect.NavigateToNotice -> navigateToNotice()
 
             is HomeSideEffect.ShowToast -> Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
             is HomeSideEffect.HandleException -> handleException(effect.exception)
@@ -122,9 +122,9 @@ fun HomeScreen(
                     onClickAttend = { onIntent(HomeIntent.ClickRequestAttendCode) }
                 )
 
-                HomeRecentAttendanceHistory(
-                    recentAttendanceHistory = homeState.recentAttendanceHistory,
-                    onClickShowAll = { onIntent(HomeIntent.ClickShowAllAttendanceHistory) }
+                HomeNotices(
+                    notices = homeState.notices.notices,
+                    onClickMore = { onIntent(HomeIntent.ClickShowAllNotice) }
                 )
             }
         }
