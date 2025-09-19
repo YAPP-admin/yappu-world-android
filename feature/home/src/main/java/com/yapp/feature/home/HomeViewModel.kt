@@ -162,19 +162,19 @@ internal class HomeViewModel @Inject constructor(
         postSideEffect: (HomeSideEffect) -> Unit
     ) {
         postsRepository.getNoticeList(null, 3, NoticeType.ALL.apiValue)
-            .catch { exception ->
+            .onEach { response ->
+                reduce {
+                    copy(notices = response.copy(
+                        notices = response.notices
+                    ))
+                }
+            }.catch { exception ->
                 when (exception) {
                     is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
                     else -> {
                         postSideEffect(HomeSideEffect.HandleException(exception))
                         exception.record()
                     }
-                }
-            }.onEach { response ->
-                reduce {
-                    copy(notices = response.copy(
-                        notices = response.notices
-                    ))
                 }
             }.launchIn(viewModelScope)
     }
