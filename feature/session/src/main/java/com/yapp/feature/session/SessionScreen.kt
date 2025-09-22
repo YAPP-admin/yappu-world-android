@@ -55,6 +55,7 @@ import android.net.Uri
 import com.naver.maps.geometry.LatLng
 import java.net.URLEncoder
 import com.yapp.core.designsystem.R as DesignR
+import androidx.core.net.toUri
 
 @Composable
 internal fun SessionRoute(
@@ -301,7 +302,7 @@ private fun openKakaoMap(context: Context, name: String, latitude: Double, longi
     } catch (e: Exception) {
         name
     }
-    val kakaoUri = Uri.parse("kakaomap://search?q=$encodedName&p=$latitude,$longitude")
+    val kakaoUri = "kakaomap://search?q=$encodedName&p=$latitude,$longitude".toUri()
     val intent = Intent(Intent.ACTION_VIEW, kakaoUri)
     // Prefer Kakao Map app explicitly if present
     intent.`package` = "net.daum.android.map"
@@ -311,7 +312,7 @@ private fun openKakaoMap(context: Context, name: String, latitude: Double, longi
         // Fallback to Kakao Map web with place name
         val web = Intent(
             Intent.ACTION_VIEW,
-            Uri.parse("https://map.kakao.com/link/map/$encodedName,$latitude,$longitude")
+            "https://map.kakao.com/link/map/$encodedName,$latitude,$longitude".toUri()
         )
         context.startActivity(web)
     }
@@ -323,9 +324,7 @@ private fun openNaverMap(context: Context, latitude: Double, longitude: Double, 
     } catch (e: Exception) {
         name
     }
-    val naverUri = Uri.parse(
-        "nmap://search?query=$encodedName&appname=${context.packageName}"
-    )
+    val naverUri = "nmap://search?query=$encodedName&appname=${context.packageName}".toUri()
     val intent = Intent(Intent.ACTION_VIEW, naverUri)
     intent.`package` = "com.nhn.android.nmap"
     try {
@@ -333,7 +332,7 @@ private fun openNaverMap(context: Context, latitude: Double, longitude: Double, 
     } catch (e: Exception) {
         // Fallback to Naver Map web (centered at coordinates or search by name)
         val webUrl = "https://map.naver.com/v5/search/$encodedName?c=$longitude,$latitude,16,0,0,0,dh"
-        val web = Intent(Intent.ACTION_VIEW, Uri.parse(webUrl))
+        val web = Intent(Intent.ACTION_VIEW, webUrl.toUri())
         context.startActivity(web)
     }
 }
