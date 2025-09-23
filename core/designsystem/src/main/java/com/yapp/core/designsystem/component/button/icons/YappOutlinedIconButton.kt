@@ -50,10 +50,11 @@ fun YappOutlinedIconButtonBasic(
         contentAlignment = Alignment.Center,
     ) {
         Icon(
-            modifier = modifier
+            modifier = Modifier
                 .size(iconSize),
             painter = painterResource(resourceId),
             contentDescription = contentDescription,
+            tint = iconTint,
         )
     }
 }
