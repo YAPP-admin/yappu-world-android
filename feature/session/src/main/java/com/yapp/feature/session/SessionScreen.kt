@@ -57,6 +57,7 @@ import com.yapp.model.SessionProgressPhase
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.ui.graphics.Color
 import com.naver.maps.geometry.LatLng
 import java.net.URLEncoder
@@ -94,13 +95,14 @@ fun SessionScreen(
     }
 
     // 타이틀 초기 위치와 헤더 높이 저장
-    var titleInitialBottom by remember { mutableStateOf(0f) }
-    var headerHeight by remember { mutableStateOf(56f) } // 기본 헤더 높이
+    var titleInitialBottom by remember { mutableFloatStateOf(0f) }
+    var headerHeight by remember { mutableFloatStateOf(56f) } // 기본 헤더 높이
     var isTitlePositioned by remember { mutableStateOf(false) }
 
-    // 타이틀이 헤더 영역 밖으로 스크롤되었는지 확인
+    // 타이틀이 완전히 가려졌는지 확인
     val showTitleInHeader by remember {
         derivedStateOf {
+            // 타이틀의 하단이 헤더 높이를 넘어서 스크롤되었을 때 (타이틀이 완전히 가려짐)
             isTitlePositioned && scrollState.value > titleInitialBottom
         }
     }
@@ -131,7 +133,8 @@ fun SessionScreen(
                             if (!isTitlePositioned) {
                                 // boundsInParent는 스크롤 컨테이너 기준의 고정된 위치
                                 val bounds = coordinates.boundsInParent()
-                                titleInitialBottom = bounds.top - headerHeight
+                                // 타이틀의 하단 위치를 저장 (타이틀이 완전히 사라지는 지점)
+                                titleInitialBottom = bounds.bottom
                                 isTitlePositioned = true
                             }
                         },
