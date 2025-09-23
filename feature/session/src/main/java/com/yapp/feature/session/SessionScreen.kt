@@ -25,11 +25,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.boundsInParent
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -52,6 +57,7 @@ import com.yapp.model.SessionProgressPhase
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.ui.graphics.Color
 import com.naver.maps.geometry.LatLng
 import java.net.URLEncoder
 import com.yapp.core.designsystem.R as DesignR
@@ -87,17 +93,27 @@ fun SessionScreen(
         derivedStateOf { scrollState.canScrollBackward }
     }
 
+    // 타이틀 초기 위치와 헤더 높이 저장
+    var titleInitialBottom by remember { mutableStateOf(0f) }
+    var headerHeight by remember { mutableStateOf(56f) } // 기본 헤더 높이
+    var isTitlePositioned by remember { mutableStateOf(false) }
+
+    // 타이틀이 헤더 영역 밖으로 스크롤되었는지 확인
+    val showTitleInHeader by remember {
+        derivedStateOf {
+            isTitlePositioned && scrollState.value > titleInitialBottom
+        }
+    }
+
+    val sessionTitle = "2차 데모데이"
+
     YappBackground {
         Box {
-            Column(modifier = Modifier.verticalScroll(scrollState)) {
-                // Header
-                YappHeaderActionbar(
-                    leftIcon = DesignR.drawable.icon_chevron_left,
-                    contentDescription = "뒤로가기 버튼",
-                    onClickLeftIcon = onBack,
-                    title = "",
-                )
-
+            Column(
+                modifier = Modifier
+                    .verticalScroll(scrollState)
+                    .padding(top = with(LocalDensity.current) { headerHeight.toDp() })
+            ) {
                 // Title Block
                 Column(
                     modifier = Modifier
@@ -111,7 +127,15 @@ fun SessionScreen(
                     )
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        text = "2차 데모데이",
+                        modifier = Modifier.onGloballyPositioned { coordinates ->
+                            if (!isTitlePositioned) {
+                                // boundsInParent는 스크롤 컨테이너 기준의 고정된 위치
+                                val bounds = coordinates.boundsInParent()
+                                titleInitialBottom = bounds.top - headerHeight
+                                isTitlePositioned = true
+                            }
+                        },
+                        text = sessionTitle,
                         style = YappTheme.typography.title2Bold,
                         color = YappTheme.colorScheme.labelNormal,
                         maxLines = 2,
@@ -168,7 +192,12 @@ fun SessionScreen(
                                         .size(32.dp)
                                         .clip(CircleShape)
                                         .yappClickable(onClick = {
-                                            openKakaoMap(context, "KT&G상상플래닛", seoulCityHall.latitude, seoulCityHall.longitude)
+                                            openKakaoMap(
+                                                context,
+                                                "KT&G상상플래닛",
+                                                seoulCityHall.latitude,
+                                                seoulCityHall.longitude
+                                            )
                                         }),
                                     painter = painterResource(R.drawable.image_kakao_map),
                                     contentDescription = "카카오맵으로 이동"
@@ -178,7 +207,12 @@ fun SessionScreen(
                                         .size(32.dp)
                                         .clip(CircleShape)
                                         .yappClickable(onClick = {
-                                            openNaverMap(context, seoulCityHall.latitude, seoulCityHall.longitude, "KT&G상상플래닛")
+                                            openNaverMap(
+                                                context,
+                                                seoulCityHall.latitude,
+                                                seoulCityHall.longitude,
+                                                "KT&G상상플래닛"
+                                            )
                                         }),
                                     painter = painterResource(R.drawable.image_naver_map),
                                     contentDescription = "네이버 지도로 이동"
@@ -219,28 +253,23 @@ fun SessionScreen(
                     )
 
                     Spacer(Modifier.height(8.dp))
-                    DummyNotices().forEachIndexed { index, notice ->
-                        NoticeItem(
-                            noticeInfo = notice,
-                            onClick = {},
-                        )
-                        if (index != DummyNotices().lastIndex) {
-                            Spacer(Modifier.height(8.dp))
-                            HorizontalDivider(color = YappTheme.colorScheme.lineNormalAlternative)
+                    repeat(3) {
+                        DummyNotices().forEachIndexed { index, notice ->
+                            NoticeItem(
+                                noticeInfo = notice,
+                                onClick = {},
+                            )
+                            if (index != DummyNotices().lastIndex) {
+                                Spacer(Modifier.height(8.dp))
+                                HorizontalDivider(color = YappTheme.colorScheme.lineNormalAlternative)
+                            }
                         }
                     }
+
                     Spacer(Modifier.height(24.dp))
                 }
             }
 
-            if (showGradientBottom) {
-                GradientBottom(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(40.dp),
-                    color = YappTheme.colorScheme.staticWhite
-                )
-            }
 
             GradientTop(
                 modifier = Modifier
@@ -249,6 +278,31 @@ fun SessionScreen(
                     .align(Alignment.BottomCenter),
                 color = YappTheme.colorScheme.staticWhite
             )
+
+            Column(
+                modifier = Modifier.align(Alignment.TopCenter)
+            ) {
+                YappHeaderActionbar(
+                    modifier = Modifier
+                        .background(color = YappTheme.colorScheme.backgroundElevatedNormal)
+                        .onGloballyPositioned { coordinates ->
+                            headerHeight = coordinates.size.height.toFloat()
+                        },
+                    leftIcon = DesignR.drawable.icon_chevron_left,
+                    contentDescription = "뒤로가기 버튼",
+                    onClickLeftIcon = onBack,
+                    title = if (showTitleInHeader) sessionTitle else "",
+                )
+
+                if (showGradientBottom) {
+                    GradientBottom(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(40.dp),
+                        color = YappTheme.colorScheme.staticWhite
+                    )
+                }
+            }
         }
     }
 }
@@ -333,7 +387,8 @@ private fun openNaverMap(context: Context, latitude: Double, longitude: Double, 
         context.startActivity(intent)
     } catch (e: Exception) {
         // Fallback to Naver Map web (centered at coordinates or search by name)
-        val webUrl = "https://map.naver.com/v5/search/$encodedName?c=$longitude,$latitude,16,0,0,0,dh"
+        val webUrl =
+            "https://map.naver.com/v5/search/$encodedName?c=$longitude,$latitude,16,0,0,0,dh"
         val web = Intent(Intent.ACTION_VIEW, webUrl.toUri())
         context.startActivity(web)
     }
