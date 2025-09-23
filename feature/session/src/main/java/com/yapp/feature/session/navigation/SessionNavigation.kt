@@ -14,9 +14,17 @@ fun NavController.navigateToSession(navOptions: NavOptions? = null) {
     navigate(SessionRoute, navOptions)
 }
 
-fun NavGraphBuilder.sessionNavGraph() {
+fun NavGraphBuilder.sessionNavGraph(
+    navigateToBack: () -> Unit = {},
+    navigateToLogin: () -> Unit = {},
+    handleException: (Throwable) -> Unit = {},
+) {
     composable<SessionRoute> {
-        SessionRoute()
+        SessionRoute(
+            navigateToBack = navigateToBack,
+            navigateToLogin = navigateToLogin,
+            handleException = handleException,
+        )
     }
 }
 

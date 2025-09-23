@@ -120,6 +120,14 @@ fun YappNavHost(
             navigateToLogin = { navigator.navigateLoginScreen(clearBackStackNavOptions) },
             handleException = handleException,
         )
-        sessionNavGraph()
+        sessionNavGraph(
+            navigateToBack = { navigator.popBackStack() },
+            navigateToLogin = {
+                navigator.navigateLoginScreen(
+                    navOptions = clearBackStackNavOptions
+                )
+            },
+            handleException = handleException,
+        )
     }
 }
