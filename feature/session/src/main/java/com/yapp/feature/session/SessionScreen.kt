@@ -59,7 +59,9 @@ import androidx.core.net.toUri
 
 @Composable
 internal fun SessionRoute(
-    onBack: (() -> Unit)? = null,
+    navigateToBack: () -> Unit = {},
+    navigateToLogin: () -> Unit = {},
+    handleException: (Throwable) -> Unit = {},
     viewModel: SessionViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
@@ -68,7 +70,7 @@ internal fun SessionRoute(
     val state by viewModel.store.uiState.collectAsStateWithLifecycle()
     SessionScreen(
         state = state,
-        onBack = onBack,
+        onBack = navigateToBack,
     )
 }
 
