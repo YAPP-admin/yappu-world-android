@@ -96,7 +96,7 @@ private class OptionalApiResultCall<R : Any>(
     companion object {
         private val json = Json {
             encodeDefaults = true
-            encodeDefaults = true
+            ignoreUnknownKeys = true
         }
     }
 }
