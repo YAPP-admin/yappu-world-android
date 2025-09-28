@@ -34,6 +34,7 @@ import com.yapp.core.designsystem.R as DesignR
 fun SessionNaverMap(
     modifier: Modifier = Modifier,
     center: LatLng,
+    locationName: String? = null,
     onMapReady: ((com.naver.maps.map.NaverMap) -> Unit)? = null,
 ) {
     val isPreview = LocalInspectionMode.current
@@ -102,6 +103,7 @@ fun SessionNaverMap(
                     naverMap.moveCamera(CameraUpdate.scrollTo(center))
                     Marker().apply {
                         position = center
+                        captionText = locationName ?: ""
                         map = naverMap
                     }
                     onMapReady?.invoke(naverMap)

@@ -29,7 +29,7 @@ fun YappNavHost(
 ) {
     NavHost(
         navController = navigator.navController,
-        startDestination = SessionRoute,
+        startDestination = SessionRoute(sessionId = "01999022-7df2-2b4a-f7b5-8d349c58d3ab"), // TODO 여기부터 작업하시면 됩니다. (to @김동현)
         modifier = modifier,
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
@@ -126,6 +126,9 @@ fun YappNavHost(
                 navigator.navigateLoginScreen(
                     navOptions = clearBackStackNavOptions
                 )
+            },
+            navigateToNoticeDetail = { noticeId ->
+                navigator.navigateNoticeDetail(noticeId)
             },
             handleException = handleException,
         )

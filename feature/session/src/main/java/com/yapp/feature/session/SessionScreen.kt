@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -51,15 +49,15 @@ import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.NoticeItem
 import com.yapp.core.ui.component.YappBackground
-import com.yapp.model.NoticeInfo
-import com.yapp.model.NoticeType
-import com.yapp.model.SessionProgressPhase
+import com.yapp.core.ui.component.YappSkeleton
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
+import android.widget.Toast
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.ui.graphics.Color
 import com.naver.maps.geometry.LatLng
+import com.yapp.core.ui.extension.collectWithLifecycle
 import java.net.URLEncoder
 import com.yapp.core.designsystem.R as DesignR
 import androidx.core.net.toUri
@@ -68,6 +66,7 @@ import androidx.core.net.toUri
 internal fun SessionRoute(
     navigateToBack: () -> Unit = {},
     navigateToLogin: () -> Unit = {},
+    navigateToNoticeDetail: (String) -> Unit = {},
     handleException: (Throwable) -> Unit = {},
     viewModel: SessionViewModel = hiltViewModel(),
 ) {
@@ -75,9 +74,32 @@ internal fun SessionRoute(
         viewModel.store.onIntent(SessionIntent.EnterSessionScreen)
     }
     val state by viewModel.store.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    viewModel.store.sideEffects.collectWithLifecycle { effect ->
+        when (effect) {
+            SessionSideEffect.NavigateToLogin -> navigateToLogin()
+            is SessionSideEffect.ShowToast -> {
+                Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
+            }
+            is SessionSideEffect.HandleException -> handleException(effect.throwable)
+            is SessionSideEffect.NavigateToNoticeDetail -> navigateToNoticeDetail(effect.noticeId)
+            is SessionSideEffect.OpenKakaoMap -> {
+                openKakaoMap(context, effect.name, effect.latitude, effect.longitude)
+            }
+            is SessionSideEffect.OpenNaverMap -> {
+                openNaverMap(context, effect.latitude, effect.longitude, effect.name)
+            }
+            is SessionSideEffect.CopyAddressToClipboard -> {
+                copyAddressToClipboard(context, effect.address)
+            }
+        }
+    }
+
     SessionScreen(
         state = state,
         onBack = navigateToBack,
+        onIntent = { viewModel.store.onIntent(it) },
     )
 }
 
@@ -85,9 +107,12 @@ internal fun SessionRoute(
 fun SessionScreen(
     state: SessionState,
     onBack: (() -> Unit)? = null,
+    onIntent: (SessionIntent) -> Unit = {},
 ) {
-    val context = LocalContext.current
-    val seoulCityHall = remember { LatLng(37.5665, 126.9780) }
+    val sessionDetail = state.sessionDetail
+    val location = remember(sessionDetail) {
+        sessionDetail?.let { LatLng(it.latitude, it.longitude) }
+    }
 
     val scrollState = rememberScrollState()
     val showGradientBottom by remember {
@@ -102,31 +127,35 @@ fun SessionScreen(
     // 타이틀이 완전히 가려졌는지 확인
     val showTitleInHeader by remember {
         derivedStateOf {
-            // 타이틀의 하단이 헤더 높이를 넘어서 스크롤되었을 때 (타이틀이 완전히 가려짐)
             isTitlePositioned && scrollState.value > titleInitialBottom
         }
     }
 
-    val sessionTitle = "2차 데모데이"
+    val sessionTitle = sessionDetail?.title ?: ""
 
     YappBackground {
         Box {
-            Column(
-                modifier = Modifier
-                    .verticalScroll(scrollState)
-                    .padding(top = with(LocalDensity.current) { headerHeight.toDp() })
-            ) {
+            if (state.isLoading) {
+                SessionSkeletonScreen(headerHeight = headerHeight)
+            } else {
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(scrollState)
+                        .padding(top = with(LocalDensity.current) { headerHeight.toDp() })
+                ) {
                 // Title Block
                 Column(
                     modifier = Modifier
                         .padding(horizontal = 20.dp)
                         .padding(top = 16.dp)
                 ) {
-                    YappChipLarge(
-                        text = SessionProgressPhase.PENDING.title,
-                        colorType = ChipColorType.Gray,
-                        isFill = true,
-                    )
+                    sessionDetail?.progressPhase?.let { phase ->
+                        YappChipLarge(
+                            text = phase.title,
+                            colorType = ChipColorType.Gray,
+                            isFill = true,
+                        )
+                    }
                     Spacer(Modifier.height(8.dp))
                     Text(
                         modifier = Modifier.onGloballyPositioned { coordinates ->
@@ -156,7 +185,7 @@ fun SessionScreen(
                         )
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            text = "2025. 02. 15 (토) / 오후 6시 - 오후 8시",
+                            text = sessionDetail?.dateTimeText ?: "",
                             style = YappTheme.typography.label1NormalRegular,
                             color = YappTheme.colorScheme.labelAlternative,
                         )
@@ -176,13 +205,13 @@ fun SessionScreen(
 
                         Column {
                             Text(
-                                text = "서울 창업허브",
+                                text = sessionDetail?.place ?: "",
                                 style = YappTheme.typography.label1NormalRegular,
                                 color = YappTheme.colorScheme.labelAlternative,
                             )
                             Spacer(Modifier.height(4.dp))
                             Text(
-                                text = "서울 마포구 백범로31길 21 서울창업허브 서울복지타운",
+                                text = sessionDetail?.address ?: "",
                                 style = YappTheme.typography.caption1Regular,
                                 color = YappTheme.colorScheme.labelAssistive,
                             )
@@ -190,52 +219,61 @@ fun SessionScreen(
 
                             // Action buttons (placeholders)
                             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                                Image(
-                                    modifier = Modifier
-                                        .size(32.dp)
-                                        .clip(CircleShape)
-                                        .yappClickable(onClick = {
-                                            openKakaoMap(
-                                                context,
-                                                "KT&G상상플래닛",
-                                                seoulCityHall.latitude,
-                                                seoulCityHall.longitude
-                                            )
-                                        }),
-                                    painter = painterResource(R.drawable.image_kakao_map),
-                                    contentDescription = "카카오맵으로 이동"
-                                )
-                                Image(
-                                    modifier = Modifier
-                                        .size(32.dp)
-                                        .clip(CircleShape)
-                                        .yappClickable(onClick = {
-                                            openNaverMap(
-                                                context,
-                                                seoulCityHall.latitude,
-                                                seoulCityHall.longitude,
-                                                "KT&G상상플래닛"
-                                            )
-                                        }),
-                                    painter = painterResource(R.drawable.image_naver_map),
-                                    contentDescription = "네이버 지도로 이동"
-                                )
-                                YappOutlinedIconButtonSmall(
-                                    resourceId = R.drawable.icon_copy,
-                                    contentDescription = "주소 복사하기",
-                                    onClick = {},
-                                )
+                                if (location != null && sessionDetail != null) {
+                                    Image(
+                                        modifier = Modifier
+                                            .size(32.dp)
+                                            .clip(CircleShape)
+                                            .yappClickable(onClick = {
+                                                onIntent(
+                                                    SessionIntent.ClickKakaoMap(
+                                                        name = sessionDetail.place,
+                                                        latitude = location.latitude,
+                                                        longitude = location.longitude
+                                                    )
+                                                )
+                                            }),
+                                        painter = painterResource(R.drawable.image_kakao_map),
+                                        contentDescription = "카카오맵으로 이동"
+                                    )
+                                    Image(
+                                        modifier = Modifier
+                                            .size(32.dp)
+                                            .clip(CircleShape)
+                                            .yappClickable(onClick = {
+                                                onIntent(
+                                                    SessionIntent.ClickNaverMap(
+                                                        latitude = location.latitude,
+                                                        longitude = location.longitude,
+                                                        name = sessionDetail.place
+                                                    )
+                                                )
+                                            }),
+                                        painter = painterResource(R.drawable.image_naver_map),
+                                        contentDescription = "네이버 지도로 이동"
+                                    )
+                                    YappOutlinedIconButtonSmall(
+                                        resourceId = R.drawable.icon_copy,
+                                        contentDescription = "주소 복사하기",
+                                        onClick = {
+                                            onIntent(SessionIntent.ClickCopyAddress(sessionDetail.address))
+                                        },
+                                    )
+                                }
                             }
 
                             Spacer(Modifier.height(8.dp))
 
-                            SessionNaverMap(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(180.dp)
-                                    .clip(RoundedCornerShape(8.dp)),
-                                center = seoulCityHall,
-                            )
+                            location?.let { loc ->
+                                SessionNaverMap(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(180.dp)
+                                        .clip(RoundedCornerShape(8.dp)),
+                                    center = loc,
+                                    locationName = sessionDetail?.place,
+                                )
+                            }
                         }
                     }
                 }
@@ -256,21 +294,20 @@ fun SessionScreen(
                     )
 
                     Spacer(Modifier.height(8.dp))
-                    repeat(3) {
-                        DummyNotices().forEachIndexed { index, notice ->
-                            NoticeItem(
-                                noticeInfo = notice,
-                                onClick = {},
-                            )
-                            if (index != DummyNotices().lastIndex) {
-                                Spacer(Modifier.height(8.dp))
-                                HorizontalDivider(color = YappTheme.colorScheme.lineNormalAlternative)
-                            }
+                    sessionDetail?.notices?.forEachIndexed { index, notice ->
+                        NoticeItem(
+                            noticeInfo = notice,
+                            onClick = { onIntent(SessionIntent.ClickNoticeItem(notice.id)) },
+                        )
+                        if (index != sessionDetail.notices.lastIndex) {
+                            Spacer(Modifier.height(8.dp))
+                            HorizontalDivider(color = YappTheme.colorScheme.lineNormalAlternative)
                         }
                     }
 
                     Spacer(Modifier.height(24.dp))
                 }
+            }
             }
 
 
@@ -309,42 +346,6 @@ fun SessionScreen(
         }
     }
 }
-
-private fun DummyNotices(): List<NoticeInfo> = listOf(
-    NoticeInfo(
-        id = "1",
-        writerName = "홍길동",
-        writerId = "1",
-        writerPosition = "운영진",
-        writerGeneration = 20,
-        createdAt = "2023-08-13",
-        title = "심장 건강을 책임지는 스마트 워치, 심박수 감시와 예...",
-        content = "한반도의 경제 협력이 새로운 국면을 맞이하며 남북 간 첫 연합 기업이 설립되었습니다.",
-        noticeType = NoticeType.SESSION
-    ),
-    NoticeInfo(
-        id = "2",
-        writerName = "홍길동",
-        writerId = "2",
-        writerPosition = "운영진",
-        writerGeneration = 20,
-        createdAt = "2023-08-13",
-        title = "심장 건강을 책임지는 스마트 워치, 심박수 감시와 예...",
-        content = "한반도의 경제 협력이 새로운 국면을 맞이하며 남북 간 첫 연합 기업이 설립되었습니다.",
-        noticeType = NoticeType.SESSION
-    ),
-    NoticeInfo(
-        id = "3",
-        writerName = "홍길동",
-        writerId = "3",
-        writerPosition = "운영진",
-        writerGeneration = 20,
-        createdAt = "2023-08-13",
-        title = "심장 건강을 책임지는 스마트 워치, 심박수 감시와 예...",
-        content = "한반도의 경제 협력이 새로운 국면을 맞이하며 남북 간 첫 연합 기업이 설립되었습니다.",
-        noticeType = NoticeType.SESSION
-    )
-)
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
@@ -395,4 +396,110 @@ private fun openNaverMap(context: Context, latitude: Double, longitude: Double, 
         val web = Intent(Intent.ACTION_VIEW, webUrl.toUri())
         context.startActivity(web)
     }
+}
+
+@Composable
+fun SessionSkeletonScreen(
+    headerHeight: Float = 56f
+) {
+    Column(
+        modifier = Modifier
+            .padding(top = with(LocalDensity.current) { headerHeight.toDp() })
+            .padding(horizontal = 20.dp)
+    ) {
+        Spacer(Modifier.height(16.dp))
+
+        YappSkeleton(
+            modifier = Modifier
+                .width(80.dp)
+                .height(32.dp),
+            radius = 16.0
+        )
+
+        Spacer(Modifier.height(8.dp))
+
+        YappSkeleton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp),
+            radius = 8.0
+        )
+
+        Spacer(Modifier.height(8.dp))
+
+        YappSkeleton(
+            modifier = Modifier
+                .fillMaxWidth(0.7f)
+                .height(20.dp),
+            radius = 4.0
+        )
+
+        Spacer(Modifier.height(8.dp))
+
+        YappSkeleton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(20.dp),
+            radius = 4.0
+        )
+
+        Spacer(Modifier.height(4.dp))
+
+        YappSkeleton(
+            modifier = Modifier
+                .fillMaxWidth(0.85f)
+                .height(16.dp),
+            radius = 4.0
+        )
+
+        Spacer(Modifier.height(8.dp))
+
+        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            repeat(3) {
+                YappSkeleton(
+                    modifier = Modifier
+                        .size(32.dp),
+                    radius = 16.0
+                )
+            }
+        }
+
+        Spacer(Modifier.height(8.dp))
+
+        YappSkeleton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(180.dp),
+            radius = 8.0
+        )
+
+        Spacer(Modifier.height(24.dp))
+
+        YappSkeleton(
+            modifier = Modifier
+                .width(120.dp)
+                .height(28.dp),
+            radius = 4.0
+        )
+
+        Spacer(Modifier.height(16.dp))
+
+        repeat(3) {
+            YappSkeleton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                radius = 8.0
+            )
+            if (it < 2) {
+                Spacer(Modifier.height(8.dp))
+            }
+        }
+    }
+}
+
+private fun copyAddressToClipboard(context: Context, address: String) {
+    val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clip = ClipData.newPlainText("address", address)
+    clipboardManager.setPrimaryClip(clip)
 }
