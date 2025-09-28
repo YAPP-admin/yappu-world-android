@@ -85,6 +85,9 @@ private class ApiResultCall<R>(
     override fun timeout(): Timeout = delegate.timeout()
 
     companion object {
-        private val json = Json { encodeDefaults = true }
+        private val json = Json {
+            encodeDefaults = true
+            ignoreUnknownKeys = true
+        }
     }
 }
