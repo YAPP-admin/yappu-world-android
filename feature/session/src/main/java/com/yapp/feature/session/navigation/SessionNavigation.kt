@@ -8,21 +8,23 @@ import com.yapp.feature.session.SessionRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object SessionRoute
+data class SessionRoute(val sessionId: String)
 
-fun NavController.navigateToSession(navOptions: NavOptions? = null) {
-    navigate(SessionRoute, navOptions)
+fun NavController.navigateToSession(sessionId: String, navOptions: NavOptions? = null) {
+    navigate(SessionRoute(sessionId), navOptions)
 }
 
 fun NavGraphBuilder.sessionNavGraph(
     navigateToBack: () -> Unit = {},
     navigateToLogin: () -> Unit = {},
+    navigateToNoticeDetail: (String) -> Unit = {},
     handleException: (Throwable) -> Unit = {},
 ) {
     composable<SessionRoute> {
         SessionRoute(
             navigateToBack = navigateToBack,
             navigateToLogin = navigateToLogin,
+            navigateToNoticeDetail = navigateToNoticeDetail,
             handleException = handleException,
         )
     }

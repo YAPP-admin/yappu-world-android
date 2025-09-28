@@ -4,9 +4,11 @@ import com.yapp.core.data.remote.api.ScheduleApi
 import com.yapp.core.data.remote.model.response.SessionResponse
 import com.yapp.core.data.remote.model.response.toDateGroupedScheduleList
 import com.yapp.core.data.remote.model.response.toHomeSessionListModel
+import com.yapp.core.data.remote.model.response.toSessionDetailInfo
 import com.yapp.dataapi.ScheduleRepository
 import com.yapp.model.HomeSessionList
 import com.yapp.model.ScheduleList
+import com.yapp.model.SessionDetailInfo
 import com.yapp.model.UpcomingSessionInfo
 import javax.inject.Inject
 
@@ -66,5 +68,9 @@ internal class ScheduleRepositoryImpl @Inject constructor(
             .also { scheduleList ->
                 scheduleCache[Pair(year, month)] = scheduleList
             }
+    }
+
+    override suspend fun getSessionDetail(sessionId: String): SessionDetailInfo {
+        return scheduleApi.getSessionDetail(sessionId).toSessionDetailInfo()
     }
 }
