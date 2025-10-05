@@ -121,7 +121,7 @@ fun SessionScreen(
 
     // 타이틀 초기 위치와 헤더 높이 저장
     var titleInitialBottom by remember { mutableFloatStateOf(0f) }
-    var headerHeight by remember { mutableFloatStateOf(56f) } // 기본 헤더 높이
+    var headerHeight by remember { mutableFloatStateOf(0f) }
     var isTitlePositioned by remember { mutableStateOf(false) }
 
     // 타이틀이 완전히 가려졌는지 확인
@@ -136,7 +136,7 @@ fun SessionScreen(
     YappBackground {
         Box {
             if (state.isLoading) {
-                SessionSkeletonScreen(headerHeight = headerHeight)
+                SessionSkeletonScreen()
             } else {
                 Column(
                     modifier = Modifier
@@ -159,10 +159,9 @@ fun SessionScreen(
                     Spacer(Modifier.height(8.dp))
                     Text(
                         modifier = Modifier.onGloballyPositioned { coordinates ->
-                            if (!isTitlePositioned) {
-                                // boundsInParent는 스크롤 컨테이너 기준의 고정된 위치
+                            if (!isTitlePositioned && headerHeight != 0f) {
                                 val bounds = coordinates.boundsInParent()
-                                // 타이틀의 하단 위치를 저장 (타이틀이 완전히 사라지는 지점)
+                                // 타이틀의 상단 위치를 저장 (타이틀이 완전히 사라질 때까지 기다림)
                                 titleInitialBottom = bounds.bottom
                                 isTitlePositioned = true
                             }
@@ -399,12 +398,9 @@ private fun openNaverMap(context: Context, latitude: Double, longitude: Double, 
 }
 
 @Composable
-fun SessionSkeletonScreen(
-    headerHeight: Float = 56f
-) {
+fun SessionSkeletonScreen() {
     Column(
         modifier = Modifier
-            .padding(top = with(LocalDensity.current) { headerHeight.toDp() })
             .padding(horizontal = 20.dp)
     ) {
         Spacer(Modifier.height(16.dp))
