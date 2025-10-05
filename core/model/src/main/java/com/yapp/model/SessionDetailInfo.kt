@@ -15,24 +15,4 @@ data class SessionDetailInfo(
     val latitude: Double,
     val longitude: Double,
     val notices: List<NoticeInfo>
-) {
-    val dateTimeText: String
-        get() {
-            val formattedStartDate = startDate.replace("-", ". ")
-            val formattedEndDate = endDate?.replace("-", ". ")
-
-            val timeRange = if (startTime != null && endTime != null) {
-                " / $startTime - $endTime"
-            } else if (startTime != null) {
-                " / $startTime"
-            } else {
-                ""
-            }
-
-            return if (formattedEndDate != null && endDayOfWeek != null) {
-                "$formattedStartDate ($startDayOfWeek)$timeRange ~ $formattedEndDate ($endDayOfWeek)$timeRange"
-            } else {
-                "$formattedStartDate ($startDayOfWeek)$timeRange"
-            }
-        }
-}
+)
