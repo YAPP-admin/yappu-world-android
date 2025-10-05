@@ -185,7 +185,7 @@ fun SessionScreen(
                         )
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            text = sessionDetail?.dateTimeText ?: "",
+                            text = state.sessionDateTime,
                             style = YappTheme.typography.label1NormalRegular,
                             color = YappTheme.colorScheme.labelAlternative,
                         )
