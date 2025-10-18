@@ -18,6 +18,7 @@ fun NavGraphBuilder.homeNavGraph(
     navigateLogin : () -> Unit,
     navigateSchedule: () -> Unit,
     navigateToNotice: () -> Unit,
+    navigateToSessionDetail: (String) -> Unit,
     handleException: (Throwable) -> Unit,
 ) {
     composable<HomeRoute> {
@@ -25,6 +26,7 @@ fun NavGraphBuilder.homeNavGraph(
             navigateToLogin = navigateLogin,
             navigateToSchedule = navigateSchedule,
             navigateToNotice = navigateToNotice,
+            navigateToSessionDetail = navigateToSessionDetail,
             handleException = handleException,
         )
     }

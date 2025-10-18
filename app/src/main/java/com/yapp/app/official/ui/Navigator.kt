@@ -22,6 +22,7 @@ import com.yapp.feature.notice.navigation.navigateToNotice
 import com.yapp.feature.notice.navigation.navigateToNoticeDetail
 import com.yapp.feature.profile.navigation.navigateToProfile
 import com.yapp.feature.schedule.navigation.navigateToSchedule
+import com.yapp.feature.session.navigation.navigateToSession
 import com.yapp.feature.setting.navigation.navigateToSetting
 import com.yapp.feature.signup.navigation.navigateToSignUp
 
@@ -61,6 +62,10 @@ class NavigatorState(
 
     fun navigateHomeScreen(navOptions: NavOptions? = null) {
         navController.navigateToHome(navOptions = navOptions)
+    }
+
+    fun navigateSessionScreen(sessionId: String, navOptions: NavOptions? = null) {
+        navController.navigateToSession(sessionId, navOptions = navOptions)
     }
 
     fun navigateScheduleScreen(navOptions: NavOptions? = null) {

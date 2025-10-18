@@ -52,6 +52,7 @@ internal fun HomeHeader(
     modifier: Modifier = Modifier,
     sessions: List<HomeSession>,
     upcomingSessionId: String?,
+    onClickSessionItem: (String) -> Unit,
     onClickShowAll: () -> Unit,
 ) {
     val pageIndex = sessions.indexOfFirst { it.id == upcomingSessionId }
@@ -132,7 +133,7 @@ internal fun HomeHeader(
                     dayOfWeek = it.dayOfWeek,
                     progressPhase = it.progressPhase,
                     showSessionChip = it.showSessionChip,
-                    onClickSessionItem = {  }
+                    onClickSessionItem = onClickSessionItem
                 )
             }
         }
@@ -256,6 +257,7 @@ private fun HomeStickHeaderPreview() {
                     relativeDays = 0
                 )
             ),
+            onClickSessionItem = { _ -> },
             onClickShowAll = { },
             upcomingSessionId = "123"
         )

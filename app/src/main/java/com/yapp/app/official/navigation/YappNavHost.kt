@@ -15,7 +15,6 @@ import com.yapp.feature.notice.navigation.noticeDetailNavGraph
 import com.yapp.feature.notice.navigation.noticeNavGraph
 import com.yapp.feature.profile.navigation.profileNavGraph
 import com.yapp.feature.schedule.navigation.scheduleNavGraph
-import com.yapp.feature.session.navigation.SessionRoute
 import com.yapp.feature.session.navigation.sessionNavGraph
 import com.yapp.feature.setting.navigation.settingNavGraph
 import com.yapp.feature.signup.navigation.signupNavGraph
@@ -29,7 +28,7 @@ fun YappNavHost(
 ) {
     NavHost(
         navController = navigator.navController,
-        startDestination = SessionRoute(sessionId = "01999022-7df2-2b4a-f7b5-8d349c58d3ab"), // TODO 여기부터 작업하시면 됩니다. (to @김동현)
+        startDestination = navigator.startDestination,
         modifier = modifier,
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
@@ -65,6 +64,9 @@ fun YappNavHost(
             },
             navigateToNotice = {
                 navigator.navigateToTopLevelDestination(TopLevelDestination.BOARD)
+            },
+            navigateToSessionDetail = { sessionId ->
+                navigator.navigateSessionScreen(sessionId)
             },
             handleException = handleException,
         )
