@@ -67,6 +67,7 @@ internal class HomeViewModel @Inject constructor(
                 loadNoticeHistory(reduce, postSideEffect)
             }
 
+            is HomeIntent.ClickSessionItem -> postSideEffect(HomeSideEffect.NavigateToSessionDetail(intent.sessionId))
             HomeIntent.ClickShowAllSession -> postSideEffect(HomeSideEffect.NavigateToSchedule)
             HomeIntent.ClickShowAllNotice -> postSideEffect(HomeSideEffect.NavigateToNotice)
             HomeIntent.ClickRequestAttendCode -> {

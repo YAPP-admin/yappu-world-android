@@ -40,6 +40,7 @@ internal fun HomeRoute(
     navigateToLogin: () -> Unit,
     navigateToSchedule: () -> Unit,
     navigateToNotice: () -> Unit,
+    navigateToSessionDetail: (String) -> Unit,
     handleException: (Throwable) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
@@ -54,6 +55,7 @@ internal fun HomeRoute(
             HomeSideEffect.NavigateToLogin -> navigateToLogin()
             HomeSideEffect.NavigateToSchedule -> navigateToSchedule()
             HomeSideEffect.NavigateToNotice -> navigateToNotice()
+            is HomeSideEffect.NavigateToSessionDetail -> navigateToSessionDetail(effect.sessionId)
 
             is HomeSideEffect.ShowToast -> Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
             is HomeSideEffect.HandleException -> handleException(effect.exception)
@@ -110,6 +112,9 @@ fun HomeScreen(
                         .padding(top = 18.dp),
                     sessions = homeState.sessionList.sessions,
                     upcomingSessionId = homeState.sessionList.upcomingSessionId,
+                    onClickSessionItem = { sessionId ->
+                        onIntent(HomeIntent.ClickSessionItem(sessionId))
+                    },
                     onClickShowAll = { onIntent(HomeIntent.ClickShowAllSession) },
                 )
 
