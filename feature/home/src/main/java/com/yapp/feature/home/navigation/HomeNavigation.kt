@@ -17,7 +17,8 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) {
 fun NavGraphBuilder.homeNavGraph(
     navigateLogin : () -> Unit,
     navigateSchedule: () -> Unit,
-    navigateToNotice: () -> Unit,
+    navigateAttendanceHistory: () -> Unit,
+    navigateToNotice: (id: String) -> Unit,
     navigateToSessionDetail: (String) -> Unit,
     handleException: (Throwable) -> Unit,
 ) {
@@ -25,6 +26,7 @@ fun NavGraphBuilder.homeNavGraph(
         HomeRoute(
             navigateToLogin = navigateLogin,
             navigateToSchedule = navigateSchedule,
+            navigateToAttendanceHistory = navigateAttendanceHistory,
             navigateToNotice = navigateToNotice,
             navigateToSessionDetail = navigateToSessionDetail,
             handleException = handleException,
