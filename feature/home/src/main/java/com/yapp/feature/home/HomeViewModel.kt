@@ -18,9 +18,6 @@ import com.yapp.model.exceptions.NoScheduledSessionException
 import com.yapp.model.exceptions.NotFoundException
 import com.yapp.model.exceptions.UndefineNoticeWriterInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -57,6 +54,10 @@ internal class HomeViewModel @Inject constructor(
                     isInitialized = true
                 }
             }
+
+            HomeIntent.ClickShowAllAttendanceHistory -> postSideEffect(HomeSideEffect.NavigateToAttendanceHistory)
+            is HomeIntent.ClickNotice -> postSideEffect(HomeSideEffect.NavigateToNotice(intent.id))
+            is HomeIntent.ClickDetail -> postSideEffect(HomeSideEffect.NavigateToSessionDetail(intent.id))
 
             HomeIntent.Refresh -> {
                 loadUpcomingSessionInfo(reduce, postSideEffect)
@@ -108,12 +109,31 @@ internal class HomeViewModel @Inject constructor(
         val (startDate, endDate) = LocalDate.now().toMonthDateRange()
 
         reduce { copy(isLoading = true) }
+
         runCatchingIgnoreCancelled {
             scheduleRepository.getSessions(startDate, endDate)
         }.onSuccess { homeSessions ->
+            val sessionListWithNotice = homeSessions.upcomingSessionId
+                ?.takeIf { it.isNotBlank() }
+                ?.let { sessionId ->
+                    runCatchingIgnoreCancelled {
+                        scheduleRepository.getSessionDetail(sessionId)
+                    }.onFailure { e ->
+                        when (e) {
+                            is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
+                            else -> {
+                                postSideEffect(HomeSideEffect.HandleException(e))
+                                e.record()
+                            }
+                        }
+                    }.getOrNull()?.let { detail ->
+                        homeSessions.copy(upcomingNotice = detail.notices)
+                    }
+                } ?: homeSessions
+
             reduce {
                 copy(
-                    sessionList = homeSessions
+                    sessionList = sessionListWithNotice
                 )
             }
         }.onFailure { e ->
@@ -193,6 +213,7 @@ internal class HomeViewModel @Inject constructor(
                     is CodeNotCorrectException -> {
                         reduce { copy(showAttendanceCodeError = true) }
                     }
+
                     else -> {
                         postSideEffect(HomeSideEffect.HandleException(e))
                         e.record()
