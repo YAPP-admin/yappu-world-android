@@ -2,6 +2,7 @@ package com.yapp.feature.home.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
@@ -58,7 +60,9 @@ private fun Faq(
             modifier = Modifier
                 .padding(vertical = 12.dp)
                 .fillMaxWidth()
-                .yappClickable(onClick = { clickBasicRule() })
+                .yappClickable(onClick = { clickBasicRule() }),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Image(painter = painterResource(coreDesignR.drawable.yappo_wink), contentDescription = null)
             Text(text = "YAPP 기본 규칙")
@@ -68,7 +72,9 @@ private fun Faq(
             modifier = Modifier
                 .padding(vertical = 12.dp)
                 .fillMaxWidth()
-                .yappClickable(onClick = { clickCurriculum() })
+                .yappClickable(onClick = { clickCurriculum() }),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Image(painter = painterResource(coreDesignR.drawable.yappo_smile), contentDescription = null)
             Text(text = "N기 커리큘럼")
