@@ -20,7 +20,6 @@ internal class SessionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val scheduleRepository: ScheduleRepository,
 ) : ViewModel() {
-
     private val sessionId: String = savedStateHandle.toRoute<SessionRoute>().sessionId
 
     val store: MviIntentStore<SessionState, SessionIntent, SessionSideEffect> =
@@ -37,9 +36,7 @@ internal class SessionViewModel @Inject constructor(
     ) {
         when (intent) {
             SessionIntent.EnterSessionScreen -> {
-                loadSessionDetail(reduce, postSideEffect)
-            }
-            SessionIntent.Refresh -> {
+                if (state.isLoading.not()) return
                 loadSessionDetail(reduce, postSideEffect)
             }
             is SessionIntent.ClickKakaoMap -> {

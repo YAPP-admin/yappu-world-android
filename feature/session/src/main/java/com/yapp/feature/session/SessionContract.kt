@@ -4,7 +4,7 @@ import com.yapp.core.ui.util.formatSessionDateTime
 import com.yapp.model.SessionDetailInfo
 
 data class SessionState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val sessionDetail: SessionDetailInfo? = null,
     val error: Throwable? = null
 ) {
@@ -18,7 +18,6 @@ data class SessionState(
 
 sealed interface SessionIntent {
     data object EnterSessionScreen : SessionIntent
-    data object Refresh : SessionIntent
     data class ClickKakaoMap(val name: String, val latitude: Double, val longitude: Double) :
         SessionIntent
 
