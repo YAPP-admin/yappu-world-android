@@ -1,15 +1,13 @@
 package com.yapp.model
 
+import java.time.LocalDateTime
+
 data class SessionDetailInfo(
     val id: String,
     val progressPhase: SessionProgressPhase,
     val title: String,
-    val startDate: String,
-    val startTime: String?,
-    val startDayOfWeek: String,
-    val endDate: String?,
-    val endTime: String?,
-    val endDayOfWeek: String?,
+    val startDateTime: LocalDateTime,
+    val endDateTime: LocalDateTime,
     val place: String,
     val address: String,
     val latitude: Double,

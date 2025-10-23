@@ -10,12 +10,8 @@ data class SessionState(
 ) {
     val sessionDateTime: String = sessionDetail?.let {
         formatSessionDateTime(
-            startDate = it.startDate,
-            startDayOfWeek = it.startDayOfWeek,
-            startTime = it.startTime,
-            endDate = it.endDate,
-            endDayOfWeek = it.endDayOfWeek,
-            endTime = it.endTime
+            startDateTime = it.startDateTime,
+            endDateTime = it.endDateTime
         )
     } ?: ""
 }

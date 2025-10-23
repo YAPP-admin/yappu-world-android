@@ -27,6 +27,8 @@ enum class YappServerError(val exception: YappException) {
     //출석 체크
     ATD_1001(CodeNotCorrectException()),
 
+    BRD_1001(UndefineNoticeWriterInfo()),
+
     NOT_DEFINED(NotDefinedException());
 
     companion object {
@@ -54,6 +56,7 @@ class InvalidTokenException : YappException("비정상 토큰입니다")
 class CodeNotCorrectException : YappException("출석 코드가 일치하지 않습니다.")
 class NoScheduledSessionException : YappException("예정된 세션이 존재하지 않습니다.")
 class NotDefinedException : YappException("정의되지 않은 오류입니다.")
+class UndefineNoticeWriterInfo : YappException("공지사항 작성자 정보가 존재하지 않습니다.")
 
 open class YappException(message: String = "") : Exception(message) {
     private var _message: String = message

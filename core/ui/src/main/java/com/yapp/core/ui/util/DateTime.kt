@@ -121,27 +121,36 @@ fun formatDateTime(context: Context, input: String): String {
 }
 
 fun formatSessionDateTime(
-    startDate: String,
-    startDayOfWeek: String,
-    startTime: String?,
-    endDate: String?,
-    endDayOfWeek: String?,
-    endTime: String?
+    startDateTime: LocalDateTime,
+    endDateTime: LocalDateTime
 ): String {
-    val formattedStartDate = startDate.replace("-", ". ")
-    val formattedEndDate = endDate?.replace("-", ". ")
+    val dateFormatter = DateTimeFormatter.ofPattern("yyyy. MM. dd")
+    val dayOfWeekFormatter = DateTimeFormatter.ofPattern("E", Locale.KOREAN)
+    val timeFormatter = DateTimeFormatter.ofPattern("a h시", Locale.KOREAN)
+    val timeWithMinuteFormatter = DateTimeFormatter.ofPattern("a h시 m분", Locale.KOREAN)
 
-    val timeRange = if (startTime != null && endTime != null) {
-        " / $startTime - $endTime"
-    } else if (startTime != null) {
-        " / $startTime"
+    val formattedStartDate = startDateTime.format(dateFormatter)
+    val formattedEndDate = endDateTime.format(dateFormatter)
+    val startDayOfWeek = startDateTime.format(dayOfWeekFormatter)
+    val endDayOfWeek = endDateTime.format(dayOfWeekFormatter)
+
+    val formattedStartTime = if (startDateTime.minute == 0) {
+        startDateTime.format(timeFormatter)
     } else {
-        ""
+        startDateTime.format(timeWithMinuteFormatter)
     }
 
-    return if (formattedEndDate != null && endDayOfWeek != null) {
-        "$formattedStartDate ($startDayOfWeek)$timeRange ~ $formattedEndDate ($endDayOfWeek)$timeRange"
+    val formattedEndTime = if (endDateTime.minute == 0) {
+        endDateTime.format(timeFormatter)
     } else {
-        "$formattedStartDate ($startDayOfWeek)$timeRange"
+        endDateTime.format(timeWithMinuteFormatter)
+    }
+
+    val timeRange = "$formattedStartTime ~ $formattedEndTime"
+
+    return if (formattedStartDate == formattedEndDate) {
+        "$formattedStartDate ($startDayOfWeek)\n$timeRange"
+    } else {
+        "$formattedStartDate ($startDayOfWeek) $formattedStartTime\n~ $formattedEndDate ($endDayOfWeek) $formattedEndTime"
     }
 }
