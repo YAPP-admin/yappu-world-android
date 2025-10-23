@@ -26,7 +26,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.boundsInParent
@@ -38,7 +37,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.yapp.core.designsystem.component.button.icons.YappOutlinedIconButtonSmall
 import com.yapp.core.designsystem.component.chip.ChipColorType
 import com.yapp.core.designsystem.component.chip.YappChipLarge
@@ -56,6 +54,7 @@ import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.ui.Alignment
 import com.naver.maps.geometry.LatLng
 import com.yapp.core.ui.extension.collectWithLifecycle
 import java.net.URLEncoder
@@ -175,9 +174,9 @@ fun SessionScreen(
                     Spacer(Modifier.height(8.dp))
 
                     // Date & Time
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(verticalAlignment = Alignment.Top) {
                         Icon(
-                            painter = painterResource(id = DesignR.drawable.icon_time),
+                            painter = painterResource(id = R.drawable.icon_calendar),
                             contentDescription = null,
                             modifier = Modifier.size(16.dp),
                             tint = YappTheme.colorScheme.labelAlternative,

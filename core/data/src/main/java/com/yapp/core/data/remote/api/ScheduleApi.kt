@@ -28,7 +28,7 @@ interface ScheduleApi {
         @Query("month") month: Int,
     ): DateGroupedScheduleResponse
 
-    @GET("v1/sessions/{sessionId}")
+    @GET("v2/sessions/{sessionId}")
     suspend fun getSessionDetail(
         @Path("sessionId") sessionId: String
     ): SessionDetailResponse
