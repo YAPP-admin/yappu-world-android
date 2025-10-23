@@ -54,7 +54,7 @@ internal fun DateGroupedScheduleItem(
         } else {
             YappTheme.colorScheme.labelNeutral
         }
-        val dateWidth = if (showMonth) 72.dp else 58.dp
+        val dateWidth = if (showMonth) 72.dp else 60.dp
 
         Row(
             modifier = Modifier.width(dateWidth),
