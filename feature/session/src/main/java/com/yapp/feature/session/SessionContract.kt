@@ -8,12 +8,12 @@ data class SessionState(
     val sessionDetail: SessionDetailInfo? = null,
     val error: Throwable? = null
 ) {
-    val sessionDateTime: String = sessionDetail?.let {
+    val sessionDateTimePair: Pair<String, String> = sessionDetail?.let {
         formatSessionDateTime(
             startDateTime = it.startDateTime,
             endDateTime = it.endDateTime
         )
-    } ?: ""
+    } ?: ("" to "")
 }
 
 sealed interface SessionIntent {
