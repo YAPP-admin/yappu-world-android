@@ -59,22 +59,44 @@ internal fun HomeAttendanceContent(
                 onClickAttend = onClickAttend,
                 onClickNotice = onClickNotice,
             )
+        } else if (upcomingSession != null) {
+            UpcomingSessionCard(session = upcomingSession)
         } else {
-            UpcomingSessionCard(
-                today = LocalDate.now(),
-                session = upcomingSession
-            )
+            EmptyNextSessionCard()
         }
     }
 }
 
 @Composable
+private fun EmptyNextSessionCard() {
+    val today = remember { LocalDate.now() }
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.session_today_text, today.format(DATE_OUTPUT)),
+            style = YappTheme.typography.headline1Bold,
+            color = YappTheme.colorScheme.labelNormal
+        )
+
+        /***
+         *  내려오는 다음 세션이 없기에 강제화 처리를 위해 true, null 값 지정
+         ***/
+        HomeAttendanceNotice(
+            isNotToday = true,
+            upcomingSession = null
+        )
+    }
+}
+
+@Composable
 private fun UpcomingSessionCard(
-    today: LocalDate,
-    session: UpcomingSessionInfo?
+    session: UpcomingSessionInfo
 ) {
-    val parsedDate = remember(session?.startDate) {
-        formatSessionDate(session?.startDate.orEmpty())
+    val today = remember { LocalDate.now() }
+    val parsedDate = remember(session.startDate) {
+        formatSessionDate(session.startDate)
     }
 
     Column(
@@ -263,12 +285,26 @@ fun TodaySessionCard(
 @Composable
 private fun HomeAttendanceContentPreview() {
     YappTheme {
-        HomeAttendanceContent(
-            upcomingSession = null,
-            notices = emptyList(),
-            onClickAttend = {},
-            onClickNotice = {}
-        )
+        Column {
+            UpcomingSessionCard(
+                session = UpcomingSessionInfo(
+                    sessionId = "019a1190-4db2-34d7-bbbe-2b0bf56810fb",
+                    name = "23기 테스트",
+                    startDate = "2025-10-23",
+                    startDayOfTheWeek = "목",
+                    endDate = "2025-10-23",
+                    endDayOfTheWeek = "목",
+                    startTime = "17:10:00",
+                    endTime = "18:40:00",
+                    location = "KT&G상상플래닛",
+                    remainingDays = 2,
+                    canCheckIn = false,
+                    status = null,
+                )
+            )
+            Spacer(Modifier.height(40.dp))
+            EmptyNextSessionCard()
+        }
     }
 }
 
