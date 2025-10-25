@@ -65,7 +65,7 @@ private fun Faq(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Image(painter = painterResource(coreDesignR.drawable.yappo_wink), contentDescription = null)
-            Text(text = "YAPP 기본 규칙")
+            Text(text = "YAPP 기본 규칙", style = YappTheme.typography.body1NormalRegular)
         }
         HorizontalDivider(color = YappTheme.colorScheme.lineNormalAlternative)
         Row(
@@ -77,7 +77,7 @@ private fun Faq(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Image(painter = painterResource(coreDesignR.drawable.yappo_smile), contentDescription = null)
-            Text(text = "N기 커리큘럼")
+            Text(text = "N기 커리큘럼", style = YappTheme.typography.body1NormalRegular)
         }
     }
 }
