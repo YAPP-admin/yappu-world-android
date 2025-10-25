@@ -184,11 +184,19 @@ fun SessionScreen(
                             tint = YappTheme.colorScheme.labelAlternative,
                         )
                         Spacer(Modifier.width(8.dp))
-                        Text(
-                            text = state.sessionDateTime,
-                            style = YappTheme.typography.label1NormalRegular,
-                            color = YappTheme.colorScheme.labelAlternative,
-                        )
+                        Column {
+                            Text(
+                                text = state.sessionDateTimePair.first,
+                                style = YappTheme.typography.label1NormalRegular,
+                                color = YappTheme.colorScheme.labelAlternative,
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                text = state.sessionDateTimePair.second,
+                                style = YappTheme.typography.label1NormalRegular,
+                                color = YappTheme.colorScheme.labelAlternative,
+                            )
+                        }
                     }
 
                     Spacer(Modifier.height(8.dp))

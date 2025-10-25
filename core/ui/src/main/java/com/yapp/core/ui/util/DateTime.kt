@@ -123,7 +123,7 @@ fun formatDateTime(context: Context, input: String): String {
 fun formatSessionDateTime(
     startDateTime: LocalDateTime,
     endDateTime: LocalDateTime
-): String {
+): Pair<String, String> {
     val dateFormatter = DateTimeFormatter.ofPattern("yyyy. MM. dd")
     val dayOfWeekFormatter = DateTimeFormatter.ofPattern("E", Locale.KOREAN)
     val timeFormatter = DateTimeFormatter.ofPattern("a h시", Locale.KOREAN)
@@ -149,8 +149,14 @@ fun formatSessionDateTime(
     val timeRange = "$formattedStartTime ~ $formattedEndTime"
 
     return if (formattedStartDate == formattedEndDate) {
-        "$formattedStartDate ($startDayOfWeek)\n$timeRange"
+        Pair(
+            "$formattedStartDate ($startDayOfWeek)",
+            timeRange
+        )
     } else {
-        "$formattedStartDate ($startDayOfWeek) $formattedStartTime\n~ $formattedEndDate ($endDayOfWeek) $formattedEndTime"
+        Pair(
+            "$formattedStartDate ($startDayOfWeek) $formattedStartTime",
+            "~ $formattedEndDate ($endDayOfWeek) $formattedEndTime"
+        )
     }
 }
