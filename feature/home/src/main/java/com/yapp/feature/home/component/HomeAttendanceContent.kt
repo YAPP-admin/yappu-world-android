@@ -128,6 +128,10 @@ fun TodaySessionCard(
         )
     }
 
+    val startTime = remember(session) {
+        formatStartTime(context, startTime = session.startTime)
+    }
+
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
             text = session.name,
@@ -181,7 +185,7 @@ fun TodaySessionCard(
                     isFill = true
                 )
                 Text(
-                    text = formatStartTime(context, session.startTime),
+                    text = startTime,
                     style = YappTheme.typography.label1NormalMedium,
                     color = YappTheme.colorScheme.labelAssistive
                 )
