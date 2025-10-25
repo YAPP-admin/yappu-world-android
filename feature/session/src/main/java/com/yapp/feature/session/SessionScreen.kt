@@ -60,6 +60,7 @@ import com.yapp.core.ui.extension.collectWithLifecycle
 import java.net.URLEncoder
 import com.yapp.core.designsystem.R as DesignR
 import androidx.core.net.toUri
+import kotlinx.coroutines.delay
 
 @Composable
 internal fun SessionRoute(
@@ -70,8 +71,7 @@ internal fun SessionRoute(
     viewModel: SessionViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
-        // 애니메이션이 완료된 후 API 호출 시작 (300ms 애니메이션 + 약간의 여유)
-        kotlinx.coroutines.delay(350)
+        delay(350)
         viewModel.store.onIntent(SessionIntent.EnterSessionScreen)
     }
     val state by viewModel.store.uiState.collectAsStateWithLifecycle()
