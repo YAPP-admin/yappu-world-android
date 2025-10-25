@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.component.button.solid.SolidButtonDefaults
 import com.yapp.core.designsystem.component.button.solid.YappSolidPrimaryButtonLarge
@@ -233,7 +234,9 @@ fun TodaySessionCard(
             notices.forEachIndexed { index, item ->
                 key(item.id) {
                     Row(
-                        modifier = Modifier.fillMaxWidth().yappClickable(onClick = { onClickNotice(item.id) }),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .yappClickable(onClick = { onClickNotice(item.id) }),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(text = item.title)
@@ -249,6 +252,19 @@ fun TodaySessionCard(
             }
 
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun HomeAttendanceContentPreview() {
+    YappTheme {
+        HomeAttendanceContent(
+            upcomingSession = null,
+            notices = emptyList(),
+            onClickAttend = {},
+            onClickNotice = {}
+        )
     }
 }
 
