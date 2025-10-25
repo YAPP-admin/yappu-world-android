@@ -110,6 +110,7 @@ fun HomeScreen(
                         .verticalScroll(rememberScrollState())
                 ) {
                     HomeHeader(
+                        modifier = Modifier.padding(horizontal = 20.dp),
                         body = {
                             CurrentSessionSection(
                                 upcomingSession = homeState.upcomingSession,
@@ -123,13 +124,13 @@ fun HomeScreen(
                     )
                     Spacer(Modifier.height(16.dp))
                     OtherSection(
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                        modifier = Modifier.padding(horizontal = 20.dp),
                         clickAttendance = { onIntent(HomeIntent.ClickShowAllAttendanceHistory) },
                         clickTotalSession = { onIntent(HomeIntent.ClickShowAllSession) },
                     )
                     Spacer(Modifier.height(16.dp))
                     FAQSection(
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                        modifier = Modifier.padding(horizontal = 20.dp),
                         clickCurriculum = {},
                         clickBasicRule = {}
                     )

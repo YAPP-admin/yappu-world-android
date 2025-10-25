@@ -39,7 +39,6 @@ internal fun HomeHeader(
 ) {
     Column(
         modifier = modifier.fillMaxWidth()
-            .padding(horizontal = 20.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(color = YappTheme.colorScheme.staticWhite)
             .padding(16.dp),
