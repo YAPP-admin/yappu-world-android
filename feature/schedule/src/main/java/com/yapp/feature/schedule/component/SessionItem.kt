@@ -27,6 +27,8 @@ enum class SessionDateState {
     PAST, TODAY, FUTURE
 }
 
+private val SESSION_ITEM_CORNER_RADIUS = 12.dp
+
 @Composable
 internal fun SessionItem(
     id: String,
@@ -47,10 +49,10 @@ internal fun SessionItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(SESSION_ITEM_CORNER_RADIUS))
             .background(
                 color = backgroundColor,
-                shape = RoundedCornerShape(12.dp),
+                shape = RoundedCornerShape(SESSION_ITEM_CORNER_RADIUS),
             )
             .then(
                 if (dateState == SessionDateState.FUTURE) {
@@ -59,7 +61,7 @@ internal fun SessionItem(
                         strokeWidth = 1.dp,
                         dashLength = 2.dp,
                         gapLength = 2.dp,
-                        cornerRadius = 12.dp
+                        cornerRadius = SESSION_ITEM_CORNER_RADIUS
                     )
                 } else {
                     Modifier

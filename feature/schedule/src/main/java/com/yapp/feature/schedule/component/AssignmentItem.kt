@@ -10,11 +10,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.extension.dashedBorder
+
+private val ASSIGNMENT_ITEM_CORNER_RADIUS = 12.dp
 
 @Composable
 internal fun AssignmentItem(
@@ -33,9 +36,10 @@ internal fun AssignmentItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(ASSIGNMENT_ITEM_CORNER_RADIUS))
             .background(
                 color = backgroundColor,
-                shape = RoundedCornerShape(12.dp),
+                shape = RoundedCornerShape(ASSIGNMENT_ITEM_CORNER_RADIUS),
             )
             .then(
                 if (dateState == SessionDateState.FUTURE) {
@@ -44,17 +48,17 @@ internal fun AssignmentItem(
                         strokeWidth = 1.dp,
                         dashLength = 2.dp,
                         gapLength = 2.dp,
-                        cornerRadius = 12.dp
+                        cornerRadius = ASSIGNMENT_ITEM_CORNER_RADIUS
                     )
                 } else {
                     Modifier
                 }
             )
+            .yappClickable { onClick(id) }
             .padding(
                 horizontal = 12.dp,
                 vertical = 10.dp,
             )
-            .yappClickable { onClick(id) }
     ) {
         Spacer(modifier = Modifier.height(2.dp))
 
