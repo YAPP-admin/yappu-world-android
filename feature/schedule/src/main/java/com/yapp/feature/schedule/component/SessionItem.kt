@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.R
@@ -46,6 +47,7 @@ internal fun SessionItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
             .background(
                 color = backgroundColor,
                 shape = RoundedCornerShape(12.dp),
@@ -63,11 +65,11 @@ internal fun SessionItem(
                     Modifier
                 }
             )
+            .yappClickable { onClick(id) }
             .padding(
                 horizontal = 12.dp,
                 vertical = 10.dp,
             )
-            .yappClickable { onClick(id) }
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Spacer(modifier = Modifier.height(2.dp))
