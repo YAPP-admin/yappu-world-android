@@ -189,7 +189,7 @@ private fun ScheduleList(
                     title = schedule.name,
                     content = "",
                     dateState = dateState,
-                    onClick = onClick
+                    onClick = {  }
                 )
             }
         }
