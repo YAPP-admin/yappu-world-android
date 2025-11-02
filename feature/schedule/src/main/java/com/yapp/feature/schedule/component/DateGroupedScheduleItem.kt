@@ -25,6 +25,8 @@ import com.yapp.model.AttendanceStatus
 import com.yapp.model.ScheduleInfo
 import com.yapp.model.ScheduleProgressPhase
 import com.yapp.model.ScheduleType
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Composable
 internal fun DateGroupedScheduleItem(
@@ -37,6 +39,20 @@ internal fun DateGroupedScheduleItem(
 ) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
+
+    val today = remember { LocalDate.now() }
+    val parsedDate = remember(date) {
+        runCatching { LocalDate.parse(date, DateTimeFormatter.ISO_DATE) }.getOrNull()
+    }
+
+    val dateState = remember(parsedDate, today) {
+        when {
+            parsedDate == null -> SessionDateState.FUTURE
+            parsedDate.isEqual(today) -> SessionDateState.TODAY
+            parsedDate.isBefore(today) -> SessionDateState.PAST
+            else -> SessionDateState.FUTURE
+        }
+    }
 
     val faded = remember(date) { isPastDate(date) }
 
@@ -74,7 +90,7 @@ internal fun DateGroupedScheduleItem(
             )
         }
 
-        Spacer(modifier = Modifier.width(20.dp))
+        Spacer(modifier = Modifier.width(8.dp))
 
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -109,6 +125,7 @@ internal fun DateGroupedScheduleItem(
                             scheduleProgressPhase = schedule.scheduleProgressPhase,
                             location = schedule.place,
                             duration = duration,
+                            dateState = dateState,
                             onClick = onClick,
                         )
                     }
@@ -118,6 +135,7 @@ internal fun DateGroupedScheduleItem(
                             id = schedule.id,
                             title = schedule.name,
                             content = "",
+                            dateState = dateState,
                             onClick = onClick,
                         )
                     }
@@ -135,7 +153,7 @@ private fun DateGroupedScheduleItemPreview() {
     YappTheme {
         Column {
             DateGroupedScheduleItem(
-                date = "2025-05-08",
+                date = "2025-11-02",
                 dayOfWeek = "일",
                 isToday = true,
                 schedules = listOf(
@@ -151,8 +169,8 @@ private fun DateGroupedScheduleItemPreview() {
                         endDayOfWeek = "일",
                         sessionType = null,
                         scheduleProgressPhase = ScheduleProgressPhase.ONGOING,
-                        date = "2023.10.01",
-                        endDate = "2023.10.01"
+                        date = "2023-10-01",
+                        endDate = "2023-10-01"
                     ),
                     ScheduleInfo(
                         id = "2",
@@ -166,8 +184,8 @@ private fun DateGroupedScheduleItemPreview() {
                         endDayOfWeek = "일",
                         sessionType = null,
                         scheduleProgressPhase = ScheduleProgressPhase.TODAY,
-                        date = "2023.10.01",
-                        endDate = "2023.10.01"
+                        date = "2023-10-01",
+                        endDate = "2023-10-01"
                     ),
                     ScheduleInfo(
                         id = "3",
@@ -181,8 +199,8 @@ private fun DateGroupedScheduleItemPreview() {
                         endDayOfWeek = "일",
                         sessionType = null,
                         scheduleProgressPhase = ScheduleProgressPhase.ONGOING,
-                        date = "2023.10.01",
-                        endDate = "2023.10.01"
+                        date = "2023-10-01",
+                        endDate = "2023-11-01"
                     ),
                 ),
                 showMonth = true,
@@ -206,8 +224,8 @@ private fun DateGroupedScheduleItemPreview() {
                         endDayOfWeek = "일",
                         sessionType = null,
                         scheduleProgressPhase = ScheduleProgressPhase.ONGOING,
-                        date = "2023.10.01",
-                        endDate = "2023.10.01"
+                        date = "2023-10-01",
+                        endDate = "2023-10-01"
                     ),
                 ),
                 showMonth = true,
