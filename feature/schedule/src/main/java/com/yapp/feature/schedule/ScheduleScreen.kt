@@ -204,7 +204,7 @@ private fun ScheduleAllScreen(
                 }
             }
 
-            item { Spacer(modifier = Modifier.height(8.dp)) }
+            item { Spacer(modifier = Modifier.height(20.dp)) }
         }
     }
 }
@@ -296,7 +296,7 @@ private fun ScheduleSessionScreen(
             }
         }
 
-        item { Spacer(modifier = Modifier.height(8.dp)) }
+        item { Spacer(modifier = Modifier.height(20.dp)) }
     }
 }
 
