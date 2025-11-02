@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -41,6 +41,7 @@ import com.yapp.core.ui.component.LocalBottomBarHeight
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.schedule.component.DateGroupedScheduleItem
+import com.yapp.feature.schedule.component.ScheduleGroupVariant
 import com.yapp.feature.schedule.component.ScheduleTabRow
 import com.yapp.feature.schedule.component.UpcomingSessionSection
 import com.yapp.model.AttendanceStatus
@@ -157,7 +158,7 @@ private fun ScheduleAllScreen(
                 onPreviousMonthClick = { onIntent(ScheduleIntent.ClickPreviousMonth) },
                 onNextMonthClick = { onIntent(ScheduleIntent.ClickNextMonth) }
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
         }
         if (schedules.isEmpty) {
             item {
@@ -183,18 +184,22 @@ private fun ScheduleAllScreen(
 
             }
         } else {
-            items(
-                items = schedules.dates,
-                key = { it.date },
-            ) {
+            itemsIndexed(schedules.dates, key = { _, it -> it.date }) { index, grouped ->
                 DateGroupedScheduleItem(
-                    date = it.date,
-                    dayOfWeek = it.dayOfTheWeek,
-                    isToday = it.isToday,
-                    schedules = it.schedules,
+                    variant = ScheduleGroupVariant.TOP_ALIGNED,
+                    date = grouped.date,
+                    dayOfWeek = grouped.dayOfTheWeek,
+                    isToday = grouped.isToday,
+                    showMonth = true,
+                    schedules = grouped.schedules,
                 ) { }
+
+                if (index < schedules.dates.lastIndex) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
 
+            item { Spacer(modifier = Modifier.height(8.dp)) }
         }
     }
 }
@@ -268,18 +273,22 @@ private fun ScheduleSessionScreen(
             )
         }
 
-        items(
-            items = sessions.dates,
-            key = { it.date },
-        ) {
+        itemsIndexed(sessions.dates, key = { _, it -> it.date }) { index, grouped ->
             DateGroupedScheduleItem(
-                date = it.date,
-                dayOfWeek = it.dayOfTheWeek,
-                isToday = it.isToday,
+                variant = ScheduleGroupVariant.TOP_ALIGNED,
+                date = grouped.date,
+                dayOfWeek = grouped.dayOfTheWeek,
+                isToday = grouped.isToday,
                 showMonth = true,
-                schedules = it.schedules,
+                schedules = grouped.schedules,
             ) { }
+
+            if (index < sessions.dates.lastIndex) {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
         }
+
+        item { Spacer(modifier = Modifier.height(8.dp)) }
     }
 }
 
