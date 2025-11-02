@@ -86,6 +86,9 @@ fun YappNavHost(
                 )
             },
             handleException = handleException,
+            navigateToSessionDetail = { sessionId ->
+                navigator.navigateSessionScreen(sessionId)
+            }
         )
         noticeNavGraph(
             navigateToNoticeDetail = { noticeId ->

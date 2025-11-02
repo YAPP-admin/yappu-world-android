@@ -56,6 +56,7 @@ internal fun ScheduleRoute(
     viewModel: ScheduleViewModel = hiltViewModel(),
     handleException: (Throwable) -> Unit,
     navigateToLogin: () -> Unit,
+    navigateToSessionDetail: (String) -> Unit
 ) {
     LaunchedEffect(Unit) {
         viewModel.store.onIntent(ScheduleIntent.EnterScheduleScreen)
@@ -66,6 +67,7 @@ internal fun ScheduleRoute(
         when (effect) {
             is ScheduleSideEffect.HandleException -> handleException(effect.exception)
             ScheduleSideEffect.NavigateToLogin -> navigateToLogin()
+            is ScheduleSideEffect.NavigateToSessionDetail -> navigateToSessionDetail(effect.id)
         }
     }
 
@@ -128,7 +130,8 @@ internal fun ScheduleScreen(
 
                     ScheduleTab.SESSION -> ScheduleSessionScreen(
                         upcomingSessions = scheduleState.upcomingSessions,
-                        sessions = scheduleState.sessions
+                        sessions = scheduleState.sessions,
+                        onIntent = onIntent
                     )
                 }
             }
@@ -192,7 +195,9 @@ private fun ScheduleAllScreen(
                     isToday = grouped.isToday,
                     showMonth = true,
                     schedules = grouped.schedules,
-                ) { }
+                ) { id ->
+                    onIntent(ScheduleIntent.ClickSessionItem(id))
+                }
 
                 if (index < schedules.dates.lastIndex) {
                     Spacer(modifier = Modifier.height(16.dp))
@@ -208,6 +213,7 @@ private fun ScheduleAllScreen(
 private fun ScheduleSessionScreen(
     upcomingSessions: List<ScheduleInfo>,
     sessions: ScheduleList,
+    onIntent: (ScheduleIntent) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth()
@@ -281,7 +287,9 @@ private fun ScheduleSessionScreen(
                 isToday = grouped.isToday,
                 showMonth = true,
                 schedules = grouped.schedules,
-            ) { }
+            ) { id ->
+                onIntent(ScheduleIntent.ClickSessionItem(id))
+            }
 
             if (index < sessions.dates.lastIndex) {
                 Spacer(modifier = Modifier.height(16.dp))

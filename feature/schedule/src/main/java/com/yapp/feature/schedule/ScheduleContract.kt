@@ -20,11 +20,13 @@ sealed interface ScheduleIntent {
     data class RefreshTab(val tab: ScheduleTab): ScheduleIntent
     data object ClickPreviousMonth: ScheduleIntent
     data object ClickNextMonth: ScheduleIntent
+    data class ClickSessionItem(val id: String): ScheduleIntent
 }
 
 sealed interface ScheduleSideEffect {
     data class HandleException(val exception: Throwable): ScheduleSideEffect
     data object NavigateToLogin: ScheduleSideEffect
+    data class NavigateToSessionDetail(val id: String): ScheduleSideEffect
 }
 
 enum class ScheduleTab(val index: Int, val labelResId: Int) {
