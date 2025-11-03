@@ -3,7 +3,6 @@ package com.yapp.feature.schedule.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -46,7 +45,7 @@ internal fun SessionItem(
         SessionDateState.FUTURE -> YappTheme.colorScheme.staticWhite
     }
 
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(SESSION_ITEM_CORNER_RADIUS))
@@ -68,45 +67,40 @@ internal fun SessionItem(
                 }
             )
             .yappClickable { onClick(id) }
-            .padding(
-                horizontal = 12.dp,
-                vertical = 10.dp,
-            )
+            .padding(12.dp)
     ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Spacer(modifier = Modifier.height(2.dp))
-
-            Text(
-                text = title,
-                style = YappTheme.typography.label1NormalBold,
-                color = YappTheme.colorScheme.labelNormal
-            )
-
-            Spacer(modifier = Modifier.height(6.dp))
-
-            if (!location.isNullOrBlank()) {
-                IconWithText(
-                    iconResId = R.drawable.icon_location,
-                    text = location,
-                    contentDescription = null,
-                )
-            }
-
-            duration?.let {
-                Spacer(modifier = Modifier.height(4.dp))
-
-                IconWithText(
-                    iconResId = R.drawable.icon_time,
-                    text = duration,
-                    contentDescription = null,
-                )
-            }
-        }
-
         if (attendanceStatus != null || scheduleProgressPhase == ScheduleProgressPhase.PENDING) {
             ScheduleStatusChip(
                 attendanceStatus = attendanceStatus,
                 scheduleProgressPhase = scheduleProgressPhase
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+        }
+
+        Text(
+            text = title,
+            style = YappTheme.typography.label1NormalBold,
+            color = YappTheme.colorScheme.labelNormal
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        if (!location.isNullOrBlank()) {
+            IconWithText(
+                iconResId = R.drawable.icon_location,
+                text = location,
+                contentDescription = null,
+            )
+        }
+
+        duration?.let {
+            Spacer(modifier = Modifier.height(4.dp))
+
+            IconWithText(
+                iconResId = R.drawable.icon_time,
+                text = duration,
+                contentDescription = null,
             )
         }
     }
