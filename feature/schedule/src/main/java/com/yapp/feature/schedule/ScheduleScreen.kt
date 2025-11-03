@@ -189,7 +189,7 @@ private fun ScheduleAllScreen(
         } else {
             itemsIndexed(schedules.dates, key = { _, it -> it.date }) { index, grouped ->
                 DateGroupedScheduleItem(
-                    variant = ScheduleGroupVariant.TOP_ALIGNED,
+                    variant = ScheduleGroupVariant.LEFT_ALIGNED,
                     date = grouped.date,
                     dayOfWeek = grouped.dayOfTheWeek,
                     isToday = grouped.isToday,
