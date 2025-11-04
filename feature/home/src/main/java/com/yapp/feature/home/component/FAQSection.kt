@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,63 +28,50 @@ import com.yapp.core.designsystem.R as coreDesignR
 internal fun FAQSection(
     modifier: Modifier = Modifier,
     clickBasicRule: () -> Unit,
-    clickCurriculum: () -> Unit,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Text(text = "혹시... 처음이 YAPP?", style = YappTheme.typography.headline1Bold)
         Spacer(Modifier.height(8.dp))
-        Faq(
-            clickBasicRule = clickBasicRule,
-            clickCurriculum = clickCurriculum
-        )
+        Faq(clickBasicRule = clickBasicRule)
     }
 }
 
 @Preview
 @Composable
 private fun FaQSectionPreview() {
-    YappTheme { FAQSection(clickCurriculum = {}, clickBasicRule = {}) }
 }
 
 @Composable
 private fun Faq(
-    clickBasicRule: () -> Unit,
-    clickCurriculum: () -> Unit,
+    clickBasicRule: () -> Unit
 ) {
-    Column(
+    Row(
         modifier = Modifier
             .clip(RoundedCornerShape(16.dp))
-            .background(color = YappTheme.colorScheme.staticWhite)
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .background(color = YappTheme.colorScheme.staticWhite, shape = RoundedCornerShape(16.dp))
+            .yappClickable(onClick = { clickBasicRule() })
+            .padding(horizontal = 16.dp, vertical = 20.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceAround,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Row(
-            modifier = Modifier
-                .padding(vertical = 12.dp)
-                .fillMaxWidth()
-                .yappClickable(onClick = { clickBasicRule() }),
+            modifier = Modifier.weight(1f),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
-            verticalAlignment = Alignment.CenterVertically,
         ) {
             Image(painter = painterResource(coreDesignR.drawable.yappo_wink), contentDescription = null)
             Text(text = "YAPP 기본 규칙", style = YappTheme.typography.body1NormalRegular)
         }
-        HorizontalDivider(color = YappTheme.colorScheme.lineNormalAlternative)
-        Row(
-            modifier = Modifier
-                .padding(vertical = 12.dp)
-                .fillMaxWidth()
-                .yappClickable(onClick = { clickCurriculum() }),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Image(painter = painterResource(coreDesignR.drawable.yappo_smile), contentDescription = null)
-            Text(text = "N기 커리큘럼", style = YappTheme.typography.body1NormalRegular)
-        }
+        Icon(
+            painter = painterResource(coreDesignR.drawable.icon_chevron_right),
+            contentDescription = null,
+            tint = YappTheme.colorScheme.labelDisable
+        )
     }
 }
 
 @Preview
 @Composable
 private fun FaqPreview() {
-    YappTheme { Faq(clickCurriculum = {}, clickBasicRule = {}) }
+    YappTheme { Faq(clickBasicRule = {}) }
 }

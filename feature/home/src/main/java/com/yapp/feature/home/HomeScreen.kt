@@ -134,7 +134,6 @@ fun HomeScreen(
                     Spacer(Modifier.height(16.dp))
                     FAQSection(
                         modifier = Modifier.padding(horizontal = 20.dp),
-                        clickCurriculum = {},
                         clickBasicRule = { onIntent(HomeIntent.ClickBasicRuleLink) }
                     )
                     Spacer(Modifier.height(30.dp))
