@@ -67,6 +67,10 @@ class ScheduleViewModel @Inject constructor(
                 reduce { copy(selectedYear = newYear, selectedMonth = newMonth) }
                 loadScheduleInfo(newYear, newMonth, reduce, postSideEffect)
             }
+
+            is ScheduleIntent.ClickSessionItem -> {
+                postSideEffect(ScheduleSideEffect.NavigateToSessionDetail(intent.id))
+            }
         }
     }
 
