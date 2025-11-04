@@ -36,9 +36,10 @@ internal fun FAQSection(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun FaQSectionPreview() {
+    YappTheme { FAQSection(clickBasicRule = {}) }
 }
 
 @Composable
@@ -70,7 +71,7 @@ private fun Faq(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun FaqPreview() {
     YappTheme { Faq(clickBasicRule = {}) }
