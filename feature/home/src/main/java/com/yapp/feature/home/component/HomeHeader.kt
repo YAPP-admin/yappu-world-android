@@ -1,12 +1,9 @@
 package com.yapp.feature.home.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.snapping.SnapPosition
-import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,18 +11,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,130 +23,28 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.component.Indicators
 import com.yapp.core.ui.component.SessionChip
 import com.yapp.core.ui.util.formatTimeRange
-import com.yapp.feature.home.R
-import com.yapp.model.HomeSession
 import com.yapp.model.SessionProgressPhase
-import kotlinx.coroutines.launch
 import com.yapp.core.designsystem.R as coreDesignR
 
 @Composable
 internal fun HomeHeader(
     modifier: Modifier = Modifier,
-    sessions: List<HomeSession>,
-    upcomingSessionId: String?,
-    onClickSessionItem: (String) -> Unit,
-    onClickShowAll: () -> Unit,
+    body: @Composable ColumnScope.() -> Unit,
 ) {
-    val pageIndex = sessions.indexOfFirst { it.id == upcomingSessionId }
-    val scope = rememberCoroutineScope()
-    val lazyListState = rememberLazyListState()
-    val flingBehavior = rememberSnapFlingBehavior(
-        lazyListState = lazyListState,
-        snapPosition = SnapPosition.Start
-    )
-    val selectedIndex by remember {
-        derivedStateOf {
-            val visibleItems = lazyListState.layoutInfo.visibleItemsInfo
-            if (visibleItems.isEmpty()) 0
-            else {
-                val center = (lazyListState.layoutInfo.viewportStartOffset +
-                        lazyListState.layoutInfo.viewportEndOffset) / 2
-                visibleItems.minByOrNull {
-                    val itemCenter = it.offset + it.size / 2
-                    kotlin.math.abs(itemCenter - center)
-                }?.index ?: 0
-            }
-        }
-    }
-
     Column(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .background(color = YappTheme.colorScheme.staticWhite)
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Image(
-                    painter = painterResource(coreDesignR.drawable.home_notice),
-                    contentDescription = null
-                )
-                Text(
-                    text = stringResource(R.string.home_generation_title),
-                    style = YappTheme.typography.headline1Bold,
-                    color = YappTheme.colorScheme.staticWhite
-                )
-            }
-
-            Text(
-                modifier = Modifier.yappClickable(onClick = onClickShowAll),
-                text = stringResource(R.string.home_session_all_title),
-                style = YappTheme.typography.label1NormalBold,
-                color = YappTheme.colorScheme.staticWhite
-            )
-        }
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp),
-            state = lazyListState,
-            flingBehavior = flingBehavior,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(horizontal = 20.dp)
-        ) {
-            items(
-                sessions,
-                key = { it.id }
-            ) {
-                SessionItem(
-                    id = it.id,
-                    title = it.name,
-                    date = it.date,
-                    place = it.place,
-                    startTime = it.startTime,
-                    endTime = it.endTime,
-                    dayOfWeek = it.dayOfWeek,
-                    progressPhase = it.progressPhase,
-                    showSessionChip = it.showSessionChip,
-                    onClickSessionItem = onClickSessionItem
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Indicators(
-            itemCount = sessions.size,
-            onPageSelect = { index ->
-                scope.launch {
-                    lazyListState.animateScrollToItem(index)
-                }
-            },
-            currentPage = selectedIndex
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-    }
-
-    LaunchedEffect(pageIndex) {
-        if (pageIndex > 0 && selectedIndex != pageIndex) {
-            lazyListState.scrollToItem(pageIndex)
-        }
+        body()
     }
 }
 
@@ -243,23 +131,7 @@ private fun HomeStickHeaderPreview() {
     YappTheme {
         HomeHeader(
             modifier = Modifier.background(brush = Brush.horizontalGradient(colorStops = colorStops)),
-            sessions = listOf(
-                HomeSession(
-                    id = "1",
-                    name = "2차 데모데이",
-                    date = "2025. 03. 15",
-                    place = "공덕 창업허브",
-                    startTime = "오후 6시",
-                    endTime = "오후 8시",
-                    dayOfWeek = "금",
-                    progressPhase = SessionProgressPhase.TODAY,
-                    attendanceStatus = null,
-                    relativeDays = 0
-                )
-            ),
-            onClickSessionItem = { _ -> },
-            onClickShowAll = { },
-            upcomingSessionId = "123"
+            body = {},
         )
     }
 }

@@ -22,6 +22,19 @@ import com.yapp.core.designsystem.extension.yappClickable
 fun YappDefaultHeader(
     modifier: Modifier = Modifier,
     onClickRightIcon: (() -> Unit)? = null,
+    rightIcon: @Composable () -> Unit = {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            Icon(
+                modifier = Modifier.yappClickable(onClick = onClickRightIcon),
+                painter = painterResource(R.drawable.icon_setting),
+                contentDescription = "setting",
+            )
+        }
+    }
 ) {
     Row(
         modifier = modifier
@@ -43,18 +56,7 @@ fun YappDefaultHeader(
             painter = painterResource(R.drawable.icon_yapp_text),
             contentDescription = "logo_text",
         )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
-        ) {
-            Icon(
-                modifier = Modifier.yappClickable(onClick = onClickRightIcon),
-                painter = painterResource(R.drawable.icon_setting),
-                contentDescription = "setting",
-
-            )
-        }
+        rightIcon()
     }
 }
 

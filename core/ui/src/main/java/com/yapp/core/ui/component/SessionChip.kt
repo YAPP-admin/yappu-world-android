@@ -23,6 +23,9 @@ fun SessionChip(
         SessionProgressPhase.UPCOMING -> {
             ChipColorType.Sub
         }
+        SessionProgressPhase.NONE -> {
+            ChipColorType.Yellow
+        }
     }
 
     YappChipSmall(

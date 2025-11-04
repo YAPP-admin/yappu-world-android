@@ -25,6 +25,8 @@ object ChipDefaults {
             subFillBackGroundColor = Color(0xFFFFAD31),
             grayFillBackGroundColor = YappTheme.colorScheme.labelNeutral,
             whiteFillBackGroundColor = YappTheme.colorScheme.labelAlternative,
+            yellowFillTextColor = YappTheme.colorScheme.staticWhite,
+            yellowFillBackGroundColor = YappTheme.colorScheme.secondaryNormal
         )
 
     val colorsWeak
@@ -36,7 +38,9 @@ object ChipDefaults {
             mainWeakBackGroundColor = Color(0xFFFFEFE9),
             subWeakBackGroundColor = Color(0xFFFFF7EA),
             grayWeakBackGroundColor = YappTheme.colorScheme.labelDisable,
-            whiteWeakBackGroundColor = YappTheme.colorScheme.backgroundNormalAlternative
+            whiteWeakBackGroundColor = YappTheme.colorScheme.backgroundNormalAlternative,
+            yellowWeakTextColor = YappTheme.colorScheme.staticWhite,
+            yellowWeakBackGroundColor = YappTheme.colorScheme.secondaryNormal
         )
 
     val textStyleLarge
@@ -52,7 +56,7 @@ object ChipDefaults {
 
 
 enum class ChipColorType {
-    Main, Sub, Gray, White
+    Main, Sub, Gray, White, Yellow
 }
 
 
@@ -71,6 +75,8 @@ data class ChipFillColors(
     val subFillBackGroundColor: Color,
     val grayFillBackGroundColor: Color,
     val whiteFillBackGroundColor: Color,
+    val yellowFillBackGroundColor: Color,
+    val yellowFillTextColor: Color,
 ) : ChipStateType() {
     @Stable
     override fun textColor(
@@ -80,6 +86,7 @@ data class ChipFillColors(
         ChipColorType.Sub -> subFillTextColor
         ChipColorType.White -> whiteFillTextColor
         ChipColorType.Gray -> grayFillTextColor
+        ChipColorType.Yellow -> yellowFillTextColor
     }
 
     @Stable
@@ -90,6 +97,7 @@ data class ChipFillColors(
         ChipColorType.Sub -> subFillBackGroundColor
         ChipColorType.White -> whiteFillBackGroundColor
         ChipColorType.Gray -> grayFillBackGroundColor
+        ChipColorType.Yellow -> yellowFillBackGroundColor
     }
 }
 
@@ -104,6 +112,8 @@ data class ChipWeakColors(
     val subWeakBackGroundColor: Color,
     val grayWeakBackGroundColor: Color,
     val whiteWeakBackGroundColor: Color,
+    val yellowWeakBackGroundColor: Color,
+    val yellowWeakTextColor: Color,
 ) : ChipStateType() {
     @Stable
     override fun textColor(
@@ -113,6 +123,7 @@ data class ChipWeakColors(
         ChipColorType.Sub -> subWeakTextColor
         ChipColorType.White -> whiteWeakTextColor
         ChipColorType.Gray -> grayWeakTextColor
+        ChipColorType.Yellow -> yellowWeakTextColor
     }
 
     @Stable
@@ -123,5 +134,6 @@ data class ChipWeakColors(
         ChipColorType.Sub -> subWeakBackGroundColor
         ChipColorType.White -> whiteWeakBackGroundColor
         ChipColorType.Gray -> grayWeakBackGroundColor
+        ChipColorType.Yellow -> yellowWeakBackGroundColor
     }
 }

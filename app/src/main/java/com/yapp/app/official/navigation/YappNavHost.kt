@@ -63,10 +63,13 @@ fun YappNavHost(
                 navigator.navigateToTopLevelDestination(TopLevelDestination.SCHEDULE)
             },
             navigateToNotice = {
-                navigator.navigateToTopLevelDestination(TopLevelDestination.BOARD)
+                navigator.navigateNoticeDetail(it)
             },
             navigateToSessionDetail = { sessionId ->
                 navigator.navigateSessionScreen(sessionId)
+            },
+            navigateAttendanceHistory = {
+                navigator.navigateAttendance()
             },
             handleException = handleException,
         )

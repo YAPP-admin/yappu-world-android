@@ -25,6 +25,7 @@ internal class OperationsRepositoryImpl @Inject constructor(
     private var usageInquiryLink: String? = null
     private var termsOfServiceLink: String? = null
     private var privacyPolicyLink: String? = null
+    private var basicRuleLink: String? = null
 
     override fun getPositionConfigs(): Flow<List<String>> = flow {
         val localPositionConfigs = dataStore.data.firstOrNull()
@@ -62,6 +63,12 @@ internal class OperationsRepositoryImpl @Inject constructor(
     override suspend fun getPrivacyPolicyLink(): String {
         return privacyPolicyLink ?: operationsApi.getPrivacyPolicyLink().link.also {
             privacyPolicyLink = it
+        }
+    }
+
+    override suspend fun getBasicRuleLink(): String {
+        return basicRuleLink ?: operationsApi.getBasicRuleLink().link.also {
+            basicRuleLink = it
         }
     }
 
