@@ -11,6 +11,8 @@ interface OperationsRepository {
 
     suspend fun getPrivacyPolicyLink(): String
 
+    suspend fun getBasicRuleLink(): String
+
     fun getAppVersion(): String
 
     suspend fun isForceUpdateRequired(): Boolean

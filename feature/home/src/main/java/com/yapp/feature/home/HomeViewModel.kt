@@ -7,6 +7,7 @@ import com.yapp.core.common.android.util.toMonthDateRange
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.AttendanceRepository
+import com.yapp.dataapi.OperationsRepository
 import com.yapp.dataapi.ScheduleRepository
 import com.yapp.domain.runCatchingIgnoreCancelled
 import com.yapp.model.AttendanceInfo
@@ -27,8 +28,10 @@ import javax.inject.Inject
 internal class HomeViewModel @Inject constructor(
     private val scheduleRepository: ScheduleRepository,
     private val attendanceRepository: AttendanceRepository,
+    private val operationsRepository: OperationsRepository,
 ) : ViewModel() {
     private var isInitialized = false
+    private var basicRuleLink: String? = null
 
     val store: MviIntentStore<HomeState, HomeIntent, HomeSideEffect> =
         mviIntentStore(
@@ -65,6 +68,19 @@ internal class HomeViewModel @Inject constructor(
 
             is HomeIntent.ClickSessionItem -> postSideEffect(HomeSideEffect.NavigateToSessionDetail(intent.sessionId))
             HomeIntent.ClickShowAllSession -> postSideEffect(HomeSideEffect.NavigateToSchedule)
+            HomeIntent.ClickBasicRuleLink -> {
+                viewModelScope.launch {
+                    basicRuleLink?.let {
+                        postSideEffect(HomeSideEffect.OpenUrl(it))
+                    } ?: run {
+                        runCatching { operationsRepository.getBasicRuleLink() }
+                            .onSuccess {
+                                basicRuleLink = it
+                                postSideEffect(HomeSideEffect.OpenUrl(it))
+                            }.onFailure { postSideEffect(HomeSideEffect.ShowToast(it.message.orEmpty())) }
+                    }
+                }
+            }
             HomeIntent.ClickRequestAttendCode -> {
                 reduce {
                     copy(showAttendCodeBottomSheet = true)

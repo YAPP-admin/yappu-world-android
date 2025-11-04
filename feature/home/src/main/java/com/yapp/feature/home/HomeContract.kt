@@ -33,6 +33,7 @@ sealed interface HomeIntent {
     data object ClickShowAllAttendanceHistory : HomeIntent
     data class ChangeAttendanceCodeDigits(val code: List<String>) : HomeIntent
     data object ClickRequestAttendance : HomeIntent
+    data object ClickBasicRuleLink : HomeIntent
     data class ClickNotice(val id: String) : HomeIntent
     data class ClickDetail(val id: String) : HomeIntent
 }
@@ -45,4 +46,5 @@ sealed interface HomeSideEffect {
     data class ShowToast(val message: String) : HomeSideEffect
     data class HandleException(val exception: Throwable) : HomeSideEffect
     data class NavigateToNotice(val id: String) : HomeSideEffect
+    data class OpenUrl(val url: String) : HomeSideEffect
 }

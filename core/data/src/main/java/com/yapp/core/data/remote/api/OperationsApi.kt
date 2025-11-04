@@ -19,6 +19,9 @@ internal interface OperationsApi {
     @GET("v1/operations/links/privacy-policy")
     suspend fun getPrivacyPolicyLink(): LinkResponse
 
+    @GET("v1/operations/links/basic-rule")
+    suspend fun getBasicRuleLink(): LinkResponse
+
     @GET("v1/operations/force-update")
     suspend fun isForceUpdateRequired(
         @Query("version") version: String,

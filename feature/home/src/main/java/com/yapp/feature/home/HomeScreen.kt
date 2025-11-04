@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -53,6 +54,7 @@ internal fun HomeRoute(
     }
 
     val uiState by viewModel.store.uiState.collectAsStateWithLifecycle()
+    val urlHandler = LocalUriHandler.current
     val context = LocalContext.current
     viewModel.store.sideEffects.collectWithLifecycle { effect ->
         when (effect) {
@@ -60,6 +62,7 @@ internal fun HomeRoute(
             HomeSideEffect.NavigateToSchedule -> navigateToSchedule()
             HomeSideEffect.NavigateToAttendanceHistory -> navigateToAttendanceHistory()
             is HomeSideEffect.NavigateToSessionDetail -> navigateToSessionDetail(effect.sessionId)
+            is HomeSideEffect.OpenUrl -> urlHandler.openUri(effect.url)
 
             is HomeSideEffect.ShowToast -> Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
             is HomeSideEffect.HandleException -> handleException(effect.exception)
@@ -132,7 +135,7 @@ fun HomeScreen(
                     FAQSection(
                         modifier = Modifier.padding(horizontal = 20.dp),
                         clickCurriculum = {},
-                        clickBasicRule = {}
+                        clickBasicRule = { onIntent(HomeIntent.ClickBasicRuleLink) }
                     )
                     Spacer(Modifier.height(30.dp))
                 }
