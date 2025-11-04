@@ -187,7 +187,7 @@ private fun ScheduleAllScreen(
 
             }
         } else {
-            itemsIndexed(schedules.dates, key = { _, it -> it.date }) { index, grouped ->
+            itemsIndexed(schedules.dates, key = { index, it -> "${it.date}_$index" }) { index, grouped ->
                 DateGroupedScheduleItem(
                     variant = ScheduleGroupVariant.LEFT_ALIGNED,
                     date = grouped.date,
@@ -279,7 +279,7 @@ private fun ScheduleSessionScreen(
             )
         }
 
-        itemsIndexed(sessions.dates, key = { _, it -> it.date }) { index, grouped ->
+        itemsIndexed(sessions.dates, key = { index, it -> "${it.date}_$index" }) { index, grouped ->
             DateGroupedScheduleItem(
                 variant = ScheduleGroupVariant.TOP_ALIGNED,
                 date = grouped.date,
