@@ -37,9 +37,9 @@ data class HomeSession(
 }
 
 enum class SessionProgressPhase(val title: String) {
-    DONE("완료"),
+    DONE("종료"),
+    ONGOING("진행 중"),
     TODAY("당일"),
-    UPCOMING("임박"),
-    NONE("없음"),
-    PENDING("예정");
+    PENDING("예정"),
+    NONE("없음");
 }
