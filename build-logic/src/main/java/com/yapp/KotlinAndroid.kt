@@ -46,6 +46,7 @@ internal fun Project.configureKotlinAndroid() {
             }
         }
 
+        defaultConfig.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     configureKotlinCommon(jvmTarget = JvmTarget.JVM_17)
     val libs = extensions.libs
