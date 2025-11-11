@@ -249,7 +249,9 @@ fun TodaySessionCard(
                 }
 
                 YappSolidPrimaryButtonLarge(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("attendanceButton"),
                     text = buttonText,
                     enable = session.canCheckIn,
                     onClick = { if (session.canCheckIn) onClickAttend() },
