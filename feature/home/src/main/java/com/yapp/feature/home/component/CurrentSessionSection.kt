@@ -45,14 +45,13 @@ internal fun CurrentSessionSection(
                     color = YappTheme.colorScheme.labelAlternative
                 )
 
-                SessionChip(
-                    modifier = Modifier.testTag("todaySessionStatusChip"),
-                    progressPhase = upcomingSession?.progressPhase ?: SessionProgressPhase.NONE
-                )
+                SessionChip(progressPhase = upcomingSession?.progressPhase ?: SessionProgressPhase.NONE)
             }
             if (upcomingSession?.sessionId != null) {
                 Text(
-                    modifier = Modifier.yappClickable(onClick = { onClickDetail(upcomingSession.sessionId) }),
+                    modifier = Modifier
+                        .testTag("upcomingSessionDetailButton")
+                        .yappClickable(onClick = { onClickDetail(upcomingSession.sessionId) }),
                     text = stringResource(R.string.session_today_detail),
                     style = YappTheme.typography.label1NormalBold,
                     color = YappTheme.colorScheme.primaryNormal

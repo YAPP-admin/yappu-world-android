@@ -10,6 +10,7 @@ import com.yapp.feature.home.HomeScreen
 import com.yapp.feature.home.HomeState
 import com.yapp.feature.home.R
 import com.yapp.model.AttendanceStatus
+import com.yapp.model.SessionProgressPhase
 import com.yapp.model.UpcomingSessionInfo
 import org.junit.Rule
 import org.junit.Test
@@ -55,9 +56,10 @@ class HomeScreenTest {
         location = location,
         remainingDays = remainingDays,
         canCheckIn = canCheckIn,
-        status = status
+        status = status,
+        progressPhase = SessionProgressPhase.NONE,
+        notices = emptyList()
     )
-
 
     @Test
     fun 오늘의_세션에_출석할_수_있는_시간이라면_버튼을_활성화한다() {
@@ -79,7 +81,7 @@ class HomeScreenTest {
     }
 
     @Test
-    fun 오늘의_세션에_제시간에_출석_완료_시_출석완료_가_표시된다() {
+    fun 오늘의_세션에_제시간에_출석_완료_시_출석완료가_표시된다() {
         // given
         val state = HomeState(
             isLoading = false,
@@ -196,6 +198,23 @@ class HomeScreenTest {
         // then
         composeTestRule
             .onNodeWithTag("upcomingSessionCard")
+            .assertDoesNotExist()
+    }
+
+    @Test
+    fun 다음_세션이_존재하지_않는다면_상세보기_버튼을_노출하지_않는다() {
+        // given
+        val state = HomeState(
+            isLoading = false,
+            upcomingSession = null,
+        )
+
+        // when
+        setHomeScreenContent(state)
+
+        // then
+        composeTestRule
+            .onNodeWithTag("upcomingSessionDetailButton")
             .assertDoesNotExist()
     }
 }
