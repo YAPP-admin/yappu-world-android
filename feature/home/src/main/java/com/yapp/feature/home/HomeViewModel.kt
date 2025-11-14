@@ -3,7 +3,6 @@ package com.yapp.feature.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yapp.core.common.android.record
-import com.yapp.core.common.android.util.toMonthDateRange
 import com.yapp.core.ui.mvi.MviIntentStore
 import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.AttendanceRepository
@@ -12,16 +11,13 @@ import com.yapp.dataapi.ScheduleRepository
 import com.yapp.domain.runCatchingIgnoreCancelled
 import com.yapp.model.AttendanceInfo
 import com.yapp.model.AttendanceStatus
-import com.yapp.model.HomeSessionList
 import com.yapp.model.exceptions.CodeNotCorrectException
 import com.yapp.model.exceptions.InvalidTokenException
 import com.yapp.model.exceptions.NoScheduledSessionException
 import com.yapp.model.exceptions.NotFoundException
 import com.yapp.model.exceptions.UndefineNoticeWriterInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -50,10 +46,7 @@ internal class HomeViewModel @Inject constructor(
                 if (isInitialized) return
 
                 viewModelScope.launch {
-                    joinAll(
-                        loadSessionInfo(reduce, postSideEffect),
-                        loadUpcomingSessionInfo(reduce, postSideEffect),
-                    )
+                    loadUpcomingSessionInfo(reduce, postSideEffect).join()
                     isInitialized = true
                 }
             }
@@ -118,49 +111,6 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun loadSessionInfo(
-        reduce: (HomeState.() -> HomeState) -> Unit,
-        postSideEffect: (HomeSideEffect) -> Unit
-    ) = viewModelScope.launch {
-        val (startDate, endDate) = LocalDate.now().toMonthDateRange()
-
-        reduce { copy(isLoading = true) }
-
-        runCatchingIgnoreCancelled {
-            scheduleRepository.getSessions(startDate, endDate)
-        }.onSuccess { homeSessions ->
-            val sessionListWithNotice = homeSessions.upcomingSessionId
-                ?.takeIf { it.isNotBlank() }
-                ?.let { sessionId ->
-                    runCatchingIgnoreCancelled {
-                        scheduleRepository.getSessionDetail(sessionId)
-                    }.onFailure { e ->
-                        when (e) {
-                            is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
-                            else -> {
-                                postSideEffect(HomeSideEffect.HandleException(e))
-                                e.record()
-                            }
-                        }
-                    }.getOrNull()?.let { detail ->
-                        homeSessions.copy(upcomingNotice = detail.notices)
-                    }
-                } ?: homeSessions
-
-            reduce {
-                copy(
-                    sessionList = sessionListWithNotice
-                )
-            }
-        }.onFailure { e ->
-            when (e) {
-                is InvalidTokenException -> postSideEffect(HomeSideEffect.NavigateToLogin)
-                else -> e.record()
-            }
-        }
-        reduce { copy(isLoading = false) }
-    }
-
     private fun loadUpcomingSessionInfo(
         reduce: (HomeState.() -> HomeState) -> Unit,
         postSideEffect: (HomeSideEffect) -> Unit
@@ -201,20 +151,8 @@ internal class HomeViewModel @Inject constructor(
             runCatchingIgnoreCancelled {
                 attendanceRepository.postAttendance(AttendanceInfo(sessionId, code))
             }.onSuccess {
-                val updatedSessions = HomeSessionList(
-                    sessions = state.sessionList.sessions.map { session ->
-                        if (session.id == sessionId) {
-                            session.copy(attendanceStatus = AttendanceStatus.ATTENDED)
-                        } else {
-                            session
-                        }
-                    },
-                    upcomingSessionId = state.sessionList.upcomingSessionId
-                )
-
                 reduce {
                     copy(
-                        sessionList = updatedSessions,
                         upcomingSession = state.upcomingSession?.copy(
                             canCheckIn = false,
                             status = AttendanceStatus.ATTENDED

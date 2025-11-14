@@ -34,7 +34,7 @@ data class UpcomingSessionAttendanceResponse(
         remainingDays = max(0, -relativeDays),
         canCheckIn = canCheckIn,
         status = status.toAttendanceStatus(),
-        progressPhase = progressPhase.toScheduleProgressPhase(),
+        progressPhase = progressPhase.toSessionProgressPhase(),
         notices = notices.map { it.toModel() }
     )
 }
