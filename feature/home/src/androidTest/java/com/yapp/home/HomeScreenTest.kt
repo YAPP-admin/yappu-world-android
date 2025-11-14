@@ -98,6 +98,7 @@ class HomeScreenTest {
             .onNodeWithText(
                 composeTestRule.activity.getString(R.string.session_attendance_done)
             )
+            .assertExists()
     }
 
     @Test
