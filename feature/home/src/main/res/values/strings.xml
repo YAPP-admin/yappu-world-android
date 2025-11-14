@@ -5,9 +5,6 @@
     <string name="home_notice_title">공지사항</string>
 
     <!-- 홈 -->
-    <string name="home_generation_title">이번 기수 세션</string>
-    <string name="home_session_all_title">전체보기</string>
-
     <string name="home_attendance_no_upcoming">다가오는 세션이 없어요.</string>
     <string name="home_attendance_today">세션 당일이예요! 활기찬 하루 되세요 :)</string>
     <string name="home_attendance_prepare">다가오는 세션을 준비해볼까요?</string>
@@ -15,12 +12,10 @@
     <string name="session_ended_message">모든 세션이 종료되었어요.\n기수 활동에 참여해 주셔서 감사합니다 :)</string>
     <string name="session_today_text">오늘은 %1$s이에요.</string>
     <string name="session_scheduled">세션 예정</string>
-    <string name="session_time_open">%1$s 오픈</string>
-    <string name="session_time_end">%1$s 종료</string>
-    <string name="session_time_missing">장소 미정</string>
+    <string name="session_time_missing">세션 시간이 아직 정해지지 않았어요.</string>
     <string name="session_attendance_done">출석완료!</string>
     <string name="session_attendance_late">다음엔 좀 더 일찍 오기!</string>
-    <string name="session_attendance_absent">다음엔 좀 더 일찍 오기!</string>
+    <string name="session_attendance_absent">다음엔 꼭 참석해 주세요!</string>
     <string name="session_attendance_early_leave">다음엔 끝까지 함께 해요~</string>
     <string name="session_attendance_excused">다음 세션엔 함께 해요!</string>
     <string name="session_attendance">출석하기</string>
@@ -29,9 +24,6 @@
     <string name="session_attendance_not_yet_message">20분 전부터 출석이 가능해요</string>
     <string name="session_today_title">오늘의 세션</string>
     <string name="session_today_detail">상세보기</string>
-
-    <string name="home_recent_attendance_title">최근 출석 현황</string>
-    <string name="home_recent_attendance_all_title">전체 보기</string>
 
     <!--  AttendanceDialog  -->
     <string name="attendance_dialog_title">오늘의 출석을 인증해주세요!</string>
