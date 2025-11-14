@@ -36,9 +36,9 @@ import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.util.formatTimeRange
 import com.yapp.feature.home.R
 import com.yapp.model.AttendanceStatus
-import com.yapp.model.NoticeInfo
-import com.yapp.model.NoticeType
+import com.yapp.model.SessionProgressPhase
 import com.yapp.model.UpcomingSessionInfo
+import com.yapp.model.UpcomingSessionNotice
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -48,7 +48,6 @@ import com.yapp.core.designsystem.R as coreDesignR
 internal fun HomeAttendanceContent(
     modifier: Modifier = Modifier,
     upcomingSession: UpcomingSessionInfo?,
-    notices: List<NoticeInfo>,
     onClickAttend: () -> Unit,
     onClickNotice: (String) -> Unit,
 ) {
@@ -58,7 +57,6 @@ internal fun HomeAttendanceContent(
         if (isToday) {
             TodaySessionCard(
                 session = upcomingSession,
-                notices = notices,
                 onClickAttend = onClickAttend,
                 onClickNotice = onClickNotice,
             )
@@ -83,9 +81,6 @@ private fun EmptyNextSessionCard() {
             color = YappTheme.colorScheme.labelNormal
         )
 
-        /***
-         *  내려오는 다음 세션이 없기에 강제화 처리를 위해 true, null 값 지정
-         ***/
         HomeAttendanceNotice(
             isNotToday = true,
             upcomingSession = null
@@ -136,7 +131,6 @@ private fun UpcomingSessionCard(
 @Composable
 fun TodaySessionCard(
     session: UpcomingSessionInfo,
-    notices: List<NoticeInfo>,
     onClickAttend: () -> Unit,
     onClickNotice: (id: String) -> Unit,
 ) {
@@ -259,7 +253,7 @@ fun TodaySessionCard(
             }
         }
 
-        if (notices.isNotEmpty()) {
+        if (session.notices.isNotEmpty()) {
             Spacer(Modifier.height(24.dp))
             HorizontalDivider()
             Spacer(Modifier.height(24.dp))
@@ -268,7 +262,7 @@ fun TodaySessionCard(
 
             Spacer(Modifier.height(8.dp))
 
-            notices.forEachIndexed { index, item ->
+            session.notices.forEachIndexed { index, item ->
                 key(item.id) {
                     Row(
                         modifier = Modifier
@@ -283,7 +277,7 @@ fun TodaySessionCard(
                             contentDescription = null
                         )
                     }
-                    if (index < notices.lastIndex) {
+                    if (index < session.notices.lastIndex) {
                         HorizontalDivider(color = YappTheme.colorScheme.lineNormalAlternative)
                     }
                 }
@@ -312,54 +306,22 @@ private fun HomeAttendanceContentPreview() {
                     remainingDays = 0,
                     canCheckIn = false,
                     status = null,
-                ),
-                notices = listOf(
-                    NoticeInfo(
-                        id="12345",
-                        writerName="김동현",
-                        writerId="donghyun123",
-                        writerPosition="팀장",
-                        writerGeneration=5,
-                        createdAt="2025-11-11T14:30:00",
-                        title="2025년 하반기 프로젝트 계획 안내",
-                        content="2025년 하반기 프로젝트 일정 및 계획에 대한 공지입니다. 각 팀은 본 공지를 확인하고 준비해 주세요.",
-                        noticeType= NoticeType.ALL
-                    ),
-                    NoticeInfo(
-                        id="12346",
-                        writerName="김동현",
-                        writerId="donghyun123",
-                        writerPosition="팀장",
-                        writerGeneration=5,
-                        createdAt="2025-11-11T14:30:00",
-                        title="2025년 하반기 프로젝트 계획 안내",
-                        content="2025년 하반기 프로젝트 일정 및 계획에 대한 공지입니다. 각 팀은 본 공지를 확인하고 준비해 주세요.",
-                        noticeType= NoticeType.ALL
+                    progressPhase = SessionProgressPhase.PENDING,
+                    notices = listOf(
+                        UpcomingSessionNotice(
+                            id = "12345",
+                            title = "ㅁㄴㅇㄹㄹㄴㄹ"
+                        ),
+                        UpcomingSessionNotice(
+                            id = "2343",
+                            title = "ㅁㅇㄴㄹ"
+                        )
+
                     )
                 ),
                 onClickAttend = {},
                 onClickNotice = {}
             )
-
-            /*
-            UpcomingSessionCard(
-                session = UpcomingSessionInfo(
-                    sessionId = "019a1190-4db2-34d7-bbbe-2b0bf56810fb",
-                    name = "23기 테스트",
-                    startDate = "2025-10-23",
-                    startDayOfTheWeek = "목",
-                    endDate = "2025-10-23",
-                    endDayOfTheWeek = "목",
-                    startTime = "17:10:00",
-                    endTime = "18:40:00",
-                    location = "KT&G상상플래닛",
-                    remainingDays = 2,
-                    canCheckIn = false,
-                    status = null,
-                )
-            )
-            Spacer(Modifier.height(40.dp))
-            EmptyNextSessionCard()*/
         }
     }
 }

@@ -2,11 +2,9 @@ package com.yapp.feature.home
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
@@ -36,7 +34,6 @@ import com.yapp.feature.home.component.CurrentSessionSection
 import com.yapp.feature.home.component.FAQSection
 import com.yapp.feature.home.component.HomeHeader
 import com.yapp.feature.home.component.OtherSection
-import com.yapp.feature.home.component.HomeNotices
 import com.yapp.feature.home.dialog.AttendanceDialog
 
 @Composable
@@ -119,8 +116,6 @@ fun HomeScreen(
                                 upcomingSession = homeState.upcomingSession,
                                 onClickAttend = { onIntent(HomeIntent.ClickRequestAttendCode) },
                                 onClickDetail = { onIntent(HomeIntent.ClickDetail(it)) },
-                                todaySession = homeState.sessionList.lastSessions,
-                                notices = homeState.sessionList.upcomingNotice,
                                 onClickNotice = { onIntent(HomeIntent.ClickNotice(it)) }
                             )
                         },
