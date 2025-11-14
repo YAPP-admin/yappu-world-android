@@ -17,7 +17,9 @@ data class UpcomingSessionAttendanceResponse(
     val place: String?,
     val relativeDays: Int,
     val canCheckIn: Boolean,
-    val status: String?
+    val status: String?,
+    val progressPhase: String,
+    val notices: List<UpcomingSessionNoticeResponse>
 ) {
     fun toUpcomingSessionInfoModel() = UpcomingSessionInfo(
         sessionId = sessionId,
@@ -31,6 +33,8 @@ data class UpcomingSessionAttendanceResponse(
         location = place,
         remainingDays = max(0, -relativeDays),
         canCheckIn = canCheckIn,
-        status = status.toAttendanceStatus()
+        status = status.toAttendanceStatus(),
+        progressPhase = progressPhase.toScheduleProgressPhase(),
+        notices = notices.map { it.toModel() }
     )
 }
