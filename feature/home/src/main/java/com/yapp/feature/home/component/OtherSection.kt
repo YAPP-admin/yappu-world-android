@@ -15,10 +15,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
+import com.yapp.feature.home.R
 import com.yapp.core.designsystem.R as coreDesignR
 
 
@@ -45,8 +47,15 @@ internal fun OtherSection(
                 contentDescription = null
             )
             Column(modifier = Modifier.padding(16.dp)) {
-                Text(text = "출석 점수", style = YappTheme.typography.body1NormalBold)
-                Text(text = "확인하러가기", style = YappTheme.typography.caption1Regular, color = YappTheme.colorScheme.labelAlternative)
+                Text(
+                    text = stringResource(R.string.home_other_attendance_score_title),
+                    style = YappTheme.typography.body1NormalBold
+                )
+                Text(
+                    text = stringResource(R.string.home_other_check_link),
+                    style = YappTheme.typography.caption1Regular,
+                    color = YappTheme.colorScheme.labelAlternative
+                )
             }
         }
         Box(
@@ -62,8 +71,15 @@ internal fun OtherSection(
                 contentDescription = null
             )
             Column(modifier = Modifier.padding(16.dp)) {
-                Text(text = "전체 세션", style = YappTheme.typography.body1NormalBold)
-                Text(text = "확인하러가기", style = YappTheme.typography.caption1Regular, color = YappTheme.colorScheme.labelAlternative)
+                Text(
+                    text = stringResource(R.string.home_other_total_session_title),
+                    style = YappTheme.typography.body1NormalBold
+                )
+                Text(
+                    text = stringResource(R.string.home_other_check_link),
+                    style = YappTheme.typography.caption1Regular,
+                    color = YappTheme.colorScheme.labelAlternative
+                )
             }
         }
     }

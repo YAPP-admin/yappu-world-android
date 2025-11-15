@@ -8,6 +8,14 @@
     <string name="home_attendance_no_upcoming">다가오는 세션이 없어요.</string>
     <string name="home_attendance_today">세션 당일이예요! 활기찬 하루 되세요 :)</string>
     <string name="home_attendance_prepare">다가오는 세션을 준비해볼까요?</string>
+    <string name="home_session_notice_title">세션 공지</string>
+    <string name="home_faq_title">혹시... 처음이 YAPP?</string>
+    <string name="home_faq_basic_rule_title">YAPP 기본 규칙</string>
+    <string name="home_other_attendance_score_title">출석 점수</string>
+    <string name="home_other_total_session_title">전체 세션</string>
+    <string name="home_other_check_link">확인하러가기</string>
+    <string name="home_profile_generation_format">%1$d기</string>
+    <string name="home_profile_info_separator">∙</string>
 
     <string name="session_ended_message">모든 세션이 종료되었어요.\n기수 활동에 참여해 주셔서 감사합니다 :)</string>
     <string name="session_today_text">오늘은 %1$s이에요.</string>

@@ -258,7 +258,11 @@ fun TodaySessionCard(
             HorizontalDivider()
             Spacer(Modifier.height(24.dp))
 
-            Text(text = "세션 공지", style = YappTheme.typography.label2Bold, color = YappTheme.colorScheme.labelAlternative)
+            Text(
+                text = stringResource(R.string.home_session_notice_title),
+                style = YappTheme.typography.label2Bold,
+                color = YappTheme.colorScheme.labelAlternative
+            )
 
             Spacer(Modifier.height(8.dp))
 
