@@ -2,9 +2,10 @@ package com.yapp.home
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.feature.home.HomeScreen
 import com.yapp.feature.home.HomeState
@@ -95,8 +96,10 @@ class HomeScreenTest {
 
         // then
         composeTestRule
-            .onNodeWithText(
-                composeTestRule.activity.getString(R.string.session_attendance_done)
+            .onNode(
+                hasTestTag("attendanceStatusLabel") and hasText(
+                    composeTestRule.activity.getString(R.string.session_attendance_done)
+                )
             )
             .assertExists()
     }
@@ -116,8 +119,10 @@ class HomeScreenTest {
 
         // then
         composeTestRule
-            .onNodeWithText(
-                composeTestRule.activity.getString(R.string.session_attendance_late)
+            .onNode(
+                hasTestTag("attendanceStatusLabel") and hasText(
+                    composeTestRule.activity.getString(R.string.session_attendance_late)
+                )
             )
             .assertExists()
     }
@@ -137,8 +142,10 @@ class HomeScreenTest {
 
         // then
         composeTestRule
-            .onNodeWithText(
-                composeTestRule.activity.getString(R.string.session_attendance_absent)
+            .onNode(
+                hasTestTag("attendanceStatusLabel") and hasText(
+                    composeTestRule.activity.getString(R.string.session_attendance_absent)
+                )
             )
             .assertExists()
     }
@@ -158,8 +165,10 @@ class HomeScreenTest {
 
         // then
         composeTestRule
-            .onNodeWithText(
-                composeTestRule.activity.getString(R.string.session_attendance_early_leave)
+            .onNode(
+                hasTestTag("attendanceStatusLabel") and hasText(
+                    composeTestRule.activity.getString(R.string.session_attendance_early_leave)
+                )
             )
             .assertExists()
     }
@@ -179,8 +188,10 @@ class HomeScreenTest {
 
         // then
         composeTestRule
-            .onNodeWithText(
-                composeTestRule.activity.getString(R.string.session_attendance_excused)
+            .onNode(
+                hasTestTag("attendanceStatusLabel") and hasText(
+                    composeTestRule.activity.getString(R.string.session_attendance_excused)
+                )
             )
             .assertExists()
     }

@@ -226,7 +226,9 @@ fun TodaySessionCard(
                 }
 
                 YappSolidPrimaryButtonLarge(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("attendanceStatusLabel"),
                     text = message,
                     enable = false,
                     colors = SolidButtonDefaults.colorsPrimary.copy(
