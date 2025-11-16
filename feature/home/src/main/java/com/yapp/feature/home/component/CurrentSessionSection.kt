@@ -10,14 +10,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.SessionChip
 import com.yapp.feature.home.R
-import com.yapp.model.HomeSession
-import com.yapp.model.NoticeInfo
 import com.yapp.model.SessionProgressPhase
 import com.yapp.model.UpcomingSessionInfo
 
@@ -25,8 +24,6 @@ import com.yapp.model.UpcomingSessionInfo
 internal fun CurrentSessionSection(
     modifier: Modifier = Modifier,
     upcomingSession: UpcomingSessionInfo?,
-    todaySession: HomeSession?,
-    notices: List<NoticeInfo>,
     onClickDetail: (String) -> Unit,
     onClickAttend: () -> Unit,
     onClickNotice: (String) -> Unit,
@@ -47,14 +44,19 @@ internal fun CurrentSessionSection(
                     style = YappTheme.typography.label1NormalBold,
                     color = YappTheme.colorScheme.labelAlternative
                 )
-                SessionChip(progressPhase = todaySession?.progressPhase ?: SessionProgressPhase.NONE)
+
+                SessionChip(progressPhase = upcomingSession?.progressPhase ?: SessionProgressPhase.NONE)
             }
-            Text(
-                modifier = Modifier.yappClickable(onClick = { onClickDetail(todaySession?.id.orEmpty()) }),
-                text = stringResource(R.string.session_today_detail),
-                style = YappTheme.typography.label1NormalBold,
-                color = YappTheme.colorScheme.primaryNormal
-            )
+            if (upcomingSession?.sessionId != null) {
+                Text(
+                    modifier = Modifier
+                        .testTag("upcomingSessionDetailButton")
+                        .yappClickable(onClick = { onClickDetail(upcomingSession.sessionId) }),
+                    text = stringResource(R.string.session_today_detail),
+                    style = YappTheme.typography.label1NormalBold,
+                    color = YappTheme.colorScheme.primaryNormal
+                )
+            }
         }
 
         Spacer(Modifier.height(21.dp))
@@ -62,7 +64,6 @@ internal fun CurrentSessionSection(
         HomeAttendanceContent(
             upcomingSession = upcomingSession,
             onClickAttend = onClickAttend,
-            notices = notices,
             onClickNotice = onClickNotice,
         )
     }

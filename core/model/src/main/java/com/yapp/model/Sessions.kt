@@ -1,18 +1,10 @@
 package com.yapp.model
 
-import java.time.LocalDate
-
-data class HomeSessionDetail(
-    val notices: List<NoticeInfo>
-)
 data class HomeSessionList(
     val sessions: List<HomeSession>,
     val upcomingSessionId: String?,
     val upcomingNotice: List<NoticeInfo> = emptyList()
-) {
-    val lastSessions: HomeSession?
-        get() = sessions.find { session -> LocalDate.parse(session.date) == LocalDate.now() }
-}
+)
 
 data class HomeSession(
     val id: String,
@@ -37,9 +29,9 @@ data class HomeSession(
 }
 
 enum class SessionProgressPhase(val title: String) {
-    DONE("완료"),
+    DONE("종료"),
+    ONGOING("진행 중"),
     TODAY("당일"),
-    UPCOMING("임박"),
-    NONE("없음"),
-    PENDING("예정");
+    PENDING("예정"),
+    NONE("없음");
 }

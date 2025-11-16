@@ -1,18 +1,10 @@
 package com.yapp.feature.home
 
-import com.yapp.model.HomeSessionList
-import com.yapp.model.NoticeList
-import com.yapp.model.NoticeInfo
 import com.yapp.model.UpcomingSessionInfo
 
 data class HomeState(
     val isLoading: Boolean = true,
-    val sessionList: HomeSessionList = HomeSessionList(
-        sessions = emptyList(),
-        upcomingSessionId = null
-    ),
     val upcomingSession: UpcomingSessionInfo? = null,
-    val notices: NoticeList = NoticeList(notices = emptyList(), lastNoticeId = "", hasNext = false),
     val showAttendCodeBottomSheet: Boolean = false,
     val attendanceCodeDigits: List<String> = List(4) { "" },
     val showAttendanceCodeError: Boolean = false,

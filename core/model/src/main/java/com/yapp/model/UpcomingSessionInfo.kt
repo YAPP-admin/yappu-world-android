@@ -12,5 +12,7 @@ data class UpcomingSessionInfo(
     val location: String?,
     val remainingDays: Int,
     val canCheckIn: Boolean,
-    val status: AttendanceStatus?
+    val status: AttendanceStatus?,
+    val progressPhase: SessionProgressPhase,
+    val notices: List<UpcomingSessionNotice>
 )
