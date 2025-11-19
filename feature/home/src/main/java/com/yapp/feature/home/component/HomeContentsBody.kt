@@ -3,7 +3,6 @@ package com.yapp.feature.home.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,8 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.feature.home.R
@@ -47,7 +48,9 @@ internal fun HomeAttendanceNotice(
                     color = YappTheme.colorScheme.orange99,
                     shape = RoundedCornerShape(size = 10.dp)
                 )
-                .padding(vertical = 8.dp),
+                .padding(vertical = 8.dp)
+                .testTag(HOME_ATTENDANCE_NOTICE_TAG)
+                .semantics(mergeDescendants = true) {},
             horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -59,3 +62,5 @@ internal fun HomeAttendanceNotice(
         }
     }
 }
+
+internal const val HOME_ATTENDANCE_NOTICE_TAG = "homeAttendanceNotice"

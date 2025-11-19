@@ -1,6 +1,7 @@
 package com.yapp.home
 
 import androidx.activity.ComponentActivity
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
@@ -10,11 +11,13 @@ import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.feature.home.HomeScreen
 import com.yapp.feature.home.HomeState
 import com.yapp.feature.home.R
+import com.yapp.feature.home.component.HOME_ATTENDANCE_NOTICE_TAG
 import com.yapp.model.AttendanceStatus
 import com.yapp.model.SessionProgressPhase
 import com.yapp.model.UpcomingSessionInfo
 import org.junit.Rule
 import org.junit.Test
+import java.time.LocalDate
 
 class HomeScreenTest {
 
@@ -228,5 +231,67 @@ class HomeScreenTest {
         composeTestRule
             .onNodeWithTag("upcomingSessionDetailButton")
             .assertDoesNotExist()
+    }
+
+    @Test
+    fun 다가오는_세션이_없다면_세션없음_문구를_노출한다() {
+        // given
+        val state = HomeState(
+            isLoading = false,
+            upcomingSession = null,
+        )
+
+        // when
+        setHomeScreenContent(state)
+
+        // then
+        val expectedText = composeTestRule.activity.getString(R.string.home_attendance_no_upcoming)
+        composeTestRule
+            .onNodeWithTag(HOME_ATTENDANCE_NOTICE_TAG)
+            .assert(hasText(expectedText))
+    }
+
+    @Test
+    fun 오늘_세션이있다면_오늘_문구를_노출한다() {
+        // given
+        val state = HomeState(
+            isLoading = false,
+            upcomingSession = defaultUpcomingSessionInfo(
+                startDate = LocalDate.now().toString(),
+                remainingDays = 0,
+                status = null,
+            )
+        )
+
+        // when
+        setHomeScreenContent(state)
+
+        // then
+        val expectedText = composeTestRule.activity.getString(R.string.home_attendance_today)
+        composeTestRule
+            .onNodeWithTag(HOME_ATTENDANCE_NOTICE_TAG)
+            .assert(hasText(expectedText))
+    }
+
+    @Test
+    fun 오늘이_아닌_다가오는_세션이_있다면_준비_문구를_노출한다() {
+        // given
+        val state = HomeState(
+            isLoading = false,
+            upcomingSession = defaultUpcomingSessionInfo(
+                startDate = LocalDate.now().plusDays(1).toString(),
+                remainingDays = 1,
+                status = null,
+            )
+        )
+
+        // when
+        setHomeScreenContent(state)
+
+        // then
+        val expectedText = composeTestRule.activity.getString(R.string.home_attendance_prepare)
+        composeTestRule
+            .onNodeWithTag(HOME_ATTENDANCE_NOTICE_TAG)
+            .assert(hasText(expectedText))
     }
 }
