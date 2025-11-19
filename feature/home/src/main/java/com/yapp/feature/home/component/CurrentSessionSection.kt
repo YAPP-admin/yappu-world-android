@@ -50,7 +50,7 @@ internal fun CurrentSessionSection(
             if (upcomingSession?.sessionId != null) {
                 Text(
                     modifier = Modifier
-                        .testTag("upcomingSessionDetailButton")
+                        .testTag(HOME_UPCOMING_SESSION_DETAIL_BUTTON_TAG)
                         .yappClickable(onClick = { onClickDetail(upcomingSession.sessionId) }),
                     text = stringResource(R.string.session_today_detail),
                     style = YappTheme.typography.label1NormalBold,
@@ -68,3 +68,5 @@ internal fun CurrentSessionSection(
         )
     }
 }
+
+internal const val HOME_UPCOMING_SESSION_DETAIL_BUTTON_TAG = "upcomingSessionDetailButton"

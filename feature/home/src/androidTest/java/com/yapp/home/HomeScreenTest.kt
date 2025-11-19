@@ -11,7 +11,11 @@ import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.feature.home.HomeScreen
 import com.yapp.feature.home.HomeState
 import com.yapp.feature.home.R
+import com.yapp.feature.home.component.HOME_ATTENDANCE_BUTTON_TAG
 import com.yapp.feature.home.component.HOME_ATTENDANCE_NOTICE_TAG
+import com.yapp.feature.home.component.HOME_ATTENDANCE_STATUS_LABEL_TAG
+import com.yapp.feature.home.component.HOME_UPCOMING_SESSION_CARD_TAG
+import com.yapp.feature.home.component.HOME_UPCOMING_SESSION_DETAIL_BUTTON_TAG
 import com.yapp.model.AttendanceStatus
 import com.yapp.model.SessionProgressPhase
 import com.yapp.model.UpcomingSessionInfo
@@ -80,7 +84,7 @@ class HomeScreenTest {
 
         // then
         composeTestRule
-            .onNodeWithTag("attendanceButton")
+            .onNodeWithTag(HOME_ATTENDANCE_BUTTON_TAG)
             .assertIsEnabled()
     }
 
@@ -100,7 +104,7 @@ class HomeScreenTest {
         // then
         composeTestRule
             .onNode(
-                hasTestTag("attendanceStatusLabel") and hasText(
+                hasTestTag(HOME_ATTENDANCE_STATUS_LABEL_TAG) and hasText(
                     composeTestRule.activity.getString(R.string.session_attendance_done)
                 )
             )
@@ -123,7 +127,7 @@ class HomeScreenTest {
         // then
         composeTestRule
             .onNode(
-                hasTestTag("attendanceStatusLabel") and hasText(
+                hasTestTag(HOME_ATTENDANCE_STATUS_LABEL_TAG) and hasText(
                     composeTestRule.activity.getString(R.string.session_attendance_late)
                 )
             )
@@ -146,7 +150,7 @@ class HomeScreenTest {
         // then
         composeTestRule
             .onNode(
-                hasTestTag("attendanceStatusLabel") and hasText(
+                hasTestTag(HOME_ATTENDANCE_STATUS_LABEL_TAG) and hasText(
                     composeTestRule.activity.getString(R.string.session_attendance_absent)
                 )
             )
@@ -169,7 +173,7 @@ class HomeScreenTest {
         // then
         composeTestRule
             .onNode(
-                hasTestTag("attendanceStatusLabel") and hasText(
+                hasTestTag(HOME_ATTENDANCE_STATUS_LABEL_TAG) and hasText(
                     composeTestRule.activity.getString(R.string.session_attendance_early_leave)
                 )
             )
@@ -212,7 +216,7 @@ class HomeScreenTest {
 
         // then
         composeTestRule
-            .onNodeWithTag("upcomingSessionCard")
+            .onNodeWithTag(HOME_UPCOMING_SESSION_CARD_TAG)
             .assertDoesNotExist()
     }
 
@@ -229,7 +233,7 @@ class HomeScreenTest {
 
         // then
         composeTestRule
-            .onNodeWithTag("upcomingSessionDetailButton")
+            .onNodeWithTag(HOME_UPCOMING_SESSION_DETAIL_BUTTON_TAG)
             .assertDoesNotExist()
     }
 

@@ -100,7 +100,7 @@ private fun UpcomingSessionCard(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .testTag("upcomingSessionCard"),
+            .testTag(HOME_UPCOMING_SESSION_CARD_TAG),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
@@ -228,7 +228,7 @@ fun TodaySessionCard(
                 YappSolidPrimaryButtonLarge(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .testTag("attendanceStatusLabel"),
+                        .testTag(HOME_ATTENDANCE_STATUS_LABEL_TAG),
                     text = message,
                     enable = false,
                     colors = SolidButtonDefaults.colorsPrimary.copy(
@@ -247,7 +247,7 @@ fun TodaySessionCard(
                 YappSolidPrimaryButtonLarge(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .testTag("attendanceButton"),
+                        .testTag(HOME_ATTENDANCE_BUTTON_TAG),
                     text = buttonText,
                     enable = session.canCheckIn,
                     onClick = { if (session.canCheckIn) onClickAttend() },
@@ -352,3 +352,7 @@ private fun formatStartTime(context: Context, startTime: String?): String {
 
 private fun formatSessionDate(date: String): LocalDate? =
     runCatching { LocalDate.parse(date, DATE_INPUT) }.getOrNull()
+
+internal const val HOME_UPCOMING_SESSION_CARD_TAG = "upcomingSessionCard"
+internal const val HOME_ATTENDANCE_STATUS_LABEL_TAG = "attendanceStatusLabel"
+internal const val HOME_ATTENDANCE_BUTTON_TAG = "attendanceButton"
