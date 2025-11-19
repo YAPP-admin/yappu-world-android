@@ -110,7 +110,7 @@ private fun UpcomingSessionCard(
         )
 
         HomeAttendanceNotice(
-            isNotToday = parsedDate?.let { today.isEqual(it) } ?: true,
+            isNotToday = parsedDate?.let { !today.isEqual(it) } ?: true,
             upcomingSession = session
         )
 
