@@ -1,5 +1,6 @@
 package com.yapp.feature.schedule
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -23,7 +26,9 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -51,6 +56,8 @@ import com.yapp.model.ScheduleList
 import com.yapp.model.ScheduleProgressPhase
 import com.yapp.model.ScheduleType
 import com.yapp.model.SessionType
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Composable
 internal fun ScheduleRoute(
@@ -78,7 +85,7 @@ internal fun ScheduleRoute(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 internal fun ScheduleScreen(
     scheduleState: ScheduleState,
@@ -86,6 +93,29 @@ internal fun ScheduleScreen(
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
     val saveableStateHolder = rememberSaveableStateHolder()
+    val pagerState = rememberPagerState(
+        initialPage = scheduleState.selectedTab.ordinal,
+        pageCount = { ScheduleTab.entries.size }
+    )
+    val currentSelectedTab by rememberUpdatedState(scheduleState.selectedTab)
+
+    LaunchedEffect(scheduleState.selectedTab) {
+        val targetPage = scheduleState.selectedTab.ordinal
+        if (pagerState.currentPage != targetPage) {
+            pagerState.animateScrollToPage(targetPage)
+        }
+    }
+
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }
+            .distinctUntilChanged()
+            .collectLatest { page ->
+                val tab = ScheduleTab.entries[page]
+                if (tab != currentSelectedTab) {
+                    onIntent(ScheduleIntent.SelectTab(tab))
+                }
+            }
+    }
 
     YappBackground(
         color = YappTheme.colorScheme.staticWhite,
@@ -118,8 +148,12 @@ internal fun ScheduleScreen(
                     }
                 )
 
-                saveableStateHolder.SaveableStateProvider(key = scheduleState.selectedTab) {
-                    when (scheduleState.selectedTab) {
+                HorizontalPager(
+                    modifier = Modifier.fillMaxSize(),
+                    state = pagerState
+                ) { page ->
+                    val tab = ScheduleTab.entries[page]
+                    when (tab) {
                         ScheduleTab.ALL -> {
                             ScheduleAllScreen(
                                 selectedYear = scheduleState.selectedYear,
