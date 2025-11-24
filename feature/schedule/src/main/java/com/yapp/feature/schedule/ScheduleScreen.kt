@@ -23,6 +23,7 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -84,6 +85,7 @@ internal fun ScheduleScreen(
     onIntent: (ScheduleIntent) -> Unit = {},
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
+    val saveableStateHolder = rememberSaveableStateHolder()
 
     YappBackground(
         color = YappTheme.colorScheme.staticWhite,
@@ -116,23 +118,25 @@ internal fun ScheduleScreen(
                     }
                 )
 
-                when (scheduleState.selectedTab) {
-                    ScheduleTab.ALL -> {
-                        ScheduleAllScreen(
-                            selectedYear = scheduleState.selectedYear,
-                            selectedMonth = scheduleState.selectedMonth,
-                            schedules = scheduleState.schedules[
-                                Pair(scheduleState.selectedYear, scheduleState.selectedMonth)
-                            ] ?: ScheduleList(emptyList()),
+                saveableStateHolder.SaveableStateProvider(key = scheduleState.selectedTab) {
+                    when (scheduleState.selectedTab) {
+                        ScheduleTab.ALL -> {
+                            ScheduleAllScreen(
+                                selectedYear = scheduleState.selectedYear,
+                                selectedMonth = scheduleState.selectedMonth,
+                                schedules = scheduleState.schedules[
+                                    Pair(scheduleState.selectedYear, scheduleState.selectedMonth)
+                                ] ?: ScheduleList(emptyList()),
+                                onIntent = onIntent
+                            )
+                        }
+
+                        ScheduleTab.SESSION -> ScheduleSessionScreen(
+                            upcomingSessions = scheduleState.upcomingSessions,
+                            sessions = scheduleState.sessions,
                             onIntent = onIntent
                         )
                     }
-
-                    ScheduleTab.SESSION -> ScheduleSessionScreen(
-                        upcomingSessions = scheduleState.upcomingSessions,
-                        sessions = scheduleState.sessions,
-                        onIntent = onIntent
-                    )
                 }
             }
         }
