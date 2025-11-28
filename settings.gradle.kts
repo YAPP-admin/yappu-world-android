@@ -39,7 +39,9 @@ include(
     ":core:designsystem",
     ":core:ui",
     ":core:data",
-    ":core:domain"
+    ":core:domain",
+    ":core:common-android",
+    ":core:testing"
 )
 
 // feature
@@ -54,5 +56,3 @@ include(
     ":feature:setting",
     ":feature:session"
 )
-include(":core:common-android")
-include(":core:testing")
