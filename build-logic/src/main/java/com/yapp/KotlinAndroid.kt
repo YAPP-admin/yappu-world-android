@@ -87,4 +87,11 @@ private fun Project.configureKotlinCommon(jvmTarget: JvmTarget) {
             )
         }
     }
+
+    val libs = extensions.libs
+    dependencies {
+        "implementation"(libs.findLibrary("junit").get())
+        "implementation"(libs.findLibrary("mockk").get())
+        "implementation"(libs.findLibrary("kotlinx.coroutines.test").get())
+    }
 }

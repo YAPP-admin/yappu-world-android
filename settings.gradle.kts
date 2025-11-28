@@ -55,3 +55,4 @@ include(
     ":feature:session"
 )
 include(":core:common-android")
+include(":core:testing")
