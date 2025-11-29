@@ -20,7 +20,21 @@ import com.yapp.model.UpcomingSessionNotice
 import java.time.LocalDateTime
 
 object ScheduleTestData {
-    fun homeSessionList(): HomeSessionList = HomeSessionList(
+    val notices: List<NoticeInfo> = listOf(
+        NoticeInfo(
+            id = "notice-1",
+            writerName = "운영국",
+            writerId = "operation-1",
+            writerPosition = "운영",
+            writerGeneration = 15,
+            createdAt = "2024-05-01T10:00:00+09:00",
+            title = "세션 안내",
+            content = "이번 주 세션은 판교 스테이션에서 진행됩니다.",
+            noticeType = NoticeType.SESSION
+        )
+    )
+
+    val homeSessionList: HomeSessionList = HomeSessionList(
         sessions = listOf(
             HomeSession(
                 id = "session-1",
@@ -48,10 +62,10 @@ object ScheduleTestData {
             )
         ),
         upcomingSessionId = "session-upcoming",
-        upcomingNotice = notices()
+        upcomingNotice = notices
     )
 
-    fun scheduleList(): ScheduleList = ScheduleList(
+    val scheduleList: ScheduleList = ScheduleList(
         dates = listOf(
             DateGroupedSchedule(
                 date = "2024-05-18",
@@ -100,7 +114,7 @@ object ScheduleTestData {
         )
     )
 
-    fun upcomingSessionInfo(): UpcomingSessionInfo = UpcomingSessionInfo(
+    val upcomingSessionInfo: UpcomingSessionInfo = UpcomingSessionInfo(
         sessionId = "session-upcoming",
         name = "안드로이드 심화 세션",
         startDate = "2024-05-25",
@@ -126,7 +140,7 @@ object ScheduleTestData {
         )
     )
 
-    fun sessionDetailInfo(): SessionDetailInfo = SessionDetailInfo(
+    val sessionDetailInfo: SessionDetailInfo = SessionDetailInfo(
         id = "session-1",
         progressPhase = SessionProgressPhase.PENDING,
         title = "전체 세션",
@@ -136,20 +150,6 @@ object ScheduleTestData {
         address = "경기도 성남시 판교로 242",
         latitude = 37.4018,
         longitude = 127.1087,
-        notices = notices()
-    )
-
-    private fun notices(): List<NoticeInfo> = listOf(
-        NoticeInfo(
-            id = "notice-1",
-            writerName = "운영국",
-            writerId = "operation-1",
-            writerPosition = "운영",
-            writerGeneration = 15,
-            createdAt = "2024-05-01T10:00:00+09:00",
-            title = "세션 안내",
-            content = "이번 주 세션은 판교 스테이션에서 진행됩니다.",
-            noticeType = NoticeType.SESSION
-        )
+        notices = notices
     )
 }
