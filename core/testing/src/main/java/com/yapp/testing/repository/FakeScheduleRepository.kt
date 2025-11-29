@@ -8,25 +8,22 @@ import com.yapp.model.UpcomingSessionInfo
 import com.yapp.testing.data.ScheduleTestData
 
 class FakeScheduleRepository(
-    var homeSessionList: HomeSessionList = ScheduleTestData.homeSessionList(),
-    var dateGroupedScheduleList: ScheduleList = ScheduleTestData.scheduleList(),
-    var monthlyScheduleList: ScheduleList = ScheduleTestData.scheduleList(),
-    var upcomingSessionInfo: UpcomingSessionInfo = ScheduleTestData.upcomingSessionInfo(),
+    var homeSessionList: HomeSessionList = ScheduleTestData.homeSessionList,
+    var dateGroupedScheduleList: ScheduleList = ScheduleTestData.scheduleList,
+    var monthlyScheduleList: ScheduleList = ScheduleTestData.scheduleList,
+    var upcomingSessionInfo: UpcomingSessionInfo = ScheduleTestData.upcomingSessionInfo,
     sessionDetails: Map<String, SessionDetailInfo> = mapOf(
-        ScheduleTestData.sessionDetailInfo().let { it.id to it }
+        ScheduleTestData.sessionDetailInfo.let { it.id to it }
     )
 ) : ScheduleRepository {
 
     private val sessionDetailMap = sessionDetails.toMutableMap().also { map ->
         if (map.isEmpty()) {
-            val defaultDetail = ScheduleTestData.sessionDetailInfo()
+            val defaultDetail = ScheduleTestData.sessionDetailInfo
             map[defaultDetail.id] = defaultDetail
         }
     }
     private val monthlySchedulesByKey = mutableMapOf<Pair<Int, Int>, ScheduleList>()
-
-    var refreshUpcomingSessionsCount: Int = 0
-        private set
 
     var lastSessionsRange: Pair<String, String>? = null
         private set
@@ -50,10 +47,7 @@ class FakeScheduleRepository(
 
     override suspend fun refreshDateGroupedSessions(): ScheduleList = dateGroupedScheduleList
 
-    override suspend fun refreshUpcomingSessions(): UpcomingSessionInfo {
-        refreshUpcomingSessionsCount++
-        return upcomingSessionInfo
-    }
+    override suspend fun refreshUpcomingSessions(): UpcomingSessionInfo = upcomingSessionInfo
 
     override suspend fun refreshSchedules(year: Int, month: Int): ScheduleList {
         return fetchMonthlySchedule(year, month)

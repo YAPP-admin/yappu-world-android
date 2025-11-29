@@ -12,18 +12,11 @@ class FakeAttendanceRepository(
     var postAttendanceResult: Result<Unit> = Result.success(Unit)
 ) : AttendanceRepository {
 
-    val postedAttendances: MutableList<AttendanceInfo> = mutableListOf()
-
     override suspend fun getAttendanceStatistics(): AttendStatistics = attendStatistics
 
     override suspend fun getAttendanceHistory(): AttendanceHistoryList = attendanceHistoryList
 
     override suspend fun postAttendance(attendance: AttendanceInfo) {
-        postedAttendances += attendance
         postAttendanceResult.getOrThrow()
-    }
-
-    fun clearPostedAttendances() {
-        postedAttendances.clear()
     }
 }

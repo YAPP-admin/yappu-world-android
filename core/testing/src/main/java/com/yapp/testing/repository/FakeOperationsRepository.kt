@@ -15,10 +15,7 @@ class FakeOperationsRepository(
     var forceUpdateRequired: Boolean = false
 ) : OperationsRepository {
 
-
     private val positionConfigs = MutableStateFlow(initialPositions)
-    var basicRuleRequestCount: Int = 0
-        private set
 
     override fun getPositionConfigs(): Flow<List<String>> = positionConfigs
 
@@ -28,10 +25,7 @@ class FakeOperationsRepository(
 
     override suspend fun getPrivacyPolicyLink(): String = privacyPolicyLink
 
-    override suspend fun getBasicRuleLink(): String {
-        basicRuleRequestCount++
-        return basicRuleLink
-    }
+    override suspend fun getBasicRuleLink(): String = basicRuleLink
 
     override fun getAppVersion(): String = storedAppVersion
 
