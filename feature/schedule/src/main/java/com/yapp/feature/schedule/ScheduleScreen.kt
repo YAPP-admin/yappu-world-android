@@ -1,5 +1,6 @@
 package com.yapp.feature.schedule
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -22,7 +26,12 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -50,6 +59,10 @@ import com.yapp.model.ScheduleList
 import com.yapp.model.ScheduleProgressPhase
 import com.yapp.model.ScheduleType
 import com.yapp.model.SessionType
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun ScheduleRoute(
@@ -77,13 +90,17 @@ internal fun ScheduleRoute(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 internal fun ScheduleScreen(
     scheduleState: ScheduleState,
     onIntent: (ScheduleIntent) -> Unit = {},
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
+    val schedulePagerState = rememberSchedulePagerState(
+        selectedTab = scheduleState.selectedTab,
+        onTabSelected = { onIntent(ScheduleIntent.SelectTab(it)) }
+    )
 
     YappBackground(
         color = YappTheme.colorScheme.staticWhite,
@@ -111,29 +128,83 @@ internal fun ScheduleScreen(
                 ScheduleTabRow(
                     selectedTab = scheduleState.selectedTab,
                     tabList = ScheduleTab.entries,
-                    onTabSelected = {
-                        onIntent(ScheduleIntent.SelectTab(it))
-                    }
+                    onTabSelected = { tab -> onIntent(ScheduleIntent.SelectTab(tab)) }
                 )
 
-                when (scheduleState.selectedTab) {
-                    ScheduleTab.ALL -> {
-                        ScheduleAllScreen(
-                            selectedYear = scheduleState.selectedYear,
-                            selectedMonth = scheduleState.selectedMonth,
-                            schedules = scheduleState.schedules[
-                                Pair(scheduleState.selectedYear, scheduleState.selectedMonth)
-                            ] ?: ScheduleList(emptyList()),
+                HorizontalPager(
+                    modifier = Modifier.fillMaxSize(),
+                    state = schedulePagerState.pagerState
+                ) { page ->
+                    val tab = ScheduleTab.entries[page]
+                    when (tab) {
+                        ScheduleTab.ALL -> {
+                            ScheduleAllScreen(
+                                selectedYear = scheduleState.selectedYear,
+                                selectedMonth = scheduleState.selectedMonth,
+                                schedules = scheduleState.schedules[
+                                    Pair(scheduleState.selectedYear, scheduleState.selectedMonth)
+                                ] ?: ScheduleList(emptyList()),
+                                onIntent = onIntent
+                            )
+                        }
+
+                        ScheduleTab.SESSION -> ScheduleSessionScreen(
+                            upcomingSessions = scheduleState.upcomingSessions,
+                            sessions = scheduleState.sessions,
                             onIntent = onIntent
                         )
                     }
-
-                    ScheduleTab.SESSION -> ScheduleSessionScreen(
-                        upcomingSessions = scheduleState.upcomingSessions,
-                        sessions = scheduleState.sessions,
-                        onIntent = onIntent
-                    )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun rememberSchedulePagerState(
+    selectedTab: ScheduleTab,
+    onTabSelected: (ScheduleTab) -> Unit,
+): SchedulePagerState {
+    val coroutineScope = rememberCoroutineScope()
+    val pagerState = rememberPagerState(
+        initialPage = selectedTab.ordinal,
+        pageCount = { ScheduleTab.entries.size }
+    )
+    val schedulePagerState = remember(pagerState, coroutineScope) {
+        SchedulePagerState(
+            pagerState = pagerState,
+            coroutineScope = coroutineScope,
+        )
+    }
+    val currentTab by rememberUpdatedState(selectedTab)
+
+    LaunchedEffect(currentTab) {
+        schedulePagerState.animateToTab(currentTab)
+    }
+
+    LaunchedEffect(schedulePagerState) {
+        snapshotFlow { schedulePagerState.pagerState.currentPage }
+            .distinctUntilChanged()
+            .collectLatest { page ->
+                val tab = ScheduleTab.entries[page]
+                if (tab != currentTab) {
+                    onTabSelected(tab)
+                }
+            }
+    }
+
+    return schedulePagerState
+}
+
+@Stable
+private class SchedulePagerState(
+    val pagerState: PagerState,
+    private val coroutineScope: CoroutineScope,
+) {
+    fun animateToTab(tab: ScheduleTab) {
+        coroutineScope.launch {
+            if (pagerState.currentPage != tab.ordinal) {
+                pagerState.animateScrollToPage(tab.ordinal)
             }
         }
     }

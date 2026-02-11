@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,10 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
+import com.yapp.feature.home.R
 import com.yapp.core.designsystem.R as coreDesignR
 
 @Composable
@@ -30,7 +31,10 @@ internal fun FAQSection(
     clickBasicRule: () -> Unit,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        Text(text = "혹시... 처음이 YAPP?", style = YappTheme.typography.headline1Bold)
+        Text(
+            text = stringResource(R.string.home_faq_title),
+            style = YappTheme.typography.headline1Bold
+        )
         Spacer(Modifier.height(8.dp))
         Faq(clickBasicRule = clickBasicRule)
     }
@@ -61,7 +65,10 @@ private fun Faq(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Image(painter = painterResource(coreDesignR.drawable.yappo_wink), contentDescription = null)
-            Text(text = "YAPP 기본 규칙", style = YappTheme.typography.body1NormalRegular)
+            Text(
+                text = stringResource(R.string.home_faq_basic_rule_title),
+                style = YappTheme.typography.body1NormalRegular
+            )
         }
         Icon(
             painter = painterResource(coreDesignR.drawable.icon_chevron_right),

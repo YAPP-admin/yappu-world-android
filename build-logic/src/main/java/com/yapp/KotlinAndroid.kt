@@ -46,12 +46,15 @@ internal fun Project.configureKotlinAndroid() {
             }
         }
 
+        defaultConfig.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     configureKotlinCommon(jvmTarget = JvmTarget.JVM_17)
     val libs = extensions.libs
     dependencies {
         "implementation"(libs.findLibrary("kotlinx.serialization.json").get())
     }
+
+    configureTestDependencies()
 }
 
 
@@ -85,5 +88,14 @@ private fun Project.configureKotlinCommon(jvmTarget: JvmTarget) {
                 )
             )
         }
+    }
+}
+
+internal fun Project.configureTestDependencies(configurationName: String = "testImplementation") {
+    val libs = extensions.libs
+    dependencies {
+        add(configurationName, libs.findLibrary("junit").get())
+        add(configurationName, libs.findLibrary("mockk").get())
+        add(configurationName, libs.findLibrary("kotlinx.coroutines.test").get())
     }
 }
