@@ -39,7 +39,7 @@ fun GradientBottom(
 
 @Preview
 @Composable
-fun GradientBottomPreview() {
+private fun GradientBottomPreview() {
     YappTheme {
         Box(modifier = Modifier.fillMaxSize()) {
             GradientBottom(

@@ -1,7 +1,5 @@
 package com.yapp.app.official.navigation
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
@@ -15,6 +13,7 @@ import com.yapp.feature.notice.navigation.noticeDetailNavGraph
 import com.yapp.feature.notice.navigation.noticeNavGraph
 import com.yapp.feature.profile.navigation.profileNavGraph
 import com.yapp.feature.schedule.navigation.scheduleNavGraph
+import com.yapp.feature.session.navigation.sessionNavGraph
 import com.yapp.feature.setting.navigation.settingNavGraph
 import com.yapp.feature.signup.navigation.signupNavGraph
 import com.yapp.feature.signup.signup.SignUpStep
@@ -29,8 +28,10 @@ fun YappNavHost(
         navController = navigator.navController,
         startDestination = navigator.startDestination,
         modifier = modifier,
-        enterTransition = { EnterTransition.None },
-        exitTransition = { ExitTransition.None },
+        enterTransition = { yappEnterTransition() },
+        exitTransition = { yappExitTransition() },
+        popEnterTransition = { yappPopEnterTransition() },
+        popExitTransition = { yappPopExitTransition() },
     ) {
         loginNavGraph(
             navigateSignUpName = { navigator.navigateSignUpScreen(SignUpStep.Name.name) },
@@ -61,6 +62,12 @@ fun YappNavHost(
             navigateSchedule = {
                 navigator.navigateToTopLevelDestination(TopLevelDestination.SCHEDULE)
             },
+            navigateToNotice = {
+                navigator.navigateNoticeDetail(it)
+            },
+            navigateToSessionDetail = { sessionId ->
+                navigator.navigateSessionScreen(sessionId)
+            },
             navigateAttendanceHistory = {
                 navigator.navigateAttendance()
             },
@@ -82,6 +89,9 @@ fun YappNavHost(
                 )
             },
             handleException = handleException,
+            navigateToSessionDetail = { sessionId ->
+                navigator.navigateSessionScreen(sessionId)
+            }
         )
         noticeNavGraph(
             navigateToNoticeDetail = { noticeId ->
@@ -116,6 +126,18 @@ fun YappNavHost(
         previousHistoryNavGraph(
             navigateToBack = { navigator.popBackStack() },
             navigateToLogin = { navigator.navigateLoginScreen(clearBackStackNavOptions) },
+            handleException = handleException,
+        )
+        sessionNavGraph(
+            navigateToBack = { navigator.popBackStack() },
+            navigateToLogin = {
+                navigator.navigateLoginScreen(
+                    navOptions = clearBackStackNavOptions
+                )
+            },
+            navigateToNoticeDetail = { noticeId ->
+                navigator.navigateNoticeDetail(noticeId)
+            },
             handleException = handleException,
         )
     }

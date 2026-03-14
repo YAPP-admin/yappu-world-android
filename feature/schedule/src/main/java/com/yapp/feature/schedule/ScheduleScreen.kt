@@ -1,5 +1,6 @@
 package com.yapp.feature.schedule
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,7 +14,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -23,6 +26,9 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -41,6 +47,7 @@ import com.yapp.core.ui.component.LocalBottomBarHeight
 import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.schedule.component.DateGroupedScheduleItem
+import com.yapp.feature.schedule.component.ScheduleGroupVariant
 import com.yapp.feature.schedule.component.ScheduleTabRow
 import com.yapp.feature.schedule.component.UpcomingSessionSection
 import com.yapp.model.AttendanceStatus
@@ -49,12 +56,15 @@ import com.yapp.model.ScheduleList
 import com.yapp.model.ScheduleProgressPhase
 import com.yapp.model.ScheduleType
 import com.yapp.model.SessionType
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Composable
 internal fun ScheduleRoute(
     viewModel: ScheduleViewModel = hiltViewModel(),
     handleException: (Throwable) -> Unit,
     navigateToLogin: () -> Unit,
+    navigateToSessionDetail: (String) -> Unit
 ) {
     LaunchedEffect(Unit) {
         viewModel.store.onIntent(ScheduleIntent.EnterScheduleScreen)
@@ -65,6 +75,7 @@ internal fun ScheduleRoute(
         when (effect) {
             is ScheduleSideEffect.HandleException -> handleException(effect.exception)
             ScheduleSideEffect.NavigateToLogin -> navigateToLogin()
+            is ScheduleSideEffect.NavigateToSessionDetail -> navigateToSessionDetail(effect.id)
         }
     }
 
@@ -74,13 +85,37 @@ internal fun ScheduleRoute(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 internal fun ScheduleScreen(
     scheduleState: ScheduleState,
     onIntent: (ScheduleIntent) -> Unit = {},
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
+    val saveableStateHolder = rememberSaveableStateHolder()
+    val pagerState = rememberPagerState(
+        initialPage = scheduleState.selectedTab.ordinal,
+        pageCount = { ScheduleTab.entries.size }
+    )
+    val currentSelectedTab by rememberUpdatedState(scheduleState.selectedTab)
+
+    LaunchedEffect(scheduleState.selectedTab) {
+        val targetPage = scheduleState.selectedTab.ordinal
+        if (pagerState.currentPage != targetPage) {
+            pagerState.animateScrollToPage(targetPage)
+        }
+    }
+
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }
+            .distinctUntilChanged()
+            .collectLatest { page ->
+                val tab = ScheduleTab.entries[page]
+                if (tab != currentSelectedTab) {
+                    onIntent(ScheduleIntent.SelectTab(tab))
+                }
+            }
+    }
 
     YappBackground(
         color = YappTheme.colorScheme.staticWhite,
@@ -113,22 +148,29 @@ internal fun ScheduleScreen(
                     }
                 )
 
-                when (scheduleState.selectedTab) {
-                    ScheduleTab.ALL -> {
-                        ScheduleAllScreen(
-                            selectedYear = scheduleState.selectedYear,
-                            selectedMonth = scheduleState.selectedMonth,
-                            schedules = scheduleState.schedules[
-                                Pair(scheduleState.selectedYear, scheduleState.selectedMonth)
-                            ] ?: ScheduleList(emptyList()),
+                HorizontalPager(
+                    modifier = Modifier.fillMaxSize(),
+                    state = pagerState
+                ) { page ->
+                    val tab = ScheduleTab.entries[page]
+                    when (tab) {
+                        ScheduleTab.ALL -> {
+                            ScheduleAllScreen(
+                                selectedYear = scheduleState.selectedYear,
+                                selectedMonth = scheduleState.selectedMonth,
+                                schedules = scheduleState.schedules[
+                                    Pair(scheduleState.selectedYear, scheduleState.selectedMonth)
+                                ] ?: ScheduleList(emptyList()),
+                                onIntent = onIntent
+                            )
+                        }
+
+                        ScheduleTab.SESSION -> ScheduleSessionScreen(
+                            upcomingSessions = scheduleState.upcomingSessions,
+                            sessions = scheduleState.sessions,
                             onIntent = onIntent
                         )
                     }
-
-                    ScheduleTab.SESSION -> ScheduleSessionScreen(
-                        upcomingSessions = scheduleState.upcomingSessions,
-                        sessions = scheduleState.sessions
-                    )
                 }
             }
         }
@@ -157,7 +199,7 @@ private fun ScheduleAllScreen(
                 onPreviousMonthClick = { onIntent(ScheduleIntent.ClickPreviousMonth) },
                 onNextMonthClick = { onIntent(ScheduleIntent.ClickNextMonth) }
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
         }
         if (schedules.isEmpty) {
             item {
@@ -183,18 +225,24 @@ private fun ScheduleAllScreen(
 
             }
         } else {
-            items(
-                items = schedules.dates,
-                key = { it.date },
-            ) {
+            itemsIndexed(schedules.dates, key = { index, it -> "${it.date}_$index" }) { index, grouped ->
                 DateGroupedScheduleItem(
-                    date = it.date,
-                    dayOfWeek = it.dayOfTheWeek,
-                    isToday = it.isToday,
-                    schedules = it.schedules,
-                ) { }
+                    variant = ScheduleGroupVariant.LEFT_ALIGNED,
+                    date = grouped.date,
+                    dayOfWeek = grouped.dayOfTheWeek,
+                    isToday = grouped.isToday,
+                    showMonth = true,
+                    schedules = grouped.schedules,
+                ) { id ->
+                    onIntent(ScheduleIntent.ClickSessionItem(id))
+                }
+
+                if (index < schedules.dates.lastIndex) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
 
+            item { Spacer(modifier = Modifier.height(20.dp)) }
         }
     }
 }
@@ -203,6 +251,7 @@ private fun ScheduleAllScreen(
 private fun ScheduleSessionScreen(
     upcomingSessions: List<ScheduleInfo>,
     sessions: ScheduleList,
+    onIntent: (ScheduleIntent) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth()
@@ -268,18 +317,24 @@ private fun ScheduleSessionScreen(
             )
         }
 
-        items(
-            items = sessions.dates,
-            key = { it.date },
-        ) {
+        itemsIndexed(sessions.dates, key = { index, it -> "${it.date}_$index" }) { index, grouped ->
             DateGroupedScheduleItem(
-                date = it.date,
-                dayOfWeek = it.dayOfTheWeek,
-                isToday = it.isToday,
+                variant = ScheduleGroupVariant.TOP_ALIGNED,
+                date = grouped.date,
+                dayOfWeek = grouped.dayOfTheWeek,
+                isToday = grouped.isToday,
                 showMonth = true,
-                schedules = it.schedules,
-            ) { }
+                schedules = grouped.schedules,
+            ) { id ->
+                onIntent(ScheduleIntent.ClickSessionItem(id))
+            }
+
+            if (index < sessions.dates.lastIndex) {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
         }
+
+        item { Spacer(modifier = Modifier.height(20.dp)) }
     }
 }
 

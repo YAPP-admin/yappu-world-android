@@ -12,14 +12,14 @@ import retrofit2.Response
 import java.lang.reflect.Type
 import java.util.Optional
 
-internal class OptionalApiResultCallAdapter<R: Any>(
+internal class OptionalApiResultCallAdapter<R : Any>(
     private val successType: Type,
 ) : CallAdapter<R, Call<Optional<R>>> {
     override fun adapt(call: Call<R>): Call<Optional<R>> = OptionalApiResultCall(call, successType)
     override fun responseType(): Type = successType
 }
 
-private class OptionalApiResultCall<R: Any>(
+private class OptionalApiResultCall<R : Any>(
     private val delegate: Call<R>,
     private val successType: Type,
 ) : Call<Optional<R>> {
@@ -45,7 +45,10 @@ private class OptionalApiResultCall<R: Any>(
                     return
                 }
 
-                callback.onResponse(this@OptionalApiResultCall, Response.success(Optional.ofNullable(null)))
+                callback.onResponse(
+                    this@OptionalApiResultCall,
+                    Response.success(Optional.ofNullable(null))
+                )
             }
 
             override fun onFailure(call: Call<R>, throwable: Throwable) {
@@ -91,6 +94,9 @@ private class OptionalApiResultCall<R: Any>(
     override fun timeout(): Timeout = delegate.timeout()
 
     companion object {
-        private val json = Json { encodeDefaults = true }
+        private val json = Json {
+            encodeDefaults = true
+            ignoreUnknownKeys = true
+        }
     }
 }

@@ -23,10 +23,15 @@ android {
 
     defaultConfig {
         applicationId = "com.yapp.app.official"
-        versionCode = 8
-        versionName = "1.1.3"
+        versionCode = 11
+        versionName = "1.2.0"
 
         targetSdk = 35
+
+        val localProperties = Properties()
+        localProperties.load(project.rootProject.file("local.properties").bufferedReader())
+        manifestPlaceholders["NAVER_MAP_CLIENT_ID"] =
+            localProperties.getProperty("NAVER_MAP_CLIENT_ID", "")
     }
     buildTypes {
         getByName("debug") {
@@ -73,6 +78,7 @@ dependencies {
     implementation(projects.feature.login)
     implementation(projects.feature.history)
     implementation(projects.feature.setting)
+    implementation(projects.feature.session)
     implementation(projects.core.designsystem)
     implementation(projects.core.ui)
     implementation(projects.core.data)

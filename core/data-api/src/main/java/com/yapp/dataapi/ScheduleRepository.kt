@@ -2,6 +2,7 @@ package com.yapp.dataapi
 
 import com.yapp.model.HomeSessionList
 import com.yapp.model.ScheduleList
+import com.yapp.model.SessionDetailInfo
 import com.yapp.model.UpcomingSessionInfo
 
 interface ScheduleRepository {
@@ -18,4 +19,6 @@ interface ScheduleRepository {
     suspend fun refreshUpcomingSessions(): UpcomingSessionInfo
 
     suspend fun refreshSchedules(year: Int, month: Int): ScheduleList
+
+    suspend fun getSessionDetail(sessionId: String): SessionDetailInfo
 }

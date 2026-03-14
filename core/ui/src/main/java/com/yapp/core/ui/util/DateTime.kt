@@ -119,3 +119,44 @@ fun formatDateTime(context: Context, input: String): String {
 
     return dateTime.format(outputFormatter)
 }
+
+fun formatSessionDateTime(
+    startDateTime: LocalDateTime,
+    endDateTime: LocalDateTime
+): Pair<String, String> {
+    val dateFormatter = DateTimeFormatter.ofPattern("yyyy. MM. dd")
+    val dayOfWeekFormatter = DateTimeFormatter.ofPattern("E", Locale.KOREAN)
+    val timeFormatter = DateTimeFormatter.ofPattern("a h시", Locale.KOREAN)
+    val timeWithMinuteFormatter = DateTimeFormatter.ofPattern("a h시 m분", Locale.KOREAN)
+
+    val formattedStartDate = startDateTime.format(dateFormatter)
+    val formattedEndDate = endDateTime.format(dateFormatter)
+    val startDayOfWeek = startDateTime.format(dayOfWeekFormatter)
+    val endDayOfWeek = endDateTime.format(dayOfWeekFormatter)
+
+    val formattedStartTime = if (startDateTime.minute == 0) {
+        startDateTime.format(timeFormatter)
+    } else {
+        startDateTime.format(timeWithMinuteFormatter)
+    }
+
+    val formattedEndTime = if (endDateTime.minute == 0) {
+        endDateTime.format(timeFormatter)
+    } else {
+        endDateTime.format(timeWithMinuteFormatter)
+    }
+
+    val timeRange = "$formattedStartTime ~ $formattedEndTime"
+
+    return if (formattedStartDate == formattedEndDate) {
+        Pair(
+            "$formattedStartDate ($startDayOfWeek)",
+            timeRange
+        )
+    } else {
+        Pair(
+            "$formattedStartDate ($startDayOfWeek) $formattedStartTime",
+            "~ $formattedEndDate ($endDayOfWeek) $formattedEndTime"
+        )
+    }
+}

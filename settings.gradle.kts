@@ -19,6 +19,12 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven(url = "https://jitpack.io")
+        // Naver Maps SDK repository (limit group to avoid POM parse issues)
+        maven(url = "https://repository.map.naver.com/archive/maven") {
+            content {
+                includeGroup("com.naver.maps")
+            }
+        }
     }
 }
 
@@ -45,6 +51,7 @@ include(
     ":feature:schedule",
     ":feature:profile",
     ":feature:history",
-    ":feature:setting"
+    ":feature:setting",
+    ":feature:session"
 )
 include(":core:common-android")

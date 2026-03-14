@@ -1,36 +1,44 @@
 package com.yapp.feature.home.component
 
 import android.content.Context
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.component.button.solid.SolidButtonDefaults
 import com.yapp.core.designsystem.component.button.solid.YappSolidPrimaryButtonLarge
 import com.yapp.core.designsystem.component.chip.ChipColorType
 import com.yapp.core.designsystem.component.chip.YappChipSmall
+import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.extension.dashedBorder
-import com.yapp.core.ui.util.formatToKoreanTime
+import com.yapp.core.ui.util.formatTimeRange
 import com.yapp.feature.home.R
 import com.yapp.model.AttendanceStatus
+import com.yapp.model.SessionProgressPhase
 import com.yapp.model.UpcomingSessionInfo
+import com.yapp.model.UpcomingSessionNotice
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -40,67 +48,70 @@ import com.yapp.core.designsystem.R as coreDesignR
 internal fun HomeAttendanceContent(
     modifier: Modifier = Modifier,
     upcomingSession: UpcomingSessionInfo?,
-    onClickAttend: () -> Unit
+    onClickAttend: () -> Unit,
+    onClickNotice: (String) -> Unit,
 ) {
     val isToday = upcomingSession?.remainingDays == 0
 
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp)
-            .dashedBorder(
-                color = Color(0xFFFED9CB),
-                dashLength = 3.dp,
-                cornerRadius = 10.dp
+    Box(modifier = modifier.fillMaxWidth()) {
+        if (isToday) {
+            TodaySessionCard(
+                session = upcomingSession,
+                onClickAttend = onClickAttend,
+                onClickNotice = onClickNotice,
             )
-            .padding(20.dp)
-    ) {
-        if (upcomingSession == null) {
-            EmptySessionMessage()
+        } else if (upcomingSession != null) {
+            UpcomingSessionCard(session = upcomingSession)
         } else {
-            if (isToday) {
-                TodaySessionCard(
-                    session = upcomingSession,
-                    onClickAttend = onClickAttend
-                )
-            } else {
-                UpcomingSessionCard(
-                    today = LocalDate.now(),
-                    upcomingDate = upcomingSession.startDate
-                )
-            }
+            EmptyNextSessionCard()
         }
     }
 }
 
 @Composable
-private fun EmptySessionMessage() {
-    Text(
-        modifier = Modifier.fillMaxWidth(),
-        text = stringResource(id = R.string.session_ended_message),
-        textAlign = TextAlign.Center,
-        style = YappTheme.typography.caption1Medium,
-        color = YappTheme.colorScheme.labelNormal,
-    )
-}
-
-@Composable
-private fun UpcomingSessionCard(
-    today: LocalDate,
-    upcomingDate: String
-) {
-    val parsedDate = remember(upcomingDate) {
-        formatSessionDate(upcomingDate)
-    }
-
+private fun EmptyNextSessionCard() {
+    val today = remember { LocalDate.now() }
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
             text = stringResource(R.string.session_today_text, today.format(DATE_OUTPUT)),
-            style = YappTheme.typography.label2Medium,
+            style = YappTheme.typography.headline1Bold,
             color = YappTheme.colorScheme.labelNormal
+        )
+
+        HomeAttendanceNotice(
+            isNotToday = true,
+            upcomingSession = null
+        )
+    }
+}
+
+@Composable
+private fun UpcomingSessionCard(
+    session: UpcomingSessionInfo
+) {
+    val today = remember { LocalDate.now() }
+    val parsedDate = remember(session.startDate) {
+        formatSessionDate(session.startDate)
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(HOME_UPCOMING_SESSION_CARD_TAG),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.session_today_text, today.format(DATE_OUTPUT)),
+            style = YappTheme.typography.headline1Bold,
+            color = YappTheme.colorScheme.labelNormal
+        )
+
+        HomeAttendanceNotice(
+            isNotToday = parsedDate?.let { !today.isEqual(it) } ?: true,
+            upcomingSession = session
         )
 
         YappSolidPrimaryButtonLarge(
@@ -120,44 +131,70 @@ private fun UpcomingSessionCard(
 @Composable
 fun TodaySessionCard(
     session: UpcomingSessionInfo,
-    onClickAttend: () -> Unit
+    onClickAttend: () -> Unit,
+    onClickNotice: (id: String) -> Unit,
 ) {
     val context = LocalContext.current
-
+    val configuration = LocalConfiguration.current
     val isAttended = session.status != null
 
-    val timeStr = if (isAttended) session.endTime else session.startTime
-    val displayTime = timeStr?.let { formatToKoreanTime(context, it) }
-        ?: stringResource(R.string.session_date_error)
-
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text(
-            text = session.name,
-            style = YappTheme.typography.label2Medium,
-            color = YappTheme.colorScheme.labelNormal
+    val duration = remember(
+        configuration,
+        session
+    ) {
+        formatTimeRange(
+            context = context,
+            startTime = session.startTime,
+            endTime = session.endTime,
         )
+    }
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+    val startTime = remember(session) {
+        formatStartTime(context, startTime = session.startTime)
+    }
+
+    Column {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Image(
+            Text(
+                text = session.name,
+                style = YappTheme.typography.headline1Bold,
+                color = YappTheme.colorScheme.labelNormal
+            )
+
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Icon(
+                    painter = painterResource(id = coreDesignR.drawable.icon_location),
+                    contentDescription = null,
+                    tint = Color.Unspecified
+                )
+                Spacer(Modifier.width(4.dp))
+                Text(
+                    text = session.location.orEmpty(),
+                    style = YappTheme.typography.caption1Regular,
+                    color = YappTheme.colorScheme.labelAlternative
+                )
+            }
+
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Icon(
                     painter = painterResource(id = coreDesignR.drawable.icon_time),
                     contentDescription = null,
-                    colorFilter = ColorFilter.tint(color = YappTheme.colorScheme.primaryNormal)
+                    tint = Color.Unspecified
                 )
-
+                Spacer(Modifier.width(4.dp))
                 Text(
-                    text = if (isAttended)
-                        stringResource(R.string.session_time_end, displayTime)
-                    else
-                        stringResource(R.string.session_time_open, displayTime),
-                    style = YappTheme.typography.label1NormalMedium,
-                    color = YappTheme.colorScheme.primaryNormal
+                    text = duration.orEmpty(),
+                    style = YappTheme.typography.caption1Regular,
+                    color = YappTheme.colorScheme.labelAlternative
+                )
+            }
+
+            if (session.status == null) {
+                HomeAttendanceNotice(
+                    isNotToday = false,
+                    upcomingSession = session
                 )
             }
 
@@ -172,45 +209,124 @@ fun TodaySessionCard(
                         isFill = true
                     )
                     Text(
-                        text = formatStartTime(context, session.startTime),
+                        text = startTime,
                         style = YappTheme.typography.label1NormalMedium,
                         color = YappTheme.colorScheme.labelAssistive
                     )
                 }
             }
+
+            session.status?.let { status ->
+                val message = when (status) {
+                    AttendanceStatus.ATTENDED -> stringResource(R.string.session_attendance_done)
+                    AttendanceStatus.LATE -> stringResource(R.string.session_attendance_late)
+                    AttendanceStatus.ABSENT -> stringResource(R.string.session_attendance_absent)
+                    AttendanceStatus.EARLY_LEAVE -> stringResource(R.string.session_attendance_early_leave)
+                    AttendanceStatus.EXCUSED -> stringResource(R.string.session_attendance_excused)
+                }
+
+                YappSolidPrimaryButtonLarge(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag(HOME_ATTENDANCE_STATUS_LABEL_TAG),
+                    text = message,
+                    enable = false,
+                    colors = SolidButtonDefaults.colorsPrimary.copy(
+                        disableBackgroundColor = YappTheme.colorScheme.orange99,
+                        disableTextColor = YappTheme.colorScheme.primaryNormal
+                    ),
+                    onClick = {}
+                )
+            } ?: run {
+                val buttonText = if (session.canCheckIn) {
+                    stringResource(R.string.session_attendance)
+                } else {
+                    stringResource(R.string.session_attendance_not_yet_message)
+                }
+
+                YappSolidPrimaryButtonLarge(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag(HOME_ATTENDANCE_BUTTON_TAG),
+                    text = buttonText,
+                    enable = session.canCheckIn,
+                    onClick = { if (session.canCheckIn) onClickAttend() },
+                )
+            }
         }
 
-        session.status?.let { status ->
-            val message = when (status) {
-                AttendanceStatus.ATTENDED -> stringResource(R.string.session_attendance_done)
-                AttendanceStatus.LATE -> stringResource(R.string.session_attendance_late)
-                AttendanceStatus.ABSENT -> stringResource(R.string.session_attendance_absent)
-                AttendanceStatus.EARLY_LEAVE -> stringResource(R.string.session_attendance_early_leave)
-                AttendanceStatus.EXCUSED -> stringResource(R.string.session_attendance_excused)
-            }
+        if (session.notices.isNotEmpty()) {
+            Spacer(Modifier.height(24.dp))
+            HorizontalDivider()
+            Spacer(Modifier.height(24.dp))
 
-            YappSolidPrimaryButtonLarge(
-                modifier = Modifier.fillMaxWidth(),
-                text = message,
-                enable = false,
-                colors = SolidButtonDefaults.colorsPrimary.copy(
-                    disableBackgroundColor = YappTheme.colorScheme.orange99,
-                    disableTextColor = YappTheme.colorScheme.primaryNormal
-                ),
-                onClick = {}
+            Text(
+                text = stringResource(R.string.home_session_notice_title),
+                style = YappTheme.typography.label2Bold,
+                color = YappTheme.colorScheme.labelAlternative
             )
-        } ?: run {
-            val buttonText = if (session.canCheckIn) {
-                stringResource(R.string.session_attendance)
-            } else {
-                stringResource(R.string.session_attendance_not_yet_message)
+
+            Spacer(Modifier.height(8.dp))
+
+            session.notices.forEachIndexed { index, item ->
+                key(item.id) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .yappClickable(onClick = { onClickNotice(item.id) })
+                            .padding(vertical = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(text = item.title)
+                        Icon(
+                            painterResource(coreDesignR.drawable.icon_chevron_right),
+                            contentDescription = null
+                        )
+                    }
+                    if (index < session.notices.lastIndex) {
+                        HorizontalDivider(color = YappTheme.colorScheme.lineNormalAlternative)
+                    }
+                }
             }
 
-            YappSolidPrimaryButtonLarge(
-                modifier = Modifier.fillMaxWidth(),
-                text = buttonText,
-                enable = session.canCheckIn,
-                onClick = { if (session.canCheckIn) onClickAttend() },
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun HomeAttendanceContentPreview() {
+    YappTheme {
+        Column {
+            HomeAttendanceContent(
+                upcomingSession = UpcomingSessionInfo(
+                    sessionId = "019a1190-4db2-34d7-bbbe-2b0bf56810fb",
+                    name = "23기 테스트",
+                    startDate = "2025-10-23",
+                    startDayOfTheWeek = "목",
+                    endDate = "2025-10-23",
+                    endDayOfTheWeek = "목",
+                    startTime = "17:10:00",
+                    endTime = "18:40:00",
+                    location = "KT&G상상플래닛",
+                    remainingDays = 0,
+                    canCheckIn = false,
+                    status = null,
+                    progressPhase = SessionProgressPhase.PENDING,
+                    notices = listOf(
+                        UpcomingSessionNotice(
+                            id = "12345",
+                            title = "ㅁㄴㅇㄹㄹㄴㄹ"
+                        ),
+                        UpcomingSessionNotice(
+                            id = "2343",
+                            title = "ㅁㅇㄴㄹ"
+                        )
+
+                    )
+                ),
+                onClickAttend = {},
+                onClickNotice = {}
             )
         }
     }
@@ -236,3 +352,7 @@ private fun formatStartTime(context: Context, startTime: String?): String {
 
 private fun formatSessionDate(date: String): LocalDate? =
     runCatching { LocalDate.parse(date, DATE_INPUT) }.getOrNull()
+
+internal const val HOME_UPCOMING_SESSION_CARD_TAG = "upcomingSessionCard"
+internal const val HOME_ATTENDANCE_STATUS_LABEL_TAG = "attendanceStatusLabel"
+internal const val HOME_ATTENDANCE_BUTTON_TAG = "attendanceButton"

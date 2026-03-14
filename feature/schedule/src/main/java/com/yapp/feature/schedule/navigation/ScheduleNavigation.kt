@@ -17,11 +17,13 @@ fun NavController.navigateToSchedule(navOptions: NavOptions? = null) {
 fun NavGraphBuilder.scheduleNavGraph(
     handleException: (Throwable) -> Unit,
     navigateToLogin: () -> Unit,
+    navigateToSessionDetail: (String) -> Unit
 ) {
     composable<ScheduleRoute> {
         ScheduleRoute(
             handleException = handleException,
             navigateToLogin = navigateToLogin,
+            navigateToSessionDetail = navigateToSessionDetail
         )
     }
 }

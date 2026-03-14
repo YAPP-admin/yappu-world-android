@@ -80,5 +80,6 @@ fun SessionResponse.Session.toHomeSessionModel(): HomeSession {
 }
 
 fun String.toSessionProgressPhase() =
-    SessionProgressPhase.entries.firstOrNull { it.name == this }
-        ?: SessionProgressPhase.PENDING
+    SessionProgressPhase.entries.firstOrNull { it.title == this }
+        ?: SessionProgressPhase.entries.firstOrNull { it.name == this }
+            ?: SessionProgressPhase.NONE

@@ -1,19 +1,10 @@
 package com.yapp.feature.home
 
-import com.yapp.model.AttendanceHistoryList
-import com.yapp.model.HomeSessionList
 import com.yapp.model.UpcomingSessionInfo
 
 data class HomeState(
     val isLoading: Boolean = true,
-    val sessionList: HomeSessionList = HomeSessionList(
-        sessions = emptyList(),
-        upcomingSessionId = null
-    ),
     val upcomingSession: UpcomingSessionInfo? = null,
-    val recentAttendanceHistory: AttendanceHistoryList = AttendanceHistoryList(
-        histories = emptyList()
-    ),
     val showAttendCodeBottomSheet: Boolean = false,
     val attendanceCodeDigits: List<String> = List(4) { "" },
     val showAttendanceCodeError: Boolean = false,
@@ -28,19 +19,24 @@ sealed interface HomeIntent {
     data object ClickRequestAttendCode : HomeIntent
     data object ClickDismissDialog : HomeIntent
     data object EnterHomeScreen : HomeIntent
+    data class ClickSessionItem(val sessionId: String) : HomeIntent
     data object ClickShowAllSession : HomeIntent
-    data object ClickShowAllAttendanceHistory : HomeIntent
-
     data object Refresh : HomeIntent
-
+    data object ClickShowAllAttendanceHistory : HomeIntent
     data class ChangeAttendanceCodeDigits(val code: List<String>) : HomeIntent
     data object ClickRequestAttendance : HomeIntent
+    data object ClickBasicRuleLink : HomeIntent
+    data class ClickNotice(val id: String) : HomeIntent
+    data class ClickDetail(val id: String) : HomeIntent
 }
 
 sealed interface HomeSideEffect {
     data object NavigateToSchedule : HomeSideEffect
     data object NavigateToLogin : HomeSideEffect
     data object NavigateToAttendanceHistory : HomeSideEffect
+    data class NavigateToSessionDetail(val sessionId: String) : HomeSideEffect
     data class ShowToast(val message: String) : HomeSideEffect
     data class HandleException(val exception: Throwable) : HomeSideEffect
+    data class NavigateToNotice(val id: String) : HomeSideEffect
+    data class OpenUrl(val url: String) : HomeSideEffect
 }

@@ -1,9 +1,11 @@
 package com.yapp.core.data.remote.api
 
 import com.yapp.core.data.remote.model.response.DateGroupedScheduleResponse
+import com.yapp.core.data.remote.model.response.SessionDetailResponse
 import com.yapp.core.data.remote.model.response.SessionResponse
 import com.yapp.core.data.remote.model.response.UpcomingSessionAttendanceResponse
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ScheduleApi {
@@ -25,4 +27,9 @@ interface ScheduleApi {
         @Query("year") year: Int,
         @Query("month") month: Int,
     ): DateGroupedScheduleResponse
+
+    @GET("v2/sessions/{sessionId}")
+    suspend fun getSessionDetail(
+        @Path("sessionId") sessionId: String
+    ): SessionDetailResponse
 }
