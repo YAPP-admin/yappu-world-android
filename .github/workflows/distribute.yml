@@ -1,0 +1,60 @@
+name: Firebase App Distribution
+
+on:
+  workflow_dispatch:
+    inputs:
+      lane:
+        description: 'Fastlane lane'
+        required: true
+        default: 'distribute_qa'
+        type: choice
+        options:
+          - distribute_qa
+          - distribute_qa_test
+      branch:
+        description: '배포할 브랜치'
+        required: true
+        default: 'develop'
+        type: string
+
+permissions: write-all
+
+jobs:
+  distribute:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - uses: ./.github/actions/build-configuration
+        with:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          BASE_URL_DEBUG: ${{ secrets.BASE_URL_DEBUG }}
+          BASE_URL_RELEASE: ${{ secrets.BASE_URL_RELEASE }}
+          BASE_URL_QA: ${{ secrets.BASE_URL_QA }}
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Decode Firebase credentials
+        run: echo '${{ secrets.FIREBASE_CREDENTIAL_JSON }}' > fastlane/credentials.json
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Run Fastlane
+        env:
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          FIREBASE_CREDENTIAL_PATH: ./credentials.json
+          FIREBASE_GROUP: ${{ secrets.FIREBASE_GROUP }}
+        run: bundle exec fastlane android ${{ inputs.lane }}
