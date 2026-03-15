@@ -17,7 +17,8 @@ on:
         default: 'develop'
         type: string
 
-permissions: write-all
+permissions:
+  contents: write
 
 jobs:
   distribute:
