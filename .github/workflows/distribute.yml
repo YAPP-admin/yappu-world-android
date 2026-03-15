@@ -20,6 +20,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: fb-distribute-${{ inputs.branch }}-${{ inputs.lane }}
+  cancel-in-progress: false
+
 jobs:
   distribute:
     runs-on: ubuntu-latest
