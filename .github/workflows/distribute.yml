@@ -59,3 +59,7 @@ jobs:
           FIREBASE_CREDENTIAL_PATH: ./credentials.json
           FIREBASE_GROUP: ${{ secrets.FIREBASE_GROUP }}
         run: bundle exec fastlane android ${{ inputs.lane }}
+
+      - name: Clean up Firebase credentials
+        if: always()
+        run: rm -f fastlane/credentials.json
