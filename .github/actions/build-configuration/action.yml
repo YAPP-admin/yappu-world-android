@@ -15,6 +15,10 @@ inputs:
     required: true
   BASE_URL_QA:
     required: true
+  NAVER_MAP_CLIENT_ID:
+    required: true
+  GOOGLE_SERVICES_JSON:
+    required: true
 
 runs:
   using: 'composite' # 외부에서 사용하도록 처리
@@ -38,12 +42,17 @@ runs:
         echo "key.alias=${{ inputs.KEY_ALIAS }}" >> keystore.properties
       shell: bash
 
+    - name: Decode google-services.json
+      run: echo "${{ inputs.GOOGLE_SERVICES_JSON }}" | base64 -d > app/google-services.json
+      shell: bash
+
     - name: Generate local.properties
       run: |
         echo "sdk.dir=/opt/hostedtoolcache/android/sdk" > local.properties
         echo "base.url.debug=${{ inputs.BASE_URL_DEBUG }}" >> local.properties
         echo "base.url.release=${{ inputs.BASE_URL_RELEASE }}" >> local.properties
         echo "base.url.qa=${{ inputs.BASE_URL_QA }}" >> local.properties
+        echo "NAVER_MAP_CLIENT_ID=${{ inputs.NAVER_MAP_CLIENT_ID }}" >> local.properties
       shell: bash
 
 

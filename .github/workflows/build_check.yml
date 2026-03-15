@@ -27,6 +27,8 @@ jobs:
           BASE_URL_DEBUG: ${{ secrets.BASE_URL_DEBUG }}
           BASE_URL_RELEASE: ${{ secrets.BASE_URL_RELEASE }}
           BASE_URL_QA: ${{ secrets.BASE_URL_QA }}
+          NAVER_MAP_CLIENT_ID: ${{ secrets.NAVER_MAP_CLIENT_ID }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
       - id: dekekt
         name: Dekekt
