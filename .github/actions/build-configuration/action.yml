@@ -36,7 +36,7 @@ runs:
 
     - name: Generate keystore.properties
       run: |
-        echo "store.file.path=yapp.keystore" > keystore.properties
+        echo "store.file.path=../yapp.keystore" > keystore.properties
         echo "store.password=${{ inputs.KEYSTORE_PASSWORD }}" >> keystore.properties
         echo "key.password=${{ inputs.KEY_PASSWORD }}" >> keystore.properties
         echo "key.alias=${{ inputs.KEY_ALIAS }}" >> keystore.properties
