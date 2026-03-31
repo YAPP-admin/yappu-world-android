@@ -23,7 +23,7 @@ import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.signup.R
 
 @Composable
-fun PasswordPage(
+internal fun PasswordPage(
     viewModel: PasswordViewModel = hiltViewModel(),
     onPasswordChanged: (String) -> Unit,
     onPasswordConfirmChanged: (String) -> Unit,

@@ -31,7 +31,7 @@ import com.yapp.feature.setting.component.SettingItemMedium
 import com.yapp.core.ui.R as coreR
 
 @Composable
-fun SettingRoute(
+internal fun SettingRoute(
     viewModel: SettingViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
     navigateLogin: () -> Unit,

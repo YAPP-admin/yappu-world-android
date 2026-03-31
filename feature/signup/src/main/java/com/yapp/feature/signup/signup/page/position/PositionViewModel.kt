@@ -9,7 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class PositionViewModel @Inject constructor() : ViewModel() {
+internal class PositionViewModel @Inject constructor() : ViewModel() {
     val store: MviIntentStore<PositionState, PositionIntent, PositionSideEffect> =
         mviIntentStore(
             initialState = PositionState(),

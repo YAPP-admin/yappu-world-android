@@ -39,7 +39,7 @@ import com.yapp.feature.notice.noticedetail.component.NoticeDetailLoading
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @Composable
-fun NoticeDetailRoute(
+internal fun NoticeDetailRoute(
     viewModel: NoticeDetailViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
     navigateLogin: () -> Unit,

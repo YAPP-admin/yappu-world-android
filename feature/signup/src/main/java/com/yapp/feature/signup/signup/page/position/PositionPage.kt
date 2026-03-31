@@ -33,7 +33,7 @@ import com.yapp.feature.signup.signup.page.position.component.PreviousActivityUn
 import com.yapp.model.ActivityUnit
 
 @Composable
-fun PositionPage(
+internal fun PositionPage(
     viewModel: PositionViewModel = hiltViewModel(),
     name: String,
     positions: List<String>,

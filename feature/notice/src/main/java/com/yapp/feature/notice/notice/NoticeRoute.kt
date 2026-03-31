@@ -44,7 +44,7 @@ import com.yapp.feature.notice.notice.component.NoticeCategoryButton
 import com.yapp.model.NoticeType
 
 @Composable
-fun NoticeRoute(
+internal fun NoticeRoute(
     viewModel: NoticeViewModel = hiltViewModel(),
     navigateToNoticeDetail: (String) -> Unit,
     handleException: (Throwable) -> Unit,

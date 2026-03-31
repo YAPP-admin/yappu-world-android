@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class EmailViewModel @Inject constructor(
+internal class EmailViewModel @Inject constructor(
     private val authRepository: AuthRepository,
 ) : ViewModel() {
     val store: MviIntentStore<EmailState, EmailIntent, EmailSideEffect> =

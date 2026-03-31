@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class NoticeDetailViewModel @Inject constructor(
+internal class NoticeDetailViewModel @Inject constructor(
     private val postsRepository: PostsRepository,
 ) : ViewModel() {
     val store: MviIntentStore<NoticeDetailState, NoticeDetailIntent, NoticeDetailSideEffect> =

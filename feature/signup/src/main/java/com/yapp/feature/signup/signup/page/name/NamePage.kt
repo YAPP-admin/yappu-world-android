@@ -21,7 +21,7 @@ import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.signup.R
 
 @Composable
-fun NamePage(
+internal fun NamePage(
     viewModel: NameViewModel = hiltViewModel(),
     onNameChanged: (String) -> Unit,
 ) {

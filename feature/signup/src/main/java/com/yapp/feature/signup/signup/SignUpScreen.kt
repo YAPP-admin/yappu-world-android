@@ -50,7 +50,7 @@ import com.yapp.feature.signup.signup.page.password.PasswordPage
 import com.yapp.feature.signup.signup.page.position.PositionPage
 
 @Composable
-fun SignUpRoute(
+internal fun SignUpRoute(
     viewModel: SignUpViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
     navigateHome: () -> Unit,

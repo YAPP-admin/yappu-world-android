@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor(
+internal class SignUpViewModel @Inject constructor(
     private val signUpUseCase: SignUpUseCase,
     private val getPositionConfigsUseCase: GetPositionConfigsUseCase,
     private val operationsRepository: OperationsRepository,

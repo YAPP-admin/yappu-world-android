@@ -26,7 +26,7 @@ import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.signup.R
 
 @Composable
-fun EmailPage(
+internal fun EmailPage(
     viewModel: EmailViewModel = hiltViewModel(),
     onEmailChanged: (String, Boolean) -> Unit,
     handleException: (Throwable) -> Unit,

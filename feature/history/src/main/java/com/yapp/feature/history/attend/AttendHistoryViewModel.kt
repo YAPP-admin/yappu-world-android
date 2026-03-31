@@ -25,7 +25,7 @@ internal class AttendHistoryViewModel @Inject constructor(
         intent: AttendHistoryIntent,
         state: AttendHistoryState,
         reduce: (AttendHistoryState.() -> AttendHistoryState) -> Unit,
-        sideEffect: (AttendHistorySideEffect) -> Unit
+        postSideEffect: (AttendHistorySideEffect) -> Unit
     ) {
         when(intent) {
             AttendHistoryIntent.OnEntryScreen -> {
@@ -33,7 +33,7 @@ internal class AttendHistoryViewModel @Inject constructor(
                 loadAttendanceHistory(reduce = reduce)
             }
             AttendHistoryIntent.OnClickBackButton -> {
-                sideEffect(AttendHistorySideEffect.NavigateToBack)
+                postSideEffect(AttendHistorySideEffect.NavigateToBack)
             }
         }
     }
