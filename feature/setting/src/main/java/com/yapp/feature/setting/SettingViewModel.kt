@@ -78,7 +78,12 @@ internal class SettingViewModel @Inject constructor(
                 viewModelScope.launch {
                     runCatchingIgnoreCancelled { operationsRepository.getPrivacyPolicyLink() }
                         .onSuccess { postSideEffect(SettingSideEffect.OpenWebBrowser(it)) }
-                        .onFailure { postSideEffect(SettingSideEffect.ShowUrlLoadFailToast) }
+                        .onFailure { e ->
+                            when (e) {
+                                is InvalidTokenException -> postSideEffect(SettingSideEffect.NavigateToLogin)
+                                else -> postSideEffect(SettingSideEffect.ShowUrlLoadFailToast)
+                            }
+                        }
                 }
             }
 
@@ -86,7 +91,12 @@ internal class SettingViewModel @Inject constructor(
                 viewModelScope.launch {
                     runCatchingIgnoreCancelled { operationsRepository.getTermsOfServiceLink() }
                         .onSuccess { postSideEffect(SettingSideEffect.OpenWebBrowser(it)) }
-                        .onFailure { postSideEffect(SettingSideEffect.ShowUrlLoadFailToast) }
+                        .onFailure { e ->
+                            when (e) {
+                                is InvalidTokenException -> postSideEffect(SettingSideEffect.NavigateToLogin)
+                                else -> postSideEffect(SettingSideEffect.ShowUrlLoadFailToast)
+                            }
+                        }
                 }
             }
         }
