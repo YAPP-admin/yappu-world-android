@@ -15,18 +15,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.yapp.core.designsystem.R as coreDesignR
+import com.yapp.core.designsystem.component.background.YappBackground
 import com.yapp.core.designsystem.component.header.YappHeaderActionbar
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.designsystem.component.background.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.history.R
+import com.yapp.feature.history.attend.AttendHistoryIntent as Intent
+import com.yapp.feature.history.attend.AttendHistorySideEffect as SideEffect
 import com.yapp.feature.history.attend.component.AttendanceStatusSection
 import com.yapp.feature.history.attend.component.SessionAttendanceHistory
 import com.yapp.feature.history.attend.component.StatusItem
 import com.yapp.model.AttendanceHistoryList
-import com.yapp.core.designsystem.R as coreDesignR
-import com.yapp.feature.history.attend.AttendHistoryIntent as Intent
-import com.yapp.feature.history.attend.AttendHistorySideEffect as SideEffect
 
 @Composable
 internal fun AttendHistoryRoute(

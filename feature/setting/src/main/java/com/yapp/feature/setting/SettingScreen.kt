@@ -19,16 +19,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.yapp.core.designsystem.component.background.YappBackground
 import com.yapp.core.designsystem.component.control.switches.YappSwitchMedium
 import com.yapp.core.designsystem.component.header.YappHeaderActionbar
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.designsystem.component.background.YappBackground
+import com.yapp.core.ui.R as coreR
 import com.yapp.core.ui.extension.borderBottom
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.core.ui.extension.safeOpenUri
 import com.yapp.feature.setting.component.SettingItemLarge
 import com.yapp.feature.setting.component.SettingItemMedium
-import com.yapp.core.ui.R as coreR
 
 @Composable
 internal fun SettingRoute(

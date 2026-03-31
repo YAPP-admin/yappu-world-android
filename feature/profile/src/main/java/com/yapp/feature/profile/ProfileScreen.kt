@@ -21,15 +21,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.component.alert.YappAlertShortDialog
+import com.yapp.core.designsystem.component.background.YappBackground
 import com.yapp.core.designsystem.component.button.outlined.YappOutlinedSecondaryButtonLarge
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.designsystem.component.background.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.core.ui.extension.safeOpenUri
+import com.yapp.feature.profile.ProfileSideEffect as SideEffect
 import com.yapp.feature.profile.component.ProfileInformationSection
 import com.yapp.feature.profile.component.ProfileSectionItem
 import com.yapp.feature.profile.component.ProfileTopBarSection
-import com.yapp.feature.profile.ProfileSideEffect as SideEffect
 
 @Composable
 internal fun ProfileRoute(
