@@ -14,7 +14,7 @@ import com.yapp.core.designsystem.component.button.solid.YappSolidPrimaryButtonL
 import com.yapp.core.designsystem.component.button.text.YappTextPrimaryButtonSmall
 import com.yapp.core.designsystem.component.input.text.YappInputTextLarge
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.component.BottomDialog
+import com.yapp.core.designsystem.component.bottomsheet.BottomDialog
 import com.yapp.feature.signup.R
 
 @Composable

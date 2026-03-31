@@ -16,14 +16,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.yapp.core.designsystem.component.background.YappBackground
+import com.yapp.core.designsystem.component.input.password.PasswordInputTextLarge
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.component.PasswordInputTextLarge
-import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.signup.R
 
 @Composable
-fun PasswordPage(
+internal fun PasswordPage(
     viewModel: PasswordViewModel = hiltViewModel(),
     onPasswordChanged: (String) -> Unit,
     onPasswordConfirmChanged: (String) -> Unit,

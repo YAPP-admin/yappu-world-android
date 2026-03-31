@@ -22,10 +22,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.yapp.core.designsystem.component.background.YappBackground
 import com.yapp.core.designsystem.component.button.text.YappTextAssistiveButtonSmall
 import com.yapp.core.designsystem.component.gradient.GradientBottom
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.component.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.signup.R
 import com.yapp.feature.signup.signup.page.position.component.ActivityUnitInputSection
@@ -33,7 +33,7 @@ import com.yapp.feature.signup.signup.page.position.component.PreviousActivityUn
 import com.yapp.model.ActivityUnit
 
 @Composable
-fun PositionPage(
+internal fun PositionPage(
     viewModel: PositionViewModel = hiltViewModel(),
     name: String,
     positions: List<String>,

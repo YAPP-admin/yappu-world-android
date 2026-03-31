@@ -15,15 +15,15 @@ fun NavController.navigateToSchedule(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.scheduleNavGraph(
-    handleException: (Throwable) -> Unit,
-    navigateToLogin: () -> Unit,
-    navigateToSessionDetail: (String) -> Unit
+    onHandleException: (Throwable) -> Unit,
+    onNavigateToLogin: () -> Unit,
+    onNavigateToSessionDetail: (String) -> Unit,
 ) {
     composable<ScheduleRoute> {
         ScheduleRoute(
-            handleException = handleException,
-            navigateToLogin = navigateToLogin,
-            navigateToSessionDetail = navigateToSessionDetail
+            handleException = onHandleException,
+            navigateToLogin = onNavigateToLogin,
+            navigateToSessionDetail = onNavigateToSessionDetail,
         )
     }
 }

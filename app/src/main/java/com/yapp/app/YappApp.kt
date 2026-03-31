@@ -29,9 +29,9 @@ import com.yapp.app.official.navigation.YappNavHost
 import com.yapp.app.official.ui.NavigatorState
 import com.yapp.core.designsystem.component.alert.YappAlertLongDialog
 import com.yapp.core.ui.R
-import com.yapp.core.ui.component.BottomNavigationBar
-import com.yapp.core.ui.component.BottomNavigationBarItem
-import com.yapp.core.ui.component.LocalBottomBarHeight
+import com.yapp.core.designsystem.component.navigation.BottomNavigationBar
+import com.yapp.core.designsystem.component.navigation.BottomNavigationBarItem
+import com.yapp.core.designsystem.component.navigation.LocalBottomBarHeight
 import com.yapp.core.ui.extension.safeOpenUri
 import kotlin.reflect.KClass
 

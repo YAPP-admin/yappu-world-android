@@ -15,15 +15,15 @@ fun NavController.navigateToSignUp(step : String, navOptions: NavOptions? = null
 }
 
 fun NavGraphBuilder.signupNavGraph(
-    navigateBack: () -> Unit,
-    navigateHome: () -> Unit,
-    handleException: (Throwable) -> Unit,
+    onNavigateBack: () -> Unit,
+    onNavigateToHome: () -> Unit,
+    onHandleException: (Throwable) -> Unit,
 ) {
     composable<SignUpRoute> {
         SignUpRoute(
-            navigateBack = navigateBack,
-            navigateHome = navigateHome,
-            handleException = handleException,
+            navigateBack = onNavigateBack,
+            navigateHome = onNavigateToHome,
+            handleException = onHandleException,
         )
     }
 }

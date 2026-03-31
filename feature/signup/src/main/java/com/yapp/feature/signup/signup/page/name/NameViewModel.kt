@@ -7,7 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class NameViewModel @Inject constructor() : ViewModel() {
+internal class NameViewModel @Inject constructor() : ViewModel() {
     val store: MviIntentStore<NameState, NameIntent, NameSideEffect> =
         mviIntentStore(
             initialState = NameState(),

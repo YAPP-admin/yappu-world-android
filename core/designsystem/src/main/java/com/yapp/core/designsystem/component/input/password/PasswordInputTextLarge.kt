@@ -1,4 +1,4 @@
-package com.yapp.core.ui.component
+package com.yapp.core.designsystem.component.input.password
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
@@ -23,11 +23,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.yapp.core.designsystem.R
 import com.yapp.core.designsystem.component.input.text.InputTextDefaults
 import com.yapp.core.designsystem.component.input.text.YappBasicInputText
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.R
 
 @Composable
 fun PasswordInputTextLarge(

@@ -28,17 +28,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.yapp.core.designsystem.component.background.YappBackground
 import com.yapp.core.designsystem.component.button.solid.YappSolidPrimaryButtonLarge
 import com.yapp.core.designsystem.component.button.solid.YappSolidPrimaryButtonXLarge
 import com.yapp.core.designsystem.component.button.text.YappTextAssistiveButtonMedium
 import com.yapp.core.designsystem.component.header.YappHeaderActionbar
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.component.YappBackground
+import com.yapp.core.ui.R as coreR
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.core.ui.extension.safeOpenUri
 import com.yapp.core.ui.util.keyboardAsState
 import com.yapp.feature.signup.R
-import com.yapp.core.ui.R as coreR
 import com.yapp.feature.signup.signup.component.SignUpCodeBottomDialog
 import com.yapp.feature.signup.signup.extension.signUpAnimatedContentTransitionSpec
 import com.yapp.feature.signup.signup.page.CompletePage
@@ -50,7 +50,7 @@ import com.yapp.feature.signup.signup.page.password.PasswordPage
 import com.yapp.feature.signup.signup.page.position.PositionPage
 
 @Composable
-fun SignUpRoute(
+internal fun SignUpRoute(
     viewModel: SignUpViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
     navigateHome: () -> Unit,

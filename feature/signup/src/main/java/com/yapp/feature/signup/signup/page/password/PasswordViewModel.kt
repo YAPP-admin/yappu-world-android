@@ -7,7 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class PasswordViewModel @Inject constructor() : ViewModel() {
+internal class PasswordViewModel @Inject constructor() : ViewModel() {
     val store: MviIntentStore<PasswordState, PasswordIntent, PasswordSideEffect> =
         mviIntentStore(
             initialState = PasswordState(),

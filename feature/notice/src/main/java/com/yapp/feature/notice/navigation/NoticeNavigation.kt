@@ -27,25 +27,25 @@ fun NavController.navigateToNoticeDetail(noticeId: String, navOptions: NavOption
 }
 
 fun NavGraphBuilder.noticeNavGraph(
-    navigateToNoticeDetail: (String) -> Unit,
-    handleException: (Throwable) -> Unit,
-    navigateToLogin: () -> Unit,
+    onNavigateToNoticeDetail: (String) -> Unit,
+    onHandleException: (Throwable) -> Unit,
+    onNavigateToLogin: () -> Unit,
 ) {
     composable<NoticeRoute> {
         NoticeRoute(
             navigateToNoticeDetail = { noticeId ->
-                navigateToNoticeDetail(noticeId)
+                onNavigateToNoticeDetail(noticeId)
             },
-            handleException = handleException,
-            navigateToLogin = navigateToLogin,
+            handleException = onHandleException,
+            navigateToLogin = onNavigateToLogin,
         )
     }
 }
 
 fun NavGraphBuilder.noticeDetailNavGraph(
-    navigateBack: () -> Unit,
-    navigateLogin: () -> Unit,
-    handleException: (Throwable) -> Unit,
+    onNavigateBack: () -> Unit,
+    onNavigateToLogin: () -> Unit,
+    onHandleException: (Throwable) -> Unit,
 ) {
     composable<NoticeDetailRoute>(
         deepLinks = listOf(
@@ -56,9 +56,10 @@ fun NavGraphBuilder.noticeDetailNavGraph(
     ) { backStackEntry ->
         val noticeId = backStackEntry.toRoute<NoticeDetailRoute>().id
         NoticeDetailRoute(
-            noticeId = noticeId, navigateBack = navigateBack,
-            navigateLogin = navigateLogin,
-            handleException = handleException,
+            noticeId = noticeId,
+            navigateBack = onNavigateBack,
+            navigateLogin = onNavigateToLogin,
+            handleException = onHandleException,
         )
     }
 }

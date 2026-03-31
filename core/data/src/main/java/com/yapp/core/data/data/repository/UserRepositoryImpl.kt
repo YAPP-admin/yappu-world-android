@@ -13,7 +13,7 @@ internal class UserRepositoryImpl @Inject constructor(
     private val userApi: UserApi,
     private val securityPreferences: SecurityPreferences,
 ): UserRepository {
-    override suspend fun getUserAccessToken(): Flow<String> {
+    override fun getUserAccessToken(): Flow<String> {
         return securityPreferences.flowAccessToken()
     }
 
@@ -22,7 +22,7 @@ internal class UserRepositoryImpl @Inject constructor(
         securityPreferences.clearAll()
     }
 
-    override suspend fun getUserProfile() = flow<UserInfo> {  emit(userApi.getUserProfile().toModel())}
+    override fun getUserProfile() = flow<UserInfo> { emit(userApi.getUserProfile().toModel()) }
     override fun getUserActivityHistories() = flow {
         emit(userApi.getUserActivityHistories().toModel())
     }

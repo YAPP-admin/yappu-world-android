@@ -28,11 +28,11 @@ internal class PreviousHistoryViewModel @Inject constructor(
         intent: PreviousHistoryIntent,
         state: PreviousHistoryState,
         reduce: (PreviousHistoryState.() -> PreviousHistoryState) -> Unit,
-        sideEffect: (PreviousHistorySideEffect) -> Unit
+        postSideEffect: (PreviousHistorySideEffect) -> Unit
     ) {
         when (intent) {
             PreviousHistoryIntent.OnClickBackButton -> {
-                sideEffect(PreviousHistorySideEffect.Finish)
+                postSideEffect(PreviousHistorySideEffect.Finish)
             }
             PreviousHistoryIntent.OnEntryScreen -> {
                 userRepository.getUserActivityHistories().map { result ->
@@ -49,11 +49,11 @@ internal class PreviousHistoryViewModel @Inject constructor(
                 }.catch {
                     when (it) {
                         is InvalidTokenException -> {
-                            sideEffect(PreviousHistorySideEffect.NavigateLogin)
+                            postSideEffect(PreviousHistorySideEffect.NavigateLogin)
                         }
 
                         else -> {
-                            sideEffect(PreviousHistorySideEffect.HandleException(it))
+                            postSideEffect(PreviousHistorySideEffect.HandleException(it))
                             it.record()
                         }
                     }

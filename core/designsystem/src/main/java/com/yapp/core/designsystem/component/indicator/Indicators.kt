@@ -1,4 +1,4 @@
-package com.yapp.core.ui.component
+package com.yapp.core.designsystem.component.indicator
 
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.layout.Arrangement

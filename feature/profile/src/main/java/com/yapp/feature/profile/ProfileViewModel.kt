@@ -36,12 +36,12 @@ internal class ProfileViewModel @Inject constructor(
         intent: ProfileIntent,
         state: ProfileState,
         reduce: (ProfileState.() -> ProfileState) -> Unit,
-        sideEffect: (ProfileSideEffect) -> Unit
+        postSideEffect: (ProfileSideEffect) -> Unit
     ) {
         when (intent) {
             ProfileIntent.EntryScreen -> {
                 onCollectGetUserProfile(
-                    postSideEffect = sideEffect,
+                    postSideEffect = postSideEffect,
                     reduce = reduce
                 )
             }
@@ -54,7 +54,7 @@ internal class ProfileViewModel @Inject constructor(
 
             ProfileIntent.ClickUsage -> {
                 viewModelScope.launch {
-                    updateUrl(sideEffect)
+                    updateUrl(postSideEffect)
                 }
             }
 
@@ -65,7 +65,7 @@ internal class ProfileViewModel @Inject constructor(
             }
 
             ProfileIntent.ClickSettings -> {
-                sideEffect(ProfileSideEffect.NavigateToSetting)
+                postSideEffect(ProfileSideEffect.NavigateToSetting)
             }
 
             ProfileIntent.ClickWithdraw -> {
@@ -75,11 +75,11 @@ internal class ProfileViewModel @Inject constructor(
             }
 
             ProfileIntent.ClickAttendHistory -> {
-                sideEffect(ProfileSideEffect.NavigateToAttendHistory)
+                postSideEffect(ProfileSideEffect.NavigateToAttendHistory)
             }
 
             ProfileIntent.ClickPreviousHistory -> {
-                sideEffect(ProfileSideEffect.NavigateToPreviousHistory)
+                postSideEffect(ProfileSideEffect.NavigateToPreviousHistory)
             }
 
             ProfileIntent.CancelLogout, ProfileIntent.DismissLogout -> {
@@ -91,7 +91,7 @@ internal class ProfileViewModel @Inject constructor(
             ProfileIntent.LaunchedLogout -> {
                 viewModelScope.launch {
                     logoutUseCase().onSuccess {
-                        sideEffect(ProfileSideEffect.NavigateToLogin)
+                        postSideEffect(ProfileSideEffect.NavigateToLogin)
                     }
                 }
             }
@@ -100,10 +100,10 @@ internal class ProfileViewModel @Inject constructor(
                 viewModelScope.launch {
                     userDeleteAccountUseCase()
                         .onSuccess {
-                            sideEffect(ProfileSideEffect.NavigateToLogin)
+                            postSideEffect(ProfileSideEffect.NavigateToLogin)
                         }
                         .onFailure {
-                            sideEffect(ProfileSideEffect.HandleException(it))
+                            postSideEffect(ProfileSideEffect.HandleException(it))
                         }
                 }
             }
@@ -140,9 +140,14 @@ internal class ProfileViewModel @Inject constructor(
         }
     }
 
-    private suspend fun updateUrl(sideEffect: (ProfileSideEffect) -> Unit) {
+    private suspend fun updateUrl(postSideEffect: (ProfileSideEffect) -> Unit) {
         runCatchingIgnoreCancelled { operationsRepository.getUsageInquiryLink() }
-            .onSuccess { sideEffect(ProfileSideEffect.OpenWebBrowser(it)) }
-            .onFailure { sideEffect(ProfileSideEffect.ShowUrlLoadFailToast) }
+            .onSuccess { postSideEffect(ProfileSideEffect.OpenWebBrowser(it)) }
+            .onFailure { e ->
+                when (e) {
+                    is InvalidTokenException -> postSideEffect(ProfileSideEffect.NavigateToLogin)
+                    else -> postSideEffect(ProfileSideEffect.ShowUrlLoadFailToast)
+                }
+            }
     }
 }

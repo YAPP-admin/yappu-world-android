@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.component.YappSkeleton
+import com.yapp.core.designsystem.component.skeleton.YappSkeleton
 
 
 @Composable

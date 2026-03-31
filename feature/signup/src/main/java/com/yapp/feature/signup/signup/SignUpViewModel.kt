@@ -2,6 +2,8 @@ package com.yapp.feature.signup.signup
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.navigation.toRoute
+import com.yapp.feature.signup.navigation.SignUpRoute
 import androidx.lifecycle.viewModelScope
 import com.yapp.core.common.android.record
 import com.yapp.core.ui.mvi.MviIntentStore
@@ -9,13 +11,12 @@ import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.OperationsRepository
 import com.yapp.domain.GetPositionConfigsUseCase
 import com.yapp.domain.SignUpUseCase
+import com.yapp.domain.runCatchingIgnoreCancelled
 import com.yapp.model.SignUpInfo
 import com.yapp.model.SignUpResult
 import com.yapp.model.exceptions.SignUpCodeException
 import com.yapp.model.exceptions.UnprocessedSignUpException
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
@@ -24,21 +25,15 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor(
+internal class SignUpViewModel @Inject constructor(
     private val signUpUseCase: SignUpUseCase,
     private val getPositionConfigsUseCase: GetPositionConfigsUseCase,
     private val operationsRepository: OperationsRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private var signUpInfo = SignUpInfo()
-    private var inquiryLink: String? = null
 
-    companion object {
-        private const val STEP_ID_KEY = "currentStep"
-    }
-
-    private val step: String =
-        requireNotNull(savedStateHandle.get<String>(STEP_ID_KEY)) { "Name" }
+    private val step: String = savedStateHandle.toRoute<SignUpRoute>().currentStep
 
 
     val store: MviIntentStore<SignUpState, SignUpIntent, SignUpSideEffect> =
@@ -65,10 +60,6 @@ class SignUpViewModel @Inject constructor(
                         it.record()
                     }
                     .launchIn(viewModelScope)
-
-                viewModelScope.launch {
-                    updateUrl()
-                }
             }
 
             SignUpIntent.BackPressed,
@@ -191,12 +182,9 @@ class SignUpViewModel @Inject constructor(
 
             SignUpIntent.ClickPendingButton -> {
                 viewModelScope.launch {
-                    updateUrl()
-                    inquiryLink?.let { inquiryLink ->
-                        postSideEffect(SignUpSideEffect.OpenWebBrowser(link = inquiryLink))
-                    } ?: run {
-                        postSideEffect(SignUpSideEffect.ShowUrlLoadFailToast)
-                    }
+                    runCatchingIgnoreCancelled { operationsRepository.getUsageInquiryLink() }
+                        .onSuccess { postSideEffect(SignUpSideEffect.OpenWebBrowser(link = it)) }
+                        .onFailure { postSideEffect(SignUpSideEffect.ShowUrlLoadFailToast) }
                 }
             }
 
@@ -252,15 +240,4 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    private suspend fun updateUrl() = coroutineScope {
-        val inquiryDeferred = async {
-            if (inquiryLink == null) {
-                runCatching { operationsRepository.getUsageInquiryLink() }
-            } else {
-                Result.success(inquiryLink)
-            }
-        }
-
-        inquiryLink = inquiryDeferred.await().getOrNull()
-    }
 }

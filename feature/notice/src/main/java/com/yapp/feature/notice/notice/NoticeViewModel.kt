@@ -15,8 +15,8 @@ import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
-class NoticeViewModel @Inject constructor(
-    private val getNoticeListRepository: PostsRepository,
+internal class NoticeViewModel @Inject constructor(
+    private val postsRepository: PostsRepository,
 ) : ViewModel() {
     val store: MviIntentStore<NoticeState, NoticeIntent, NoticeSideEffect> =
         mviIntentStore(
@@ -53,7 +53,7 @@ class NoticeViewModel @Inject constructor(
             reduce { copy(isNoticesLoading = true) }
         }
 
-        getNoticeListRepository
+        postsRepository
             .getNoticeList(
                 state.notices.lastNoticeId.ifEmpty { null },
                 30,
@@ -77,7 +77,7 @@ class NoticeViewModel @Inject constructor(
         noticeType: NoticeType,
     ) {
         reduce { copy(noticeType = noticeType, isNoticesLoading = true) }
-        getNoticeListRepository
+        postsRepository
             .getNoticeList(null, 30, noticeType.apiValue)
             .onEach { noticeList ->
                 reduce { copy(notices = noticeList, isNoticesLoading = false) }

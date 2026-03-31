@@ -19,7 +19,7 @@ import com.yapp.core.ui.R as coreR
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.component.YappBackground
+import com.yapp.core.designsystem.component.background.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.core.ui.extension.safeOpenUri
 import com.yapp.feature.login.component.AgreementBottomDialog

@@ -34,111 +34,111 @@ fun YappNavHost(
         popExitTransition = { yappPopExitTransition() },
     ) {
         loginNavGraph(
-            navigateSignUpName = { navigator.navigateSignUpScreen(SignUpStep.Name.name) },
-            navigateSignUpPending = { navigator.navigateSignUpScreen(SignUpStep.Pending.name) },
-            navigateSignUpReject = { navigator.navigateSignUpScreen(SignUpStep.Reject.name) },
-            navigateHome = {
+            onNavigateToSignUpName = { navigator.navigateSignUpScreen(SignUpStep.Name.name) },
+            onNavigateToSignUpPending = { navigator.navigateSignUpScreen(SignUpStep.Pending.name) },
+            onNavigateToSignUpReject = { navigator.navigateSignUpScreen(SignUpStep.Reject.name) },
+            onNavigateToHome = {
                 navigator.navigateHomeScreen(
                     navOptions = clearBackStackNavOptions
                 )
             },
-            handleException = handleException,
+            onHandleException = handleException,
         )
         signupNavGraph(
-            navigateBack = { navigator.popBackStack() },
-            navigateHome = {
+            onNavigateBack = { navigator.popBackStack() },
+            onNavigateToHome = {
                 navigator.navigateHomeScreen(
                     navOptions = clearBackStackNavOptions
                 )
             },
-            handleException = handleException,
+            onHandleException = handleException,
         )
         homeNavGraph(
-            navigateLogin = {
+            onNavigateToLogin = {
                 navigator.navigateLoginScreen(
                     navOptions = clearBackStackNavOptions
                 )
             },
-            navigateSchedule = {
+            onNavigateToSchedule = {
                 navigator.navigateToTopLevelDestination(TopLevelDestination.SCHEDULE)
             },
-            navigateToNotice = {
+            onNavigateToNotice = {
                 navigator.navigateNoticeDetail(it)
             },
-            navigateToSessionDetail = { sessionId ->
+            onNavigateToSessionDetail = { sessionId ->
                 navigator.navigateSessionScreen(sessionId)
             },
-            navigateAttendanceHistory = {
+            onNavigateToAttendanceHistory = {
                 navigator.navigateAttendance()
             },
-            handleException = handleException,
+            onHandleException = handleException,
         )
         settingNavGraph(
-            navigateLogin = {
+            onNavigateToLogin = {
                 navigator.navigateLoginScreen(
                     navOptions = clearBackStackNavOptions
                 )
             },
-            navigateBack = { navigator.popBackStack() },
-            handleException = handleException,
+            onNavigateBack = { navigator.popBackStack() },
+            onHandleException = handleException,
         )
         scheduleNavGraph(
-            navigateToLogin = {
+            onNavigateToLogin = {
                 navigator.navigateLoginScreen(
                     navOptions = clearBackStackNavOptions
                 )
             },
-            handleException = handleException,
-            navigateToSessionDetail = { sessionId ->
+            onHandleException = handleException,
+            onNavigateToSessionDetail = { sessionId ->
                 navigator.navigateSessionScreen(sessionId)
-            }
+            },
         )
         noticeNavGraph(
-            navigateToNoticeDetail = { noticeId ->
+            onNavigateToNoticeDetail = { noticeId ->
                 navigator.navigateNoticeDetail(noticeId)
             },
-            navigateToLogin = {
+            onNavigateToLogin = {
                 navigator.navigateLoginScreen(
                     navOptions = clearBackStackNavOptions
                 )
             },
-            handleException = handleException,
+            onHandleException = handleException,
         )
         noticeDetailNavGraph(
-            navigateBack = { navigator.popBackStack() },
-            navigateLogin = {
+            onNavigateBack = { navigator.popBackStack() },
+            onNavigateToLogin = {
                 navigator.navigateLoginScreen(
                     navOptions = clearBackStackNavOptions
                 )
             },
-            handleException = handleException,
+            onHandleException = handleException,
         )
         profileNavGraph(
             onNavigateToSetting = { navigator.navigateSettingScreen() },
             onNavigateToLogin = { navigator.navigateLoginScreen(clearBackStackNavOptions) },
             onNavigateToPreviousHistory = { navigator.navigatePreviousHistory() },
             onNavigateToAttendHistory = { navigator.navigateAttendance() },
-            handleException = handleException,
+            onHandleException = handleException,
         )
         attendanceHistoryNavGraph(
-            navigateToBack = { navigator.popBackStack() }
+            onNavigateBack = { navigator.popBackStack() },
         )
         previousHistoryNavGraph(
-            navigateToBack = { navigator.popBackStack() },
-            navigateToLogin = { navigator.navigateLoginScreen(clearBackStackNavOptions) },
-            handleException = handleException,
+            onNavigateBack = { navigator.popBackStack() },
+            onNavigateToLogin = { navigator.navigateLoginScreen(clearBackStackNavOptions) },
+            onHandleException = handleException,
         )
         sessionNavGraph(
-            navigateToBack = { navigator.popBackStack() },
-            navigateToLogin = {
+            onNavigateBack = { navigator.popBackStack() },
+            onNavigateToLogin = {
                 navigator.navigateLoginScreen(
                     navOptions = clearBackStackNavOptions
                 )
             },
-            navigateToNoticeDetail = { noticeId ->
+            onNavigateToNoticeDetail = { noticeId ->
                 navigator.navigateNoticeDetail(noticeId)
             },
-            handleException = handleException,
+            onHandleException = handleException,
         )
     }
 }

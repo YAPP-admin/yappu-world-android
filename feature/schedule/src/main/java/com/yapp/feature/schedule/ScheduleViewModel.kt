@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ScheduleViewModel @Inject constructor(
+internal class ScheduleViewModel @Inject constructor(
     private val scheduleRepository: ScheduleRepository,
 ) : ViewModel() {
 
