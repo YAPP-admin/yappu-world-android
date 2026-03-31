@@ -15,15 +15,15 @@ fun NavController.navigateToSetting(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.settingNavGraph(
-    navigateLogin: () -> Unit,
-    navigateBack: () -> Unit,
-    handleException: (Throwable) -> Unit,
+    onNavigateToLogin: () -> Unit,
+    onNavigateBack: () -> Unit,
+    onHandleException: (Throwable) -> Unit,
 ) {
     composable<SettingRoute> {
         SettingRoute(
-            navigateBack = navigateBack,
-            navigateLogin = navigateLogin,
-            handleException = handleException,
+            navigateBack = onNavigateBack,
+            navigateLogin = onNavigateToLogin,
+            handleException = onHandleException,
         )
     }
 }

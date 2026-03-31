@@ -15,21 +15,21 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.homeNavGraph(
-    navigateLogin : () -> Unit,
-    navigateSchedule: () -> Unit,
-    navigateAttendanceHistory: () -> Unit,
-    navigateToNotice: (id: String) -> Unit,
-    navigateToSessionDetail: (String) -> Unit,
-    handleException: (Throwable) -> Unit,
+    onNavigateToLogin: () -> Unit,
+    onNavigateToSchedule: () -> Unit,
+    onNavigateToAttendanceHistory: () -> Unit,
+    onNavigateToNotice: (id: String) -> Unit,
+    onNavigateToSessionDetail: (String) -> Unit,
+    onHandleException: (Throwable) -> Unit,
 ) {
     composable<HomeRoute> {
         HomeRoute(
-            navigateToLogin = navigateLogin,
-            navigateToSchedule = navigateSchedule,
-            navigateToAttendanceHistory = navigateAttendanceHistory,
-            navigateToNotice = navigateToNotice,
-            navigateToSessionDetail = navigateToSessionDetail,
-            handleException = handleException,
+            navigateToLogin = onNavigateToLogin,
+            navigateToSchedule = onNavigateToSchedule,
+            navigateToAttendanceHistory = onNavigateToAttendanceHistory,
+            navigateToNotice = onNavigateToNotice,
+            navigateToSessionDetail = onNavigateToSessionDetail,
+            handleException = onHandleException,
         )
     }
 }

@@ -19,7 +19,7 @@ fun NavGraphBuilder.profileNavGraph(
     onNavigateToAttendHistory: () -> Unit,
     onNavigateToPreviousHistory: () -> Unit,
     onNavigateToLogin: () -> Unit,
-    handleException: (Throwable) -> Unit,
+    onHandleException: (Throwable) -> Unit,
 ) {
     composable<ProfileRoute> {
         ProfileRoute(
@@ -27,7 +27,7 @@ fun NavGraphBuilder.profileNavGraph(
             onNavigateToAttendHistory = onNavigateToAttendHistory,
             onNavigateToLogin = onNavigateToLogin,
             onNavigateToPreviousHistory = onNavigateToPreviousHistory,
-            handleException = handleException,
+            handleException = onHandleException,
         )
     }
 }

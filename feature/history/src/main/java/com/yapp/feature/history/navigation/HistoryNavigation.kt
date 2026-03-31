@@ -22,23 +22,23 @@ fun NavController.navigateToPreviousHistory() {
 }
 
 fun NavGraphBuilder.attendanceHistoryNavGraph(
-    navigateToBack: () -> Unit
+    onNavigateBack: () -> Unit,
 ) {
     composable<AttendanceHistory> {
-        AttendHistoryRoute(navigateToBack = navigateToBack)
+        AttendHistoryRoute(navigateToBack = onNavigateBack)
     }
 }
 
 fun NavGraphBuilder.previousHistoryNavGraph(
-    navigateToBack: () -> Unit,
-    navigateToLogin: () -> Unit,
-    handleException: (Throwable) -> Unit,
+    onNavigateBack: () -> Unit,
+    onNavigateToLogin: () -> Unit,
+    onHandleException: (Throwable) -> Unit,
 ) {
     composable<PreviousHistory> {
         PreviousHistoryRoute(
-            navigateToBack = navigateToBack,
-            navigateToLogin = navigateToLogin,
-            handleException = handleException,
+            navigateToBack = onNavigateBack,
+            navigateToLogin = onNavigateToLogin,
+            handleException = onHandleException,
         )
     }
 }

@@ -15,19 +15,19 @@ fun NavController.navigateToLogin(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.loginNavGraph(
-    navigateSignUpName: () -> Unit,
-    navigateSignUpPending: () -> Unit,
-    navigateSignUpReject: () -> Unit,
-    navigateHome: () -> Unit,
-    handleException: (Throwable) -> Unit,
+    onNavigateToSignUpName: () -> Unit,
+    onNavigateToSignUpPending: () -> Unit,
+    onNavigateToSignUpReject: () -> Unit,
+    onNavigateToHome: () -> Unit,
+    onHandleException: (Throwable) -> Unit,
 ) {
     composable<LoginRoute> {
         LoginRoute(
-            navigateToSignupName = navigateSignUpName,
-            navigateToSignupPending = navigateSignUpPending,
-            navigateToSignupReject = navigateSignUpReject,
-            navigateToHome = navigateHome,
-            handleException = handleException,
+            navigateToSignupName = onNavigateToSignUpName,
+            navigateToSignupPending = onNavigateToSignUpPending,
+            navigateToSignupReject = onNavigateToSignUpReject,
+            navigateToHome = onNavigateToHome,
+            handleException = onHandleException,
         )
     }
 }
