@@ -143,6 +143,11 @@ internal class ProfileViewModel @Inject constructor(
     private suspend fun updateUrl(postSideEffect: (ProfileSideEffect) -> Unit) {
         runCatchingIgnoreCancelled { operationsRepository.getUsageInquiryLink() }
             .onSuccess { postSideEffect(ProfileSideEffect.OpenWebBrowser(it)) }
-            .onFailure { postSideEffect(ProfileSideEffect.ShowUrlLoadFailToast) }
+            .onFailure { e ->
+                when (e) {
+                    is InvalidTokenException -> postSideEffect(ProfileSideEffect.NavigateToLogin)
+                    else -> postSideEffect(ProfileSideEffect.ShowUrlLoadFailToast)
+                }
+            }
     }
 }
