@@ -2,6 +2,8 @@ package com.yapp.feature.signup.signup
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.navigation.toRoute
+import com.yapp.feature.signup.navigation.SignUpRoute
 import androidx.lifecycle.viewModelScope
 import com.yapp.core.common.android.record
 import com.yapp.core.ui.mvi.MviIntentStore
@@ -31,12 +33,7 @@ internal class SignUpViewModel @Inject constructor(
 ) : ViewModel() {
     private var signUpInfo = SignUpInfo()
 
-    companion object {
-        private const val STEP_ID_KEY = "currentStep"
-    }
-
-    private val step: String =
-        requireNotNull(savedStateHandle.get<String>(STEP_ID_KEY)) { "Name" }
+    private val step: String = savedStateHandle.toRoute<SignUpRoute>().currentStep
 
 
     val store: MviIntentStore<SignUpState, SignUpIntent, SignUpSideEffect> =
