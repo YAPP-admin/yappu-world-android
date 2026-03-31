@@ -27,7 +27,6 @@ internal class HomeViewModel @Inject constructor(
     private val operationsRepository: OperationsRepository,
 ) : ViewModel() {
     private var isInitialized = false
-    private var basicRuleLink: String? = null
 
     val store: MviIntentStore<HomeState, HomeIntent, HomeSideEffect> =
         mviIntentStore(
@@ -63,15 +62,9 @@ internal class HomeViewModel @Inject constructor(
             HomeIntent.ClickShowAllSession -> postSideEffect(HomeSideEffect.NavigateToSchedule)
             HomeIntent.ClickBasicRuleLink -> {
                 viewModelScope.launch {
-                    basicRuleLink?.let {
-                        postSideEffect(HomeSideEffect.OpenUrl(it))
-                    } ?: run {
-                        runCatching { operationsRepository.getBasicRuleLink() }
-                            .onSuccess {
-                                basicRuleLink = it
-                                postSideEffect(HomeSideEffect.OpenUrl(it))
-                            }.onFailure { postSideEffect(HomeSideEffect.ShowToast(it.message.orEmpty())) }
-                    }
+                    runCatchingIgnoreCancelled { operationsRepository.getBasicRuleLink() }
+                        .onSuccess { postSideEffect(HomeSideEffect.OpenUrl(it)) }
+                        .onFailure { postSideEffect(HomeSideEffect.ShowToast(it.message.orEmpty())) }
                 }
             }
             HomeIntent.ClickRequestAttendCode -> {

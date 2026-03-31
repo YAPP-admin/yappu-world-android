@@ -10,8 +10,6 @@ import com.yapp.dataapi.OperationsRepository
 import com.yapp.domain.runCatchingIgnoreCancelled
 import com.yapp.model.exceptions.InvalidTokenException
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,10 +18,6 @@ internal class SettingViewModel @Inject constructor(
     private val alarmRepository: AlarmRepository,
     private val operationsRepository: OperationsRepository,
 ) : ViewModel() {
-    private var privacyPolicyLink: String? = null
-    private var termsLink: String? = null
-    private var inquiryLink: String? = null
-
     val store: MviIntentStore<SettingState, SettingIntent, SettingSideEffect> =
         mviIntentStore(
             initialState = SettingState(),
@@ -54,8 +48,6 @@ internal class SettingViewModel @Inject constructor(
                             }
                         }
                     }
-
-                    updateUrl()
                 }
             }
 
@@ -84,54 +76,20 @@ internal class SettingViewModel @Inject constructor(
 
             SettingIntent.ClickPrivacyPolicyItem -> {
                 viewModelScope.launch {
-                    updateUrl()
-                    privacyPolicyLink?.let {
-                        postSideEffect(SettingSideEffect.OpenWebBrowser(it))
-                    } ?: run {
-                        postSideEffect(SettingSideEffect.ShowUrlLoadFailToast)
-                    }
+                    runCatchingIgnoreCancelled { operationsRepository.getPrivacyPolicyLink() }
+                        .onSuccess { postSideEffect(SettingSideEffect.OpenWebBrowser(it)) }
+                        .onFailure { postSideEffect(SettingSideEffect.ShowUrlLoadFailToast) }
                 }
             }
 
             SettingIntent.ClickTermsItem -> {
                 viewModelScope.launch {
-                    updateUrl()
-                    termsLink?.let {
-                        postSideEffect(SettingSideEffect.OpenWebBrowser(it))
-                    } ?: run {
-                        postSideEffect(SettingSideEffect.ShowUrlLoadFailToast)
-                    }
+                    runCatchingIgnoreCancelled { operationsRepository.getTermsOfServiceLink() }
+                        .onSuccess { postSideEffect(SettingSideEffect.OpenWebBrowser(it)) }
+                        .onFailure { postSideEffect(SettingSideEffect.ShowUrlLoadFailToast) }
                 }
             }
         }
-    }
-
-    private suspend fun updateUrl() = coroutineScope {
-        val privacyPolicyDeferred = async {
-            if (privacyPolicyLink == null) {
-                runCatchingIgnoreCancelled { operationsRepository.getPrivacyPolicyLink() }
-            } else {
-                Result.success(privacyPolicyLink)
-            }
-        }
-        val termsDeferred = async {
-            if (termsLink == null) {
-                runCatchingIgnoreCancelled { operationsRepository.getTermsOfServiceLink() }
-            } else {
-                Result.success(termsLink)
-            }
-        }
-        val inquiryDeferred = async {
-            if (inquiryLink == null) {
-                runCatchingIgnoreCancelled { operationsRepository.getUsageInquiryLink() }
-            } else {
-                Result.success(inquiryLink)
-            }
-        }
-
-        privacyPolicyLink = privacyPolicyDeferred.await().getOrNull()
-        termsLink = termsDeferred.await().getOrNull()
-        inquiryLink = inquiryDeferred.await().getOrNull()
     }
 
 }

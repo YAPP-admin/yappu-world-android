@@ -14,8 +14,6 @@ import com.yapp.model.exceptions.SignUpPendingException
 import com.yapp.model.exceptions.UserNotFoundForEmailException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import com.yapp.domain.runCatchingIgnoreCancelled
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,9 +22,6 @@ internal class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val operationsRepository: OperationsRepository,
 ) : ViewModel() {
-    private var privacyPolicyLink: String? = null
-    private var termsLink: String? = null
-
     val store: MviIntentStore<LoginState, LoginIntent, LoginSideEffect> =
         mviIntentStore(
             initialState = LoginState(),
@@ -87,30 +82,20 @@ internal class LoginViewModel @Inject constructor(
 
             LoginIntent.ClickTerms -> {
                 viewModelScope.launch {
-                    updateUrl()
-                    termsLink?.let {
-                        postSideEffect(LoginSideEffect.OpenWebBrowser(it))
-                    } ?: run {
-                        postSideEffect(LoginSideEffect.ShowUrlLoadFailToast)
-                    }
+                    runCatchingIgnoreCancelled { operationsRepository.getTermsOfServiceLink() }
+                        .onSuccess { postSideEffect(LoginSideEffect.OpenWebBrowser(it)) }
+                        .onFailure { postSideEffect(LoginSideEffect.ShowUrlLoadFailToast) }
                 }
             }
             LoginIntent.ClickPersonalPolicy -> {
                 viewModelScope.launch {
-                    updateUrl()
-                    privacyPolicyLink?.let {
-                        postSideEffect(LoginSideEffect.OpenWebBrowser(it))
-                    } ?: run {
-                        postSideEffect(LoginSideEffect.ShowUrlLoadFailToast)
-                    }
+                    runCatchingIgnoreCancelled { operationsRepository.getPrivacyPolicyLink() }
+                        .onSuccess { postSideEffect(LoginSideEffect.OpenWebBrowser(it)) }
+                        .onFailure { postSideEffect(LoginSideEffect.ShowUrlLoadFailToast) }
                 }
             }
 
-            LoginIntent.EnterLoginScreen -> {
-                viewModelScope.launch {
-                    updateUrl()
-                }
-            }
+            LoginIntent.EnterLoginScreen -> Unit
         }
     }
 
@@ -168,24 +153,5 @@ internal class LoginViewModel @Inject constructor(
         }
     }
 
-    private suspend fun updateUrl() = coroutineScope {
-        val privacyPolicyDeferred = async {
-            if (privacyPolicyLink == null) {
-                runCatchingIgnoreCancelled { operationsRepository.getPrivacyPolicyLink() }
-            } else {
-                Result.success(privacyPolicyLink)
-            }
-        }
-        val termsDeferred = async {
-            if (termsLink == null) {
-                runCatchingIgnoreCancelled { operationsRepository.getTermsOfServiceLink() }
-            } else {
-                Result.success(termsLink)
-            }
-        }
-
-        privacyPolicyLink = privacyPolicyDeferred.await().getOrNull()
-        termsLink = termsDeferred.await().getOrNull()
-    }
 }
 

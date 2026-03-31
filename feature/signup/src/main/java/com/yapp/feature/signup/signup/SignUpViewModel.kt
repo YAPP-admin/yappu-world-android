@@ -15,8 +15,6 @@ import com.yapp.model.SignUpResult
 import com.yapp.model.exceptions.SignUpCodeException
 import com.yapp.model.exceptions.UnprocessedSignUpException
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
@@ -32,7 +30,6 @@ internal class SignUpViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private var signUpInfo = SignUpInfo()
-    private var inquiryLink: String? = null
 
     companion object {
         private const val STEP_ID_KEY = "currentStep"
@@ -66,10 +63,6 @@ internal class SignUpViewModel @Inject constructor(
                         it.record()
                     }
                     .launchIn(viewModelScope)
-
-                viewModelScope.launch {
-                    updateUrl()
-                }
             }
 
             SignUpIntent.BackPressed,
@@ -192,12 +185,9 @@ internal class SignUpViewModel @Inject constructor(
 
             SignUpIntent.ClickPendingButton -> {
                 viewModelScope.launch {
-                    updateUrl()
-                    inquiryLink?.let { inquiryLink ->
-                        postSideEffect(SignUpSideEffect.OpenWebBrowser(link = inquiryLink))
-                    } ?: run {
-                        postSideEffect(SignUpSideEffect.ShowUrlLoadFailToast)
-                    }
+                    runCatchingIgnoreCancelled { operationsRepository.getUsageInquiryLink() }
+                        .onSuccess { postSideEffect(SignUpSideEffect.OpenWebBrowser(link = it)) }
+                        .onFailure { postSideEffect(SignUpSideEffect.ShowUrlLoadFailToast) }
                 }
             }
 
@@ -253,15 +243,4 @@ internal class SignUpViewModel @Inject constructor(
         }
     }
 
-    private suspend fun updateUrl() = coroutineScope {
-        val inquiryDeferred = async {
-            if (inquiryLink == null) {
-                runCatchingIgnoreCancelled { operationsRepository.getUsageInquiryLink() }
-            } else {
-                Result.success(inquiryLink)
-            }
-        }
-
-        inquiryLink = inquiryDeferred.await().getOrNull()
-    }
 }
