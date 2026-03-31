@@ -28,7 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.component.header.YappDefaultHeader
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.component.YappBackground
+import com.yapp.core.designsystem.component.background.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.home.component.CurrentSessionSection
 import com.yapp.feature.home.component.FAQSection

@@ -32,7 +32,7 @@ import com.yapp.core.designsystem.component.chip.YappChipSmall
 import com.yapp.core.designsystem.component.gradient.GradientBottom
 import com.yapp.core.designsystem.component.header.YappHeaderActionbar
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.component.YappBackground
+import com.yapp.core.designsystem.component.background.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.notice.R
 import com.yapp.feature.notice.noticedetail.component.NoticeDetailLoading

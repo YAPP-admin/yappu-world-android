@@ -46,8 +46,8 @@ import com.yapp.core.designsystem.component.chip.ChipColorType
 import com.yapp.core.designsystem.component.chip.YappChipSmall
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.component.LocalBottomBarHeight
-import com.yapp.core.ui.component.YappBackground
+import com.yapp.core.designsystem.component.navigation.LocalBottomBarHeight
+import com.yapp.core.designsystem.component.background.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.schedule.component.DateGroupedScheduleItem
 import com.yapp.feature.schedule.component.ScheduleGroupVariant

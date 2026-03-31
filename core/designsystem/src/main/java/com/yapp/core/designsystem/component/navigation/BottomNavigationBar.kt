@@ -1,4 +1,4 @@
-package com.yapp.core.ui.component
+package com.yapp.core.designsystem.component.navigation
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

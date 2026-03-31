@@ -19,7 +19,7 @@ import com.yapp.core.designsystem.component.button.solid.YappSolidPrimaryButtonX
 import com.yapp.core.designsystem.component.button.text.YappTextAssistiveButtonSmall
 import com.yapp.core.designsystem.component.input.nestedcheckbox.YappNestedCheckboxNormal
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.component.BottomDialog
+import com.yapp.core.designsystem.component.bottomsheet.BottomDialog
 import com.yapp.feature.login.R
 
 

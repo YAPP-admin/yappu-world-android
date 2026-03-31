@@ -16,7 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.component.input.text.YappInputTextLarge
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.component.YappBackground
+import com.yapp.core.designsystem.component.background.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.signup.R
 

@@ -1,4 +1,4 @@
-package com.yapp.core.ui.component
+package com.yapp.core.designsystem.component.skeleton
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

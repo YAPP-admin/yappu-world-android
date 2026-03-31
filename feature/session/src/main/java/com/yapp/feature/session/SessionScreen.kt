@@ -46,8 +46,8 @@ import com.yapp.core.designsystem.component.header.YappHeaderActionbar
 import com.yapp.core.designsystem.extension.yappClickable
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.NoticeItem
-import com.yapp.core.ui.component.YappBackground
-import com.yapp.core.ui.component.YappSkeleton
+import com.yapp.core.designsystem.component.background.YappBackground
+import com.yapp.core.designsystem.component.skeleton.YappSkeleton
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context

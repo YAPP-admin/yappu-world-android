@@ -29,7 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.component.Indicators
+import com.yapp.core.designsystem.component.indicator.Indicators
 import com.yapp.core.ui.util.formatScheduleTimeRange
 import com.yapp.model.AttendanceStatus
 import com.yapp.model.ScheduleInfo

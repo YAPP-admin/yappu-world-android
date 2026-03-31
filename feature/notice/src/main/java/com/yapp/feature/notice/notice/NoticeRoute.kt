@@ -35,7 +35,7 @@ import com.yapp.core.designsystem.extension.OnBottomReached
 import com.yapp.core.designsystem.theme.YappTheme
 import com.yapp.core.ui.component.NoticeItem
 import com.yapp.core.ui.component.NoticeLoadingItem
-import com.yapp.core.ui.component.YappBackground
+import com.yapp.core.designsystem.component.background.YappBackground
 import com.yapp.core.ui.extension.borderBottom
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.feature.notice.R

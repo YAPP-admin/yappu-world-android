@@ -23,7 +23,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yapp.core.designsystem.component.alert.YappAlertShortDialog
 import com.yapp.core.designsystem.component.button.outlined.YappOutlinedSecondaryButtonLarge
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.component.YappBackground
+import com.yapp.core.designsystem.component.background.YappBackground
 import com.yapp.core.ui.extension.collectWithLifecycle
 import com.yapp.core.ui.extension.safeOpenUri
 import com.yapp.feature.profile.component.ProfileInformationSection

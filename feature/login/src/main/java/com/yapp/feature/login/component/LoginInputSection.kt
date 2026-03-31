@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.component.button.solid.YappSolidPrimaryButtonXLarge
 import com.yapp.core.designsystem.component.input.text.YappInputTextLarge
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.component.PasswordInputTextLarge
+import com.yapp.core.designsystem.component.input.password.PasswordInputTextLarge
 import com.yapp.feature.login.R
 
 @Composable

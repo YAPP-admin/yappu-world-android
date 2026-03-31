@@ -38,8 +38,8 @@ import androidx.compose.ui.unit.dp
 import com.yapp.core.designsystem.component.button.solid.YappSolidPrimaryButtonLarge
 import com.yapp.core.designsystem.component.button.text.YappTextPrimaryButtonSmall
 import com.yapp.core.designsystem.theme.YappTheme
-import com.yapp.core.ui.component.BottomDialog
-import com.yapp.core.ui.component.YappBackground
+import com.yapp.core.designsystem.component.bottomsheet.BottomDialog
+import com.yapp.core.designsystem.component.background.YappBackground
 import com.yapp.feature.home.R
 
 @Composable

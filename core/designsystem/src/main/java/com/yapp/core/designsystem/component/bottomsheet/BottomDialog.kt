@@ -1,4 +1,4 @@
-package com.yapp.core.ui.component
+package com.yapp.core.designsystem.component.bottomsheet
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
