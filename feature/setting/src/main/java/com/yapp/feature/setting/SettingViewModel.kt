@@ -109,21 +109,21 @@ internal class SettingViewModel @Inject constructor(
     private suspend fun updateUrl() = coroutineScope {
         val privacyPolicyDeferred = async {
             if (privacyPolicyLink == null) {
-                runCatching { operationsRepository.getPrivacyPolicyLink() }
+                runCatchingIgnoreCancelled { operationsRepository.getPrivacyPolicyLink() }
             } else {
                 Result.success(privacyPolicyLink)
             }
         }
         val termsDeferred = async {
             if (termsLink == null) {
-                runCatching { operationsRepository.getTermsOfServiceLink() }
+                runCatchingIgnoreCancelled { operationsRepository.getTermsOfServiceLink() }
             } else {
                 Result.success(termsLink)
             }
         }
         val inquiryDeferred = async {
             if (inquiryLink == null) {
-                runCatching { operationsRepository.getUsageInquiryLink() }
+                runCatchingIgnoreCancelled { operationsRepository.getUsageInquiryLink() }
             } else {
                 Result.success(inquiryLink)
             }

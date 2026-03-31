@@ -13,6 +13,7 @@ import com.yapp.model.exceptions.RecentSignUpRejectedException
 import com.yapp.model.exceptions.SignUpPendingException
 import com.yapp.model.exceptions.UserNotFoundForEmailException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import com.yapp.domain.runCatchingIgnoreCancelled
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -170,14 +171,14 @@ internal class LoginViewModel @Inject constructor(
     private suspend fun updateUrl() = coroutineScope {
         val privacyPolicyDeferred = async {
             if (privacyPolicyLink == null) {
-                runCatching { operationsRepository.getPrivacyPolicyLink() }
+                runCatchingIgnoreCancelled { operationsRepository.getPrivacyPolicyLink() }
             } else {
                 Result.success(privacyPolicyLink)
             }
         }
         val termsDeferred = async {
             if (termsLink == null) {
-                runCatching { operationsRepository.getTermsOfServiceLink() }
+                runCatchingIgnoreCancelled { operationsRepository.getTermsOfServiceLink() }
             } else {
                 Result.success(termsLink)
             }

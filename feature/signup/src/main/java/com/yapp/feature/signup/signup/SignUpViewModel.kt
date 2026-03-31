@@ -9,6 +9,7 @@ import com.yapp.core.ui.mvi.mviIntentStore
 import com.yapp.dataapi.OperationsRepository
 import com.yapp.domain.GetPositionConfigsUseCase
 import com.yapp.domain.SignUpUseCase
+import com.yapp.domain.runCatchingIgnoreCancelled
 import com.yapp.model.SignUpInfo
 import com.yapp.model.SignUpResult
 import com.yapp.model.exceptions.SignUpCodeException
@@ -255,7 +256,7 @@ internal class SignUpViewModel @Inject constructor(
     private suspend fun updateUrl() = coroutineScope {
         val inquiryDeferred = async {
             if (inquiryLink == null) {
-                runCatching { operationsRepository.getUsageInquiryLink() }
+                runCatchingIgnoreCancelled { operationsRepository.getUsageInquiryLink() }
             } else {
                 Result.success(inquiryLink)
             }
